@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BookHubApplication {
 
     public static void main(String[] args) {
+
+        System.out.println("hello world");
         SpringApplication.run(BookHubApplication.class, args);
+        System.out.println("test");
     }
 
 }
