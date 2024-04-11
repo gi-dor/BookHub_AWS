@@ -3,8 +3,8 @@
 <mapper namespace="com.example.bookhub.main.mapper.AladinMapper">
 
     <insert id="insertBook" parameterType="com.example.bookhub.main.vo.Book">
-        INSERT INTO book
-        (title, link, author, pub_date, description, isbn_13, item_id, price_sales, price_standard, cover, category_id, category_name, publisher, best_rank)
+        INSERT INTO BOOK
+        (title, link, author, pub_date, description, isbn13, item_id, price_sales, price_standard, cover, category_id, category_name, publisher, best_rank)
         VALUES
             (#{title}, #{link}, #{author}, #{pubDate}, #{description}, #{isbn13}, #{itemId}, #{priceSales}, #{priceStandard}, #{cover}, #{categoryId}, #{categoryName}, #{publisher}, #{bestRank})
     </insert>
