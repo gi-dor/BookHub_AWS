@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService productService;
+    private final BookService bookService;
 
     @GetMapping("/detail")
     public String home(@RequestParam("bookNo") long bookNo, Model model){
-        Book book = productService.findProductDetail(bookNo);
+        Book book = bookService.findProductDetail(bookNo);
         model.addAttribute("book", book);
         System.out.println(book);
 

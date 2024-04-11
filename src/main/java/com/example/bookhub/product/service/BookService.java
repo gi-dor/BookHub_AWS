@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BookService {
 
-    private final BookMapper productMapper;
+    private final BookMapper bookMapper;
 
     public Book findProductDetail(long bookNo){
-        return productMapper.findProductDetail(bookNo);
+        return bookMapper.findProductDetail(bookNo);
     }
 }
