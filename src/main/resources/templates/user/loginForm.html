@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>:: 로그인 ::</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://kit.fontawesome.com/3f84dc55d3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <style>
+
+        html,
+        body {
+            height: 100%;
+        }
+
+
+        .form-signin {
+            width: 100%;
+            max-width: 330px;
+            padding: 15px;
+            margin: auto;
+        }
+
+        .form-signin .checkbox {
+            font-weight: 400;
+        }
+
+        .form-signin .form-floating:focus-within {
+            z-index: 2;
+        }
+
+        .form-signin input[type="email"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+    </style>
+</head>
+<body class="container">
+<div class="row text-center">
+    <div class="col-2"></div>
+        <div class="col-8">
+            <div class="form-signin">
+                <form action="#" method="post">
+                    <img class="mb-4" src="/image/login/logo.png" alt="" width="auto" height="250">
+                    <h1 class="h3 mb-3 fw-normal">BookHub Login</h1>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="id" placeholder="아이디 입력...">
+                        <label for="id">아이디</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="pwd" placeholder="Password">
+                        <label for="pwd">비밀번호</label>
+                    </div>
+
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" value="remember-me"> 아이디 저장
+                        </label>
+                    </div>
+                    <button class="w-100 btn btn-lg btn-dark" type="submit" style="margin-bottom: 8px;">로그인</button>
+                    <a href="/signup" class="w-100 btn btn-lg btn-secondary">회원가입</a> <!-- 회원가입 버튼 -->
+
+                    <br>
+                    <br>
+                    <a href="/password-reset" class="text-center" style="display: block;">비밀번호를 잊으셨나요?</a>
+
+                    <div class="text-center mt-3">
+                        <a class="naver" href="" style="margin: 0 10px;"><img th:src="@{/image/login/naverLogin.png}" style="width: 40px; height: 40px"></a>
+                        <a class="kakao" href="" style="margin: 0 10px;"><img th:src="@{/image/login/kakaoLogin.png}" style="width: 40px; height: 40px"></a>
+                        <a class="google" href="" style="margin: 0 10px;"><img th:src="@{/image/login/googleLogin.png}" style="width: 40px; height: 40px"></a>
+                    </div>
+
+                </form>
+                <p class="mt-5 mb-3 text-muted">&copy; 2024–2024</p>
+            </div>
+        </div>
+    <div class="col-2"></div>
+</div>
+
+</body>
+</html>
