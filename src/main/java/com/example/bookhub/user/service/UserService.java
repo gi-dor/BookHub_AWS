@@ -28,12 +28,19 @@ public class UserService implements UserDetailsService {
     Spring Security 는 사용자의 인증 , 권한 부여를 처리한다
      */
     /*
-    사용자 이름을 기반으로 사용자를 찾습니다. 실제 구현에서는 검색이 대소문자를 구분하거나 구분하지 않을 수 있으며, 이는 구현 인스턴스가 구성된 방식에 따라 다를 수 있습니다.
-    사용자 이름을 식별하는 사용자의 데이터가 필요합니다.
-    사용자 레코드가 완전히 채워진 사용자 레코드를 반환합니다. 반환된 객체는 null이 아닙니다.
-    사용자를 찾을 수 없거나 사용자에게 부여된 권한이 없는 경우 UsernameNotFoundException을 발생시킵니다.
+    사용자 이름을 기반으로 사용자를 찾는다.
+    실제 구현에서는 검색이 대소문자를 구분하거나 구분하지 않을 수 있으며, 이는 구현 인스턴스가 구성된 방식에 따라 다를 수 있다.
+    사용자 이름을 식별하는 사용자의 데이터가 필요하다
+    사용자 레코드가 완전히 채워진 사용자 레코드를 반환. 반환된 객체는 null이 아니다
+    사용자를 찾을 수 없거나 사용자에게 부여된 권한이 없는 경우 UsernameNotFoundException을 발생
      */
 
+    /**
+     * 주어진 사용자 아이디를 기준으로 사용자의 데이터를 가져와 UserDetails 객체로 반환합니다.
+     * @param id 사용자 아이디
+     * @return UserDetails 객체
+     * @throws UsernameNotFoundException 주어진 아이디에 해당하는 사용자를 찾을 수 없는 경우 발생합니다.
+     */
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
@@ -58,6 +65,12 @@ public class UserService implements UserDetailsService {
     }
 
 
+    /**
+     * 주어진 회원가입 폼 UserSignupForm 으로 사용자를 등록한다
+     * @param form 사용자 회원가입 폼 UserSignupForm
+     * @return 등록된 사용자
+     * @throws RuntimeException 이미 존재하는 아이디나 이메일일 경우 발생
+     */
     public User registerUser(UserSignupForm form) {
 
         if (userMapper.selectUserById(form.getId()) != null) {
@@ -74,6 +87,12 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * 주어진 번호에 해당하는 사용자를 데이터베이스에서 선택
+     * @param no 사용자 번호
+     * @return 선택된 사용자
+     * @throws RuntimeException 주어진 번호에 해당하는 사용자를 찾을 수 없는 경우 발생
+     */
     public User selectUserByNo(Long no) {
         User user = userMapper.selectUserByNo(no);
 
@@ -83,6 +102,12 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * 주어진 아이디에 해당하는 사용자를 데이터베이스에서 선택
+     * @param id 사용자 아이디
+     * @return 선택된 사용자
+     * @throws RuntimeException 주어진 아이디에 해당하는 사용자를 찾을 수 없는 경우 발생
+     */
     public User selectUserById(String id) {
         User user = userMapper.selectUserById(id);
         if (user == null) {
@@ -91,6 +116,12 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * 주어진 이메일에 해당하는 사용자를 데이터베이스에서 선택
+     * @param email 사용자 이메일
+     * @return 선택된 사용자
+     * @throws RuntimeException 주어진 이메일에 해당하는 사용자를 찾을 수 없는 경우 발생
+     */
     public User selectUserByEmail(String email) {
         User user = userMapper.selectUserByEmail(email);
         if (user == null) {
