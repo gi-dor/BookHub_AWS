@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.product.mapper.BookMapper">
+
+    <resultMap type="com.example.bookhub.product.vo.Book" id="ProductDetailResultMap">
+        <id column="book_no" property="no"/>
+        <result column="title" property="title"/>
+        <result column="author" property="author"/>
+        <result column="pub_date" property="pubDate"/>
+        <result column="description" property="description"/>
+        <result column="isbn13" property="isbn13"/>
+        <result column="item_id" property="itemId"/>
+        <result column="price_sales" property="priceSales"/>
+        <result column="price_standard" property="priceStandard"/>
+        <result column="cover" property="cover"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="publisher" property="publisher"/>
+        <result column="best_rank" property="bestRank"/>
+    </resultMap>
+
+    <select id="findProductDetail" parameterType="long" resultMap="ProductDetailResultMap">
+        select
+            book_no, title, author, pub_date, description, isbn13, item_id, price_sales, price_standard, cover, category_id, category_name, publisher, best_rank
+        from
+            BOOK
+        where
+            book_no = #{value}
+    </select>
+</mapper>
