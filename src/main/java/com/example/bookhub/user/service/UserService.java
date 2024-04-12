@@ -109,6 +109,7 @@ public class UserService implements UserDetailsService {
      * @throws RuntimeException 주어진 아이디에 해당하는 사용자를 찾을 수 없는 경우 발생
      */
     public User selectUserById(String id) {
+        System.out.println(id);
         User user = userMapper.selectUserById(id);
         if (user == null) {
             throw new RuntimeException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다: " + id);
@@ -130,6 +131,29 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+
+    /**
+     * id 중복 체크
+     * @param id DB에 저장되어있는  아이디
+     * @return 0  또는 1
+     */
+    public int idCheck(String id) {
+        int cnt = userMapper.idCheck(id);
+        System.out.println("IdCnt : "+cnt);
+        return cnt;
+    }
+
+
+    /**
+     * email 중복 체크
+     * @param email DB에 저장되어있는  이메일
+     * @return 0 또는 1
+     */
+    public int emailCheck(String email) {
+        int cnt = userMapper.emailCheck(email);
+        System.out.println("EmailCnt : " + cnt);
+        return cnt;
+    }
 
 }
 

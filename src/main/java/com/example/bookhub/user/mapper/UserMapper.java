@@ -15,4 +15,8 @@ public interface UserMapper {
 
     User selectUserByEmail(String email);
 
+     int idCheck(String id);
+
+     int emailCheck(String email);
+
 }
