@@ -6,6 +6,7 @@ import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -51,6 +55,7 @@ public class UserController {
             return "redirect:/user/completed?id=" + user.getId();
 
         } catch (RuntimeException ex) {
+            System.out.println(ex);
             String message = ex.getMessage();
 
             if("id".equals(message)) {
@@ -73,5 +78,21 @@ public class UserController {
         return "user/completed";
     }
 
+
+
+    @PostMapping("/idCheck")
+    @ResponseBody
+    public int idCheck(@RequestParam("id") String id) {
+        int cnt = userService.idCheck(id);
+        return cnt;
+    }
+
+
+    @PostMapping("/emailCheck")
+    @ResponseBody
+    public int emailCheck(@RequestParam("email") String email) {
+        int cnt = userService.emailCheck(email);
+        return  cnt;
+    }
 
 }
