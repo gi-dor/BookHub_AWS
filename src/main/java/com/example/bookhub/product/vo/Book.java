@@ -13,7 +13,7 @@ public class Book {
     private LocalDateTime pubDate;
     private String description;
     private String isbn13;
-    private int itemID;
+    private int itemId;
     private int priceSales;
     private int priceStandard;
     private String cover;

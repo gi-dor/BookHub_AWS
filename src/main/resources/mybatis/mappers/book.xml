@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.product.mapper.BookMapper">
 
-    <resultMap type="com.example.bookhub.product.vo.Book" id="ProductDetailResultMap">
+    <resultMap type="com.example.bookhub.product.vo.Book" id="BookDetailResultMap">
         <id column="book_no" property="no"/>
         <result column="title" property="title"/>
         <result column="author" property="author"/>
@@ -19,7 +19,7 @@
         <result column="best_rank" property="bestRank"/>
     </resultMap>
 
-    <select id="findProductDetail" parameterType="long" resultMap="ProductDetailResultMap">
+    <select id="findProductDetail" parameterType="long" resultMap="BookDetailResultMap">
         select
             book_no, title, author, pub_date, description, isbn13, item_id, price_sales, price_standard, cover, category_id, category_name, publisher, best_rank
         from

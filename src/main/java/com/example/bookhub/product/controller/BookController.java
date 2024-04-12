@@ -20,7 +20,6 @@ public class BookController {
     public String home(@RequestParam("bookNo") long bookNo, Model model){
         Book book = bookService.findProductDetail(bookNo);
         model.addAttribute("book", book);
-        System.out.println(book);
 
         return "product/book/detail";
     }
