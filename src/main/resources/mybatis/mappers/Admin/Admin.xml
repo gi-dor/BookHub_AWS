@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.admin.mapper.AdminMapper">
 
-    <resultMap type="com.example.bookhub.board.vo.Admin" id="AdminResultMap">
+    <resultMap type="com.example.bookhub.admin.vo.Admin" id="AdminResultMap">
         <id column="admin_no" property="no"/>
         <result column="admin_id" property="id"/>
         <result column="admin_password" property="password"/>
