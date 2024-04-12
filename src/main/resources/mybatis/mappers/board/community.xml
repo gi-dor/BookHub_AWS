@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.board.mapper.CommunityMapper">
+
+
+    <resultMap type="com.example.bookhub.board.vo.Community" id="NoticeListResultMap">
+        <id column="community_board_no" property="no"/>
+        <result column="community_board_title" property="title"/>
+        <result column="community_board_content" property="content"/>
+        <result column="community_board_delete_yn" property="deleteYn"/>
+        <result column="community_board_create_date" property="createDate"/>
+        <result column="community_board_update_date" property="updateDate"/>
+        <!--어소시에이션 유저no 추가할것 -->
+
+
+    </resultMap>
+
+    <!--
+        페이징처리한 커뮤니티 목록을 조회하는 쿼리
+    -->
+    <select id="findAllCommunity" resultMap="NoticeListResultMap">
+        SELECT COMMUNITY_BOARD_NO, COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT
+        FROM COMMUNITY
+        ORDER BY COMMUNITY_BOARD_CREATE_DATE DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!--
+        총 커뮤니티보드 개수를 조회하는 쿼리
+    -->
+    <select id="getTotalCommunitiesCount" resultType="int">
+        SELECT COUNT(*)
+        FROM COMMUNITY
+    </select>
+
+
+
+
+    <insert id="insertCommunity" parameterType="com.example.bookhub.board.vo.Community">
+        INSERT INTO COMMUNITY (COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT)
+        VALUES (#{title}, #{content})
+    </insert>
+
+
+</mapper>

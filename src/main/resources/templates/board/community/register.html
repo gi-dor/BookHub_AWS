@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 등록</title>
+</head>
+<body>
+<div>
+    <h2>게시글 등록</h2>
+    <form th:action="@{/templates/board/community/register}" method="post">
+        <label for="title">제목:</label><br>
+        <input type="text" id="title" name="title" required><br>
+        <label for="content">내용:</label><br>
+        <textarea id="content" name="content" rows="4" required></textarea><br>
+        <input type="submit" value="등록">
+    </form>
+</div>
+</body>
+</html>
