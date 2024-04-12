@@ -10,7 +10,7 @@ public class BookHubApplication {
 
         System.out.println("hello world");
         SpringApplication.run(BookHubApplication.class, args);
-        System.out.println("test");
+
     }
 
 }
