@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.board.mapper.FaqMapper">
+
+
+
+    <resultMap type="com.example.bookhub.board.vo.Faq" id="FaqListResultMap">
+        <id column="faq_no" property="no"/>
+        <result column="faq_title" property="title"/>
+        <result column="faq_content" property="content"/>
+        <result column="faq_delete_yn" property="deleteYn"/>
+        <result column="faq_create_date" property="createDate"/>
+        <result column="faq_update_date" property="updateDate"/>
+
+        <association column="faq_category_no" property="faqCategory"
+                     select="com.example.bookhub.board.mapper.FaqMapper.getFaqCategoryByNo"/>
+    </resultMap>
+
+    <resultMap type="com.example.bookhub.board.vo.FaqCategory" id="FaqCategoriesListMap">
+        <id column="faq_category_no" property="no"/>
+        <result column="faq_category_name" property="name"/>
+    </resultMap>
+
+
+    <!--전체 FAQ 목록을 조회-->
+    <select id="findAllFaq" resultMap="FaqListResultMap">
+        SELECT
+            FAQ_NO, FAQ_TITLE, FAQ_CONTENT, FAQ_CATEGORY_NO
+        FROM FAQS
+        ORDER BY FAQ_CATEGORY_NO DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!-- FAQ의 총 개수를 조회하는 쿼리-->
+    <select id="getTotalFaqCount" resultType="int">
+        SELECT COUNT(*)
+        FROM FAQS
+    </select>
+
+
+    <!--FAQ 카테고리 목록을 조회 -->
+    <select id="getFaqCategoryByNo" parameterType="long" resultMap="FaqCategoriesListMap">
+        SELECT FAQ_CATEGORY_NO, FAQ_CATEGORY_NAME
+        FROM FAQ_CATEGORIES
+        WHERE FAQ_CATEGORY_NO = #{value}
+    </select>
+
+
+</mapper>
