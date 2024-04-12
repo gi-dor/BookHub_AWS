@@ -1,0 +1,61 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<div layout:fragment="content" class="container my-3">
+    <div class="row mb-3">
+        <div class="col-9">
+            <h3>장바구니</h3>
+
+            <table class="table">
+                <colgroup>
+                    <col width="5%">
+                    <col width="15%">
+                    <col width="70%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>이미지</th>
+                    <th>제목 및 가격</th>
+                    <th>수량</th>
+                </tr>
+                </thead>
+                <tbody id="table-cart-tbody">
+                     <tr th:each="cartBook: ${cartBooks}">
+                         <td></td>
+                         <td><img th:src="@{${cartBook.cover}}"></td>
+                         <td>
+                             <div th:text="${cartBook.title}">책 제목</div>
+                             <div id="cart_book_price_sales" th:text="${cartBook.priceSales}">가격</div>
+                         </td>
+                         <td>
+                             <div class="btn-group me-2" role="group" aria-label="Second group">
+                                 <button type="button" class="btn btn-outline-secondary" id="count_minus">-</button>
+                                 <span th:text="${cartBook.count}">1</span>
+                                 <button type="button" class="btn btn-outline-secondary" id="count_plus">+</button>
+                             </div>
+                         </td>
+                     </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" type="text/javascript">
+    let cartList = [];
+    let tbody = document.getElementById("table-cart-tbody");
+
+    $("#table-cart-tbody").on('click', '#count_minus', function(event){
+       let prevVal =  parseInt($(this).siblings('span').text());
+       if(prevVal - 1 >= 0)
+            $(this).siblings('span').text(prevVal - 1);
+       console.log(prevVal);
+    })
+
+    $("#table-cart-tbody").on('click', '#count_plus', function(event){
+        let prevVal =   parseInt($(this).siblings('span').text());
+        $(this).siblings('span').text(prevVal + 1);
+        console.log(prevVal);
+    })
+</script>
