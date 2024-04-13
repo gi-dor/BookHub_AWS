@@ -5,8 +5,10 @@ import com.example.bookhub.product.vo.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -26,4 +28,9 @@ public class CartController {
        return "product/cart/list";
     }
 
+    @GetMapping("/delete")
+    public String delete(@RequestParam("cartNo") long cartNo){
+        cartService.deleteBookByCartNo(cartNo);
+        return "redirect:/product/cart/list";
+    }
 }

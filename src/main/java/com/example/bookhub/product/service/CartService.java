@@ -16,4 +16,8 @@ public class CartService {
     public List<Book> findCartList(long userNo){
         return cartMapper.findCartList(userNo);
     }
+
+    public void deleteBookByCartNo(long cartNo){
+        cartMapper.deleteBookByCartNo(cartNo);
+    }
 }

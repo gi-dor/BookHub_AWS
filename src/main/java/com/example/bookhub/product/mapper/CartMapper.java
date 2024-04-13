@@ -9,4 +9,5 @@ import java.util.List;
 public interface CartMapper {
 
     List<Book> findCartList(long userNo);
+    void deleteBookByCartNo(long cartNo);
 }
