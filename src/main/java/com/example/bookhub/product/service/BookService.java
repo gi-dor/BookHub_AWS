@@ -11,7 +11,7 @@ public class BookService {
 
     private final BookMapper bookMapper;
 
-    public Book findProductDetail(long bookNo){
-        return bookMapper.findProductDetail(bookNo);
+    public Book getBookDetailByNo(long bookNo){
+        return bookMapper.getBookDetailByNo(bookNo);
     }
 }

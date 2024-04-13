@@ -3,18 +3,17 @@
 <mapper namespace="com.example.bookhub.product.mapper.CartMapper">
 
     <resultMap type="com.example.bookhub.product.dto.CartBookDto" id="CartListResultMap">
-        <id column="book_no" property="no"/>
-        <result column="title" property="title"/>
-        <result column="price_sales" property="priceSales"/>
-        <result column="price_standard" property="priceStandard"/>
+        <id column="cart_no" property="cartNo"/>
+        <result column="book_no" property="bookNo"/>
+        <result column="book_name" property="name"/>
+        <result column="book_list_price" property="price"/>
         <result column="cover" property="cover"/>
-        <result column="category_name" property="categoryName"/>
         <result column="count" property="count"/>
     </resultMap>
 
     <select id="findCartList" parameterType="long" resultMap="CartListResultMap">
         select
-            B.book_no, B.title, B.price_sales, B.price_standard, B.cover, B.category_name, C.count
+            C.cart_no, B.book_no, B.book_name, B.book_list_price, C.count
         from
             CART C, BOOK B
         where

@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BookMapper {
 
-    Book findProductDetail(long bookNo);
+    Book getBookDetailByNo(long bookNo);
 }

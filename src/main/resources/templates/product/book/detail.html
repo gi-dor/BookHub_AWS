@@ -3,13 +3,13 @@
     <div layout:fragment="content" class="container my-3">
         <div class="row mb-3">
             <div class="col-3">
-                <h3 class="d-flex justify-content-center" th:text="${book.title}"><strong>책 제목</strong></h3>
+                <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
                 <h5 class="d-flex justify-content-center">책 설명</h5>
 
                 <div id="carouselExample" class="carousel slide" style="width: 300px; height: 500px; margin: 0 auto;" >
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img th:src="@{${book.cover}}" class="d-block w-100" alt="...">
+                            <img src="" class="d-block w-100" alt="...">
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -28,11 +28,11 @@
                 <span class="badge rounded-pill text-bg-secondary">10%</span>
                 <div>
                     <span><strong>10%</strong></span>
-                    <span th:text="${book.priceStandard}"><strong>13,500</strong>원</span>
+                    <span th:text="${book.price}"><strong>13,500</strong>원</span>
                 </div>
                 <div>
                     <span><strong>적립/혜택</strong></span>
-                    <span th:text="${book.priceStandard} * 0.01"><strong>750</strong>P</span>
+                    <span th:text="${book.price} * ${book.discountRate}"><strong>750</strong>P</span>
                 </div>
             </div>
         </div>

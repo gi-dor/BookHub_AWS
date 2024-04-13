@@ -18,7 +18,7 @@ public class BookController {
 
     @GetMapping("/detail")
     public String home(@RequestParam("bookNo") long bookNo, Model model){
-        Book book = bookService.findProductDetail(bookNo);
+        Book book = bookService.getBookDetailByNo(bookNo);
         model.addAttribute("book", book);
 
         return "product/book/detail";
