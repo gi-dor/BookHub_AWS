@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.AdminMapper">
+
+    <resultMap type="com.example.bookhub.admin.vo.Admin" id="AdminResultMap">
+        <id column="admin_no" property="no"/>
+        <result column="admin_id" property="id"/>
+        <result column="admin_password" property="password"/>
+        <result column="admin_email" property="email"/>
+        <result column="admin_tel" property="tel"/>
+    </resultMap>
+
+    <select id="getAdmin" resultMap="AdminResultMap" parameterType="String">
+        SELECT
+            ADMIN_ID, ADMIN_PW, ADMIN_EMAIL, ADMIN_TEL
+        FROM
+            ADMIN
+        WHERE
+            ADMIN_ID = #{value}
+    </select>
+
+    <insert id="join" parameterType="com.example.bookhub.admin.vo.Admin">
+        INSERT INTO ADMIN(ADMIN_ID, ADMIN_PW, ADMIN_EAMIL, ADMIN_TEL)
+        VALUES #{id}, #{password}, #{email}, #{tel}
+    </insert>
+
+</mapper>

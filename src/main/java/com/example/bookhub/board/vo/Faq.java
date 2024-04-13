@@ -5,13 +5,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class Notice {
+public class Faq {
 
     private Long no;
+    private FaqCategory faqCategory;
     private String title;
     private String content;
     private boolean deleteYn;
-    private int priority;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 }
