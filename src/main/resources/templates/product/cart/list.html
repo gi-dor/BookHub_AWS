@@ -4,49 +4,51 @@
     <div class="row mb-3">
         <div class="col-9">
             <h3>장바구니</h3>
-
-            <table class="table">
-                <colgroup>
-                    <col width="5%">
-                    <col width="15%">
-                    <col width="65%">
-                    <col width="10%">
-                    <col width="5%">
-                </colgroup>
-                <thead class="thead-dark">
-                    <tr>
-                        <th><input type="checkbox" id="checkbox-all"></th>
-                        <th>이미지</th>
-                        <th>제목 및 가격</th>
-                        <th>수량</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="table-cart-tbody">
-                     <tr th:each="cartBook: ${cartBooks}">
-                         <td><input type="checkbox" name="checkbox" th:value="${cartBook.cartNo}"></td>
-                         <td></td>
-                         <td>
-                             <div th:text="${cartBook.name}">책 제목</div>
-                             <div id="cart-book-price" th:text="${cartBook.price}">가격</div>
-                         </td>
-                         <td>
-                             <div class="btn-group me-2" role="group" aria-label="Second group">
-                                 <button type="button" class="btn btn-outline-secondary" id="count-minus">-</button>
-                                 <span id="cart-count" th:text="${cartBook.count}">1</span>
-                                 <button type="button" class="btn btn-outline-secondary" id="count-plus">+</button>
-                             </div>
-                         </td>
-                         <td><a type="button"
-                                class="btn btn-outline-danger"
-                                id="cart-book-delete"
-                                th:href="@{|/product/cart/delete?cartNo=${cartBook.cartNo}|}">
-                                <i class="bi bi-trash3"></i>
-                            </a>
-                         </td>
-                     </tr>
-                </tbody>
-            </table>
+            <form method="post" action="/product/buy/order">
+                <table class="table">
+                    <colgroup>
+                        <col width="5%">
+                        <col width="15%">
+                        <col width="65%">
+                        <col width="10%">
+                        <col width="5%">
+                    </colgroup>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th><input type="checkbox" id="checkbox-all"></th>
+                            <th>이미지</th>
+                            <th>제목 및 가격</th>
+                            <th>수량</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-cart-tbody">
+                         <tr th:each="cartBook: ${cartBooks}">
+                             <td><input type="checkbox" name="selectedBook" th:value="${cartBook.bookNo}"></td>
+                             <td></td>
+                             <td>
+                                 <div th:text="${cartBook.name}">책 제목</div>
+                                 <div id="cart-book-price" th:text="${cartBook.price}">가격</div>
+                             </td>
+                             <td>
+                                 <div class="btn-group me-2" role="group" aria-label="Second group">
+                                     <button type="button" class="btn btn-outline-secondary" id="count-minus">-</button>
+                                     <span id="cart-count" th:text="${cartBook.count}">1</span>
+                                     <button type="button" class="btn btn-outline-secondary" id="count-plus">+</button>
+                                 </div>
+                             </td>
+                             <td><a type="button"
+                                    class="btn btn-outline-danger"
+                                    id="cart-book-delete"
+                                    th:href="@{|/product/cart/delete?cartNo=${cartBook.cartNo}|}">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                             </td>
+                         </tr>
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-primary">주문하기</button>
+            </form>
         </div>
         <div class="col-3">
             <div>
@@ -82,16 +84,16 @@
     // 체크박스
     $("#checkbox-all").change(function() {
         let currentCheckedStatus = $(this).prop('checked');
-        $(":checkbox[name=checkbox]").prop("checked", currentCheckedStatus);
+        $(":checkbox[name=selectedBook]").prop("checked", currentCheckedStatus);
 
         updateTotalPrice();
     });
 
     $("#checkbox-all").trigger('click');
 
-    $(":checkbox[name=checkbox]").change(function(){
-        let len = $(":checkbox[name=checkbox]").length;
-        let checkedLen = $(":checked[name=checkbox]:checked").length;
+    $(":checkbox[name=selectedBook]").change(function(){
+        let len = $(":checkbox[name=selectedBook]").length;
+        let checkedLen = $(":checked[name=selectedBook]:checked").length;
         if(len == checkedLen){
             $("#checkbox-all").prop('checked', true);
         } else {
