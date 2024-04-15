@@ -1,6 +1,6 @@
 <html  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
        layout:decorate="~{layout/base}">
-    <div layout:fragment="content" class="container my-3">
+<div layout:fragment="content" class="container my-3">
         <div class="row mb-3">
             <div class="col-9">
                 <div class="card mb-4 rounded-3 shadow-sm">
@@ -13,8 +13,8 @@
                             <tr th:each="orderBook, iterStat : ${orderBookList}">
                                 <td><img src=""></td>
                                 <td th:text="${orderBook.name}"></td>
-                                <td th:text="${orderBook.price}"></td>
-                                <td th:text="${orderBookCountList.get(iterStat.index)}"></td>
+                                <td id="order-book-price" th:text="${orderBook.price}"></td>
+                                <td id="order-book-count" th:text="${orderBookCountList.get(iterStat.index)}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -46,10 +46,23 @@
                                 <span>17,000원</span>
                             </li>
                         </ul>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">주문하기</button>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">결제하기</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+</div>
+
+<script layout:fragment="script" type="text/javascript">
+    function updateTotalPrice(){
+        let totalPrice = 0;
+        $("tbody tr td[id^=order-book-price]").each(function(){
+            let price = parseInt($(this).text());
+            let count = parseInt($(this).closest('tr').find('#order-book-count').text());
+            totalPrice += price * count;
+        });
+        $("#total-price").text(totalPrice);
+    }
+    updateTotalPrice();
+</script>
 </html>
