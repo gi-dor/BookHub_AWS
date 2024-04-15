@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Community Post</title>
+</head>
+<body>
+<h1>Edit Community Post</h1>
+<form th:action="@{/board/community/modify/{no}(no=${community.no})}" method="post">
+    <input type="hidden" name="no" th:value="${community.no}">
+    <div>
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" th:value="${community.title}">
+    </div>
+    <div>
+        <label for="content">Content:</label><br>
+        <textarea id="content" name="content" rows="5" th:text="${community.content}"></textarea>
+    </div>
+    <div>
+        <button type="submit">Update</button>
+    </div>
+</form>
+</body>
+</html>

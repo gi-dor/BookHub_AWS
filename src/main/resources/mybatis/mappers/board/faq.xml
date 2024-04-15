@@ -44,6 +44,6 @@
         FROM FAQ_CATEGORIES
         WHERE FAQ_CATEGORY_NO = #{value}
     </select>
-
+    
 
 </mapper>
