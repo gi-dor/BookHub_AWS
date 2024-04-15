@@ -1,0 +1,104 @@
+<html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="category" class="container-fluid">
+    <div class="row">
+        <h1>카테고리 관리</h1>
+        <hr>
+
+        <!-- 대분류 영역 -->
+        <div class="col-12 p-3 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary me-1" id="btn-open-modal" onclick="openModal()">추가
+            </button>
+            <button type="button" class="btn btn-success me-1">수정</button>
+            <button type="button" class="btn btn-danger">삭제</button>
+        </div>
+        <div class="col-12 bg-light p-3 mb-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <h4>대분류</h4>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <span th:each="majorCategory : ${majorCategories}">
+                        <span th:text="${majorCategory.name}" class="border p-1"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 중분류 영역 -->
+        <div class="col-12 bg-info p-3 mb-3">
+            <h4>중분류</h4>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <!-- 중분류 내용 추가 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 소분류 영역 -->
+        <div class="col-12 bg-success p-3">
+            <h4>소분류</h4>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <!-- 소분류 내용 추가 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 카테고리 추가 모달창 -->
+    <div class="modal fade " id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">카테고리 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 추가 카테고리 폼 -->
+                    <form id="addCategoryForm">
+                        <!-- 입력 필드 추가 -->
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">카테고리 이름</label>
+                            <input type="text" class="form-control" id="categoryName" name="categoryName">
+                        </div>
+                        <div class="form-group">
+                            <label for="myInput">선택 또는 입력:</label>
+                            <input type="text" id="myInput" name="myInput" list="myOptions">
+
+                            <datalist id="myOptions">
+                                <option value="선택1"></option>
+                                <option value="선택2"></option>
+                                <option value="선택3"></option>
+                                <option value="선택4"></option>
+                            </datalist>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="submitCategoryForm()">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script layout:fragment="script" type="text/javascript">
+
+    var categoryFormModal = new bootstrap.Modal(document.getElementById('addCategoryModal'));
+
+    function openModal() {
+        categoryFormModal.show();
+    }
+
+    function submitCategoryForm() {
+        // 폼 제출 로직을 추가하세요.
+        console.log("폼 제출 로직 추가");
+    }
+</script>
+
+</html>

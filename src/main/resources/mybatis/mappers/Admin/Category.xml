@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.CategoryMapper">
+
+    <select id="getAllMajorCategories" resultType="com.example.bookhub.admin.vo.Category">
+        SELECT CATEGORY_NO AS no,
+               CATEGORY_NAME AS name
+        FROM BookHub.CATEGORY
+        WHERE PARENT_CATEGORY_NO IS NULL
+    </select>
+
+    <select id="getAllMiddleCategories" resultType="com.example.bookhub.admin.vo.Category">
+        SELECT CATEGORY_NO AS no,
+               CATEGORY_NAME AS name
+        FROM BookHub.CATEGORY
+        WHERE PARENT_CATEGORY_NO IS NULL
+    </select>
+
+</mapper>
