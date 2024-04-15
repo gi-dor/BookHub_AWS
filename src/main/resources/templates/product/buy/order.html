@@ -46,7 +46,9 @@
                                 <span>17,000원</span>
                             </li>
                         </ul>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">결제하기</button>
+                        <form method="post" th:action="@{/kakaoPay/ready}">
+                            <button type="submit" class="w-100 btn btn-lg btn-primary">결제하기</button>
+                        </form>
                     </div>
                 </div>
             </div>
