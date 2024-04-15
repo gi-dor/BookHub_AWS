@@ -1,7 +1,8 @@
 package com.example.bookhub.product.service;
 
 
-import com.example.bookhub.product.dto.KakaoPayDto;
+import com.example.bookhub.product.dto.KakaoApproveResponse;
+import com.example.bookhub.product.dto.KakaoReadyResponse;
 import groovy.util.logging.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,19 +29,19 @@ public class KakaoPayService {
     @Value("${pay.admin-key}")
     private String kakaoAdminKey;
 
-    private KakaoPayDto kakaoPayDto;
+    private KakaoReadyResponse kakaoReadyResponse;
 
+    /**
+     * 결제 준비
+     */
     public String kakaoPayReady() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory()); // 정확한 에러 파악을 위해 생성
 
-        // Server Request Header : 서버 요청 헤더
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + kakaoAdminKey); // 어드민 키
-        headers.add("Accept", "application/json");
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        // 서버 요청 헤더
+        HttpHeaders headers = getHeaders();
 
-        // Server Request Body : 서버 요청 본문
+        // 서버 요청 본문
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 
         params.add("cid", "TC0ONETIME"); // 가맹점 코드 - 테스트용
@@ -55,13 +56,15 @@ public class KakaoPayService {
         params.add("fail_url", "http://localhost:8080/kakaoPay/fail");
 
         // 헤더와 바디 붙이기
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
         try {
-            kakaoPayDto = restTemplate.postForObject(new URI(Host + "/v1/payment/ready"), body, KakaoPayDto.class);
+            kakaoReadyResponse = restTemplate.postForObject(
+                    new URI(Host + "/v1/payment/ready"),
+                    requestEntity,
+                    KakaoReadyResponse.class);
 
-            System.out.println(""+ kakaoPayDto);
-            return kakaoPayDto.getNext_redirect_pc_url();
+            return kakaoReadyResponse.getNext_redirect_pc_url();
 
         } catch (RestClientException e) {
             e.printStackTrace();
@@ -69,5 +72,46 @@ public class KakaoPayService {
             e.printStackTrace();
         }
         return "product/pay/error";
+    }
+
+
+    /**
+     * 결제 완료 승인
+     */
+    public KakaoApproveResponse approveResponse(String pgToken) {
+
+        // 서버 요청 헤더
+        HttpHeaders headers = getHeaders();
+
+        // 서버 요청 본문
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        params.add("cid", "TC0ONETIME");
+        params.add("tid", kakaoReadyResponse.getTid());
+        params.add("partner_order_id", "1001");
+        params.add("partner_user_id", "lucy");
+        params.add("pg_token", pgToken);
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
+
+        // 외부에 보낼 url
+        RestTemplate restTemplate = new RestTemplate();
+
+        KakaoApproveResponse approveResponse = restTemplate.postForObject(
+                Host + "/v1/payment/approve",
+                requestEntity,
+                KakaoApproveResponse.class);
+
+        return approveResponse;
+    }
+
+    private HttpHeaders getHeaders() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        httpHeaders.add("Authorization", "KakaoAK " + kakaoAdminKey); // 어드민 키
+        httpHeaders.add("Accept", "application/json");
+        httpHeaders.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        return httpHeaders;
     }
 }
