@@ -11,4 +11,12 @@ public class MainController {
         return "main";
     }
 
+    @Controller
+    public class NavbarController {
+
+        @GetMapping("/navbar1")
+        public String showNavbar() {
+            return "navbar1"; // navbar.html 파일의 경로를 반환
+        }
+    }
 }
