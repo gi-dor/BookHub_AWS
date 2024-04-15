@@ -5,13 +5,13 @@ import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
 import com.example.bookhub.admin.vo.Admin;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,15 +34,20 @@ public class AdminController {
 
     @GetMapping("/login")
     public String loginForm(Model model){
-        model.addAttribute("adminRegisterForm", new AdminRegisterForm());
         return "admin/login";
     }
 
-//    @PostMapping("/login")
-//    public String login(String id, String password, Model model){
-//        Admin admin = adminService.getAdmin(id);
-//        admin.getId();
-//    }
+    @PostMapping("/login")
+    public String login(String id, String password, HttpSession session){
+        Admin admin = adminService.login(id, password);
+
+        if(admin != null){
+            session.setAttribute("admin", admin);
+        }  else {
+            return "redirect:/admin/login?error";
+        }
+        return "redirect:/admin/home";
+    }
 
     @GetMapping("/completed")
     public String complete(){
