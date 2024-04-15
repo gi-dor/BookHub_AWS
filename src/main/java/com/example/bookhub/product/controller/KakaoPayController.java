@@ -40,14 +40,14 @@ public class KakaoPayController {
      */
     @GetMapping("/cancel")
     public String cancel() {
-        throw new RuntimeException();
+        return "/product/pay/error";
     }
 
     /**
      * 결제 실패
      */
     @GetMapping("/fail")
-    public void fail() {
-        throw new RuntimeException();
+    public String fail() {
+        return "/product/pay/error";
     }
 }
