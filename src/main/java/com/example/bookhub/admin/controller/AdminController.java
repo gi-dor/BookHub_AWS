@@ -5,6 +5,7 @@ import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
 import com.example.bookhub.admin.vo.Admin;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -75,6 +76,14 @@ public class AdminController {
             error.rejectValue("email", null, ex.getMessage());
             return "admin/signup";
         }
+    }
+
+    // 로그아웃
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        // 세션을 파기하는 역할을 수행
+        session.invalidate();
+        return "admin/login";
     }
 
 }
