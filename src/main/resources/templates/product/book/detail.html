@@ -1,0 +1,105 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+       layout:decorate="~{layout/base}" >
+    <div layout:fragment="content" class="container my-3">
+        <div class="row mb-3">
+            <div class="col-3">
+                <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
+                <h5 class="d-flex justify-content-center">책 설명</h5>
+
+                <div id="carouselExample" class="carousel slide" style="width: 300px; height: 500px; margin: 0 auto;" >
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-9">
+                <span class="badge rounded-pill text-bg-primary">베스트셀러</span>
+                <span class="badge rounded-pill text-bg-secondary">10%</span>
+                <div>
+                    <span><strong>10%</strong></span>
+                    <span th:text="${book.price}"><strong>13,500</strong>원</span>
+                </div>
+                <div>
+                    <span><strong>적립/혜택</strong></span>
+                    <span th:text="${book.price} * ${book.discountRate}"><strong>750</strong>P</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">이벤트</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">상품정보</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">리뷰()</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">교환/반품/품절</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 바텀 네비게이션 바 -->
+        <nav class="navbar fixed-bottom navbar-light bg-light">
+            <form class="container-fluid justify-content-end">
+                <button class="btn btn-outline-secondary me-3" type="button" onclick="showAlertModal(${book.no})">장바구니</button>
+                <button class="btn btn-outline-success me-3" type="button">선물하기</button>
+                <button class="btn btn-outline-success me-3" type="button">바로 주문</button>
+            </form>
+        </nav>
+
+        <!-- 모달 창 -->
+        <div id="alert-modal" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">상품이 장바구니에 담겼습니다</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>장바구니로 이동하시겠습니까?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary">장바구니로 이동</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script layout:fragment="script" type="text/javascript">
+
+        const url = "http://localhost:8080/product/cart"
+
+        function showAlertModal(bookId){
+            const alertModal = new bootstrap.Modal("#alert-modal");
+            insertCart(bookId);
+            alertModal.show();
+        }
+
+        async function insertCart(bookId){
+            if(bookId){
+                //let response = await fetch()
+            }
+        }
+    </script>
+</html>
