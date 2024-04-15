@@ -1,0 +1,55 @@
+<html  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+       layout:decorate="~{layout/base}">
+    <div layout:fragment="content" class="container my-3">
+        <div class="row mb-3">
+            <div class="col-9">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3 d-flex justify-content-between">
+                        <h5 class="my-0 fw-normal">주문 상품</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                            <tr th:each="orderBook, iterStat : ${orderBookList}">
+                                <td><img src=""></td>
+                                <td th:text="${orderBook.name}"></td>
+                                <td th:text="${orderBook.price}"></td>
+                                <td th:text="${orderBookCountList.get(iterStat.index)}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                        <h5 class="my-0 fw-normal">주문 합계</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li class="d-flex justify-content-between">
+                                <span>상품금액</span>
+                                <span id="total-price">20,000원</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>배송비</span>
+                                <span>+ 2,000원</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>상품할인</span>
+                                <span>- 5,000원</span>
+                            </li>
+                            <hr class="my-4">
+                            <li class="d-flex justify-content-between">
+                                <span>결제 예정 금액</span>
+                                <span>17,000원</span>
+                            </li>
+                        </ul>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">주문하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>
