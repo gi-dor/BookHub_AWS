@@ -7,6 +7,8 @@ import com.example.bookhub.user.vo.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/user")
 public class UserController {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @GetMapping("/login")
@@ -44,18 +46,21 @@ public class UserController {
     public String userJoin(@ModelAttribute("userSignupForm")
                            @Valid UserSignupForm form ,
                            BindingResult errors ) {
-        // BindingResult객체에 오류가 있다면 , 유효성 체크를 통과하지 못한 것임으로 ,
-        // 회원가입 폼으로 내부 이동 시킨다.
+        // 유효성 검사에서 오류가 발생했는지 확인하고, 오류가 있다면 사용자 등록 폼을 다시 보여주는 "user/registerForm" 뷰로 이동
         if (errors.hasErrors()) {
             return "user/registerForm";
         }
 
         try {
+        //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
             User user = userService.registerUser(form);
+        //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
             return "redirect:/user/completed?id=" + user.getId();
 
         } catch (RuntimeException ex) {
             System.out.println(ex);
+            // 예외를 로깅하기
+            logger.error("에러 발생: ", ex); // 에러 레벨
             String message = ex.getMessage();
 
             if("id".equals(message)) {
