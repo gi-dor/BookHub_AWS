@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 public class UserDetailsImpl implements UserDetails {
 // 사용자의 인증 정보를 내타내는데 사용되며  사용자가 제공한 자격이 클래스의 정보와 일치하는지 확인한다
+//  Spring Security에서 사용자의 상세 정보를 나타내는 클래스
 
     private String id;
     private String password;
