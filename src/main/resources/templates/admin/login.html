@@ -1,130 +1,41 @@
-<html lang="ko" xmlns:th="http:www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" >
-    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/login.css}">
-    <title>Admin Login</title>
+    <style>
+        body {
+            margin: 100px;
+        }
+    </style>
 </head>
 <body>
-<div id="container" class="container">
-    <!-- FORM SECTION -->
-    <div class="row">
-        <!-- SIGN UP -->
-        <div class="col align-items-center flex-col sign-up">
-            <div class="form-wrapper align-items-center">
-                <form method="POST" action="/admin/signup">
-                    <div class="form sign-up">
-                        <div class="input-group">
-                            <i class='bx bxs-user'></i>
-                            <input type="text" placeholder="Id" name="id">
-                        </div>
-                        <div class="input-group">
-                            <i class='bx bx-mail-send'></i>
-                            <input type="email" placeholder="Email" name="email">
-                        </div>
-                        <div class="input-group">
-                            <i class='bx bxs-lock-alt'></i>
-                            <input type="password" placeholder="Password" name="password">
-                        </div>
-                        <div class="input-group">
-                            <i class='bx bxs-lock-alt'></i>
-                            <input type="password" placeholder="Confirm password">
-                        </div>
-                        <div class="input-group">
-                            <i class="bx bxs-lock-alt"></i>
-                            <input type="text" placeholder="Tel" name="tel">
-                        </div>
-                        <button type="submit">
-                            Sign up
-                        </button>
-                        <p>
-                      <span>
-                        Already have an account?
-                      </span>
-                            <b onclick="toggle()" class="pointer">
-                                Sign in here
-                            </b>
-                        </p>
-                    </div>
-                </form>
-            </div>
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-12">
+            <form th:action="@{/admin/login}" class="border bg-light p-3" method="post">
+                <div class="form-group mb-3">
+                    <label class="form-label">아이디</label>
+                    <input type="text" class="form-control" name="username" />
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">비밀번호</label>
+                    <input type="password" class="form-control" name="password" />
+                </div>
+                <div class="text-end">
+                    <a href="/admin/signup" class="btn btn-outline-secondary fw-bold" style="width: 150px; margin-left: 15px;" >
+                        회원가입
+                    </a>
+                    <button type="submit" class="btn btn-outline-primary fw-bold">로그인</button>
+                </div>
 
+            </form>
         </div>
-        <!-- END SIGN UP -->
-        <!-- SIGN IN -->
-        <div class="col align-items-center flex-col sign-in">
-            <div class="form-wrapper align-items-center">
-                <form action="/admin/login" method="POST">
-                    <div class="form sign-in">
-                        <div class="input-group">
-                            <i class='bx bxs-user'></i>
-                            <input type="text" placeholder="Username">
-                        </div>
-                        <div class="input-group">
-                            <i class='bx bxs-lock-alt'></i>
-                            <input type="password" placeholder="Password">
-                        </div>
-                        <button>
-                            Sign in
-                        </button>
-                        <p>
-                            <b>
-                                Forgot password?
-                            </b>
-                        </p>
-                        <p>
-                          <span>
-                            Don't have an account?
-                          </span>
-                            <b onclick="toggle()" class="pointer">
-                                Sign up here
-                            </b>
-                        </p>
-                    </div>
-                </form>
-            </div>
-            <div class="form-wrapper">
-
-            </div>
-        </div>
-        <!-- END SIGN IN -->
     </div>
-    <!-- END FORM SECTION -->
-    <!-- CONTENT SECTION -->
-    <div class="row content-row">
-        <!-- SIGN IN CONTENT -->
-        <div class="col align-items-center flex-col">
-            <div class="text sign-in">
-                <h2>
-                    Welcome
-                </h2>
-
-            </div>
-            <div class="img sign-in">
-
-            </div>
-        </div>
-        <!-- END SIGN IN CONTENT -->
-        <!-- SIGN UP CONTENT -->
-        <div class="col align-items-center flex-col">
-            <div class="img sign-up">
-
-            </div>
-            <div class="text sign-up">
-                <h2>
-                    Join with us
-                </h2>
-
-            </div>
-        </div>
-        <!-- END SIGN UP CONTENT -->
-    </div>
-    <!-- END CONTENT SECTION -->
 </div>
-<script th:src="@{/js/admin/sidebars2.js}"></script>
-<script th:src="@{/js/admin/login.js}"></script>
+
 </body>
 </html>

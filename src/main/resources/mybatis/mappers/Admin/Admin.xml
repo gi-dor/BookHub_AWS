@@ -10,13 +10,22 @@
         <result column="admin_tel" property="tel"/>
     </resultMap>
 
-    <select id="getAdmin" resultMap="AdminResultMap" parameterType="String">
+    <select id="getAdminId" resultMap="AdminResultMap" parameterType="String">
         SELECT
             ADMIN_ID, ADMIN_PW, ADMIN_EMAIL, ADMIN_TEL
         FROM
             ADMIN
         WHERE
             ADMIN_ID = #{value}
+    </select>
+
+    <select id="getAdminEmail" resultMap="AdminResultMap" parameterType="String">
+        SELECT
+            ADMIN_EMAIL
+        FROM
+            ADMIN
+        WHERE
+            ADMIN_EMAIL = #{value}
     </select>
 
     <insert id="join" parameterType="com.example.bookhub.admin.vo.Admin">

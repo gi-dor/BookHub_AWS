@@ -5,14 +5,19 @@ import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
 import com.example.bookhub.admin.vo.Admin;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -21,8 +26,14 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    @GetMapping("/home")
+    public String home(){
+        return "admin/home";
+    }
+
     @GetMapping("/login")
-    public String loginForm(){
+    public String loginForm(Model model){
+        model.addAttribute("adminRegisterForm", new AdminRegisterForm());
         return "admin/login";
     }
 
@@ -32,21 +43,24 @@ public class AdminController {
 //        admin.getId();
 //    }
 
-    @GetMapping("/home")
-    public String home(){
+    @GetMapping("/completed")
+    public String complete(){
         return "admin/home";
     }
 
+    // 회원가입 메소드
     @GetMapping("/signup")
     public String signup(Model model){
         model.addAttribute("adminRegisterForm", new AdminRegisterForm());
-        return "admin/login";
+        return "admin/signup";
     }
 
     @PostMapping("/signup")
-    public String signup(AdminRegisterForm form, BindingResult error, RedirectAttributes redirect){
+    public String signup(@Valid AdminRegisterForm form, BindingResult error, RedirectAttributes redirect){
+        // 폼 입력값 유효성 체크를 통과하지 못한 경우
         if(error.hasErrors()){
-            return "admin/login";
+            // 회원가입 실패시 입력 데이터 유지
+            return "admin/signup";
         }
         try{
             // 유효성 체크를 통과한 경우
@@ -56,15 +70,11 @@ public class AdminController {
 
         } catch (AlreadyAdminIdException ex){
             error.rejectValue("id", null, ex.getMessage());
-            return "admin/login";
+            return "admin/signup";
         } catch (AlreadyAdminEmailException ex){
             error.rejectValue("email", null, ex.getMessage());
-            return "admin/login";
+            return "admin/signup";
         }
     }
 
-    @GetMapping("/completed")
-    public String complete(){
-        return "admin/home";
-    }
 }
