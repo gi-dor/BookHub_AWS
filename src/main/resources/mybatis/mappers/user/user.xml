@@ -46,23 +46,49 @@
 
 
     <select id="selectUserByNo" parameterType="long" resultMap="UserResultMap">
-        SELECT user_no , user_id , user_password , user_name , user_email ,
-               user_tel ,user_zip_code , user_address, user_address_detail ,user_created_date , user_updated_date
+        SELECT user_no ,
+               user_id ,
+               user_password ,
+               user_name ,
+               user_email ,
+               user_tel ,
+               user_zip_code ,
+               user_address,
+               user_address_detail ,
+               user_created_date ,
+               user_updated_date
         FROM USER
         WHERE user_no = #{no}
     </select>
 
     <select id="selectUserById" parameterType="string" resultMap="UserResultMap">
-        SELECT user_no , user_id , user_password , user_name , user_email ,
-               user_tel ,user_zip_code , user_address, user_address_detail ,user_created_date , user_updated_date
+        SELECT user_no ,
+               user_id ,
+               user_password ,
+               user_name ,
+               user_email ,
+               user_tel ,
+               user_zip_code ,
+               user_address,
+               user_address_detail ,
+               user_created_date ,
+               user_updated_date
         FROM USER
         WHERE user_id = #{id}
     </select>
 
     <select id="selectUserByEmail" parameterType="string" resultMap="UserResultMap">
-        SELECT user_no, user_id, user_password, user_name, user_email,
-               user_tel, user_zip_code, user_address, user_address_detail,
-               user_created_date, user_updated_date
+        SELECT user_no,
+               user_id,
+               user_password,
+               user_name,
+               user_email,
+               user_tel,
+               user_zip_code,
+               user_address,
+               user_address_detail,
+               user_created_date,
+               user_updated_date
         FROM USER
         WHERE user_email = #{email}
     </select>
