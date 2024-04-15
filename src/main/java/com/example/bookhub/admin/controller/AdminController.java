@@ -1,6 +1,8 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.AdminRegisterForm;
+import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
+import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
 import com.example.bookhub.admin.vo.Admin;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +52,13 @@ public class AdminController {
             // 유효성 체크를 통과한 경우
             Admin admin = adminService.join(form);
             redirect.addFlashAttribute("admin", admin);
-            return "redirect:/home";
-        } catch (Exception ex){
+            return "redirect:/admin/home";
+
+        } catch (AlreadyAdminIdException ex){
+            error.rejectValue("id", null, ex.getMessage());
+            return "admin/login";
+        } catch (AlreadyAdminEmailException ex){
+            error.rejectValue("email", null, ex.getMessage());
             return "admin/login";
         }
     }
