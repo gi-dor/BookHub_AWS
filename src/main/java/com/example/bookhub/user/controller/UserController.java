@@ -5,6 +5,7 @@ import com.example.bookhub.user.dto.UserSignupForm;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -27,6 +28,21 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+
+
+    // 마이페이지
+    @GetMapping("/mypage")
+    public String myPage(Model model) {
+        return "user/myPage";
+    }
+
+    // 마이페이지 - 회원정보 조회
+    @GetMapping("/mypage/userInfo")
+    public String userInfo(Model model , Principal principal) {
+        User user = userService.selectUserById(principal.getName());
+        model.addAttribute("user" , user);
+        return "user/userInfo";
+    }
 
     @GetMapping("/login")
     public String loginForm(Model model) {
