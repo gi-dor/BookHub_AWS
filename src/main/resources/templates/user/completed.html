@@ -1,8 +1,9 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
-<head>
+<th:block layout:fragment="style">
     <link rel="stylesheet" th:href="@{/css/user/loginCompleted.css}" />
-</head>
+</th:block>
+
 <div layout:fragment="content" class="container my-3">
     <div class="row mb-3">
         <div class="col-2"> </div>
