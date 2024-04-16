@@ -61,6 +61,7 @@ public class UserService implements UserDetailsService {
 
         userDetails.setAuthorities(List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
+        System.out.println("로그인한 아이디 : " +user.getId());
         return userDetails;
     }
 
