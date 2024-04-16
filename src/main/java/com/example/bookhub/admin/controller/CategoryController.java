@@ -33,7 +33,13 @@ public class CategoryController {
 
     @GetMapping("/secondCategory")
     @ResponseBody
-    public List<Category> handleRequest(@RequestParam("category") int categoryNo) {
-        return categoryService.getSecondLevelCategoriesByTopLevelCategoryName(categoryNo);
+    public List<Category> secondCategory(@RequestParam("category") int categoryNo) {
+        return categoryService.getSecondLevelCategoriesByTopLevelCategoryNo(categoryNo);
+    }
+
+    @GetMapping("/thirdCategory")
+    @ResponseBody
+    public List<Category> thirdCategory(@RequestParam("category") int categoryNo) {
+        return categoryService.getThirdLevelCategoriesBySecondLevelCategoryNo(categoryNo);
     }
 }

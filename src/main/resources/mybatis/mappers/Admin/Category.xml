@@ -32,7 +32,7 @@
         														WHERE PARENT_CATEGORY_NO IS NULL))
     </select>
 
-    <select id="getSecondLevelCategoriesByTopLevelCategoryName" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+    <select id="getSecondLevelCategoriesByTopLevelCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
             SELECT CATEGORY_NO AS no,
             		CATEGORY_NAME AS name,
                     PARENT_CATEGORY_NO AS parentNo
@@ -41,4 +41,14 @@
             							FROM BookHub.CATEGORY
             							WHERE CATEGORY_NO = #{value})
     </select>
+
+    <select id="getThirdLevelCategoriesBySecondLevelCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+                   CATEGORY_NAME AS name,
+                   PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE PARENT_CATEGORY_NO IN (SELECT CATEGORY_NO
+                 						FROM BookHub.CATEGORY
+                  						WHERE CATEGORY_NO = #{value})
+        </select>
 </mapper>

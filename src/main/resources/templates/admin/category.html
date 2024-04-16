@@ -7,10 +7,9 @@
 
         <!-- 버튼 영역 -->
         <div class="col-12 p-3 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-1" id="btn-open-modal" onclick="openModal()">추가
-            </button>
-            <button type="button" class="btn btn-success me-1">수정</button>
-            <button type="button" class="btn btn-danger">삭제</button>
+            <button type="button" class="btn btn-primary me-1" id="btn-add-category">추가</button>
+            <button type="button" class="btn btn-success me-1" id="btn-modify-category">수정</button>
+            <button type="button" class="btn btn-danger" id="btn-delete-category">삭제</button>
         </div>
 
         <!-- 대분류 영역 -->
@@ -22,10 +21,10 @@
                 <div class="card-body">
                     <span th:each="topLevelCategory : ${topLevelCategories}"
                           th:text="${topLevelCategory.name}"
-                          th:data-no="${topLevelCategory.no}"
+                          th:data-top-category-no="${topLevelCategory.no}"
                           class="border p-1 me-1"
-                          id="topLevelCategory-${topLevelCategory.no}"
-                          onclick="showSecondLevelCategories(this)"></span>
+                          id="topLevelCategory-${topLevelCategory.no}">
+                    </span>
                 </div>
             </div>
         </div>
@@ -44,7 +43,7 @@
         <div class="col-12 bg-light p-3">
             <h4>소분류</h4>
             <div class="card mt-3">
-                <div class="card-body">
+                <div id="thirdLevelCategories" class="card-body">
                     <!-- 소분류 내용 추가 -->
                 </div>
             </div>
@@ -52,7 +51,7 @@
     </div>
 
     <!-- 카테고리 추가 모달창 -->
-    <div class="modal fade " id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -83,7 +82,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" onclick="submitCategoryForm()">추가</button>
+                    <button type="button" class="btn btn-primary" id="btn-add-category-modal">추가</button>
                 </div>
             </div>
         </div>
@@ -92,48 +91,80 @@
 </div>
 
 <script layout:fragment="script" type="text/javascript">
-
-    var categoryFormModal = new bootstrap.Modal(document.getElementById('addCategoryModal'));
-
-    function openModal() {
-        categoryFormModal.show();
-    }
-
-    function submitCategoryForm() {
-        // 폼 제출 로직을 추가하세요.
-        console.log("폼 제출 로직 추가");
-    }
-
-    function showSecondLevelCategories(element) {
-        const categoryNo = element.getAttribute("data-no");
-        console.log("선택된 대분류:", categoryNo);
-
-        // AJAX 요청 보내기
-        $.ajax({
-            url: "/admin/secondCategory",
-            method: "GET",
-            contentType: "application/x-www-form-urlencoded",
-            data: {category: categoryNo},
-            success: function (secondLevelCategories) {
-                const $secondLevelCategories = $("#secondLevelCategories");
-                $secondLevelCategories.empty();
-
-                secondLevelCategories.forEach(secondLevelCategory => {
-                    const $span = $("<span>")
-                        .addClass("border p-1 me-1")
-                        .text(secondLevelCategory.name);
-
-                    $secondLevelCategories.append($span);
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error("중분류 데이터 요청 실패:", error);
-            }
-        });
-    }
-
     $(function () {
+
+        $("#btn-add-category").click(function () {
+            let categoryFormModal = new bootstrap.Modal($("#addCategoryModal"));
+            categoryFormModal.show();
+        });
+
+        $("#btn-add-category-modal").click(function () {
+            // 카테고리 추가 로직 구현
+        });
+
         $("span[id^=topLevelCategory]").click(function () {
+            const categoryNo = $(this).data("topCategoryNo");
+
+            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
+
+            $.ajax({
+                url: "/admin/secondCategory",
+                method: "GET",
+                data: {category: categoryNo},
+                success: function (secondLevelCategories) {
+                    const $secondLevelCategories = $("#secondLevelCategories");
+
+                    $secondLevelCategories.empty();
+
+                    secondLevelCategories.forEach(secondLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(secondLevelCategory.name)
+                            .attr("data-second-category-no", secondLevelCategory.no)
+                            .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
+
+                        $secondLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("중분류 데이터 요청 실패:", error);
+                }
+            });
+        });
+
+        $(document).on("click", "span[id^=secondLevelCategory]", function () {
+            const categoryNo = $(this).data("secondCategoryNo");
+
+            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
+
+            $.ajax({
+                url: "/admin/secondCategory",
+                method: "GET",
+                data: {category: categoryNo},
+                success: function (thirdLevelCategories) {
+                    const $thirdLevelCategories = $("#thirdLevelCategories");
+
+                    $thirdLevelCategories.empty();
+
+                    thirdLevelCategories.forEach(thirdLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(thirdLevelCategory.name)
+                            .attr("data-third-category-no", thirdLevelCategory.no)
+                            .attr("id", `thirdLevelCategory-${thirdLevelCategory.no}`);
+
+                        $thirdLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("소분류 데이터 요청 실패:", error);
+                }
+            });
+
+
+        });
+
+        $(document).on("click", "span[id^=thirdLevelCategory]", function () {
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
         });
     })
