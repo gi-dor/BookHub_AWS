@@ -15,8 +15,8 @@
 <body>
 <div class="container">
     <div class="row mb-3">
-        <div class="col-3"></div>
-        <div class="col-6">
+        <div class="col-4"></div>
+        <div class="col-4">
             <h2  class="fw-bolder">Login</h2>
             <div th:if="${param.error}" class="alert alert-danger">
                 아이디 혹은 비밀번호가 올바르지 않습니다.
@@ -30,16 +30,16 @@
                     <label class="form-label">비밀번호</label>
                     <input type="password" class="form-control" name="password" />
                 </div>
-                <div class="text-end">
-                    <a href="/admin/signup" class="btn btn-outline-secondary fw-bold" style="width: 150px; margin-left: 15px;" >
-                        회원가입
-                    </a>
+                <div>
                     <button type="submit" class="btn btn-outline-primary fw-bold">로그인</button>
+                        <a href="/admin/signup" class="btn btn-outline-secondary fw-bold" style="margin-left: 140px; width: 100px;" >
+                            회원가입
+                        </a>
                 </div>
 
             </form>
         </div>
-        <div class="col-3"></div>
+        <div class="col-4"></div>
     </div>
 </div>
 

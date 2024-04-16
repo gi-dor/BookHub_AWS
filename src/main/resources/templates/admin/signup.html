@@ -15,7 +15,8 @@
 <body>
 <div class="container">
     <div class="row mb-3">
-        <div class="col-12">
+        <div class="col-3"></div>
+        <div class="col-6">
             <h2 class="fw-bolder">Sign UP</h2>
             <form method="post" th:action="@{/admin/signup}" th:object="${adminRegisterForm}" class="border bg-light p-3">
                 <div class="form-group mb-3">
@@ -44,11 +45,12 @@
                     <input type="text" class="form-control" th:field="*{tel}"/>
                     <div th:errors="*{tel}" class="text-danger"></div>
                 </div>
-                <div class="text-end">
+                <div>
                     <button type="submit" class="btn btn-outline-primary">회원가입</button>
                 </div>
             </form>
         </div>
+        <div class="col-3"></div>
     </div>
 </div>
 
