@@ -26,4 +26,16 @@
         where cart_no = #{value}
     </delete>
 
+    <update id="updateBookCountByCartNo" parameterType="map">
+        update CART
+        set count = #{count}
+        where cart_no = #{cartNo}
+    </update>
+
+    <select id="getBookNoByCartNo" parameterType="long" resultType="long">
+        select book_no
+        from CART
+        where cart_no = #{value}
+    </select>
+
 </mapper>

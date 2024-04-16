@@ -18,6 +18,7 @@
     </resultMap>
 
 
+
     <insert id="insertUser" parameterType="com.example.bookhub.user.dto.UserSignupForm">
     insert into USER
     ( user_id , user_password , user_name , user_email ,
@@ -42,27 +43,69 @@
 <!--              #{zipCode}, #{address}, #{addressDetail}, )-->
 <!--    </insert>-->
 
-
+    <!-- 로그인 아이디 비밀번호로 사용자 정보 가져오기-->
+    <select id="loginByIdAndPassword" parameterType="map" resultMap="UserResultMap">
+        SELECT user_no              as no,
+               user_id              as id,
+               user_password        as password,
+               user_name            as name,
+               user_email           as email,
+               user_tel             as tel,
+               user_zip_code        as zipCode,
+               user_address         as address,
+               user_address_detail  as addressDetail,
+               user_created_date    as createdDate,
+               user_updated_date    as updatedDate
+        FROM USER
+        WHERE user_id = #{id}
+          AND user_password = #{password}
+    </select>
 
 
     <select id="selectUserByNo" parameterType="long" resultMap="UserResultMap">
-        SELECT user_no , user_id , user_password , user_name , user_email ,
-               user_tel ,user_zip_code , user_address, user_address_detail ,user_created_date , user_updated_date
+        SELECT user_no ,
+               user_id ,
+               user_password ,
+               user_name ,
+               user_email ,
+               user_tel ,
+               user_zip_code ,
+               user_address,
+               user_address_detail ,
+               user_created_date ,
+               user_updated_date
         FROM USER
         WHERE user_no = #{no}
     </select>
 
     <select id="selectUserById" parameterType="string" resultMap="UserResultMap">
-        SELECT user_no , user_id , user_password , user_name , user_email ,
-               user_tel ,user_zip_code , user_address, user_address_detail ,user_created_date , user_updated_date
+        SELECT user_no ,
+               user_id ,
+               user_password ,
+               user_name ,
+               user_email ,
+               user_tel ,
+               user_zip_code ,
+               user_address,
+               user_address_detail ,
+               user_created_date ,
+               user_updated_date
         FROM USER
         WHERE user_id = #{id}
     </select>
 
     <select id="selectUserByEmail" parameterType="string" resultMap="UserResultMap">
-        SELECT user_no, user_id, user_password, user_name, user_email,
-               user_tel, user_zip_code, user_address, user_address_detail,
-               user_created_date, user_updated_date
+        SELECT user_no,
+               user_id,
+               user_password,
+               user_name,
+               user_email,
+               user_tel,
+               user_zip_code,
+               user_address,
+               user_address_detail,
+               user_created_date,
+               user_updated_date
         FROM USER
         WHERE user_email = #{email}
     </select>
@@ -81,6 +124,20 @@
         from USER
         where user_email = #{email}
     </select>
+
+    <!-- 회원 정보 변경 -->
+    <update id="updateUser" parameterType="com.example.bookhub.user.vo.User">
+        update USER
+        set
+            user_name = #{name},
+            user_email = #{email},
+            user_tel = #{tel},
+            user_zip_code = #{zipCode},
+            user_address = #{address},
+            user_address_detail = #{addressDetail},
+        WHERE user_id = #{id}
+        and user_password = #{password}
+    </update>
 
 
 </mapper>

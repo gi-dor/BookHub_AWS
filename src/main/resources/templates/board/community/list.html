@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>공지사항</title>
+    <title>커뮤니티</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" >
 </head>
 <body>
@@ -13,19 +13,21 @@
         <tr>
             <th scope="col">번호</th>
             <th scope="col">제목</th>
+            <th scope="col">작성자</th>
             <th scope="col">날짜</th>
         </tr>
         </thead>
         <tbody>
         <!-- 공지사항 게시글 반복문 -->
-        <tr th:each="notices : ${notices}">
-            <td scope="row" th:text="${notices.no}"></td>
-            <td th:text="${notices.title}"></td>
-            <td th:text="${#temporals.format(notices.createDate, 'yyyy.MM.dd')}"></td>
+        <tr th:each="communities : ${communities}">
+            <td scope="row" th:text="${communities.no}"></td>
+            <td><a th:href="@{/board/community/detail/{id}(id=${communities.no})}" th:text="${communities.title}"></a></td>
+            <td th:text="${communities.user.getName()}"></td>
+            <td th:text="${#temporals.format(communities.createDate, 'yyyy.MM.dd')}"></td>
         </tr>
         </tbody>
         <div class="text-end">
-            <a href="/board/notices/register" class="btn btn-primary">게시글 등록</a>
+            <a href="/board/community/register" class="btn btn-primary">게시글 등록</a>
         </div>
     </table>
 
@@ -33,25 +35,49 @@
         <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${currentPage > 1}">
-                <a class="page-link" th:href="@{/templates/board/community/list(page=1)}">맨 앞</a>
+                <a class="page-link" th:href="@{/board/community/list(page=1)}">맨 앞</a>
             </li>
             <li class="page-item" th:if="${currentPage > 1}">
-                <a class="page-link" th:href="@{/templates/board/community/list(page=${currentPage - 1})}">이전</a>
+                <a class="page-link" th:href="@{/board/community/list(page=${currentPage - 1})}">이전</a>
             </li>
             <!-- 페이지 번호를 표시 -->
             <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage} ? 'active' : ''">
-                <a class="page-link" th:href="@{/templates/board/community/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                <a class="page-link" th:href="@{/board/community/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
             </li>
             <li class="page-item" th:if="${currentPage < totalPages}">
-                <a class="page-link" th:href="@{/templates/board/community/list(page=${currentPage + 1})}">다음</a>
+                <a class="page-link" th:href="@{/board/community/list(page=${currentPage + 1})}">다음</a>
             </li>
             <li class="page-item" th:if="${currentPage < totalPages}">
-                <a class="page-link" th:href="@{/templates/board/community/list(page=${totalPages})}">맨 뒤</a>
+                <a class="page-link" th:href="@{/board/community/list(page=${totalPages})}">맨 뒤</a>
             </li>
         </ul>
         </nav>
     </div>
 
+    <!-- 커뮤니티 게시판 페이지 -->
+    <form th:action="@{/board/community/search}" method="post">
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요">
+        <input type="radio" id="title" name="searchOption" value="title">
+        <label for="title">제목</label>
+        <input type="radio" id="content" name="searchOption" value="content">
+        <label for="content">내용</label>
+        <input type="radio" id="titleContent" name="searchOption" value="titleContent">
+        <label for="titleContent">제목+내용</label>
+        <button type="submit">검색</button>
+    </form>
+
+    <!-- 검색 결과 표시 -->
+    <tr th:if="${searchResults}" th:each="result : ${searchResults}">
+        <td th:text="${result.no}"></td>
+        <td><a th:href="@{/board/community/detail/{id}(id=${result.no})}" th:text="${result.title}"></a></td>
+        <td th:text="${result.user.getName()}"></td>
+        <td th:text="${#temporals.format(result.createDate, 'yyyy.MM.dd')}"></td>
+    </tr>
+    <!-- 검색 결과가 없는 경우 -->
+    <tr th:unless="${searchResults}">
+        <td colspan="4">검색 결과가 없습니다.</td>
+    </tr>
+    </tbody>
 </div>
 </body>
 </html>

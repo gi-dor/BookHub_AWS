@@ -1,80 +1,89 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
 <div layout:fragment="content" class="container my-3">
+    <form method="post" action="/product/buy/order">
     <div class="row mb-3">
-        <div class="col-9">
-            <h3>장바구니</h3>
-            <form method="post" action="/product/buy/order">
+            <div class="col-9">
+                <h3>장바구니</h3>
                 <table class="table">
-                    <colgroup>
-                        <col width="5%">
-                        <col width="15%">
-                        <col width="65%">
-                        <col width="10%">
-                        <col width="5%">
-                    </colgroup>
-                    <thead class="thead-dark">
-                        <tr>
-                            <th><input type="checkbox" id="checkbox-all"></th>
-                            <th>이미지</th>
-                            <th>제목 및 가격</th>
-                            <th>수량</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-cart-tbody">
-                         <tr th:each="cartBook: ${cartBooks}">
-                             <td><input type="checkbox" name="selectedBook" th:value="${cartBook.bookNo}"></td>
-                             <td></td>
-                             <td>
-                                 <div th:text="${cartBook.name}">책 제목</div>
-                                 <div id="cart-book-price" th:text="${cartBook.price}">가격</div>
-                             </td>
-                             <td>
-                                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                                     <button type="button" class="btn btn-outline-secondary" id="count-minus">-</button>
-                                     <span id="cart-count" th:text="${cartBook.count}">1</span>
-                                     <button type="button" class="btn btn-outline-secondary" id="count-plus">+</button>
-                                 </div>
-                             </td>
-                             <td><a type="button"
-                                    class="btn btn-outline-danger"
-                                    id="cart-book-delete"
-                                    th:href="@{|/product/cart/delete?cartNo=${cartBook.cartNo}|}">
-                                    <i class="bi bi-trash3"></i>
-                                </a>
-                             </td>
-                         </tr>
-                    </tbody>
+                        <colgroup>
+                            <col width="5%">
+                            <col width="15%">
+                            <col width="65%">
+                            <col width="10%">
+                            <col width="5%">
+                        </colgroup>
+                        <thead class="thead-dark">
+                            <tr>
+                                <th><input type="checkbox" id="checkbox-all"></th>
+                                <th>이미지</th>
+                                <th>제목 및 가격</th>
+                                <th>수량</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-cart-tbody">
+                             <tr th:each="cartBook: ${cartBooks}">
+                                 <td><input id="checkbox" type="checkbox" name="selectedBook" th:value="${cartBook.cartNo}"></td>
+                                 <td></td>
+                                 <td>
+                                     <div th:text="${cartBook.name}">책 제목</div>
+                                     <div id="cart-book-price" th:text="${cartBook.price}">가격</div>
+                                 </td>
+                                 <td>
+                                     <div class="btn-group me-2" role="group" aria-label="Second group">
+                                         <a type="button"
+                                            class="btn btn-outline-secondary"
+                                            id="count-minus">-</a>
+                                         <input id="cart-count" name="selectedBookCount" th:value="${cartBook.count}"
+                                                style="width:30px; border: none;  background-color: transparent; padding: 0; margin: 10px"/>
+                                         <a type="button"
+                                            class="btn btn-outline-secondary"
+                                            id="count-plus">+</a>
+                                     </div>
+                                 </td>
+                                 <td><a type="button"
+                                        class="btn btn-outline-danger"
+                                        id="cart-book-delete"
+                                        th:href="@{|/product/cart/delete?cartNo=${cartBook.cartNo}|}">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+                                 </td>
+                             </tr>
+                        </tbody>
                 </table>
-                <button type="submit" class="btn btn-primary">주문하기</button>
-            </form>
-        </div>
-        <div class="col-3">
-            <div>
-                <div>
-                    <div class="justify-content-between">
-                        <span>상품금액</span>
-                        <span id="total-price">20000</span>
+            </div>
+            <div class="col-3">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                        <h5 class="my-0 fw-normal">장바구니 합계</h5>
                     </div>
-                    <div class="justify-content-between">
-                        <span>배송비</span>
-                        <span>+ 2000</span>
-                    </div>
-                    <div class="justify-content-between">
-                        <span>상품할인</span>
-                        <span>- 5000</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="justify-content-between">
-                        <span>결제 예정 금액</span>
-                        <span></span>
+                    <div class="card-body">
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li class="d-flex justify-content-between">
+                                <span>상품금액</span>
+                                <span id="total-price">20,000원</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>배송비</span>
+                                <span>+ 2,000원</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>상품할인</span>
+                                <span>- 5,000원</span>
+                            </li>
+                            <hr class="my-4">
+                            <li class="d-flex justify-content-between">
+                                <span>결제 예정 금액</span>
+                                <span>17,000원</span>
+                            </li>
+                        </ul>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">주문하기</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script layout:fragment="script" type="text/javascript">
@@ -104,26 +113,42 @@
 
     // 수량 변경
     $("#table-cart-tbody").on('click', '#count-minus', function(event){
-       let prevVal =  parseInt($(this).siblings('span').text());
-       if(prevVal - 1 >= 0)
-            $(this).siblings('span').text(prevVal - 1);
-       updateTotalPrice()
+        let cartNo = $(this).closest("tr").find("#checkbox").val();
+        let prevVal =  parseInt($(this).siblings('input').val());
+        let nowVal = prevVal - 1;
+        if(nowVal >= 0){
+           $(this).siblings('input').val(nowVal);
+           updateTotalPrice();
+           updateBookCount(cartNo, nowVal);
+        }
     })
 
     $("#table-cart-tbody").on('click', '#count-plus', function(event){
-        let prevVal =   parseInt($(this).siblings('span').text());
-        $(this).siblings('span').text(prevVal + 1);
+        let cartNo = $(this).closest("tr").find("#checkbox").val();
+        let prevVal =   parseInt($(this).siblings('input').val());
+        let nowVal = prevVal + 1;
+        $(this).siblings('input').val(nowVal);
         updateTotalPrice();
+        updateBookCount(cartNo, nowVal);
     })
 
     function updateTotalPrice(){
         let totalPrice = 0;
         $("tbody tr:has(:checkbox:checked) div[id^=cart-book-price]").each(function(){
             let price = parseInt($(this).text());
-            let count = parseInt($(this).closest('tr').find('#cart-count').text());
+            let count = parseInt($(this).closest('tr').find('#cart-count').val());
             totalPrice += price * count;
         });
         $("#total-price").text(totalPrice);
+    }
+
+    async function updateBookCount(cartNo, count){
+        console.log("/product/cart/update/count?cartNo=" + cartNo + "&count=" + count);
+        let response = await fetch("/product/cart/update/count?cartNo=" + cartNo + "&count=" + count);
+
+        if(!response.ok){
+            console.log("장바구니 수량 변경 실패");
+        }
     }
     updateTotalPrice();
 </script>

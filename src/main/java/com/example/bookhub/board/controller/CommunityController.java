@@ -5,10 +5,7 @@ import com.example.bookhub.board.vo.Community;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,6 +43,42 @@ public class CommunityController {
         communityService.insertNotice(title, content);
 
         return "redirect:/board/community/list";
+    }
+
+    @GetMapping("/detail/{no}")
+    public String getCommunityDetail(@PathVariable Long no, Model model) {
+        Community community = communityService.getCommunityByNo(no);
+        model.addAttribute("community", community);
+        return "board/community/detail";
+    }
+
+    @GetMapping("/modify/{no}")
+    public String modifyForm(@PathVariable Long no, Model model) {
+        Community community = communityService.getCommunityByNo(no);
+        model.addAttribute("community", community);
+        return "board/community/modify";
+    }
+    @PostMapping("/modify/{no}")
+    public String updateCommunity(@ModelAttribute("community") Community community) {
+        communityService.updateCommunity(community);
+
+        return "redirect:/board/community/detail/{no}";
+    }
+
+    @PostMapping("/delete")
+    public String deleteCommunity(@RequestParam("no") Long no) {
+        communityService.deleteCommunity(no);
+
+        return "redirect:/board/community/list";
+    }
+
+    @PostMapping("/search")
+    public String searchCommunity(@RequestParam("keyword") String keyword,
+                                  @RequestParam("searchOption") String searchOption,
+                                  Model model) {
+        List<Community> searchResults = communityService.searchCommunity(keyword, searchOption);
+        model.addAttribute("searchResults", searchResults);
+        return "/board/community/list";
     }
 
 }

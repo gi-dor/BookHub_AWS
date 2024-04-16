@@ -30,4 +30,8 @@ public class User {
     private String address;
     private String addressDetail;
     private String delYn;
+
+    public String getFullAddress() {
+        return String.format("%s %s %s", zipCode,address,addressDetail);
+    }
 }

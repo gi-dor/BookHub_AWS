@@ -23,7 +23,7 @@ public class SecurityConfig {
 
         // 폼기반 로그인을 활성화
         // 사용자가 로그인 한다면 /user/login 경로로 이동하게되는데 로그인 성공시 ("/") 로 리다이렉트
-        http.formLogin(formLogin -> formLogin.loginPage("/user/login").defaultSuccessUrl("/"));
+        http.formLogin(formLogin -> formLogin.loginPage("/user/login").usernameParameter("id").defaultSuccessUrl("/"));
 
 
         // 로그아웃
