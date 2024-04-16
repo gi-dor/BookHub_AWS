@@ -15,7 +15,9 @@
 <body>
 <div class="container">
     <div class="row mb-3">
-        <div class="col-12">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h2  class="fw-bolder">Login</h2>
             <div th:if="${param.error}" class="alert alert-danger">
                 아이디 혹은 비밀번호가 올바르지 않습니다.
             </div>
@@ -37,6 +39,7 @@
 
             </form>
         </div>
+        <div class="col-3"></div>
     </div>
 </div>
 
