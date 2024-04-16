@@ -33,4 +33,10 @@ public class CartController {
         cartService.deleteBookByCartNo(cartNo);
         return "redirect:/product/cart/list";
     }
+
+    @GetMapping("/update/count")
+    public String updateCount(@RequestParam("cartNo") long cartNo, @RequestParam("type") String type){
+        cartService.updateBookCountByCartNo(cartNo, type);
+        return "redirect:/product/cart/list";
+    }
 }

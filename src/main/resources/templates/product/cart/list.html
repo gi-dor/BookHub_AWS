@@ -32,10 +32,16 @@
                                  </td>
                                  <td>
                                      <div class="btn-group me-2" role="group" aria-label="Second group">
-                                         <button type="button" class="btn btn-outline-secondary" id="count-minus">-</button>
+                                         <a type="button"
+                                            class="btn btn-outline-secondary"
+                                            id="count-minus"
+                                            th:href="@{|/product/cart/update/count?cartNo=${cartBook.cartNo}&type=minus|}">-</a>
                                          <input id="cart-count" name="selectedBookCount" th:value="${cartBook.count}"
                                                 style="width:30px; border: none;  background-color: transparent; padding: 0; margin: 10px"/>
-                                         <button type="button" class="btn btn-outline-secondary" id="count-plus">+</button>
+                                         <a type="button"
+                                            class="btn btn-outline-secondary"
+                                            id="count-plus"
+                                            th:href="@{|/product/cart/update/count?cartNo=${cartBook.cartNo}&type=plus|}">+</a>
                                      </div>
                                  </td>
                                  <td><a type="button"

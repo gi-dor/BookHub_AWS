@@ -26,4 +26,17 @@
         where cart_no = #{value}
     </delete>
 
+    <update id="updateBookCountByCartNo" parameterType="java.util.Map">
+        update CART
+        <choose>
+            <when test="type == 'minus'">
+                set count = count - 1
+            </when>
+            <when test="type == 'plus'">
+                set count = count + 1
+            </when>
+        </choose>
+        where cart_no = #{cartNo}
+    </update>
+
 </mapper>
