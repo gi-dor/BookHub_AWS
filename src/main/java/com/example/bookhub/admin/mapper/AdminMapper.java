@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AdminMapper {
 
-    Admin getAdmin(String id);
+    Admin getAdminId(String id);
+    Admin getAdminEmail(String email);
     void join(Admin admin);
 }

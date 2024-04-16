@@ -25,7 +25,6 @@ public interface FaqMapper {
     int getTotalFaqCount();
 
 
-
     /**
      * FAQ카테고리의 번호로 FAQ카테고리를 조회
      * @param no 카테고리의 번호

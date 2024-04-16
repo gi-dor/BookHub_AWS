@@ -3,24 +3,45 @@
 <mapper namespace="com.example.bookhub.board.mapper.CommunityMapper">
 
 
-    <resultMap type="com.example.bookhub.board.vo.Community" id="NoticeListResultMap">
+    <resultMap type="com.example.bookhub.board.vo.Community" id="CommunityListResultMap">
         <id column="community_board_no" property="no"/>
         <result column="community_board_title" property="title"/>
         <result column="community_board_content" property="content"/>
         <result column="community_board_delete_yn" property="deleteYn"/>
         <result column="community_board_create_date" property="createDate"/>
         <result column="community_board_update_date" property="updateDate"/>
-        <!--어소시에이션 유저no 추가할것 -->
 
-
+        <association column="community_board_user_no" property="user"
+                     select="com.example.bookhub.board.mapper.CommunityMapper.getUserByNo"/>
     </resultMap>
+
+    <resultMap type="com.example.bookhub.user.vo.User" id="CommunityGetUserNameResultMap">
+        <id column="user_no" property="no" />
+        <result column="user_id" property="id" />
+        <result column="user_password" property="password" />
+        <result column="user_name" property="name" />
+        <result column="user_email" property="email" />
+        <result column="user_created_date" property="createdDate" />
+        <result column="user_updated_date" property="updatedDate" />
+        <result column="user_tel" property="tel" />
+        <result column="user_zip_code" property="zipCode" />
+        <result column="user_address" property="address" />
+        <result column="user_address_detail" property="addressDetail" />
+        <result column="user_del_yn" property="delYn" />
+    </resultMap>
+
+
+
+
+
 
     <!--
         페이징처리한 커뮤니티 목록을 조회하는 쿼리
     -->
-    <select id="findAllCommunity" resultMap="NoticeListResultMap">
-        SELECT COMMUNITY_BOARD_NO, COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT
-        FROM COMMUNITY
+    <select id="findAllCommunity" resultMap="CommunityListResultMap">
+        SELECT COMMUNITY_BOARD_NO, COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT , COMMUNITY_BOARD_USER_NO
+        FROM COMMUNITY_BOARDS
+        WHERE COMMUNITY_BOARD_DELETE_YN = 0
         ORDER BY COMMUNITY_BOARD_CREATE_DATE DESC
         LIMIT #{offset}, #{size}
     </select>
@@ -30,16 +51,68 @@
     -->
     <select id="getTotalCommunitiesCount" resultType="int">
         SELECT COUNT(*)
-        FROM COMMUNITY
+        FROM COMMUNITY_BOARDS
+        WHERE COMMUNITY_BOARD_DELETE_YN = 0
     </select>
 
-
-
-
+    <!-- 커뮤니티 게시글 등록-->
     <insert id="insertCommunity" parameterType="com.example.bookhub.board.vo.Community">
-        INSERT INTO COMMUNITY (COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT)
+        INSERT INTO COMMUNITY_BOARDS (COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT)
         VALUES (#{title}, #{content})
     </insert>
 
+
+    <!-- 유저번호로 유저의 정보를 조회 -->
+    <select id="getUserByNo" parameterType="long" resultMap="CommunityGetUserNameResultMap">
+        SELECT USER_NO, USER_NAME
+        FROM USER
+        WHERE USER_NO = #{value}
+
+    </select>
+
+    <!-- 게시글 상세페이지 조회 -->
+    <select id="getCommunityByNo" parameterType="Long" resultMap="CommunityListResultMap">
+        SELECT *
+        FROM COMMUNITY_BOARDS
+        WHERE COMMUNITY_BOARD_NO = #{value}
+    </select>
+
+    <!-- 커뮤니티 게시글 수정 -->
+    <update id="updateCommunity">
+        UPDATE COMMUNITY_BOARDS
+        SET COMMUNITY_BOARD_TITLE = #{title},
+            COMMUNITY_BOARD_CONTENT = #{content},
+            COMMUNITY_BOARD_UPDATE_DATE = CURRENT_TIMESTAMP
+        WHERE COMMUNITY_BOARD_NO = #{no}
+    </update>
+
+    <!-- 커뮤니티 게시글 삭제 -->
+    <update id="deleteCommunity">
+        UPDATE COMMUNITY_BOARDS
+        SET COMMUNITY_BOARD_DELETE_YN = 1
+        WHERE COMMUNITY_BOARD_NO = #{no}
+    </update>
+
+    <!-- 커뮤니티 게시글 제목 혹은 내용으로 검색 -->
+    <select id="searchCommunityByTitleOrContent" parameterType="String" resultMap="CommunityListResultMap">
+        SELECT *
+        FROM COMMUNITY_BOARDS
+        WHERE COMMUNITY_BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
+        OR COMMUNITY_BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <!-- 커뮤니티 게시글 제목으로 검색 -->
+    <select id="searchCommunityByTitle" parameterType="String" resultMap="CommunityListResultMap">
+        SELECT *
+        FROM COMMUNITY_BOARDS
+        WHERE COMMUNITY_BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <!-- 커뮤니티 게시글 내용으로 검색 -->
+    <select id="searchCommunityByContent" parameterType="String" resultMap="CommunityListResultMap">
+        SELECT *
+        FROM COMMUNITY_BOARDS
+        WHERE COMMUNITY_BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%')
+    </select>
 
 </mapper>
