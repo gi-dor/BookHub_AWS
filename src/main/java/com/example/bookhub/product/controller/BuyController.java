@@ -1,6 +1,7 @@
 package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.service.BookService;
+import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.vo.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import java.util.List;
 public class BuyController {
 
     private final BookService bookService;
+    private final BuyService buyService;
 
     @PostMapping("/order")
     public String getOrder(
@@ -27,7 +29,8 @@ public class BuyController {
     {
         List<Book> orderBookList = new ArrayList<>();
         for (String selectedBook : selectedBookList) {
-            long selectedBookNo = Long.valueOf(selectedBook);
+            long selectedCartNo = Long.valueOf(selectedBook);
+            long selectedBookNo = buyService.getBookNoByCartNo(selectedCartNo);
             Book orderBook = bookService.getBookDetailByNo(selectedBookNo);
             orderBookList.add(orderBook);
         }
