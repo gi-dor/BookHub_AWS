@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.product.mapper.CartMapper">
+
+    <resultMap type="com.example.bookhub.product.dto.CartBookDto" id="CartListResultMap">
+        <id column="cart_no" property="cartNo"/>
+        <result column="book_no" property="bookNo"/>
+        <result column="book_name" property="name"/>
+        <result column="book_list_price" property="price"/>
+        <result column="cover" property="cover"/>
+        <result column="count" property="count"/>
+    </resultMap>
+
+    <select id="findCartList" parameterType="long" resultMap="CartListResultMap">
+        select
+            C.cart_no, B.book_no, B.book_name, B.book_list_price, C.count
+        from
+            CART C, BOOK B
+        where
+            C.user_no = #{value}
+            and C.book_no = B.book_no
+    </select>
+
+    <delete id="deleteBookByCartNo" parameterType="long">
+        delete from CART
+        where cart_no = #{value}
+    </delete>
+
+    <update id="updateBookCountByCartNo" parameterType="map">
+        update CART
+        set count = #{count}
+        where cart_no = #{cartNo}
+    </update>
+
+    <select id="getBookNoByCartNo" parameterType="long" resultType="long">
+        select book_no
+        from CART
+        where cart_no = #{value}
+    </select>
+
+</mapper>
