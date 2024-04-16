@@ -30,7 +30,6 @@ public class AladinService {
             book.setPriceSales(item.getPriceSales());
             book.setPriceStandard(item.getPriceStandard());
             book.setCover(item.getCover());
-            book.setCategoryId(item.getCategoryId());
             book.setCategoryName(item.getCategoryName());
             book.setPublisher(item.getPublisher());
             book.setBestRank(item.getBestRank());

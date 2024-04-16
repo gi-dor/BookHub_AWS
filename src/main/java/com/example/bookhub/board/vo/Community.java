@@ -1,5 +1,6 @@
 package com.example.bookhub.board.vo;
 
+import com.example.bookhub.user.vo.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 public class Community {
 
     private Long no;
-    private String user;
+    private User user;
     private String title;
     private String content;
     private boolean deleteYn;

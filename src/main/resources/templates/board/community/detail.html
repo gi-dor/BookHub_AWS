@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Community Post Detail</title>
+</head>
+<body>
+<h1>Community Post Detail</h1>
+<div>
+    <strong>Title:</strong> <span th:text="${community.title}"></span>
+</div>
+<div>
+    <strong>Content:</strong> <span th:text="${community.content}"></span>
+</div>
+<div>
+    <strong>Author:</strong> <span th:text="${community.user.getName()}"></span>
+</div>
+<div>
+    <strong>Created Date:</strong> <span th:text="${community.createDate}"></span>
+</div>
+<div>
+    <strong>Last Updated:</strong> <span th:text="${community.updateDate}"></span>
+</div>
+<div>
+    <a th:href="@{/board/community/modify/{no}(no=${community.no})}">Edit</a>
+</div>
+<div>
+    <form th:action="@{/board/community/delete}" method="post">
+        <input type="hidden" name="no" th:value="${community.no}">
+        <button type="submit">Delete</button>
+    </form>
+</div>
+
+</body>
+</html>

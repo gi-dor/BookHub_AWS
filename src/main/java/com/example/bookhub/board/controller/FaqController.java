@@ -33,4 +33,16 @@ public class FaqController {
 
         return "board/faq/list";
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

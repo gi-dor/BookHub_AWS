@@ -2,11 +2,11 @@
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" >
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/sidebars2.css}"/>
-    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" >
+    <link rel="stylesheet" th:href="@{/css/admin/sidebars2.css}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/js/admin/color-modes.js}"></script>
     <script th:src="@{/js/admin/sidebars2.js}"></script>
     <style>
@@ -103,12 +103,11 @@
         </div>
         <div class="col-10 mt-3">
             <th:block layout:fragment="content"></th:block>
-            <th:block layout:fragment="category"></th:block>
         </div>
     </div>
     <div th:replace="~{/footer :: footer}"></div>
 </div>
 
-<th:block layout:fragment="script"></th:block>
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js}"></script>
 </body>
 </html>
