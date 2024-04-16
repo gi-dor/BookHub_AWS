@@ -7,21 +7,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     @GetMapping("/")
-    public String mainPage()  {
+    public String mainPage() {
         return "main";
     }
 
 
     @GetMapping("/navbar")
-    public String showNavbar() {
+    public String Navbar() {
         return "navbar";
     }
+
     @GetMapping("/main2")
     public String mainPage2() {
         return "main2";
     }
+}
 
-    }
+
 
 
 
