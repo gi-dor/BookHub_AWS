@@ -61,9 +61,7 @@ public class CommunityController {
     @PostMapping("/modify/{no}")
     public String updateCommunity(@ModelAttribute("community") Community community) {
         communityService.updateCommunity(community);
-        /*
-        나중에 게시글 디테일로 리다이렉트 변경
-         */
+
         return "redirect:/board/community/detail/{no}";
     }
 
