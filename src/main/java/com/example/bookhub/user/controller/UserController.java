@@ -32,18 +32,38 @@ public class UserController {
 
     // 마이페이지
     @GetMapping("/mypage")
-    public String myPage(Model model) {
-        return "user/myPage";
+    public String myPage(Model model , Principal principal) {
+
+        if (principal == null || principal.getName() == null) {
+            return "redirect:/user/loginForm ";
+        } else {
+            model.addAttribute("id",principal.getName());
+            return "redirect:/user/myPage";
+        }
     }
 
     // 마이페이지 - 회원정보 조회
     @GetMapping("/mypage/userInfo")
-    public String userInfo(Model model , Principal principal) {
+    public String userInfo(Model model , @RequestParam(name = "id") String userId) {
+        User user = userService.selectUserById(userId);
+        model.addAttribute("user" , user);
+        return "user/userInfo";
+    }
+
+    // 마이페이지 - 회원정보 조회
+    @GetMapping("/mypage/userInfo")
+    public String userInfo2(Model model , Principal principal) {
         User user = userService.selectUserById(principal.getName());
         model.addAttribute("user" , user);
         return "user/userInfo";
     }
 
+
+
+
+
+
+    // 로그인 창으로 이동
     @GetMapping("/login")
     public String loginForm(Model model) {
 
