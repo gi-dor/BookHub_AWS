@@ -3,12 +3,10 @@ package com.example.bookhub.product.controller;
 import com.example.bookhub.product.service.CartService;
 import com.example.bookhub.product.vo.Book;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,8 +33,9 @@ public class CartController {
     }
 
     @GetMapping("/update/count")
-    public String updateCount(@RequestParam("cartNo") long cartNo, @RequestParam("type") String type){
-        cartService.updateBookCountByCartNo(cartNo, type);
-        return "redirect:/product/cart/list";
+    @ResponseBody
+    public ResponseEntity<Void> updateCount(@RequestParam("cartNo") long cartNo, @RequestParam("count") int count){
+        cartService.updateBookCountByCartNo(cartNo, count);
+        return ResponseEntity.ok().build();
     }
 }

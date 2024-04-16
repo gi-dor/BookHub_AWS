@@ -23,10 +23,11 @@ public class CartService {
         cartMapper.deleteBookByCartNo(cartNo);
     }
 
-    public void updateBookCountByCartNo(long cartNo, String type) {
+    public void updateBookCountByCartNo(long cartNo, int count) {
         Map<String, Object> map = new HashMap<>();
         map.put("cartNo", cartNo);
-        map.put("type", type);
+        map.put("count", count);
         cartMapper.updateBookCountByCartNo(map);
     }
+
 }

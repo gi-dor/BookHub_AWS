@@ -24,7 +24,7 @@
                         </thead>
                         <tbody id="table-cart-tbody">
                              <tr th:each="cartBook: ${cartBooks}">
-                                 <td><input type="checkbox" name="selectedBook" th:value="${cartBook.bookNo}"></td>
+                                 <td><input id="checkbox" type="checkbox" name="selectedBook" th:value="${cartBook.cartNo}"></td>
                                  <td></td>
                                  <td>
                                      <div th:text="${cartBook.name}">책 제목</div>
@@ -34,14 +34,12 @@
                                      <div class="btn-group me-2" role="group" aria-label="Second group">
                                          <a type="button"
                                             class="btn btn-outline-secondary"
-                                            id="count-minus"
-                                            th:href="@{|/product/cart/update/count?cartNo=${cartBook.cartNo}&type=minus|}">-</a>
+                                            id="count-minus">-</a>
                                          <input id="cart-count" name="selectedBookCount" th:value="${cartBook.count}"
                                                 style="width:30px; border: none;  background-color: transparent; padding: 0; margin: 10px"/>
                                          <a type="button"
                                             class="btn btn-outline-secondary"
-                                            id="count-plus"
-                                            th:href="@{|/product/cart/update/count?cartNo=${cartBook.cartNo}&type=plus|}">+</a>
+                                            id="count-plus">+</a>
                                      </div>
                                  </td>
                                  <td><a type="button"
@@ -115,16 +113,23 @@
 
     // 수량 변경
     $("#table-cart-tbody").on('click', '#count-minus', function(event){
-       let prevVal =  parseInt($(this).siblings('input').val());
-       if(prevVal - 1 >= 0)
-            $(this).siblings('input').val(prevVal - 1);
-       updateTotalPrice();
+        let cartNo = $(this).closest("tr").find("#checkbox").val();
+        let prevVal =  parseInt($(this).siblings('input').val());
+        let nowVal = prevVal - 1;
+        if(nowVal >= 0){
+           $(this).siblings('input').val(nowVal);
+           updateTotalPrice();
+           updateBookCount(cartNo, nowVal);
+        }
     })
 
     $("#table-cart-tbody").on('click', '#count-plus', function(event){
+        let cartNo = $(this).closest("tr").find("#checkbox").val();
         let prevVal =   parseInt($(this).siblings('input').val());
-        $(this).siblings('input').val(prevVal + 1);
+        let nowVal = prevVal + 1;
+        $(this).siblings('input').val(nowVal);
         updateTotalPrice();
+        updateBookCount(cartNo, nowVal);
     })
 
     function updateTotalPrice(){
@@ -135,6 +140,15 @@
             totalPrice += price * count;
         });
         $("#total-price").text(totalPrice);
+    }
+
+    async function updateBookCount(cartNo, count){
+        console.log("/product/cart/update/count?cartNo=" + cartNo + "&count=" + count);
+        let response = await fetch("/product/cart/update/count?cartNo=" + cartNo + "&count=" + count);
+
+        if(!response.ok){
+            console.log("장바구니 수량 변경 실패");
+        }
     }
     updateTotalPrice();
 </script>

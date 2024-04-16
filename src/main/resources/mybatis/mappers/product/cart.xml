@@ -26,17 +26,16 @@
         where cart_no = #{value}
     </delete>
 
-    <update id="updateBookCountByCartNo" parameterType="java.util.Map">
+    <update id="updateBookCountByCartNo" parameterType="map">
         update CART
-        <choose>
-            <when test="type == 'minus'">
-                set count = count - 1
-            </when>
-            <when test="type == 'plus'">
-                set count = count + 1
-            </when>
-        </choose>
+        set count = #{count}
         where cart_no = #{cartNo}
     </update>
+
+    <select id="getBookNoByCartNo" parameterType="long" resultType="long">
+        select book_no
+        from CART
+        where cart_no = #{value}
+    </select>
 
 </mapper>
