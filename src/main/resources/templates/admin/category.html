@@ -5,38 +5,43 @@
         <h1>카테고리 관리</h1>
         <hr>
 
-        <!-- 대분류 영역 -->
+        <!-- 버튼 영역 -->
         <div class="col-12 p-3 d-flex justify-content-end">
             <button type="button" class="btn btn-primary me-1" id="btn-open-modal" onclick="openModal()">추가
             </button>
             <button type="button" class="btn btn-success me-1">수정</button>
             <button type="button" class="btn btn-danger">삭제</button>
         </div>
-        <div class="col-12 bg-light p-3 mb-3">
+
+        <!-- 대분류 영역 -->
+        <div class="col-12 bg-light p-3 mb-3" id="toplevel-category-box">
             <div class="d-flex align-items-center justify-content-between">
                 <h4>대분류</h4>
             </div>
             <div class="card mt-3">
                 <div class="card-body">
-                    <span th:each="topLevelCategory : ${topLevelCategories}">
-                        <span th:text="${topLevelCategory.name}" class="border p-1"></span>
-                    </span>
+                    <span th:each="topLevelCategory : ${topLevelCategories}"
+                          th:text="${topLevelCategory.name}"
+                          th:data-no="${topLevelCategory.no}"
+                          class="border p-1 me-1"
+                          id="topLevelCategory-${topLevelCategory.no}"
+                          onclick="showSecondLevelCategories(this)"></span>
                 </div>
             </div>
         </div>
 
         <!-- 중분류 영역 -->
-        <div class="col-12 bg-info p-3 mb-3">
+        <div class="col-12 bg-light p-3 mb-3">
             <h4>중분류</h4>
             <div class="card mt-3">
-                <div class="card-body">
+                <div id="secondLevelCategories" class="card-body">
                     <!-- 중분류 내용 추가 -->
                 </div>
             </div>
         </div>
 
         <!-- 소분류 영역 -->
-        <div class="col-12 bg-success p-3">
+        <div class="col-12 bg-light p-3">
             <h4>소분류</h4>
             <div class="card mt-3">
                 <div class="card-body">
@@ -59,36 +64,20 @@
                     <!-- 추가 카테고리 폼 -->
                     <form id="addCategoryForm">
                         <!-- 입력 필드 추가 -->
-                        <!--
-                        <div class="mb-3">
-                            <label for="categoryName" class="form-label">카테고리 이름</label>
-                            <input type="text" class="form-control" id="categoryName" name="categoryName">
-                        </div>
-                        -->
                         <div class="form-group mb-3">
-                            <label for="topLevelCategory">대분류:</label>
-                            <input type="text" id="topLevelCategory" name="category" list="topLevelCategories"
-                                   onchange="showSecondLevelCategories(this.value)">
-                            <datalist id="topLevelCategories">
+                            <select name="category" onchange="showSecondLevelCategories(this.value)">
+                                <option value="" disabled selected> -- 선택하세요 --</option>
                                 <option th:each="topLevelCategory : ${topLevelCategories}"
-                                        th:value="${topLevelCategory.name}"></option>
-                            </datalist>
+                                        th:value="${topLevelCategory.no}" th:text="${topLevelCategory.name}"></option>
+                            </select>
                         </div>
                         <div class="form-group mb-3">
                             <label for="secondLevelCategory">중분류:</label>
-                            <input type="text" id="secondLevelCategory" name="category" list="secondLevelCategories">
-                            <datalist id="secondLevelCategories">
-                                <option th:each="secondLevelCategory : ${secondLevelCategories}"
-                                        th:value="${secondLevelCategory.name}"></option>
-                            </datalist>
+                            <input type="text" id="secondLevelCategory" name="category">
                         </div>
                         <div class="form-group mb-3">
                             <label for="thirdLevelCategory">소분류:</label>
-                            <input type="text" id="thirdLevelCategory" name="category" list="thirdLevelCategories">
-                            <datalist id="thirdLevelCategories">
-                                <option th:each="thirdLevelCategory : ${thirdLevelCategories}"
-                                        th:value="${thirdLevelCategory.name}"></option>
-                            </datalist>
+                            <input type="text" id="thirdLevelCategory" name="category">
                         </div>
                     </form>
                 </div>
@@ -101,7 +90,6 @@
     </div>
 
 </div>
-
 
 <script layout:fragment="script" type="text/javascript">
 
@@ -116,9 +104,39 @@
         console.log("폼 제출 로직 추가");
     }
 
-    function showSecondLevelCategories(value) {
-        console.log("변경된 대분류:", value);
+    function showSecondLevelCategories(element) {
+        const categoryNo = element.getAttribute("data-no");
+        console.log("선택된 대분류:", categoryNo);
+
+        // AJAX 요청 보내기
+        $.ajax({
+            url: "/admin/secondCategory",
+            method: "GET",
+            contentType: "application/x-www-form-urlencoded",
+            data: {category: categoryNo},
+            success: function (secondLevelCategories) {
+                const $secondLevelCategories = $("#secondLevelCategories");
+                $secondLevelCategories.empty();
+
+                secondLevelCategories.forEach(secondLevelCategory => {
+                    const $span = $("<span>")
+                        .addClass("border p-1 me-1")
+                        .text(secondLevelCategory.name);
+
+                    $secondLevelCategories.append($span);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("중분류 데이터 요청 실패:", error);
+            }
+        });
     }
+
+    $(function () {
+        $("span[id^=topLevelCategory]").click(function () {
+            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
+        });
+    })
 </script>
 
 </html>

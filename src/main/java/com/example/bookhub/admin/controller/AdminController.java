@@ -2,11 +2,8 @@ package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.AdminRegisterForm;
 import com.example.bookhub.admin.service.AdminService;
-import com.example.bookhub.admin.service.CategoryService;
 import com.example.bookhub.admin.vo.Admin;
-import com.example.bookhub.admin.vo.Category;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
 
     private final AdminService adminService;
-    private final CategoryService categoryService;
 
     @GetMapping("/home")
     public String home() {
@@ -72,19 +68,6 @@ public class AdminController {
         } catch (Exception ex) {
             return "admin/login";
         }
-    }
-
-    @GetMapping("/category")
-    public String category(Model model) {
-        List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
-        List<Category> secondLevelCategories = categoryService.getAllSecondLevelCategories();
-        List<Category> thirdLevelCategories = categoryService.getAllThirdLevelCategories();
-
-        model.addAttribute("topLevelCategories", topLevelCategories);
-        model.addAttribute("secondLevelCategories", secondLevelCategories);
-        model.addAttribute("thirdLevelCategories", thirdLevelCategories);
-
-        return "admin/category";
     }
 
 }

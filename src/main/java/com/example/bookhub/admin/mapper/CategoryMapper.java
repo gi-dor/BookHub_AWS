@@ -11,4 +11,6 @@ public interface CategoryMapper {
     List<Category> getAllSecondLevelCategories();
 
     List<Category> getAllThirdLevelCategories();
+
+    List<Category> getSecondLevelCategoriesByTopLevelCategoryName(int categoryNo);
 }

@@ -22,4 +22,8 @@ public class CategoryService {
     public List<Category> getAllThirdLevelCategories() {
         return categoryMapper.getAllThirdLevelCategories();
     }
+
+    public List<Category> getSecondLevelCategoriesByTopLevelCategoryName(int categoryNo) {
+        return categoryMapper.getSecondLevelCategoriesByTopLevelCategoryName(categoryNo);
+    }
 }
