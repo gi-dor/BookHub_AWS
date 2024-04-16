@@ -24,63 +24,52 @@ public class AdminController {
     private final AdminService adminService;
     private final CategoryService categoryService;
 
-    @GetMapping("/login")
-    public String loginForm(){
-        return "admin/login";
-    }
-
-//    @PostMapping("/login")
-//    public String login(String id, String password, Model model){
-//        Admin admin = adminService.getAdmin(id);
-//        admin.getId();
-//    }
-
     @GetMapping("/home")
-    public String home(){
+    public String home() {
         return "admin/home";
     }
 
     @GetMapping("/login")
-    public String loginForm(Model model){
+    public String loginForm(Model model) {
         return "admin/login";
     }
 
     @PostMapping("/login")
-    public String login(String id, String password, HttpSession session){
+    public String login(String id, String password, HttpSession session) {
 
         Admin admin = adminService.login(id, password);
 
-        if(admin != null){
+        if (admin != null) {
             session.setAttribute("admin", admin);
-        }  else {
+        } else {
             return "redirect:/admin/login?error";
         }
         return "redirect:/admin/home";
     }
 
     @GetMapping("/completed")
-    public String complete(){
+    public String complete() {
         return "admin/home";
     }
 
     // 회원가입 메소드
     @GetMapping("/signup")
-    public String signup(Model model){
+    public String signup(Model model) {
         model.addAttribute("adminRegisterForm", new AdminRegisterForm());
         return "admin/login";
     }
 
     @PostMapping("/signup")
-    public String signup(AdminRegisterForm form, BindingResult error, RedirectAttributes redirect){
-        if(error.hasErrors()){
+    public String signup(AdminRegisterForm form, BindingResult error, RedirectAttributes redirect) {
+        if (error.hasErrors()) {
             return "admin/login";
         }
-        try{
+        try {
             // 유효성 체크를 통과한 경우
             Admin admin = adminService.join(form);
             redirect.addFlashAttribute("admin", admin);
             return "redirect:/home";
-        } catch (Exception ex){
+        } catch (Exception ex) {
             return "admin/login";
         }
     }
