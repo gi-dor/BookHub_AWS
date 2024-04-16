@@ -5,7 +5,7 @@
     <resultMap type="com.example.bookhub.admin.vo.Admin" id="AdminResultMap">
         <id column="admin_no" property="no"/>
         <result column="admin_id" property="id"/>
-        <result column="admin_password" property="password"/>
+        <result column="admin_pw" property="password"/>
         <result column="admin_email" property="email"/>
         <result column="admin_tel" property="tel"/>
     </resultMap>

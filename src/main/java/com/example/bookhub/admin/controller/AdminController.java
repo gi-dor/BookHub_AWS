@@ -39,6 +39,7 @@ public class AdminController {
 
     @PostMapping("/login")
     public String login(String id, String password, HttpSession session){
+
         Admin admin = adminService.login(id, password);
 
         if(admin != null){
