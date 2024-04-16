@@ -16,7 +16,7 @@ public class Book {
     private int priceSales;
     private int priceStandard;
     private String cover;
-    private String categoryId;
+    private String categoryIdㅁ;
     private String categoryName;
     private String publisher;
     private int bestRank;
