@@ -20,7 +20,24 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3 d-flex justify-content-between">
+                        <h5 class="my-0 fw-normal">쿠폰/포인트 적용</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-8 d-flex justify-content-around">
+                            <span>북허브 쿠폰</span>
+                            <span><input id="coupon-total-price"/>원</span>
+                            <button type="button" class="btn btn-primary" onclick="showCouponUseModal()">사용하기</button>
+                        </div>
+                        <div class="col-4 d-flex justify-content-between">
+
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="col-3">
                 <div class="card mb-4 rounded-3 shadow-sm">
                     <div class="card-header py-3">
@@ -55,6 +72,49 @@
         </div>
 </div>
 
+<!-- 신규 회원등록 모달창 -->
+<div class="modal" tabindex="-1" id="modal-coupon-use">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">북허브 쿠폰 사용</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <table class="table">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="55%">
+                            <col width="20%">
+                            <col width="20%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>선택</th>
+                                <th>쿠폰명</th>
+                                <th>쿠폰 금액(남은 금액)</th>
+                                <th>쿠폰 결제금액</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input id="checkbox" type="checkbox" name="selectedBook" ></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" onclick="createMember()">등록</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script layout:fragment="script" type="text/javascript">
     function updatePrices(){
         let totalPrice = 0;
@@ -77,6 +137,14 @@
         let finalPrice = totalPrice + deliveryPrice - bookDiscountTotalPrice;
 
         $("#final-price").text(finalPrice);
+    }
+
+    async function showCouponUseModal(){
+        let response = await fetch("/product/buy/coupon");
+        console.log(response);
+        if(!response.ok){
+            console.log("");
+        }
     }
 
     updatePrices();
