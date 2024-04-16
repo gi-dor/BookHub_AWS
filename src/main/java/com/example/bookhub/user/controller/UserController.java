@@ -50,6 +50,7 @@ public class UserController {
         return "user/userInfo";
     }
 
+    /*
     // 마이페이지 - 회원정보 조회
     @GetMapping("/mypage/userInfo")
     public String userInfo2(Model model , Principal principal) {
@@ -57,6 +58,7 @@ public class UserController {
         model.addAttribute("user" , user);
         return "user/userInfo";
     }
+    */
 
 
 
