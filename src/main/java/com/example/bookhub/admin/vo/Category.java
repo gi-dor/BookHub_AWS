@@ -11,5 +11,6 @@ public class Category {
 
     private long no;
     private String name;
+    private long parentNo;
 
 }

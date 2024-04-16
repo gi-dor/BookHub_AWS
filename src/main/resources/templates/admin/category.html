@@ -18,8 +18,8 @@
             </div>
             <div class="card mt-3">
                 <div class="card-body">
-                    <span th:each="majorCategory : ${majorCategories}">
-                        <span th:text="${majorCategory.name}" class="border p-1"></span>
+                    <span th:each="topLevelCategory : ${topLevelCategories}">
+                        <span th:text="${topLevelCategory.name}" class="border p-1"></span>
                     </span>
                 </div>
             </div>
@@ -59,19 +59,35 @@
                     <!-- 추가 카테고리 폼 -->
                     <form id="addCategoryForm">
                         <!-- 입력 필드 추가 -->
+                        <!--
                         <div class="mb-3">
                             <label for="categoryName" class="form-label">카테고리 이름</label>
                             <input type="text" class="form-control" id="categoryName" name="categoryName">
                         </div>
-                        <div class="form-group">
-                            <label for="myInput">선택 또는 입력:</label>
-                            <input type="text" id="myInput" name="myInput" list="myOptions">
-
-                            <datalist id="myOptions">
-                                <option value="선택1"></option>
-                                <option value="선택2"></option>
-                                <option value="선택3"></option>
-                                <option value="선택4"></option>
+                        -->
+                        <div class="form-group mb-3">
+                            <label for="topLevelCategory">대분류:</label>
+                            <input type="text" id="topLevelCategory" name="category" list="topLevelCategories"
+                                   onchange="showSecondLevelCategories(this.value)">
+                            <datalist id="topLevelCategories">
+                                <option th:each="topLevelCategory : ${topLevelCategories}"
+                                        th:value="${topLevelCategory.name}"></option>
+                            </datalist>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="secondLevelCategory">중분류:</label>
+                            <input type="text" id="secondLevelCategory" name="category" list="secondLevelCategories">
+                            <datalist id="secondLevelCategories">
+                                <option th:each="secondLevelCategory : ${secondLevelCategories}"
+                                        th:value="${secondLevelCategory.name}"></option>
+                            </datalist>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="thirdLevelCategory">소분류:</label>
+                            <input type="text" id="thirdLevelCategory" name="category" list="thirdLevelCategories">
+                            <datalist id="thirdLevelCategories">
+                                <option th:each="thirdLevelCategory : ${thirdLevelCategories}"
+                                        th:value="${thirdLevelCategory.name}"></option>
                             </datalist>
                         </div>
                     </form>
@@ -98,6 +114,10 @@
     function submitCategoryForm() {
         // 폼 제출 로직을 추가하세요.
         console.log("폼 제출 로직 추가");
+    }
+
+    function showSecondLevelCategories(value) {
+        console.log("변경된 대분류:", value);
     }
 </script>
 

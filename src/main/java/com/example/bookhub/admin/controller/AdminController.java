@@ -67,8 +67,13 @@ public class AdminController {
 
     @GetMapping("/category")
     public String category(Model model) {
-        List<Category> majorCategories = categoryService.getAllMajorCategories();
-        model.addAttribute("majorCategories", majorCategories);
+        List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
+        List<Category> secondLevelCategories = categoryService.getAllSecondLevelCategories();
+        List<Category> thirdLevelCategories = categoryService.getAllThirdLevelCategories();
+        
+        model.addAttribute("topLevelCategories", topLevelCategories);
+        model.addAttribute("secondLevelCategories", secondLevelCategories);
+        model.addAttribute("thirdLevelCategories", thirdLevelCategories);
 
         return "admin/category";
     }

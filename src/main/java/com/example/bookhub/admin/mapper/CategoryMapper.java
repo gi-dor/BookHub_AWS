@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CategoryMapper {
-    List<Category> getAllMajorCategories();
+    List<Category> getAllTopLevelCategories();
 
-    List<Category> getAllMiddleCategories();
+    List<Category> getAllSecondLevelCategories();
+
+    List<Category> getAllThirdLevelCategories();
 }
