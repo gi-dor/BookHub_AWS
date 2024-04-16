@@ -112,9 +112,16 @@
 
 
                         <div class="form-group mb-3">
-                            <label class="form-label">전화번호</label>
-                            <input type="text" class="form-control" th:field="*{tel}" />
-                            <div th:errors="*{tel}" class="text-danger"></div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <label class="form-label">전화번호</label>
+                                        <input type="text" class="form-control" th:field="*{tel}" />
+                                        <div th:errors="*{tel}" class="text-danger"></div>
+                                </div>
+                                <div class="col-7">
+                                    <p class="form-text" style="font-family: Arial, sans-serif; color: grey;"> ex. 010-XXXX-XXXX </p>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="text-end">
