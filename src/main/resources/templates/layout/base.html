@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,7 +17,8 @@
     <!-- jQuery & Ajax -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+    <!-- css -->
+    <th:block layout:fragment="style"></th:block>
 </head>
 <body>
 
@@ -29,6 +30,7 @@
 <!-- 푸터 -->
 <footer th:replace="~{layout/footer :: footer}"></footer>
 
+<!--java script -->
 <th:block layout:fragment="script"></th:block>
 </body>
 </html>
