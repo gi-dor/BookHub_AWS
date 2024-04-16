@@ -11,4 +11,18 @@ public class MainController {
         return "main";
     }
 
-}
+
+    @GetMapping("/navbar")
+    public String showNavbar() {
+        return "navbar";
+    }
+    @GetMapping("/main2")
+    public String mainPage2() {
+        return "main2";
+    }
+
+    }
+
+
+
+
