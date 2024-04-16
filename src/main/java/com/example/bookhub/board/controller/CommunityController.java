@@ -40,7 +40,7 @@ public class CommunityController {
 
     @PostMapping("/register")
     public String registerCommunity(String title, String content) {
-        communityService.insertNotice(title, content);
+        communityService.insertCommunity(title, content);
 
         return "redirect:/board/community/list";
     }

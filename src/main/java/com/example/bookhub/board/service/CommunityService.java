@@ -37,7 +37,7 @@ public class CommunityService {
      * @param title 공지사항 제목
      * @param content 공지사항 내용
      */
-    public void insertNotice(String title, String content) {
+    public void insertCommunity(String title, String content) {
         Community community = new Community();
         community.setTitle(title);
         community.setContent(content);
