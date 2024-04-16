@@ -1,8 +1,9 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
-<head>
+<th:block layout:fragment="style">
     <link rel="stylesheet" th:href="@{/css/user/registerForm.css}" />
-</head>
+</th:block>
+
 <div layout:fragment="content" class="container my-3">
     <div class="row mb-3">
         <div class="col-2"></div>
@@ -125,6 +126,9 @@
             </div>
         <div class="col-2"></div>
     </div>
+</div>
+
+<th:block layout:fragment="script">
     <!--  카카오 MAP API 시작 -->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <!--  카카오 MAP API 끝-->
@@ -132,5 +136,5 @@
 
     <!-- 비밀번호 , 확인비밀번호 일치 여부 -->
     <script src="/js/user/registerForm.js"></script>
-</div>
+</th:block>
 </html>
