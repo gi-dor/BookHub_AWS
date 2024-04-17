@@ -50,10 +50,9 @@ public class BuyController {
     @GetMapping("/coupon")
     @ResponseBody
     public ResponseEntity<List<CouponProduced>> getCoupon(Principal principal){
-        System.out.println(principal.getName());
         List<CouponProduced> couponList = buyService.getCouponsByUserNo(principal.getName());
         System.out.println(couponList);
-        return ResponseEntity.ok().body(couponList);
+        return ResponseEntity.ok(couponList);
     }
 
 }
