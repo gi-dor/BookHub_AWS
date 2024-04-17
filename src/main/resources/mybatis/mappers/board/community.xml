@@ -32,9 +32,6 @@
 
 
 
-
-
-
     <!--
         페이징처리한 커뮤니티 목록을 조회하는 쿼리
     -->
@@ -55,10 +52,20 @@
         WHERE COMMUNITY_BOARD_DELETE_YN = 0
     </select>
 
-    <!-- 커뮤니티 게시글 등록-->
+
+    <!-- 커뮤니티 게시글 등록 -->
     <insert id="insertCommunity" parameterType="com.example.bookhub.board.vo.Community">
-        INSERT INTO COMMUNITY_BOARDS (COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT)
-        VALUES (#{title}, #{content})
+        <selectKey keyProperty="no" order="AFTER" resultType="Long">
+            SELECT LAST_INSERT_ID() AS no
+        </selectKey>
+        INSERT INTO COMMUNITY_BOARDS (COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT, COMMUNITY_BOARD_USER_NO)
+        VALUES (#{title}, #{content}, #{user.no})
+    </insert>
+
+    <!-- 커뮤니티 게시글 이미지 등록 -->
+    <insert id="insertCommunityImage" parameterType="com.example.bookhub.board.vo.CommunityImages">
+        INSERT INTO COMMUNITY_BOARD_IMAGES (COMMUNITY_BOARD_NO, COMMUNITY_BOARD_IMAGES_PATH)
+        VALUES (#{community.no}, #{imagePath})
     </insert>
 
 
@@ -114,5 +121,6 @@
         FROM COMMUNITY_BOARDS
         WHERE COMMUNITY_BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%')
     </select>
+
 
 </mapper>
