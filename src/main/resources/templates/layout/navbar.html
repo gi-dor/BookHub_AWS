@@ -1,43 +1,33 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navbar Example</title>
-    <!-- 부트스트랩 CSS 추가 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-</head>
-<body>
 
-<!-- headerTop시작 -->
 <div th:fragment="navbar">
-    <nav class="navbar navbar-expand-lg ">
+<!-- headerTop시작 -->
+    <nav class="navbar navbar-expand-lg" style="background-color: #1D3559;" >
         <div class="container">
             <!-- 왼쪽에는 메뉴 -->
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <!--<a class="navbar-logo" href="" ><img class="mb-4" src="/image/login/logo.png" alt="로고" width="auto" height="100"></a> <!-- 로고 이미지 -->
-                    <a class="nav-link" href="#">HOME</a>
+                    <a class="nav-link text-white" href="#">HOME</a>
 
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">국내도서</a>
+                    <a class="nav-link text-white" href="#">국내도서</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">외국도서</a>
+                    <a class="nav-link text-white" href="#">외국도서</a>
                 </li>
             </ul>
             <!-- 오른쪽에는 로그인, 회원가입, 마이페이지, 고객센터, 장바구니 -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a id="loginButton" class="nav-link" href="#">로그인</a>
+                    <a id="loginButton" class="nav-link text-white" href="#">로그인</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">회원가입</a>
+                    <a class="nav-link text-white" href="#">회원가입</a>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">
-                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn dropdown-toggle text-white" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             마이페이지
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -48,10 +38,10 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">고객센터</a>
+                    <a class="nav-link text-white" href="#">고객센터</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">장바구니</a>
+                    <a class="nav-link text-white" href="#">장바구니</a>
                 </li>
             </ul>
         </div>
@@ -62,24 +52,26 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
-                <div class="nav-item">
-                    <form class="row row-cols-lg-auto g-3 align-items-center p-3">
-                        <div class="col-12">
-                            <a class="navbar-logo" href=""><img class="mb-4" src="/image/login/logo.png" alt="로고" width="auto" height="130"></a> <!-- 로고 이미지 -->
+                <div class="nav-item col-12" >
+                    <form class="row row-cols-lg-auto g-3 align-items-center p-3" >
+                        <div class="col-3">
+                            <a class="navbar-logo" href=""><img class="mb-4" src="/image/login/logo.png" alt="로고" width="auto" height="120"></a> <!-- 로고 이미지 -->
                         </div>
-                        <div class="col-12">
-                            <select class="form-select" >
-                                <option selected>통합검색</option>
-                                <option value="1">국내도서</option>
-                                <option value="2">해외도서</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요" >
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">검색</button>
-                        </div>
+                        <div class="search-wrapper col-9" style="display: flex; align-items: center; border: 2px solid #1D3559;"  >
+                            <div class="search mt-2 mb-2 ms-2 ">
+                                <select class="form-select">
+                                    <option selected>통합검색</option>
+                                    <option value="1">국내도서</option>
+                                    <option value="2">해외도서</option>
+                                </select>
+                            </div>
+                            <div class="search mt-2 mb-2 ms-2 ">
+                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요">
+                            </div>
+                            <div class="search mt-2 mb-2 ms-2 ">
+                                <button type="submit" class="btn btn-primary">검색</button>
+                            </div>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -155,55 +147,13 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-        <div >dddddddddddddddddddddddddd</div>
-        <div >dddddddddddddddddddddddddd</div>
-        <div >dddddddddddddddddddddddddd</div>
-        <div >dddddddddddddddddddddddddd</div>
-        <div >dddddddddddddddddddddddddd</div>
     </div>
+    <div class="mt-3 mb-5" style="border-bottom: 1.5px solid #1D3559; "></div>
 </div>
 <!--headerMiddle,Bottom 종료 -->
 
-<!-- 부트스트랩 JS 및 jQuery 추가 -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    // 검색어 입력창 클릭시 변경
-    const searchInput = document.getElementById('searchInput');
-    $(searchInput).on('focus', function () {
-        this.placeholder = '';
-    });
-    $(searchInput).on('blur', function () {
-        this.placeholder = '검색어를 입력하세요';
-    });
-
-    // category버튼을 클릭할 때마다 도서 카테고리 메뉴가 보이거나 숨김
-    $("#btn-toggle-category").click(function () {
-        $("#menu-book-category").toggleClass("d-none")
-    });
-
-    // 로그인, 로그아웃 상태 변경
-    $(document).ready(function () {
-        // 로그인 상태 확인 (예시로 true 또는 false로 가정)
-        let isLogIn = false;
-
-        function updateNavbar() {
-            const login = $('#loginButton');
-            if (isLogIn) {
-                login.text('로그아웃');
-                login.attr('href', '#logout'); // 로그아웃 링크로 변경
-            } else {
-                login.text('로그인');
-                login.attr('href', '#login'); // 로그인 링크로 변경
-            }
-        }
-    });
-</script>
-
-
-</body>
+<th:block layout:fragment="script">
+    <script src="/js/main/navbar.js"></script>
+</th:block>
 </html>

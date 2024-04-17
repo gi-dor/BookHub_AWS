@@ -14,17 +14,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Noto+Serif:ital,wdth@1,75&display=swap" rel="stylesheet">
+    <!--Fontawsome에서 제공하는 아이콘-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- jQuery & Ajax -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- css -->
     <th:block layout:fragment="style"></th:block>
+
 </head>
 <body>
 
 <!-- 내비게이션 바 -->
 <!--<nav th:replace="~{layout/navbar :: navbar-fragment}"></nav>-->
-<div th:replace="navbar :: navbar"></div>
+<div th:replace="~{layout/navbar :: navbar}"></div>
 
 <th:block layout:fragment="content"></th:block>
 
