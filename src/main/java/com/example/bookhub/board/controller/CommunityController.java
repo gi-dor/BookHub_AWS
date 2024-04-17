@@ -3,11 +3,21 @@ package com.example.bookhub.board.controller;
 import com.example.bookhub.board.service.CommunityService;
 import com.example.bookhub.board.vo.Community;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,9 +48,12 @@ public class CommunityController {
         return "board/community/register";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/register")
-    public String registerCommunity(String title, String content) {
-        communityService.insertNotice(title, content);
+    public String registerCommunity(String title, String content, Principal principal, @RequestParam("images") List<MultipartFile> images) {
+        String userId = principal.getName();
+
+        communityService.insertCommunity(title, content, userId, images);
 
         return "redirect:/board/community/list";
     }
@@ -80,5 +93,6 @@ public class CommunityController {
         model.addAttribute("searchResults", searchResults);
         return "/board/community/list";
     }
+
 
 }

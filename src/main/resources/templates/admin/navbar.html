@@ -25,18 +25,18 @@
                 </form>
                 -->
 
-                <span class="navbar-text">
-                    <strong>예시홍길동</strong>님 환영합니다
+                <span class="navbar-text" th:if="${session.admin != null}">
+                    <strong th:text="${session.admin.id}">예시홍길동</strong>님 환영합니다
                 </span>
 
                 <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    <li class="nav-item" th:if="${session.admin == null}">
                         <a class="nav-link" th:href="@{/admin/login}">로그인</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" th:if="${session.admin != null}">
                         <a class="nav-link" th:href="@{/admin/logout}">로그아웃</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item"  th:if="${session.admin == null}">
                     <a class="nav-link" th:href="@{/admin/signup}">회원가입</a>
                     </li>
                 </ul>

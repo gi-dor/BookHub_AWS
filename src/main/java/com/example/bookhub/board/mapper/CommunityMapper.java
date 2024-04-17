@@ -1,6 +1,7 @@
 package com.example.bookhub.board.mapper;
 
 import com.example.bookhub.board.vo.Community;
+import com.example.bookhub.board.vo.CommunityImages;
 import com.example.bookhub.user.vo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -36,6 +37,10 @@ public interface CommunityMapper {
      * @param community
      */
     void insertCommunity(Community community);
+
+    void insertCommunityImage(CommunityImages communityImages);
+
+
 
     /**
      * 게시글 번호로 게시글 조회
@@ -78,6 +83,6 @@ public interface CommunityMapper {
      * @return
      */
     List<Community> searchCommunityByContent(String keyword);
-    
+
 
 }

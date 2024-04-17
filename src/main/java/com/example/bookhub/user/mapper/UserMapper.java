@@ -19,4 +19,6 @@ public interface UserMapper {
 
      int emailCheck(String email);
 
+     void updateUser(User user);
+
 }
