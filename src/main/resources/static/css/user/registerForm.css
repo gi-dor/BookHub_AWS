@@ -1,6 +1,19 @@
-#registerFormTitle {
-    font-family: "Dongle", sans-serif;
-    font-weight: 400;
+/*#registerFormTitle {*/
+/*    font-family: "Dongle", sans-serif;*/
+/*    font-weight: 400;*/
+/*    font-size: 40px;*/
+/*    text-align: center;*/
+/*}*/
+
+#registerFormTitle{
+    text-decoration: none;
+    color: black;
+    font-family: "Noto Serif", serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: italic;
+    font-variation-settings:
+            "wdth" 100;
     font-size: 40px;
     text-align: center;
 }
