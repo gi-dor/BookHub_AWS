@@ -9,4 +9,5 @@ import java.util.List;
 public interface BuyMapper {
     long getBookNoByCartNo(long cartNo);
     List<CouponProduced> getCouponsByUserNo(long userNo);
+    int getPointByUserNo(long userNo);
 }

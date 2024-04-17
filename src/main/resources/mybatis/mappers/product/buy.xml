@@ -45,4 +45,13 @@
              and used = 'N'
     </select>
 
+    <select id="getPointByUserNo" parameterType="long" resultType="int">
+        select
+            point
+        from
+             USER_INFO
+        where
+            user_no = #{value}
+    </select>
+
 </mapper>

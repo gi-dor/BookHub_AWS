@@ -23,4 +23,9 @@ public class BuyService {
         User user = userMapper.selectUserById(userId);
         return buyMapper.getCouponsByUserNo(user.getNo());
     }
+
+    public int getPointByUserNo(String userId) {
+        User user = userMapper.selectUserById(userId);
+        return buyMapper.getPointByUserNo(user.getNo());
+    }
 }

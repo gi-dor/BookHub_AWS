@@ -23,10 +23,12 @@ public class BuyController {
     private final BookService bookService;
     private final BuyService buyService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/order")
     public String getOrder(
             @RequestParam("selectedBook") String[] selectedBookList,
             @RequestParam("selectedBookCount") int[] selectedBookCountList,
+            Principal principal,
             Model model)
     {
         List<Book> orderBookList = new ArrayList<>();
@@ -43,6 +45,10 @@ public class BuyController {
             orderBookCountList.add(selectedBookCount);
         }
         model.addAttribute("orderBookCountList", orderBookCountList);
+
+        int point = buyService.getPointByUserNo(principal.getName());
+        model.addAttribute("point", point);
+
         return "product/buy/order";
     }
 
