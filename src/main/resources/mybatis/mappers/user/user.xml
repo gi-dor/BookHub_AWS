@@ -73,9 +73,11 @@
                user_address,
                user_address_detail ,
                user_created_date ,
-               user_updated_date
+               user_updated_date,
+               user_del_yn
         FROM USER
         WHERE user_no = #{no}
+        and user_del_yn = 'N'
     </select>
 
     <select id="selectUserById" parameterType="string" resultMap="UserResultMap">
@@ -89,9 +91,11 @@
                user_address,
                user_address_detail ,
                user_created_date ,
-               user_updated_date
+               user_updated_date,
+               user_del_yn
         FROM USER
         WHERE user_id = #{id}
+        and user_del_yn = 'N'
     </select>
 
     <select id="selectUserByEmail" parameterType="string" resultMap="UserResultMap">
@@ -105,9 +109,11 @@
                user_address,
                user_address_detail,
                user_created_date,
-               user_updated_date
+               user_updated_date,
+               user_del_yn
         FROM USER
         WHERE user_email = #{email}
+        and user_del_yn = 'N'
     </select>
 
 
@@ -129,14 +135,12 @@
     <update id="updateUser" parameterType="com.example.bookhub.user.vo.User">
         update USER
         set
-            user_name = #{name},
             user_email = #{email},
             user_tel = #{tel},
             user_zip_code = #{zipCode},
             user_address = #{address},
-            user_address_detail = #{addressDetail},
+            user_address_detail = #{addressDetail}
         WHERE user_id = #{id}
-        and user_password = #{password}
     </update>
 
 

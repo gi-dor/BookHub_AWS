@@ -1,0 +1,54 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/user/myPage.css}" />
+</th:block>
+
+<div layout:fragment="content" class="container my-3">
+    <div class="row">
+        <div>
+            <h3 id="welcomeMyPage" th:text="'MyPage , ' + ${id} + ' 님 환영합니다'"></h3>
+        </div>
+        <div class="col-4">
+            <div class="myPage">
+                <dt>주문</dt>
+                <dd>
+                    <ul class="">
+                        <li>주문내역</li>
+                        <li>주문 취소내역</li>
+                        <li>반품 교환내역</li>
+                    </ul>
+                </dd>
+            </div>
+            <div class="myPage">
+                <dt>나의 정보</dt>
+                <dd>
+                    <ul class="">
+                        <li>
+                            <a th:href="@{/user/mypage/userInfo}">회원정보</a></li>
+                        <li>
+                            <a th:href="@{/user/mypage/userDelete}">회원 탈퇴</a></li>
+                    </ul>
+                </dd>
+            </div>
+            <div class="myPage">
+                <dt>공지사항</dt>
+                <dd>
+                    <ul class="">
+                        <li>공지사항</li>
+                        <li>1 : 1 문의하기</li>
+                        <li><a href="/board/faq/list">FAQ 자주묻는 질문</a></li>
+                    </ul>
+                </dd>
+            </div>
+        </div> <!-- 사이드바 끝 -->
+        <div class="col-8">
+
+            주문내역
+
+            나의 1:1 문의 내역
+        </div>
+    </div>
+</div>
+</html>

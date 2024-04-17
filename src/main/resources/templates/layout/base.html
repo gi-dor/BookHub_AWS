@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title></title>
-    <!--    Bootstrap CSS 파일을 링크-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--    부트스트랩 JavaScript 파일을 로드-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <!--    부트스트랩에서 제공하는 아이콘-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Noto+Serif:ital,wdth@1,75&display=swap" rel="stylesheet">
-    <!-- jQuery & Ajax -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- css -->
-    <th:block layout:fragment="style"></th:block>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title></title>
+<!--    Bootstrap CSS 파일을 링크-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<!--    부트스트랩 JavaScript 파일을 로드-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<!--    부트스트랩에서 제공하는 아이콘-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dongle&family=Noto+Serif:ital,wdth@1,75&display=swap" rel="stylesheet">
+<!-- jQuery & Ajax -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- css -->
+<th:block layout:fragment="style">
+</th:block>
+<link rel="stylesheet" th:href="@{/css/main/navbar.css}" />
 </head>
 <body>
 
 <!-- 내비게이션 바 -->
-<!--<nav th:replace="~{layout/navbar :: navbar-fragment}"></nav>-->
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
 
 <th:block layout:fragment="content"></th:block>
 
@@ -31,6 +33,8 @@
 <footer th:replace="~{layout/footer :: footer}"></footer>
 
 <!--java script -->
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="script">
+</th:block>
 </body>
+    <script src="/js/main/navbar.js"></script>
 </html>

@@ -1,0 +1,11 @@
+#linkLogo{
+    text-decoration: none;
+    color: black;
+    font-family: "Noto Serif", serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: italic;
+    font-variation-settings:
+            "wdth" 100;
+    font-size: 20px;
+}
