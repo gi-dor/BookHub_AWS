@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,15 +32,45 @@ public class CategoryController {
         return "admin/category";
     }
 
-    @GetMapping("/secondCategory")
+    @GetMapping("/getSubCategories")
     @ResponseBody
-    public List<Category> secondCategory(@RequestParam("category") int categoryNo) {
-        return categoryService.getSecondLevelCategoriesByTopLevelCategoryNo(categoryNo);
+    public List<Category> subCategories(@RequestParam("category") int categoryNo) {
+        return categoryService.getSubCategoriesByCategoryNo(categoryNo);
     }
 
-    @GetMapping("/thirdCategory")
+    @GetMapping("/getParentCategory")
     @ResponseBody
-    public List<Category> thirdCategory(@RequestParam("category") int categoryNo) {
-        return categoryService.getThirdLevelCategoriesBySecondLevelCategoryNo(categoryNo);
+    public Category parentCategory(@RequestParam("category") int categoryNo) {
+        return categoryService.getParentCategoryByCategoryNo(categoryNo);
     }
+
+    @GetMapping("/getSecondCategories")
+    @ResponseBody
+    public List<Category> getSecondCategories() {
+        return categoryService.getAllSecondLevelCategories();
+    }
+
+    @PostMapping("/addTopCategory")
+    @ResponseBody
+    public List<Category> addTopLevelCategory(@RequestParam("categoryName") String categoryName) {
+        categoryService.addTopLevelCategory(categoryName);
+        return categoryService.getAllTopLevelCategories();
+    }
+
+    @PostMapping("/addSecondCategory")
+    @ResponseBody
+    public List<Category> addSecondLevelCategory(@RequestParam("categoryName") String categoryName,
+                                                 @RequestParam("topCategoryNo") int topCategoryNo) {
+        categoryService.addSecondLevelCategory(categoryName, topCategoryNo);
+        return categoryService.getAllSecondLevelCategories();
+    }
+
+    @PostMapping("/addThirdCategory")
+    @ResponseBody
+    public List<Category> addThirdLevelCategory(@RequestParam("categoryName") String categoryName,
+                                                @RequestParam("secondCategoryNo") int secondCategoryNo) {
+        categoryService.addThirdLevelCategory(categoryName, secondCategoryNo);
+        return categoryService.getAllThirdLevelCategories();
+    }
+
 }

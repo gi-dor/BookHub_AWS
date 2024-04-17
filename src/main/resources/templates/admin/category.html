@@ -7,8 +7,8 @@
 
         <!-- 버튼 영역 -->
         <div class="col-12 p-3 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-1" id="btn-add-category">추가</button>
-            <button type="button" class="btn btn-success me-1" id="btn-modify-category">수정</button>
+            <button type="button" class="btn btn-primary me-1" id="btn-create-category">추가</button>
+            <button type="button" class="btn btn-success me-1" id="btn-update-category">수정</button>
             <button type="button" class="btn btn-danger" id="btn-delete-category">삭제</button>
         </div>
 
@@ -18,7 +18,7 @@
                 <h4>대분류</h4>
             </div>
             <div class="card mt-3">
-                <div class="card-body">
+                <div id="topLevelCategories" class="card-body">
                     <span th:each="topLevelCategory : ${topLevelCategories}"
                           th:text="${topLevelCategory.name}"
                           th:data-top-category-no="${topLevelCategory.no}"
@@ -51,38 +51,106 @@
     </div>
 
     <!-- 카테고리 추가 모달창 -->
-    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+    <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addCategoryModalLabel">카테고리 추가</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
-                    <!-- 추가 카테고리 폼 -->
-                    <form id="addCategoryForm">
-                        <!-- 입력 필드 추가 -->
-                        <div class="form-group mb-3">
-                            <select name="category" onchange="showSecondLevelCategories(this.value)">
-                                <option value="" disabled selected> -- 선택하세요 --</option>
-                                <option th:each="topLevelCategory : ${topLevelCategories}"
-                                        th:value="${topLevelCategory.no}" th:text="${topLevelCategory.name}"></option>
-                            </select>
+                    <!-- 탭 구성 -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#top"
+                                    type="button" role="tab" aria-controls="home" aria-selected="true">대분류
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#second"
+                                    type="button" role="tab" aria-controls="profile" aria-selected="false">중분류
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#third"
+                                    type="button" role="tab" aria-controls="contact" aria-selected="false">소분류
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- 탭에 대한 컨텐츠 -->
+                    <div class="tab-content pt-3" id="myTabContent">
+
+                        <!-- 대분류 추가-->
+                        <div class="tab-pane fade show active" id="top" role="tabpanel" aria-labelledby="home-tab">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="top-input-top-category">대분류:</label>
+                                    <input type="text" id="top-input-top-category" name="category">
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="secondLevelCategory">중분류:</label>
-                            <input type="text" id="secondLevelCategory" name="category">
+
+                        <!-- 중분류 추가 -->
+                        <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="profile-tab">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="second-select-top-category">대분류:</label>
+                                    <select id="second-select-top-category" name="topLevelCategory">
+                                        <option disabled selected>대분류 선택</option>
+                                        <option th:each="topLevelCategory : ${topLevelCategories}"
+                                                th:value="${topLevelCategory.no}"
+                                                th:text="${topLevelCategory.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="second-input-second-category">중분류:</label>
+                                    <input type="text" id="second-input-second-category" name="category">
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="thirdLevelCategory">소분류:</label>
-                            <input type="text" id="thirdLevelCategory" name="category">
+
+                        <!-- 소분류 추가 -->
+                        <div class="tab-pane fade" id="third" role="tabpanel" aria-labelledby="contact-tab">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="third-select-top-category">대분류:</label>
+                                    <select id="third-select-top-category">
+                                        <option disabled selected>대분류 선택</option>
+                                        <option th:each="topLevelCategory : ${topLevelCategories}"
+                                                th:value="${topLevelCategory.no}"
+                                                th:text="${topLevelCategory.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="third-select-second-category">중분류:</label>
+                                    <select id="third-select-second-category">
+                                        <option disabled selected>중분류 선택</option>
+                                        <option th:each="secondLevelCategory : ${secondLevelCategories}"
+                                                th:value="${secondLevelCategory.no}"
+                                                th:text="${secondLevelCategory.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="third-input-third-category">소분류:</label>
+                                    <input type="text" id="third-input-third-category" name="category">
+                                </div>
+                            </form>
                         </div>
-                    </form>
+
+                    </div>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" id="btn-add-category-modal">추가</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-close-create-modal">
+                        닫기
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-add-create-modal">추가</button>
                 </div>
             </div>
         </div>
@@ -93,13 +161,60 @@
 <script layout:fragment="script" type="text/javascript">
     $(function () {
 
-        $("#btn-add-category").click(function () {
-            let categoryFormModal = new bootstrap.Modal($("#addCategoryModal"));
+        $("#btn-create-category").click(function () {
+            let categoryFormModal = new bootstrap.Modal($("#create-modal"));
             categoryFormModal.show();
         });
 
-        $("#btn-add-category-modal").click(function () {
-            // 카테고리 추가 로직 구현
+        $('#create-modal').on('hidden.bs.modal', function () {
+            // 대분류 입력 요소 초기화
+            $("#top-input-top-category").val("");
+
+            // 중분류의 입력 요소 초기화
+            $("#second-select-top-category option").prop('selected', false).first().prop("selected", true);
+            $("#second-input-second-category").val("");
+
+            // 소분류의 입력 요소 초기화
+            $("#third-select-top-category option").prop('selected', false).first().prop("selected", true);
+            $.ajax({
+                url: "/admin/getSecondCategories",
+                method: "GET",
+                success: function (secondLevelCategories) {
+                    var $secondCategorySelect = $('#third-select-second-category');
+
+                    $secondCategorySelect.empty();
+                    $secondCategorySelect.append('<option disabled selected>중분류 선택</option>');
+
+                    secondLevelCategories.forEach(secondLevelCategory => {
+                        var option = $('<option>')
+                            .val(secondLevelCategory.no)
+                            .text(secondLevelCategory.name);
+
+                        $secondCategorySelect.append(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("소분류 데이터 요청 실패:", error);
+                }
+            });
+            $("#third-input-third-category").val("");
+
+            /*
+            // 모달 창 내의 모든 폼 요소를 선택합니다.
+            var forms = $(this).find('form');
+
+            // 각 폼 요소를 초기화합니다.
+            forms.each(function () {
+                // 폼 요소를 기본값으로 재설정합니다.
+                this.reset();
+            });
+            */
+
+            // 탭을 첫 번째 탭으로 리셋합니다.
+            $(this).find('.nav-link').removeClass('active');
+            $(this).find('.nav-link:first').addClass('active');
+            $(this).find('.tab-pane').removeClass('show active');
+            $(this).find('.tab-pane:first').addClass('show active');
         });
 
         $("span[id^=topLevelCategory]").click(function () {
@@ -108,7 +223,7 @@
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
 
             $.ajax({
-                url: "/admin/secondCategory",
+                url: "/admin/getSubCategories",
                 method: "GET",
                 data: {category: categoryNo},
                 success: function (secondLevelCategories) {
@@ -132,13 +247,13 @@
             });
         });
 
-        $(document).on("click", "span[id^=secondLevelCategory]", function () {
+        $("#secondLevelCategories").on("click", "span[id^=secondLevelCategory]", function () {
             const categoryNo = $(this).data("secondCategoryNo");
 
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
 
             $.ajax({
-                url: "/admin/secondCategory",
+                url: "/admin/getSubCategories",
                 method: "GET",
                 data: {category: categoryNo},
                 success: function (thirdLevelCategories) {
@@ -160,13 +275,162 @@
                     console.error("소분류 데이터 요청 실패:", error);
                 }
             });
-
-
         });
 
-        $(document).on("click", "span[id^=thirdLevelCategory]", function () {
+        $("#thirdLevelCategories").on("click", "span[id^=thirdLevelCategory]", function () {
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
         });
+
+        $('#third-select-top-category').change(function () {
+            const categoryNo = $(this).val();
+
+            $.ajax({
+                url: "/admin/getSubCategories",
+                method: "GET",
+                data: {category: categoryNo},
+                success: function (secondLevelCategories) {
+                    var $secondCategorySelect = $('#third-select-second-category option');
+                    $secondCategorySelect.not(':first').remove();
+                    $secondCategorySelect.first().prop("selected", true);
+
+                    secondLevelCategories.forEach(secondLevelCategory => {
+                        var option = $('<option>')
+                            .val(secondLevelCategory.no)
+                            .text(secondLevelCategory.name);
+
+                        $secondCategorySelect.parent().append(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("소분류 데이터 요청 실패:", error);
+                }
+            });
+        });
+
+        $('#third-select-second-category').change(function () {
+            const categoryNo = $(this).val();
+
+            $.ajax({
+                url: "/admin/getParentCategory",
+                method: "GET",
+                data: {category: categoryNo},
+                success: function (topLevelCategory) {
+                    $('#third-select-top-category option').each(function () {
+                        var option = $(this);
+                        if (option.val() === topLevelCategory.no) {
+                            option.attr('selected', true);
+                        } else {
+                            option.attr('selected', false);
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("소분류 데이터 요청 실패:", error);
+                }
+            });
+        });
+
+        <!-- 카테고리 저장 -->
+        $("#btn-add-create-modal").click(function () {
+            let tab = $(".nav-tabs .nav-link.active").text().trim();
+            if (tab === '대분류') {
+                createTopCategory();
+            }
+            if (tab === "중분류") {
+                createSecondCategory();
+            }
+            if (tab === "소분류") {
+                createThirdCategory();
+            }
+
+        });
+
+        function createTopCategory() {
+            let categoryName = $("#top-input-top-category").val();
+
+            $.ajax({
+                url: "/admin/addTopCategory",
+                method: "POST",
+                data: {categoryName: categoryName},
+                success: function (topLevelCategories) {
+                    const $topCategorySpan = $("#topLevelCategories");
+
+                    $topCategorySpan.empty();
+
+                    topLevelCategories.forEach(topLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(topLevelCategory.name)
+                            .attr("data-top-category-no", topLevelCategory.no)
+                            .attr("id", `topLevelCategory-${topLevelCategory.no}`);
+
+                        $topCategorySpan.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("에러발생:", error);
+                }
+            });
+        }
+
+        function createSecondCategory() {
+            let categoryName = $("#second-input-second-category").val();
+            let topCategoryNo = $("#second-select-top-category").val();
+
+            $.ajax({
+                url: "/admin/addSecondCategory",
+                method: "POST",
+                data: {categoryName: categoryName, topCategoryNo: topCategoryNo},
+                success: function (secondLevelCategories) {
+                    const $secondLevelCategories = $("#secondLevelCategories");
+
+                    $secondLevelCategories.empty();
+
+                    secondLevelCategories.forEach(secondLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(secondLevelCategory.name)
+                            .attr("data-second-category-no", secondLevelCategory.no)
+                            .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
+
+                        $secondLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("에러발생:", error);
+                }
+            });
+        }
+
+        function createThirdCategory() {
+            let categoryName = $("#third-input-third-category").val();
+            let secondCategoryNo = $("#third-select-second-category").val();
+
+            $.ajax({
+                url: "/admin/addThirdCategory",
+                method: "POST",
+                data: {categoryName: categoryName, secondCategoryNo: secondCategoryNo},
+                success: function (thirdLevelCategories) {
+                    const $thirdLevelCategories = $("#thirdLevelCategories");
+
+                    $thirdLevelCategories.empty();
+
+                    thirdLevelCategories.forEach(thirdLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(thirdLevelCategory.name)
+                            .attr("data-third-category-no", thirdLevelCategory.no)
+                            .attr("id", `thirdLevelCategory-${thirdLevelCategory.no}`);
+
+                        $thirdLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("에러발생:", error);
+                }
+            });
+        }
+
     })
 </script>
 

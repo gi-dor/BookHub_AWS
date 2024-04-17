@@ -23,11 +23,23 @@ public class CategoryService {
         return categoryMapper.getAllThirdLevelCategories();
     }
 
-    public List<Category> getSecondLevelCategoriesByTopLevelCategoryNo(int categoryNo) {
-        return categoryMapper.getSecondLevelCategoriesByTopLevelCategoryNo(categoryNo);
+    public List<Category> getSubCategoriesByCategoryNo(int categoryNo) {
+        return categoryMapper.getSubCategoriesByCategoryNo(categoryNo);
     }
 
-    public List<Category> getThirdLevelCategoriesBySecondLevelCategoryNo(int categoryNo) {
-        return categoryMapper.getThirdLevelCategoriesBySecondLevelCategoryNo(categoryNo);
+    public Category getParentCategoryByCategoryNo(int categoryNo) {
+        return categoryMapper.getParentCategoryByCategoryNo(categoryNo);
+    }
+
+    public void addTopLevelCategory(String categoryName) {
+        categoryMapper.addTopLevelCategory(categoryName);
+    }
+
+    public void addSecondLevelCategory(String categoryName, int topCategoryNo) {
+        categoryMapper.addSecondLevelCategory(categoryName, topCategoryNo);
+    }
+
+    public void addThirdLevelCategory(String categoryName, int secondCategoryNo) {
+        categoryMapper.addThirdLevelCategory(categoryName, secondCategoryNo);
     }
 }

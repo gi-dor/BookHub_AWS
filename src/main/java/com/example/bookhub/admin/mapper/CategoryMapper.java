@@ -12,7 +12,13 @@ public interface CategoryMapper {
 
     List<Category> getAllThirdLevelCategories();
 
-    List<Category> getSecondLevelCategoriesByTopLevelCategoryNo(int categoryNo);
+    List<Category> getSubCategoriesByCategoryNo(int categoryNo);
 
-    List<Category> getThirdLevelCategoriesBySecondLevelCategoryNo(int categoryNo);
+    Category getParentCategoryByCategoryNo(int categoryNo);
+
+    void addTopLevelCategory(String categoryName);
+
+    void addSecondLevelCategory(String categoryName, int topCategoryNo);
+
+    void addThirdLevelCategory(String categoryName, int secondCategoryNo);
 }

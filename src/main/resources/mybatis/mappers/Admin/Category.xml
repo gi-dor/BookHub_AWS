@@ -32,7 +32,7 @@
         														WHERE PARENT_CATEGORY_NO IS NULL))
     </select>
 
-    <select id="getSecondLevelCategoriesByTopLevelCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+    <select id="getSubCategoriesByCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
             SELECT CATEGORY_NO AS no,
             		CATEGORY_NAME AS name,
                     PARENT_CATEGORY_NO AS parentNo
@@ -42,13 +42,34 @@
             							WHERE CATEGORY_NO = #{value})
     </select>
 
-    <select id="getThirdLevelCategoriesBySecondLevelCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+    <select id="getParentCategoryByCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
             SELECT CATEGORY_NO AS no,
-                   CATEGORY_NAME AS name,
-                   PARENT_CATEGORY_NO AS parentNo
+            		CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
             FROM BookHub.CATEGORY
-            WHERE PARENT_CATEGORY_NO IN (SELECT CATEGORY_NO
-                 						FROM BookHub.CATEGORY
-                  						WHERE CATEGORY_NO = #{value})
-        </select>
+            WHERE CATEGORY_NO IN (SELECT PARENT_CATEGORY_NO
+            						FROM BookHub.CATEGORY
+            						WHERE CATEGORY_NO = #{value})
+    </select>
+
+    <insert id="addTopLevelCategory" parameterType="String">
+            INSERT INTO BookHub.CATEGORY
+            (CATEGORY_NAME, PARENT_CATEGORY_NO)
+            VALUES
+            (#{value}, NULL)
+    </insert>
+
+    <insert id="addSecondLevelCategory" parameterType="map">
+            INSERT INTO BookHub.CATEGORY
+            (CATEGORY_NAME, PARENT_CATEGORY_NO)
+            VALUES
+            (#{categoryName}, #{topCategoryNo})
+    </insert>
+
+    <insert id="addThirdLevelCategory" parameterType="map">
+            INSERT INTO BookHub.CATEGORY
+            (CATEGORY_NAME, PARENT_CATEGORY_NO)
+            VALUES
+            (#{categoryName}, #{secondCategoryNo})
+    </insert>
 </mapper>
