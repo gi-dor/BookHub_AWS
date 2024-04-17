@@ -3,13 +3,15 @@ package com.example.bookhub.product.controller;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.vo.Book;
+import com.example.bookhub.product.vo.CouponProduced;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +23,12 @@ public class BuyController {
     private final BookService bookService;
     private final BuyService buyService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/order")
     public String getOrder(
             @RequestParam("selectedBook") String[] selectedBookList,
             @RequestParam("selectedBookCount") int[] selectedBookCountList,
+            Principal principal,
             Model model)
     {
         List<Book> orderBookList = new ArrayList<>();
@@ -41,7 +45,20 @@ public class BuyController {
             orderBookCountList.add(selectedBookCount);
         }
         model.addAttribute("orderBookCountList", orderBookCountList);
+
+        int point = buyService.getPointByUserNo(principal.getName());
+        model.addAttribute("point", point);
+
         return "product/buy/order";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/coupon")
+    @ResponseBody
+    public ResponseEntity<List<CouponProduced>> getCoupon(Principal principal){
+        List<CouponProduced> couponList = buyService.getCouponsByUserNo(principal.getName());
+        System.out.println(couponList);
+        return ResponseEntity.ok(couponList);
     }
 
 }
