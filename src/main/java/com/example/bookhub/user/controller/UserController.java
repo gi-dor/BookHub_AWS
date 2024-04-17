@@ -43,14 +43,14 @@ public class UserController {
     }
 
     // 마이페이지 - 회원정보 조회
-    @GetMapping("/mypage/userInfo")
-    public String userInfo(Model model , @RequestParam(name = "id") String userId) {
-        User user = userService.selectUserById(userId);
-        model.addAttribute("user" , user);
-        return "user/userInfo";
-    }
+//    @GetMapping("/mypage/userInfo")
+//    public String userInfo(Model model , @RequestParam(name = "id") String userId) {
+//        User user = userService.selectUserById(userId);
+//        model.addAttribute("user" , user);
+//        return "user/userInfo";
+//    }
 
-    /*
+
     // 마이페이지 - 회원정보 조회
     @GetMapping("/mypage/userInfo")
     public String userInfo2(Model model , Principal principal) {
@@ -58,7 +58,7 @@ public class UserController {
         model.addAttribute("user" , user);
         return "user/userInfo";
     }
-    */
+
 
 
 
