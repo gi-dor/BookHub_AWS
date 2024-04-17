@@ -1,64 +1,27 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>Title</title>
-<!--    Bootstrap CSS 파일을 링크-->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-<!--    부트스트랩 JavaScript 파일을 로드-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-<!--    부트스트랩에서 제공하는 아이콘-->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Noto+Serif:ital,wdth@1,75&display=swap" rel="stylesheet">
-<!--    Font Awesome Key 값-->
-<script src="https://kit.fontawesome.com/3f84dc55d3.js" crossorigin="anonymous"></script>
-<style>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/user/userInfo.css}" />
+</th:block>
 
-    .BookHubLogo:hover {
-        text-decoration: none; /* 호버 시에도 밑줄 없애기 */
-    }
-
-    #linkLogo{
-        text-decoration: none;
-        color: black;
-        font-family: "Noto Serif", serif;
-        font-optical-sizing: auto;
-        font-weight: 400;
-        font-style: italic;
-        font-variation-settings:
-                "wdth" 75;
-        font-size: 20px;
-    }
-
-    #memberInfoTitle {
-        text-align: center;
-        font-family: "Dongle", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-        font-size: 50px;
-    }
-
-</style>
-</head>
-<body class="container">
+<div layout:fragment="content" class="container my-3">
     <div class="row mt-5">
         <div class="col-2">
             <div>
+                <!--
                 <a href="/" id="linkLogo">
                 <img class="mb-3" src="/image/login/logo.png" alt="" width="auto" height="80">
                     <span class="BookHubLogo">
                         BookHub
                     </span>
                 </a>
+                -->
             </div>
         </div>
         <div class="col-8">
             <h3 id="memberInfoTitle">회원 정보</h3>
             <br>
-                <form th:action="@{/user/mypage/userInfoModifyForm}" method="post">
+                <form th:action="@{/user/mypage/modifyUserInfoForm}" method="get">
                     <table class="table">
                         <colgroup>
                             <col width="30%">
@@ -131,5 +94,5 @@
             </div>
         </div>
     </div>
-</body>
+</div>
 </html>
