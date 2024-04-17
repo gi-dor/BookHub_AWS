@@ -41,7 +41,7 @@
                                 <label class="form-label">아이디</label>
                                 <div class="row" >
                                     <div class="col-5">
-                                        <input type="text" class="form-control" th:value="${user.id}" readonly/>
+                                        <input type="text" class="form-control" th:name="id" th:value="${user.id}" readonly/>
                                         <div th:errors="${user.id}" class="text-danger"></div>
                                     </div>
                                     <div class="col-7">
@@ -58,7 +58,7 @@
                                 <label class="form-label">비밀번호</label>
                                 <div class="row">
                                     <div class="col-5">
-                                        <input type="password" class="form-control" id="password" th:value="${user.password}" readonly/>
+                                        <input type="password" class="form-control" id="password" th:name="password"  th:value="${user.password}" readonly/>
                                         <div th:errors="${user.password}" class="text-danger"></div>
                                     </div>
                                     <div class="col-7">
@@ -74,7 +74,7 @@
                             <div class="form-group mb-3">
                                 <div class="row">
                                     <div class="col-5">
-                                        <input type="text" class="form-control" th:value="${user.name}" readonly/>
+                                        <input type="text" class="form-control" th:name="name" th:value="${user.name}" readonly/>
                                         <div th:errors="${user.name}" class="text-danger"></div>
                                     </div>
                                     <div class="col-7">
@@ -90,7 +90,7 @@
                             <div class="form-group mb-3">
                                 <div class="row">
                                     <div class="col-5">
-                                        <input type="text" class="form-control" th:value="${user.tel}" />
+                                        <input type="text" class="form-control" th:name="tel" th:value="${user.tel}" />
                                         <div th:errors="${user.tel}" class="text-danger"></div>
                                     </div>
                                     <div class="col-7">
@@ -106,7 +106,7 @@
                             <div class="form-group mb-3">
                                 <div class="row">
                                     <div class="col-5">
-                                        <input type="text" class="form-control" th:value="${user.email}"  />
+                                        <input type="text" class="form-control" th:name="email" th:value="${user.email}"  />
                                         <div th:errors="${user.email}" class="text-danger"></div>
                                     </div>
                                     <div class="col-7">
@@ -128,8 +128,8 @@
                                         <input type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
                                     </div>
                                 </div>
-                                <input type="text" id="sample6_address"  th:value="${user.address}" placeholder="주소" class="form-control mb-1" >
-                                <input type="text" id="sample6_detailAddress"  th:value="${user.addressDetail}" placeholder="상세주소" class="form-control">
+                                <input type="text" id="sample6_address"  th:name="address" th:value="${user.address}"  placeholder="주소" class="form-control mb-1" >
+                                <input type="text" id="sample6_detailAddress"  th:name="addressDetail" th:value="${user.addressDetail}" placeholder="상세주소" class="form-control">
                             </div>
                         </td>
                     </tr>
