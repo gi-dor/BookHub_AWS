@@ -65,11 +65,19 @@
                             </li>
                             <li class="d-flex justify-content-between">
                                 <span>배송비</span>
-                                <span>+ </span><span id="delivery-price">2000</span>
+                                +<span id="delivery-price">2000</span>
                             </li>
                             <li class="d-flex justify-content-between">
                                 <span>상품할인</span>
-                                <span id="book-discount-total-price"></span>
+                                -<span id="book-discount-total-price">0</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>쿠폰할인</span>
+                                -<span id="book-discount-total-coupon">0</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>포인트적용</span>
+                                -<span id="book-discount-total-point">0</span>
                             </li>
                             <hr class="my-4">
                             <li class="d-flex justify-content-between">
@@ -115,7 +123,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" onclick="useSelectedCoupon()">등록</button>
+                    <button type="button" class="btn btn-primary" onclick="useSelectedCoupon()">사용</button>
                 </div>
             </div>
         </div>
@@ -140,12 +148,16 @@
         $("#total-price").text(totalPrice);
         $("#book-discount-total-price").text(bookDiscountTotalPrice);
 
-        updateFinalPrice(totalPrice, bookDiscountTotalPrice);
+        updateFinalPrice();
     }
 
-    function updateFinalPrice(totalPrice, bookDiscountTotalPrice){
+    function updateFinalPrice(){
+        let totalPrice = parseInt($("#total-price").text());
+        let bookDiscountTotalPrice = parseInt($("#book-discount-total-price").text());
         let deliveryPrice = parseInt($("#delivery-price").text());
-        let finalPrice = totalPrice + deliveryPrice - bookDiscountTotalPrice;
+        let totalCouponPrice = parseInt($("#book-discount-total-coupon").text());
+        let totalPointPrice = parseInt($("#book-discount-total-point").text());
+        let finalPrice = totalPrice + deliveryPrice - bookDiscountTotalPrice - totalCouponPrice - totalPointPrice;
 
         $("#final-price").text(finalPrice);
     }
@@ -197,13 +209,18 @@
             totalCouponPrice += parseInt($(this).val());
         });
         $("#total-coupon-price").val(totalCouponPrice);
-
+        $("#book-discount-total-coupon").text(totalCouponPrice);
         modalCoupon.hide();
+
+        updateFinalPrice();
     }
 
     function useTotalPoint(){
         let totalPoint = $("#total-point").text();
         $("#total-point-use").val(totalPoint);
+        $("#book-discount-total-point").text(totalPoint)
+
+        updateFinalPrice();
     }
 
     updatePrices();
