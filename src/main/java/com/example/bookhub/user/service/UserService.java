@@ -156,5 +156,11 @@ public class UserService implements UserDetailsService {
         return cnt;
     }
 
+    public User modifyUserInfo(User user) {
+        userMapper.updateUser(user);
+
+        return user;
+    }
+
 }
 
