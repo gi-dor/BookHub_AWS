@@ -10,19 +10,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Controller
@@ -39,9 +36,9 @@ public class UserController {
     @GetMapping("/mypage")
     public String myPage(Model model , Principal principal) {
 
-            String id = principal.getName();
-            model.addAttribute("id",id);
-            return "/user/mypage";
+        String id = principal.getName();
+        model.addAttribute("id",id);
+        return "/user/mypage";
     }
 
 
@@ -55,22 +52,39 @@ public class UserController {
 //    }
 
 
+    /**
+     * 현재 로그인한 사용자의 회원 정보를 조회하는 컨트롤러 메서드입니다.
+     *
+     * @param model View에 전달할 데이터를 담는 Model 객체
+     * @param principal 현재 로그인한 사용자의 Principal 객체
+     * @return 회원 정보 페이지의 뷰 이름
+     */
     // 마이페이지 - 회원정보 조회
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage/userInfo")
     public String userInfo(Model model , Principal principal) {
 
-            String userId = principal.getName();
-            User user = userService.selectUserById(userId);
-            model.addAttribute("user" , user);
-            return "user/userInfo";
+        String userId = principal.getName();
+        User user = userService.selectUserById(userId);
+        model.addAttribute("user" , user);
+        return "user/userInfo";
 
     }
 
 
+    /**
+     * 회원 정보 수정 페이지를 제공하는 컨트롤러 메서드입니다.
+     *
+     * @param model View에 전달할 데이터를 담는 Model 객체
+     * @param principal 현재 로그인한 사용자의 Principal 객체
+     * @return 회원 정보 수정 페이지의 뷰 이름
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage/modifyUserInfoForm")
     public String modifyForm(Model model , Principal principal) {
+
+        log.info("유저 아이디 log: " +principal.getName());
+        System.out.println("유저 아이디  sop : " +principal.getName());
 
         // 현재 로그인한 사용자의 ID
         String userId = principal.getName();
@@ -82,22 +96,45 @@ public class UserController {
         return "user/modifyUserInfo";
     }
 
+    /**
+     * 사용자 정보를 수정하는 POST 요청을 처리하는 컨트롤러 메서드입니다.
+     *
+     * @param principal 현재 로그인한 사용자의 Principal 객체
+     * @param user 수정된 사용자 정보를 포함하는 User 객체
+     * @return 사용자 정보 수정 후 사용자 정보 페이지로 리다이렉트하는 URL 문자열
+     */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/mypage/modifyUserInfo")
-    public String modifyUser(Model model , Principal principal){
-        String id = principal.getName();
-        User user = userService.selectUserById(id);
+    public String modifyUser(Principal principal , User user){
 
-        user.setTel(user.getTel());
-        user.setEmail(user.getEmail());
-        user.setZipCode(user.getZipCode());
-        user.setAddress(user.getAddress());
-        user.setAddressDetail(user.getAddressDetail());
+        String id = principal.getName();
+        User userId = userService.selectUserById(id);
+
+        userId.setTel(user.getTel());
+        userId.setEmail(user.getEmail());
+        userId.setZipCode(user.getZipCode());
+        userId.setAddress(user.getAddress());
+        userId.setAddressDetail(user.getAddressDetail());
 
         userService.modifyUserInfo(user);
 
         return  "redirect:/user/mypage/userInfo";
     }
+
+
+     // 로그아웃
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/logout123")
+//    public String logout( Principal principal) {
+//        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+//        if (user != null) {
+//            // 로그아웃 처리
+//           SecurityContextHolder.getContext().setAuthentication(null);
+////               SecurityContextHolder.clearContext(); // 인증 객체를 모두 제거
+//        }
+//        return "redirect:/";
+//    }
+
 
 
 
@@ -126,9 +163,9 @@ public class UserController {
         }
 
         try {
-        //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
+            //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
             User user = userService.registerUser(form);
-        //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
+            //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
 
             return "redirect:/user/completed?id=" + user.getId();
 
@@ -139,10 +176,15 @@ public class UserController {
             String message = ex.getMessage();
 
             if("id".equals(message)) {
+                errors.rejectValue("id", null, "사용 할 수 없는 아이디");
+            }
+        /*
+            if("id".equals(message)) {
                 errors.rejectValue("id", null,"사용 할 수 없는 아이디");
             } else if( "email".equals(message)) {
                 errors.rejectValue("email", null, "사용 할 수 없는 이메일");
             }
+       */
 
             return "user/registerForm";
         }
