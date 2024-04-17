@@ -78,9 +78,11 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("이미 존재하는 아이디입니다: " + form.getId());
         }
 
-        if (userMapper.selectUserByEmail(form.getEmail()) != null) {
-            throw new RuntimeException("이미 존재하는 이메일 입니다: " + form.getEmail());
-        }
+        // 1 주민번호 1 이메일 다계정 일수도 있음
+
+//        if (userMapper.selectUserByEmail(form.getEmail()) != null) {
+//            throw new RuntimeException("이미 존재하는 이메일 입니다: " + form.getEmail());
+//        }
 
         User user = form.toEntity(passwordEncoder);
         userMapper.insertUser(user);
@@ -104,13 +106,13 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * 주어진 아이디에 해당하는 사용자를 데이터베이스에서 선택
+     * 주어진 아이디에 해당하는 사용자를 데이터베이스에서 찾는다
      * @param id 사용자 아이디
      * @return 선택된 사용자
      * @throws RuntimeException 주어진 아이디에 해당하는 사용자를 찾을 수 없는 경우 발생
      */
     public User selectUserById(String id) {
-        System.out.println(id);
+        System.out.println("userService.selectUserById = " +id);
         User user = userMapper.selectUserById(id);
         if (user == null) {
             throw new RuntimeException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다: " + id);
@@ -119,7 +121,7 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * 주어진 이메일에 해당하는 사용자를 데이터베이스에서 선택
+     * 주어진 이메일에 해당하는 사용자를 데이터베이스에서 찾는다
      * @param email 사용자 이메일
      * @return 선택된 사용자
      * @throws RuntimeException 주어진 이메일에 해당하는 사용자를 찾을 수 없는 경우 발생
@@ -156,6 +158,11 @@ public class UserService implements UserDetailsService {
         return cnt;
     }
 
+    /**
+     *  사용자 정보를 수정하는 메서드
+     * @param user 수정할 사용자 정보를 담은 User 객체
+     * @return 업데이트 (수정)된 사용자 정보를  담은 User 객체
+     */
     public User modifyUserInfo(User user) {
         userMapper.updateUser(user);
 
