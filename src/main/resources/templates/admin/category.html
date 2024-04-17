@@ -144,7 +144,6 @@
                         </div>
 
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-close-create-modal">
@@ -161,11 +160,13 @@
 <script layout:fragment="script" type="text/javascript">
     $(function () {
 
+        // 추가 버튼 클릭 시 모달창 열기
         $("#btn-create-category").click(function () {
             let categoryFormModal = new bootstrap.Modal($("#create-modal"));
             categoryFormModal.show();
         });
 
+        // 모달창 닫을 때 입력 내용 초기화
         $('#create-modal').on('hidden.bs.modal', function () {
             // 대분류 입력 요소 초기화
             $("#top-input-top-category").val("");
@@ -217,10 +218,12 @@
             $(this).find('.tab-pane:first').addClass('show active');
         });
 
+        // 대분류 카테고리 클릭 시 관련된 중분류 카테고리 표시
         $("span[id^=topLevelCategory]").click(function () {
             const categoryNo = $(this).data("topCategoryNo");
 
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
+            $("#thirdLevelCategories").empty();
 
             $.ajax({
                 url: "/admin/getSubCategories",
@@ -247,6 +250,7 @@
             });
         });
 
+        // 중분류 카테고리 클릭 시 관련된 소분류 카테고리 표시
         $("#secondLevelCategories").on("click", "span[id^=secondLevelCategory]", function () {
             const categoryNo = $(this).data("secondCategoryNo");
 
@@ -277,10 +281,12 @@
             });
         });
 
+        // 소분류 카테고리 클릭 시 강조 표시
         $("#thirdLevelCategories").on("click", "span[id^=thirdLevelCategory]", function () {
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
         });
 
+        // 모달창의 소분류 탭에서 대분류 카테고리 선택 시 관련된 중분류 카테고리 표시
         $('#third-select-top-category').change(function () {
             const categoryNo = $(this).val();
 
@@ -307,6 +313,7 @@
             });
         });
 
+        // 모달창의 소분류 탭에서 중분류 카테고리 선택 시 일치하는 대분류 카테고리 선택
         $('#third-select-second-category').change(function () {
             const categoryNo = $(this).val();
 
@@ -342,9 +349,9 @@
             if (tab === "소분류") {
                 createThirdCategory();
             }
-
         });
 
+        // 대분류 카테고리 생성
         function createTopCategory() {
             let categoryName = $("#top-input-top-category").val();
 
@@ -373,6 +380,7 @@
             });
         }
 
+        // 중분류 카테고리 생성
         function createSecondCategory() {
             let categoryName = $("#second-input-second-category").val();
             let topCategoryNo = $("#second-select-top-category").val();
@@ -402,6 +410,7 @@
             });
         }
 
+        // 소분류 카테고리 생성
         function createThirdCategory() {
             let categoryName = $("#third-input-third-category").val();
             let secondCategoryNo = $("#third-select-second-category").val();
