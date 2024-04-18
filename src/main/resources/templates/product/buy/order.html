@@ -10,11 +10,11 @@
                 <div class="card-body">
                     <table class="table">
                         <tbody>
-                        <tr th:each="orderBook, iterStat : ${orderBookList}">
+                        <tr th:each="buyBook, iterStat : ${buyBookList}">
                             <td><img src=""></td>
-                            <td th:text="${orderBook.name}"></td>
-                            <td class="order-book-price" th:text="${orderBook.price}"></td>
-                            <td class="order-book-count" th:text="${orderBookCountList.get(iterStat.index)}"></td>
+                            <td th:text="${buyBook.name}"></td>
+                            <td class="buy-book-price" th:text="${buyBook.price}"></td>
+                            <td class="buy-book-count" th:text="${buyBookCountList.get(iterStat.index)}"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -53,43 +53,43 @@
         </div>
 
         <div class="col-3">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                    <h5 class="my-0 fw-normal">주문 합계</h5>
+            <form method="post" th:action="@{/kakaoPay/ready}">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                        <h5 class="my-0 fw-normal">주문 합계</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li class="d-flex justify-content-between">
+                                <span>상품금액</span>
+                                <input id="total-price" name="totalPrice" />
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>배송비</span>
+                                +<input id="delivery-price" name="deliveryPrice" value=2000 />
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>상품할인</span>
+                                -<input id="total-book-discount-price" name="totalBookDiscountPrice" value=0 />
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>쿠폰할인</span>
+                                -<input id="total-coupon-discount-amount" name="totalCouponDiscountAmount" value=0 />
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>포인트적용</span>
+                                -<input id="total-point-use-amount" name="totalPointUseAmount" value=0 />
+                            </li>
+                            <hr class="my-4">
+                            <li class="d-flex justify-content-between">
+                                <span>결제 예정 금액</span>
+                                <input id="final-price" name="finalPrice" value=0 />
+                            </li>
+                        </ul>
+                            <button type="submit" class="w-100 btn btn-lg btn-primary">결제하기</button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li class="d-flex justify-content-between">
-                            <span>상품금액</span>
-                            <span id="total-price"></span>
-                        </li>
-                        <li class="d-flex justify-content-between">
-                            <span>배송비</span>
-                            +<span id="delivery-price">2000</span>
-                        </li>
-                        <li class="d-flex justify-content-between">
-                            <span>상품할인</span>
-                            -<span id="total-book-discount-price">0</span>
-                        </li>
-                        <li class="d-flex justify-content-between">
-                            <span>쿠폰할인</span>
-                            -<span id="total-coupon-discount-amount">0</span>
-                        </li>
-                        <li class="d-flex justify-content-between">
-                            <span>포인트적용</span>
-                            -<span id="total-point-use-amount">0</span>
-                        </li>
-                        <hr class="my-4">
-                        <li class="d-flex justify-content-between">
-                            <span>결제 예정 금액</span>
-                            <span id="final-price"></span>
-                        </li>
-                    </ul>
-                    <form method="post" th:action="@{/kakaoPay/ready}">
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">결제하기</button>
-                    </form>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -139,27 +139,27 @@
         let totalPrice = 0;
         let totalBookDiscountPrice = 0;
 
-        $("tbody tr td[class=order-book-price]").each(function(){
+        $("tbody tr td[class=buy-book-price]").each(function(){
             let price = parseInt($(this).text());
-            let count = parseInt($(this).closest('tr').find('.order-book-count').text());
+            let count = parseInt($(this).closest('tr').find('.buy-book-count').text());
             totalPrice += price * count;
             totalBookDiscountPrice += (price * count *  0.1);
         });
-        $("#total-price").text(totalPrice);
-        $("#total-book-discount-price").text(totalBookDiscountPrice);
+        $("#total-price").val(totalPrice);
+        $("#total-book-discount-price").val(totalBookDiscountPrice);
 
         updateFinalPrice();
     }
 
     function updateFinalPrice(){
-        let totalPrice = parseInt($("#total-price").text());
-        let totalBookDiscountPrice = parseInt($("#total-book-discount-price").text());
-        let deliveryPrice = parseInt($("#delivery-price").text());
-        let totalCouponDiscountAmount = parseInt($("#total-coupon-discount-amount").text());
-        let totalPointUseAmount = parseInt($("#total-point-use-amount").text());
+        let totalPrice = parseInt($("#total-price").val());
+        let totalBookDiscountPrice = parseInt($("#total-book-discount-price").val());
+        let deliveryPrice = parseInt($("#delivery-price").val());
+        let totalCouponDiscountAmount = parseInt($("#total-coupon-discount-amount").val());
+        let totalPointUseAmount = parseInt($("#total-point-use-amount").val());
         let finalPrice = totalPrice + deliveryPrice - totalBookDiscountPrice - totalCouponDiscountAmount - totalPointUseAmount;
 
-        $("#final-price").text(finalPrice);
+        $("#final-price").val(finalPrice);
     }
 
     async function showCouponUseModal(){
@@ -209,7 +209,7 @@
             totalCouponDiscountAmount += parseInt($(this).val());
         });
         $("#total-coupon-discount-amount-tmp").val(totalCouponDiscountAmount);
-        $("#total-coupon-discount-amount").text(totalCouponDiscountAmount);
+        $("#total-coupon-discount-amount").val(totalCouponDiscountAmount);
         modalCoupon.hide();
 
         updateFinalPrice();
@@ -218,7 +218,7 @@
     function useTotalPoint(){
         let totalPointAmount = $("#total-point-amount").text();
         $("#total-point-use-amount-tmp").val(totalPointAmount);
-        $("#total-point-use-amount").text(totalPointAmount)
+        $("#total-point-use-amount").val(totalPointAmount)
 
         updateFinalPrice();
     }
