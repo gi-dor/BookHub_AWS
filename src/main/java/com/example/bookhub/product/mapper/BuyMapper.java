@@ -7,7 +7,6 @@ import java.util.List;
 
 @Mapper
 public interface BuyMapper {
-    long getBookNoByCartNo(long cartNo);
     List<CouponProduced> getCouponsByUserNo(long userNo);
     int getPointByUserNo(long userNo);
 }

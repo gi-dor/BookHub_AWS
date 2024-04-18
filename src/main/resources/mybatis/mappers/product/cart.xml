@@ -33,10 +33,4 @@
         where cart_no = #{cartNo}
     </update>
 
-    <select id="getBookNoByCartNo" parameterType="long" resultType="long">
-        select book_no
-        from CART
-        where cart_no = #{value}
-    </select>
-
 </mapper>

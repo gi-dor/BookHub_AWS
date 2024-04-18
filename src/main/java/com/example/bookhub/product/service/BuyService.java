@@ -15,10 +15,6 @@ public class BuyService {
     private final UserMapper userMapper;
     private final BuyMapper buyMapper;
 
-    public long getBookNoByCartNo(long cartNo){
-        return buyMapper.getBookNoByCartNo(cartNo);
-    }
-
     public List<CouponProduced> getCouponsByUserNo(String userId) {
         User user = userMapper.selectUserById(userId);
         return buyMapper.getCouponsByUserNo(user.getNo());
@@ -28,4 +24,5 @@ public class BuyService {
         User user = userMapper.selectUserById(userId);
         return buyMapper.getPointByUserNo(user.getNo());
     }
+
 }
