@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Sign UP</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" >
+
     <style>
         body {
             margin: 100px;
@@ -26,13 +27,13 @@
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">비밀번호</label>
-                    <input type="password" class="form-control" th:field="*{password}"/>
-                    <div th:errors="*{password}" class="text-danger"></div>
+                    <input id="password" type="password" class="form-control" th:field="*{password}"/>
                 </div>
 
                 <div class="form-group mb-3">
                     <label class="form-label">비밀번호 확인</label>
-                    <input  type="password" class="form-control"/>
+                    <input type="password" class="form-control" id="confirmPassword"/>
+                    <div id="passwordError" class="text-danger"></div>
                 </div>
 
                 <div class="form-group mb-3">
@@ -55,5 +56,18 @@
 </div>
 
 </body>
+<script>
+    document.getElementById('confirmPassword').addEventListener('keyup', function () {
+        let password = document.getElementById('password').value;
+        let confirmPassword = document.getElementById('confirmPassword').value;
 
+        let passwordError = document.getElementById('passwordError');
+        if(password !== confirmPassword){
+            passwordError.innerText = '비밀번호가 일치하지 않습니다';
+        } else {
+            passwordError.innerText = '';
+        }
+    });
+
+</script>
 </html>
