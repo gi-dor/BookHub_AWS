@@ -30,6 +30,7 @@
                                  <td>
                                      <div th:text="${cartBook.name}">책 제목</div>
                                      <div class="cart-book-price" th:text="${cartBook.price}">가격</div>
+                                     <div class="cart-book-discountRate" th:text="${cartBook.discountRate}">할인율</div>
                                  </td>
                                  <td>
                                      <div class="btn-group me-2" role="group" aria-label="Second group">
@@ -64,16 +65,16 @@
                             </li>
                             <li class="d-flex justify-content-between">
                                 <span>배송비</span>
-                                <span>+ 2,000원</span>
+                                +<span id="delivery-price">2000</span>
                             </li>
                             <li class="d-flex justify-content-between">
                                 <span>상품할인</span>
-                                <span>- 5,000원</span>
+                                -<span id="total-book-discount-price">0</span>
                             </li>
                             <hr class="my-4">
                             <li class="d-flex justify-content-between">
                                 <span>결제 예정 금액</span>
-                                <span>17,000원</span>
+                                <span id="final-price">0</span>
                             </li>
                         </ul>
                         <button type="submit" class="w-100 btn btn-lg btn-primary">주문하기</button>
@@ -93,7 +94,7 @@
         let currentCheckedStatus = $(this).prop('checked');
         $(":checkbox[name=cart-no]").prop("checked", currentCheckedStatus);
 
-        updateTotalPrice();
+        updatePrices();
     });
 
     $("#checkbox-all").trigger('click');
@@ -106,7 +107,7 @@
         } else {
             $("#checkbox-all").prop('checked', false);
         }
-        updateTotalPrice();
+        updatePrices();
     });
 
     // 수량 변경
@@ -116,7 +117,7 @@
         let nowVal = prevVal - 1;
         if(nowVal >= 0){
            $(this).siblings('input').val(nowVal);
-           updateTotalPrice();
+           updatePrices();
            updateBookCount(cartNo, nowVal);
         }
     })
@@ -126,18 +127,28 @@
         let prevVal =   parseInt($(this).siblings('input').val());
         let nowVal = prevVal + 1;
         $(this).siblings('input').val(nowVal);
-        updateTotalPrice();
+        updatePrices();
         updateBookCount(cartNo, nowVal);
     })
 
-    function updateTotalPrice(){
+    function updatePrices(){
         let totalPrice = 0;
+        let deliveryPrice = parseInt($("#delivery-price").text());
+        let totalBookDiscountPrice = 0;
+        let finalPrice = 0;
+
         $("tbody tr:has(:checkbox:checked) div[class=cart-book-price]").each(function(){
             let price = parseInt($(this).text());
             let count = parseInt($(this).closest('tr').find('.cart-count').val());
+            let discountRate = parseFloat($(this).closest('tr').find(".cart-book-discountRate").text());
             totalPrice += price * count;
+            totalBookDiscountPrice += price * count * discountRate;
         });
+        finalPrice = totalPrice + deliveryPrice - totalBookDiscountPrice;
+
         $("#total-price").text(totalPrice);
+        $("#total-book-discount-price").text(totalBookDiscountPrice);
+        $("#final-price").text(finalPrice);
     }
 
     async function updateBookCount(cartNo, count){
@@ -148,5 +159,5 @@
             console.log("장바구니 수량 변경 실패");
         }
     }
-    updateTotalPrice();
+    updatePrices();
 </script>

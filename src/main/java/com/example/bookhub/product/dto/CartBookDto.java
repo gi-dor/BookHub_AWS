@@ -10,5 +10,6 @@ public class CartBookDto {
     private String name;
     private int price;
     private String cover;
+    private float discountRate;
     private int count;
 }
