@@ -103,7 +103,7 @@
                                         <h5 class="mb-1">All customers<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"> <span class="badge-label">+26.5%</span></span></h5>
                                         <h6 class="text-body-tertiary">Last 7 days</h6>
                                     </div>
-                                    <h4>356</h4>
+                                    <h4 id="CustomerText">356</h4>
                                 </div>
                                 <div class="pb-0 pt-4">
                                     <!-- All Customers 그래프가 들어가야할 위치 -->
@@ -185,11 +185,15 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('myChart');
-        const allctx = document.getElementById('AllCustomer');
-        const topctx = document.getElementById('TopCoupons');
-        const totalctx = document.getElementById('TotalOrders');
-        const payctx = document.getElementById('Paying');
+        $(document).ready(function (){
+            getAllCustomer();
+
+        });
+        const ctx = document.getElementById('myChart'); // 왼쪽 그래프
+        const allctx = document.getElementById('AllCustomer');  // 오른쪽 우상
+        const topctx = document.getElementById('TopCoupons'); // 오른쪽 좌하
+        const totalctx = document.getElementById('TotalOrders'); // 오른쪽 그래프 좌상
+        const payctx = document.getElementById('Paying');   // 오른쪽 우하
 
         <!-- Total selles 그래프 -->
         new Chart(ctx, {
@@ -231,24 +235,63 @@
         });
 
         <!-- All customers -->
-        new Chart(allctx, {
-            type: 'line',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        function getAllCustomer() {
+            $.ajax({
+                url: "/allCustomer.do", // 데이터를 가져올 URL
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+
+                    let text = document.getElementById("CustomerText");
+                    text.textContent = data.allCustomer;
+
+                    let chart = new Chart(allctx, {
+                        type: "bar",
+                        data: {
+                            labels: ['전체 회원 수'], // 'allCustomer'를 따옴표로 감싸서 문자열로 처리
+                            datasets: [{
+                                label: '전체 회원수',
+                                data: [data.allCustomer], // data.allCustomer를 사용하여 데이터를 가져옴
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function () {
+                    alert("Failed to fetch data from the server.");
                 }
-            }
-        });
+            });
+        }
+        // <!-- All customers -->
+        // new Chart(allctx, {
+        //     type: 'line',
+        //     data: {
+        //         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        //         datasets: [{
+        //             label: '# of Votes',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
+
+
         <!-- Top coupons -->
         new Chart(topctx, {
             type: 'line',
