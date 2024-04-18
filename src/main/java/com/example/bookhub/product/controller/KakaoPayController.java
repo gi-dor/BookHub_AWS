@@ -2,11 +2,15 @@ package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
+import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.KakaoPayService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 
 @Controller
@@ -16,22 +20,25 @@ import org.springframework.web.bind.annotation.*;
 public class KakaoPayController {
 
     private final KakaoPayService kakaoPayService;
+    private final BuyService buyService;
 
     /**
      * 결제요청
      */
     @PostMapping("/ready")
     public String kakaoPayReady(@ModelAttribute BuyForm buyForm) {
-        //System.out.println(buyForm);
-        return "redirect:" + kakaoPayService.kakaoPayReady();
+        return "redirect:" + kakaoPayService.kakaoPayReady(buyForm);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/success")
-    public String kakaoPaySuccess(@ModelAttribute BuyForm buyForm, @RequestParam("pg_token")String pgToken, Model model) {
+    public String kakaoPaySuccess(@ModelAttribute BuyForm buyForm, Principal principal,
+                                  @RequestParam("pg_token")String pgToken, Model model) {
         KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
-        System.out.println(kakaoApprove.toString());
-        System.out.println(kakaoApprove.getAmount().toString());
-        System.out.println(buyForm);
+//        System.out.println(kakaoApprove.toString());
+//        System.out.println(kakaoApprove.getAmount().toString());
+//        System.out.println(buyForm);
+        buyService.createBuy(buyForm, principal.getName());
         return "product/pay/success";
     }
 
