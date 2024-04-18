@@ -194,7 +194,7 @@
         }
         $tbody.html(rows);
 
-        $(document).on('change', 'input[name="selectedCoupon"]', function() {
+        $(document).on('change', 'input[name="selectedCouponList"]', function() {
             if (!$(this).prop('checked')) {
                 $(this).closest('tr').find('input[name="coupon-payment-amount"]').val('0');
             }
