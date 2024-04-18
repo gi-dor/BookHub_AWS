@@ -24,27 +24,25 @@
                         </thead>
                         <tbody id="table-cart-tbody">
                              <tr th:each="cartBook: ${cartBooks}">
-                                 <td><input id="checkbox" type="checkbox" name="selectedBook" th:value="${cartBook.cartNo}"></td>
+                                 <td><input type="checkbox" name="cart-no" th:value="${cartBook.cartNo}"></td>
+                                 <input type="hidden" name="buyBookNoList" th:value="${cartBook.bookNo}" />
                                  <td></td>
                                  <td>
                                      <div th:text="${cartBook.name}">책 제목</div>
-                                     <div id="cart-book-price" th:text="${cartBook.price}">가격</div>
+                                     <div class="cart-book-price" th:text="${cartBook.price}">가격</div>
                                  </td>
                                  <td>
                                      <div class="btn-group me-2" role="group" aria-label="Second group">
                                          <a type="button"
-                                            class="btn btn-outline-secondary"
-                                            id="count-minus">-</a>
-                                         <input id="cart-count" name="selectedBookCount" th:value="${cartBook.count}"
+                                            class="btn btn-outline-secondary count-minus">-</a>
+                                         <input class="cart-count" name="buyBookCountList" th:value="${cartBook.count}"
                                                 style="width:30px; border: none;  background-color: transparent; padding: 0; margin: 10px"/>
                                          <a type="button"
-                                            class="btn btn-outline-secondary"
-                                            id="count-plus">+</a>
+                                            class="btn btn-outline-secondary count-plus">+</a>
                                      </div>
                                  </td>
                                  <td><a type="button"
-                                        class="btn btn-outline-danger"
-                                        id="cart-book-delete"
+                                        class="btn btn-outline-danger cart-book-delete"
                                         th:href="@{|/product/cart/delete?cartNo=${cartBook.cartNo}|}">
                                         <i class="bi bi-trash3"></i>
                                     </a>
@@ -93,16 +91,16 @@
     // 체크박스
     $("#checkbox-all").change(function() {
         let currentCheckedStatus = $(this).prop('checked');
-        $(":checkbox[name=selectedBook]").prop("checked", currentCheckedStatus);
+        $(":checkbox[name=cart-no]").prop("checked", currentCheckedStatus);
 
         updateTotalPrice();
     });
 
     $("#checkbox-all").trigger('click');
 
-    $(":checkbox[name=selectedBook]").change(function(){
-        let len = $(":checkbox[name=selectedBook]").length;
-        let checkedLen = $(":checked[name=selectedBook]:checked").length;
+    $(":checkbox[name=cart-no]").change(function(){
+        let len = $(":checkbox[name=cart-no]").length;
+        let checkedLen = $(":checked[name=cart-no]:checked").length;
         if(len == checkedLen){
             $("#checkbox-all").prop('checked', true);
         } else {
@@ -112,8 +110,8 @@
     });
 
     // 수량 변경
-    $("#table-cart-tbody").on('click', '#count-minus', function(event){
-        let cartNo = $(this).closest("tr").find("#checkbox").val();
+    $("#table-cart-tbody").on('click', '.count-minus', function(event){
+        let cartNo = $(this).closest("tr").find("input[name=cart-no]").val();
         let prevVal =  parseInt($(this).siblings('input').val());
         let nowVal = prevVal - 1;
         if(nowVal >= 0){
@@ -123,8 +121,8 @@
         }
     })
 
-    $("#table-cart-tbody").on('click', '#count-plus', function(event){
-        let cartNo = $(this).closest("tr").find("#checkbox").val();
+    $("#table-cart-tbody").on('click', '.count-plus', function(event){
+        let cartNo = $(this).closest("tr").find("input[name=cart-no]").val();
         let prevVal =   parseInt($(this).siblings('input').val());
         let nowVal = prevVal + 1;
         $(this).siblings('input').val(nowVal);
@@ -134,9 +132,9 @@
 
     function updateTotalPrice(){
         let totalPrice = 0;
-        $("tbody tr:has(:checkbox:checked) div[id^=cart-book-price]").each(function(){
+        $("tbody tr:has(:checkbox:checked) div[class=cart-book-price]").each(function(){
             let price = parseInt($(this).text());
-            let count = parseInt($(this).closest('tr').find('#cart-count').val());
+            let count = parseInt($(this).closest('tr').find('.cart-count').val());
             totalPrice += price * count;
         });
         $("#total-price").text(totalPrice);
