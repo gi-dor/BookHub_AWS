@@ -9,4 +9,5 @@ import java.util.List;
 public interface DashBoardMapper {
 
     int getAllUserCnt();
+    int getAllBookCnt();
 }

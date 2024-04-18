@@ -7,5 +7,9 @@
         from USER
     </select>
 
+    <select id="getAllBookCnt" resultType="int">
+        select COUNT(*) as CNT
+        from BOOK
+    </select>
 
 </mapper>

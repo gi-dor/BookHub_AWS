@@ -16,4 +16,9 @@ public class DashBoardService {
     public int getAllUserCnt() {
         return dashBoardMapper.getAllUserCnt();
     }
+
+    public int getAllBookCnt(){
+        return dashBoardMapper.getAllBookCnt();
+    }
+
 }

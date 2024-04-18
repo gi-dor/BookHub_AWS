@@ -32,4 +32,13 @@ public class DashBoardController {
         return map;
 
     }
+
+    @RequestMapping("/getAllBookCnt.do")
+    public @ResponseBody Map<String, Object> getAllBookCnt(Model model){
+        int cnt = dashBoardService.getAllBookCnt();
+        Map<String, Object> map = new HashMap<>();
+        map.put("allBook", cnt);
+        model.addAttribute("allBook", cnt);
+        return map;
+    }
 }
