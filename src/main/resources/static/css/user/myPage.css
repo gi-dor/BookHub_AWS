@@ -4,3 +4,22 @@
     font-style: normal;
     font-size: 35px;
 }
+
+
+#welcomeName{
+    font-family: "Dongle", sans-serif;
+    font-width: 500;
+    font-style: normal;
+    font-size: 40px;
+}
+
+#myPageTop{
+    color:black;
+    text-decoration: none;
+}
+
+td > a{
+    color:black;
+    text-decoration: none;
+    font-weight: bold;
+}
