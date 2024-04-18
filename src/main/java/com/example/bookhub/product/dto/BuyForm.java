@@ -8,6 +8,7 @@ import java.util.List;
 public class BuyForm {
     private List<Long> buyBookNoList;
     private List<Integer> buyBookCountList;
+    private List<Integer> selectedCouponList;
     private int totalPrice;
     private int deliveryPrice;
     private int totalBookDiscountPrice;
