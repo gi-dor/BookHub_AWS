@@ -15,12 +15,7 @@
         <result column="coupon_price" property="price"/>
     </resultMap>
 
-    <select id="getBookNoByCartNo" parameterType="long" resultType="long">
-        select book_no
-        from CART
-        where cart_no = #{value}
-    </select>
-
+    <!-- association -->
     <select id="getCouponByNo" parameterType="long" resultMap="CouponResultMap">
         select
             coupon_no,
@@ -49,9 +44,29 @@
         select
             point
         from
-             USER_INFO
+             USER
         where
             user_no = #{value}
     </select>
+
+    <insert id="createBuy" parameterType="com.example.bookhub.product.vo.Buy" >
+        insert into BUY
+        (total_price, total_book_discount_price, total_coupon_discount_amount, total_point_use_amount, final_price, point_accumulation_amount,
+         common_entrance_approach, common_entrance_password, buy_pay_method_no, buy_status_no, buy_delivery_request_no, user_no, delivery_no)
+        values
+        (#{totalPrice}, #{totalBookDiscountPrice}, #{totalCouponDiscountAmount}, #{totalPointUseAmount}, #{finalPrice}, 1000,
+         "...", "1234", 1, 1, 1, #{user.no}, 1)
+
+         <selectKey keyProperty="buyNo" resultType="long" order="AFTER">
+             select last_insert_id()
+         </selectKey>
+    </insert>
+
+    <insert id="createBuyBook" parameterType="com.example.bookhub.product.vo.BuyBook">
+        insert into BUY_BOOK
+        (buy_no, book_no, count)
+        values
+        (#{buyNo}, #{bookNo}, #{count})
+    </insert>
 
 </mapper>
