@@ -38,6 +38,7 @@ public class KakaoPayController {
 
         KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
         buyService.createBuy(buyForm, principal.getName());
+        model.addAttribute("finalPrice", buyForm.getFinalPrice());
         return "product/pay/success";
     }
 
