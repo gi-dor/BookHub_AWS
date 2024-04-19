@@ -71,8 +71,8 @@
                         <td>
                             <div class="">
                                 <div class="" style="text-align: center">
-                                    <p class="">출석 이벤트
-                                        <span class="" style="font-weight: bold"> Y </span>일 &nbsp;
+                                    <p class="">적립금 :
+                                        <span class="" style="font-weight: bold" th:text="${user.point}"> Y </span> &nbsp;
                                         <br><br>
                                         <a href="#" class="btn btn-secondary btn-sm">
                                             <span class="">자세히보기</span>
@@ -85,7 +85,7 @@
                             <div class="">
                                 <div class="" style="text-align: center">
                                     <p class=""> 보유 쿠폰 :
-                                        <span class="" style="font-weight: bold"> X </span>개 &nbsp;
+                                        <span class="" style="font-weight: bold" th:text="${couponCnt}"> X </span>개 &nbsp;
                                         <br><br>
                                         <a href="#" class="btn btn-secondary btn-sm">
                                             <span class="">자세히보기</span>

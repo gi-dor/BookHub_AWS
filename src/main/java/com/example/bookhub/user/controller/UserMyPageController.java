@@ -31,8 +31,11 @@ public class UserMyPageController {
     @GetMapping()
     public String myPage(Model model , Principal principal) {
 
+        // 로그인 ID 사용자 정보 조회
         String userId = principal.getName();
         User user = userService.selectUserById(userId);
+
+        // 쿠폰 갯수 카운팅
         int couponCnt = myPageService.countCoupon(userId);
 
         model.addAttribute("user" , user);
