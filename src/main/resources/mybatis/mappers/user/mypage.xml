@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.user.mapper.MyPageMapper">
+
+    <select id="countCoupon" parameterType="string"  resultType="int">
+    select count(*)
+    from COUPON_PRODUCED cp , USER u
+    where cp.USER_NO = u.USER_NO
+      and u.USER_ID =  #{value};
+    </select>
+
+
+    <select id="getOrderList" parameterType="string" resultType="com.example.bookhub.product."
+
+
+</mapper>
+
+
