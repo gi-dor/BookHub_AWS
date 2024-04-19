@@ -1,7 +1,7 @@
 package com.example.bookhub.admin.service;
 
+import com.example.bookhub.admin.dto.DayTotalDto;
 import com.example.bookhub.admin.mapper.DashBoardMapper;
-import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,10 @@ public class DashBoardService {
 
     public int getAllBookCnt(){
         return dashBoardMapper.getAllBookCnt();
+    }
+
+    public List<DayTotalDto> getTotalDate() {
+        return dashBoardMapper.getTotalDate();
     }
 
 }
