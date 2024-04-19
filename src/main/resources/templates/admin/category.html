@@ -6,11 +6,20 @@
         <hr>
 
         <!-- 버튼 영역 -->
-        <div class="col-12 p-3 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-1" id="btn-create-category">추가</button>
-            <button type="button" class="btn btn-success me-1" id="btn-update-category">수정</button>
-            <button type="button" class="btn btn-danger" id="btn-delete-category">삭제</button>
+        <div class="col-12 p-3 d-flex justify-content-between">
+            <!-- 왼쪽 배치 -->
+            <div class="d-flex justify-content-start">
+                <button type="button" class="btn btn-info me-1" id="btn-initialize-category">초기화</button>
+            </div>
+
+            <!-- 오른쪽 배치 -->
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary me-1" id="btn-create-category">추가</button>
+                <button type="button" class="btn btn-success me-1" id="btn-update-category">수정</button>
+                <button type="button" class="btn btn-danger" id="btn-delete-category">삭제</button>
+            </div>
         </div>
+
 
         <!-- 대분류 영역 -->
         <div class="col-12 bg-light p-3 mb-3" id="toplevel-category-box">
@@ -459,7 +468,18 @@
             });
         }
 
-    })
+        $("#btn-initialize-category").click(function () {
+            emptyAllCategories();
+        })
+
+        // 카테고리 조회화면 초기화
+        function emptyAllCategories() {
+            $("#topLevelCategories span").removeClass("bg-primary-subtle");
+            $("#secondLevelCategories").empty();
+            $("#thirdLevelCategories").empty();
+        }
+
+    });
 </script>
 
 </html>
