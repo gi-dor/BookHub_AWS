@@ -1,5 +1,6 @@
 package com.example.bookhub.user.vo;
 
+import com.example.bookhub.product.vo.CouponProduced;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -30,7 +31,9 @@ public class User {
     private String address;
     private String addressDetail;
     private String delYn;
+    private Long point;
     private UserGrade userGrade;
+    private CouponProduced couponPr;
 
     public String getFullAddress() {
         return String.format("%s %s %s", zipCode,address,addressDetail);
