@@ -3,6 +3,8 @@ package com.example.bookhub.board.vo;
 import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FaqCategory {
 
     private Long no;

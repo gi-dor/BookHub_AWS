@@ -14,6 +14,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Noto+Serif:ital,wdth@1,75&display=swap" rel="stylesheet">
+<!--FontAwsome-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <!-- jQuery & Ajax -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -27,12 +29,14 @@
 <!-- 내비게이션 바 -->
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
-
-<th:block layout:fragment="content"></th:block>
+<div style="margin-top: 260px;">
+<th:block layout:fragment="content" ></th:block>
+</div>
 
 <!-- 푸터 -->
-<footer th:replace="~{layout/footer :: footer}"></footer>
-
+<div style="margin-top: 200px;">
+<footer th:replace="~{layout/footer :: footer} "></footer>
+</div>
 <!--java script -->
 <th:block layout:fragment="script">
 </th:block>
