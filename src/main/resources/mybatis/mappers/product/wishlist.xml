@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.product.mapper.WishListMapper">
+
+    <insert id="createWishList" parameterType="map">
+        insert into USER_WISHLIST
+        (book_no, user_no)
+        values
+        (#{bookNo}, #{userNo})
+    </insert>
+
+    <delete id="deleteWishList" parameterType="map">
+        delete from USER_WISHLIST
+        where book_no = #{bookNo}
+        and user_no = #{userNo}
+    </delete>
+</mapper>

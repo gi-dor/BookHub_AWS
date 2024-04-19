@@ -13,6 +13,10 @@
 
         <association column="community_board_user_no" property="user"
                      select="com.example.bookhub.board.mapper.CommunityMapper.getUserByNo"/>
+        <association property="images" javaType="com.example.bookhub.board.vo.CommunityImages">
+            <id column="community_board_image_no" property="no"/>
+            <result column="community_board_images_path" property="imagePath" />
+        </association>
     </resultMap>
 
     <resultMap type="com.example.bookhub.user.vo.User" id="CommunityGetUserNameResultMap">
@@ -79,9 +83,10 @@
 
     <!-- 게시글 상세페이지 조회 -->
     <select id="getCommunityByNo" parameterType="Long" resultMap="CommunityListResultMap">
-        SELECT *
-        FROM COMMUNITY_BOARDS
-        WHERE COMMUNITY_BOARD_NO = #{value}
+        SELECT C.*, I.*
+        FROM COMMUNITY_BOARDS C
+        LEFT JOIN COMMUNITY_BOARD_IMAGES I ON C.COMMUNITY_BOARD_NO = I.COMMUNITY_BOARD_NO
+        WHERE C.COMMUNITY_BOARD_NO = #{value}
     </select>
 
     <!-- 커뮤니티 게시글 수정 -->
