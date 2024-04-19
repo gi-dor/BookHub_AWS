@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AladinMapper {
     void insertBook(Book book);
+
 }
+
