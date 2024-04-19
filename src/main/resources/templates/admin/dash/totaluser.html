@@ -188,6 +188,7 @@
         $(document).ready(function (){
             getAllCustomer();
             getAllBooks();
+            getTotalYesterDay();
         });
         const ctx = document.getElementById('myChart'); // 왼쪽 그래프
         const allctx = document.getElementById('AllCustomer');  // 오른쪽 우상
@@ -196,24 +197,40 @@
         const payctx = document.getElementById('Paying');   // 오른쪽 우하
 
         <!-- Total selles 그래프 -->
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        function getTotalYesterDay() {
+            // let dateList = [];
+            // let valueList = [];
+
+            $.ajax({
+                url: "/getTotalYesterday.do",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    let chart = new Chart(ctx, {
+
+                        type: "line",
+                        data: {
+                            // 표 아래 글씨
+                            labels: [], // 'allCustomer'를 따옴표로 감싸서 문자열로 처리
+                            datasets: [{
+                                label : '매출액',
+                                data: data
+                            }]
+                        },
+                        options: {
+                            parsing: {
+                                xAxisKey: 'dayTotalDate',
+                                yAxisKey: 'dayTotalPrice'
+                            }
+                        }
+                    });
+                },
+                error: function () {
+                    alert("Failed to fetch data from the server.");
                 }
-            }
-        });
+            });
+        }
+
         <!-- Total Orders -->
         function getAllBooks() {
             $.ajax({

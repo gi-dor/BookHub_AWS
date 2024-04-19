@@ -2,14 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.admin.mapper.DashBoardMapper">
 
+    <!-- 총 유저수 -->
     <select id="getAllUserCnt" resultType="int">
         select COUNT(*) AS CNT
         from USER
     </select>
 
+    <!-- 책의 총 권 수 -->
     <select id="getAllBookCnt" resultType="int">
-        select COUNT(*) as CNT
+        select COUNT(DISTINCT BOOK.BOOK_NAME) as CNT
         from BOOK
     </select>
 
+
+    <!-- BUY 테이블에서 어제날자의 판매합계값을 통계테이블(DAY)로 저장 -->
+    <insert id="saveTotalYesterday">
+        INSERT INTO DAY_TOTAL (DAY_TOTAL_DATE, DAY_TOTAL_PRICE)
+        SELECT DATE_FORMAT(BUY_DATE, '%Y-%m-%d') AS DAY_TOTAL_DATE, SUM(TOTAL_PRICE)
+        FROM BUY
+        WHERE DATE_FORMAT(BUY_DATE, '%Y-%m-%d') = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        GROUP BY DATE_FORMAT(BUY_DATE, '%Y-%m-%d')
+    </insert>
+
+    <select id="getTotalDate" resultType="com.example.bookhub.admin.dto.DayTotalDto">
+        select DAY_TOTAL_DATE as dayTotalDate, DAY_TOTAL_PRICE as dayTotalPrice
+        from DAY_TOTAL
+    </select>
 </mapper>
