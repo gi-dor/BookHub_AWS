@@ -6,13 +6,62 @@
     select count(*)
     from COUPON_PRODUCED cp , USER u
     where cp.USER_NO = u.USER_NO
-      and u.USER_ID =  #{value};
+      and u.USER_ID =  #{value}
     </select>
 
 
 
 
+  <select id="selectOrderListById" parameterType="string" resultType="com.example.bookhub.product.vo.Buy">
+      select
+          b.BUY_NO                            as buyNo,
+          b.TOTAL_PRICE                       as totalPrice,
+          b.FINAL_PRICE                       as finalPrice,
+          b.COMMON_ENTRANCE_APPROACH          as commonEntranceApproach,
+          b.BUY_DATE                          as buyDate,
+          b.BUY_PAY_METHOD_NO                 as buyPayMethod,
+          bs.BUY_STATUS_NAME                  as "buyStatus.name",
+          u.USER_ID                           as "user.id",
+          bdr.BUY_DELIVERY_REQUEST_NO         as "buyDeliveryRequest.buyDeliveryRequestNo",
+          (select count(*)
+           from BUY_BOOK x
+           where x.BUY_NO = b.BUY_NO)            as cnt,
+          (select y.BOOK_NAME
+           from BUY_BOOK x, BOOK y
+           where x.BUY_NO = b.BUY_NO
+             and x.BOOK_NO = y.BOOK_NO
+            limit 1)                             as "book.name"
+      from BUY b , USER u , BUY_STATUS bs , BUY_DELIVERY_REQUEST bdr
+      where b.USER_NO = u.USER_NO
+        and b.BUY_STATUS_NO = bs.BUY_STATUS_NO
+        and b.BUY_DELIVERY_REQUEST_NO = bdr.BUY_DELIVERY_REQUEST_NO
+        and u.USER_ID = #{value}
+      ORDER BY
+          b.BUY_NO DESC
+          LIMIT 3;
+  </select>
 
+
+    
+    <select id="selectInquiryList" parameterType="string" resultType="com.example.bookhub.board.vo.Inquiry">
+        select
+            i.INDIVIDUAL_INQUIRY_NO             as no,
+            i.INQUIRY_CATEGORY_NO               as "faqCategory.no",
+            f.FAQ_CATEGORY_NAME                 as "faqCategory.name",
+            i.INQUIRY_USER_NO                   as "user.no",
+            u.USER_ID                           as "user.id",
+            i.INDIVIDUAL_INQUIRY_TITLE          as title,
+            i.INDIVIDUAL_INQUIRY_CONTENT        as content,
+            i.INDIVIDUAL_INQUIRY_ANSWER_YN      as answerYn,
+            i.INDIVIDUAL_INQUIRY_DELETE_YN      as deleteYn,
+            i.INDIVIDUAL_INQUIRY_CREATE_DATE    as createdDate ,
+            i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate,
+            u.USER_NAME                         as "user.name"
+        from INDIVIDUAL_INQUIRIES i , USER u , FAQ_CATEGORIES f
+        where i.INQUIRY_USER_NO = u.USER_NO
+        and i.INQUIRY_CATEGORY_NO = f.FAQ_CATEGORY_NO
+        and u.USER_ID = #{id}
+    </select>
 </mapper>
 
 

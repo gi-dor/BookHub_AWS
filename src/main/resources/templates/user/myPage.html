@@ -71,8 +71,8 @@
                         <td>
                             <div class="">
                                 <div class="" style="text-align: center">
-                                    <p class="">출석 이벤트
-                                        <span class="" style="font-weight: bold"> Y </span>일 &nbsp;
+                                    <p class="">적립금 :
+                                        <span class="" style="font-weight: bold" th:text="${user.point}"> Y </span> &nbsp;
                                         <br><br>
                                         <a href="#" class="btn btn-secondary btn-sm">
                                             <span class="">자세히보기</span>
@@ -85,7 +85,7 @@
                             <div class="">
                                 <div class="" style="text-align: center">
                                     <p class=""> 보유 쿠폰 :
-                                        <span class="" style="font-weight: bold"> X </span>개 &nbsp;
+                                        <span class="" style="font-weight: bold" th:text="${couponCnt}"> X </span>개 &nbsp;
                                         <br><br>
                                         <a href="#" class="btn btn-secondary btn-sm">
                                             <span class="">자세히보기</span>
@@ -176,45 +176,22 @@
                     <th>주문 번호</th>
                     <th>주문 상품</th>
                     <th>주문 상태</th>
-                    <th> 수령인 </th>
+                    <th> 가격 </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>2024-04-18</td>
-                    <td><a href="" id="orderNoHref">10156123</a></td>
-                    <td>상품명 ABCVDE</td>
-                    <td>배송완료</td>
-                    <td>나타</td>
-                </tr>
-                <tr>
-                    <td>2024-04-18</td>
-                    <td><a href="">10156123</a></td>
-                    <td>상품명 ABCVDE</td>
-                    <td>배송완료</td>
-                    <td>황제</td>
-                </tr>
-                <tr>
-                    <td>2024-04-18</td>
-                    <td><a href="">10156123</a></td>
-                    <td>상품명 ABCVDE</td>
-                    <td>배송완료</td>
-                    <td>치우</td>
-                </tr>
-                <tr>
-                    <td>2024-04-18</td>
-                    <td><a href="">10156123</a></td>
-                    <td>상품명 ABCVDE</td>
-                    <td>배송완료</td>
-                    <td>헌원</td>
-                </tr>
-                <tr>
-                    <td>2024-04-18</td>
-                    <td><a href="">10156123</a></td>
-                    <td>상품명 ABCVDE</td>
-                    <td>배송완료</td>
-                    <td>구야자</td>
-                </tr>
+                    <tr th:each="order : ${orderList}">
+                        <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}"></td>
+                        <td><a href="#" th:text="${order.buyNo}"></a></td>
+                        <td>
+                            <!-- 주문에 대한 상품 목록 -->
+                            <span th:text="${order.book.name}"></span>
+                            <!-- 만약 주문한 상품이 여러 개인 경우 -->
+                            <span th:if="${order.cnt > 1}" th:text="' 외 ' + ${order.cnt} + '개' "></span>
+                        </td>
+                        <td th:text="${order.buyStatus.name}"></td>
+                        <td th:text="${order.finalPrice}"></td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -246,26 +223,14 @@
                         <th> 작성 날짜 </th>
                         <th> 답변 완료</th>
                     </tr>
-                    <tr>
+                    <tr th:if="${#lists.isEmpty(inquiryList)}">
                         <td colspan="4" align="center">등록하신 1:1 문의 글이 없습니다.</td>
                     </tr>
-                    <tr>
-                        <td> 교환/환불 </td>
-                        <td> 환불 신청 하고 물건 보냈는데 입금 언제되나요 ?</td>
-                        <td> 2024-04-18</td>
-                        <td align="center"> N </td>
-                    </tr>
-                    <tr>
-                        <td> 교환/환불 </td>
-                        <td> 환불 신청 하고 물건 보냈는데 입금 언제되나요 ?</td>
-                        <td> 2024-04-18</td>
-                        <td align="center"> N </td>
-                    </tr>
-                    <tr>
-                        <td> 교환/환불 </td>
-                        <td> 환불 신청 하고 물건 보냈는데 입금 언제되나요 ?</td>
-                        <td> 2024-04-18</td>
-                        <td align="center"> N </td>
+                    <tr th:each="inquiry : ${inquiryList}" align="center">
+                        <td th:text="${inquiry.faqCategory.name}"> 교환/환불 </td>
+                        <td th:text="${inquiry.title}"> 환불 신청 하고 물건 보냈는데 입금 언제되나요 ?</td>
+                        <td th:text="${#temporals.format(inquiry.createdDate, 'yyyy-MM-dd')}"></td>
+                        <td align="center" th:text="${inquiry.answerYn}"> N </td>
                     </tr>
                 </table>
             </div>
