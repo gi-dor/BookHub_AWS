@@ -47,8 +47,8 @@
                 <!-- 그래프위에 div -->
                 <div class="row flex-between-center mb-4 g-3">
                     <div class="col-auto">
-                        <h3>EX 월간 매출</h3>
-                        <p class="text-body-tertiary lh-sm mb-0">월간 매출 밑에 들어갈 작은 글</p>
+                        <h3>주간 매출</h3>
+                        <p class="text-body-tertiary lh-sm mb-0">최근 7일치의 매출액이 조회됩니다</p>
                     </div>
                     <div class="col-8 col-sm-4">
                         <select class="form-select form-select-sm" id="select-gross-revenue-month">
@@ -214,7 +214,10 @@
                             labels: [], // 'allCustomer'를 따옴표로 감싸서 문자열로 처리
                             datasets: [{
                                 label : '매출액',
-                                data: data
+                                data: data,
+                                borderColor: 'rgba(54, 162, 235, 0.2)',
+                                backgroundColor: 'rgba(218, 165, 32, 1)',
+                                borderWidth: 1
                             }]
                         },
                         options: {
