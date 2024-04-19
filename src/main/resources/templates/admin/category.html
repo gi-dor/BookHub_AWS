@@ -168,15 +168,38 @@
 
         // 모달창 닫을 때 입력 내용 초기화
         $('#create-modal').on('hidden.bs.modal', function () {
-            // 대분류 입력 요소 초기화
+            // 대분류 탭의 입력 요소 초기화
             $("#top-input-top-category").val("");
 
-            // 중분류의 입력 요소 초기화
+            // 중분류 탭의 입력 요소 초기화
             $("#second-select-top-category option").prop('selected', false).first().prop("selected", true);
             $("#second-input-second-category").val("");
 
-            // 소분류의 입력 요소 초기화
+            // 소분류 탭의 입력 요소 초기화
             $("#third-select-top-category option").prop('selected', false).first().prop("selected", true);
+            initSecondCategories();
+            $("#third-input-third-category").val("");
+
+            /*
+            // 모달 창 내의 모든 폼 요소를 선택합니다.
+            var forms = $(this).find('form');
+
+            // 각 폼 요소를 초기화합니다.
+            forms.each(function () {
+                // 폼 요소를 기본값으로 재설정합니다.
+                this.reset();
+            });
+            */
+
+            // 탭을 첫 번째 탭으로 리셋합니다.
+            $(this).find('.nav-link').removeClass('active');
+            $(this).find('.nav-link:first').addClass('active');
+            $(this).find('.tab-pane').removeClass('show active');
+            $(this).find('.tab-pane:first').addClass('show active');
+        });
+
+        // 중분류 select 요소 초기화
+        function initSecondCategories() {
             $.ajax({
                 url: "/admin/getSecondCategories",
                 method: "GET",
@@ -198,25 +221,7 @@
                     console.error("소분류 데이터 요청 실패:", error);
                 }
             });
-            $("#third-input-third-category").val("");
-
-            /*
-            // 모달 창 내의 모든 폼 요소를 선택합니다.
-            var forms = $(this).find('form');
-
-            // 각 폼 요소를 초기화합니다.
-            forms.each(function () {
-                // 폼 요소를 기본값으로 재설정합니다.
-                this.reset();
-            });
-            */
-
-            // 탭을 첫 번째 탭으로 리셋합니다.
-            $(this).find('.nav-link').removeClass('active');
-            $(this).find('.nav-link:first').addClass('active');
-            $(this).find('.tab-pane').removeClass('show active');
-            $(this).find('.tab-pane:first').addClass('show active');
-        });
+        }
 
         // 대분류 카테고리 클릭 시 관련된 중분류 카테고리 표시
         $("span[id^=topLevelCategory]").click(function () {
@@ -224,7 +229,11 @@
 
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
             $("#thirdLevelCategories").empty();
+            showSecondCategoriesByTopCategoryNo(categoryNo);
+        });
 
+        // 대분류 카테고리 번호와 관련된 증분류 카테고리 span 요소로 표시
+        function showSecondCategoriesByTopCategoryNo(categoryNo) {
             $.ajax({
                 url: "/admin/getSubCategories",
                 method: "GET",
@@ -248,14 +257,18 @@
                     console.error("중분류 데이터 요청 실패:", error);
                 }
             });
-        });
+        }
 
         // 중분류 카테고리 클릭 시 관련된 소분류 카테고리 표시
         $("#secondLevelCategories").on("click", "span[id^=secondLevelCategory]", function () {
             const categoryNo = $(this).data("secondCategoryNo");
 
             $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
+            showThirdCategoriesBySecondCategoryNo(categoryNo);
+        });
 
+        // 중분류 카테고리 번호와 관련된 소분류 카테고리 span 요소로 표시
+        function showThirdCategoriesBySecondCategoryNo(categoryNo) {
             $.ajax({
                 url: "/admin/getSubCategories",
                 method: "GET",
@@ -279,7 +292,7 @@
                     console.error("소분류 데이터 요청 실패:", error);
                 }
             });
-        });
+        }
 
         // 소분류 카테고리 클릭 시 강조 표시
         $("#thirdLevelCategories").on("click", "span[id^=thirdLevelCategory]", function () {
@@ -289,7 +302,11 @@
         // 모달창의 소분류 탭에서 대분류 카테고리 선택 시 관련된 중분류 카테고리 표시
         $('#third-select-top-category').change(function () {
             const categoryNo = $(this).val();
+            updateSecondCategoriesOptions(categoryNo);
+        });
 
+        // 대분류 카테고리 번호와 관련된 중분류 카테고리 option 요소로 표시
+        function updateSecondCategoriesOptions(categoryNo) {
             $.ajax({
                 url: "/admin/getSubCategories",
                 method: "GET",
@@ -311,12 +328,16 @@
                     console.error("소분류 데이터 요청 실패:", error);
                 }
             });
-        });
+        }
 
         // 모달창의 소분류 탭에서 중분류 카테고리 선택 시 일치하는 대분류 카테고리 선택
         $('#third-select-second-category').change(function () {
             const categoryNo = $(this).val();
+            selectTopCategory(categoryNo);
+        });
 
+        // 중분류 카테고리 번호와 관련된 대분류 카테고리 선택
+        function selectTopCategory(categoryNo) {
             $.ajax({
                 url: "/admin/getParentCategory",
                 method: "GET",
@@ -335,9 +356,9 @@
                     console.error("소분류 데이터 요청 실패:", error);
                 }
             });
-        });
+        }
 
-        <!-- 카테고리 저장 -->
+        // 분류별 카테고리 저장
         $("#btn-add-create-modal").click(function () {
             let tab = $(".nav-tabs .nav-link.active").text().trim();
             if (tab === '대분류') {
@@ -386,7 +407,7 @@
             let topCategoryNo = $("#second-select-top-category").val();
 
             $.ajax({
-                url: "/admin/addSecondCategory",
+                url: "/admin/addSubCategory",
                 method: "POST",
                 data: {categoryName: categoryName, topCategoryNo: topCategoryNo},
                 success: function (secondLevelCategories) {
@@ -416,7 +437,7 @@
             let secondCategoryNo = $("#third-select-second-category").val();
 
             $.ajax({
-                url: "/admin/addThirdCategory",
+                url: "/admin/addSubCategory",
                 method: "POST",
                 data: {categoryName: categoryName, secondCategoryNo: secondCategoryNo},
                 success: function (thirdLevelCategories) {
@@ -433,8 +454,6 @@
 
                         $thirdLevelCategories.append($span);
                     });
-
-                    
                 },
                 error: function (xhr, status, error) {
                     console.error("에러발생:", error);

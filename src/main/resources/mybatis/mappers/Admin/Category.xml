@@ -59,17 +59,10 @@
             (#{value}, NULL)
     </insert>
 
-    <insert id="addSecondLevelCategory" parameterType="map">
+    <insert id="addSubCategory" parameterType="map">
             INSERT INTO BookHub.CATEGORY
             (CATEGORY_NAME, PARENT_CATEGORY_NO)
             VALUES
             (#{categoryName}, #{topCategoryNo})
-    </insert>
-
-    <insert id="addThirdLevelCategory" parameterType="map">
-            INSERT INTO BookHub.CATEGORY
-            (CATEGORY_NAME, PARENT_CATEGORY_NO)
-            VALUES
-            (#{categoryName}, #{secondCategoryNo})
     </insert>
 </mapper>

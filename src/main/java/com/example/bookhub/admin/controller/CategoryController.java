@@ -57,20 +57,12 @@ public class CategoryController {
         return categoryService.getAllTopLevelCategories();
     }
 
-    @PostMapping("/addSecondCategory")
+    @PostMapping("/addSubCategory")
     @ResponseBody
-    public List<Category> addSecondLevelCategory(@RequestParam("categoryName") String categoryName,
-                                                 @RequestParam("topCategoryNo") int topCategoryNo) {
-        categoryService.addSecondLevelCategory(categoryName, topCategoryNo);
+    public List<Category> addSubCategory(@RequestParam("categoryName") String categoryName,
+                                         @RequestParam("topCategoryNo") int topCategoryNo) {
+        categoryService.addSubCategory(categoryName, topCategoryNo);
         return categoryService.getSubCategoriesByCategoryNo(topCategoryNo);
-    }
-
-    @PostMapping("/addThirdCategory")
-    @ResponseBody
-    public List<Category> addThirdLevelCategory(@RequestParam("categoryName") String categoryName,
-                                                @RequestParam("secondCategoryNo") int secondCategoryNo) {
-        categoryService.addThirdLevelCategory(categoryName, secondCategoryNo);
-        return categoryService.getSubCategoriesByCategoryNo(secondCategoryNo);
     }
 
 }
