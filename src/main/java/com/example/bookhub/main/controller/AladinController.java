@@ -35,8 +35,8 @@ public class AladinController {
         model.addAttribute("books", books); // searchService 인스턴스를 통해 메서드 호출
         return "main/searchList"; // searchlist.html로 반환
     }
+*/
 
- */
 }
 
 
