@@ -1,5 +1,6 @@
 package com.example.bookhub.user.controller;
 
+import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
 import java.security.Principal;
@@ -22,7 +23,7 @@ public class UserMyPageController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
-
+    private final MyPageService myPageService;
 
 
     // 마이페이지
@@ -32,7 +33,11 @@ public class UserMyPageController {
 
         String userId = principal.getName();
         User user = userService.selectUserById(userId);
+        int couponCnt = myPageService.countCoupon(userId);
+
         model.addAttribute("user" , user);
+        model.addAttribute("couponCnt",couponCnt);
+
         return "/user/mypage";
     }
 
