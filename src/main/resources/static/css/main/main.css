@@ -59,3 +59,20 @@
     background-color: #1D3559;
     border-color: #1D3559;
 }
+
+.btn {
+    background-color: #1D3559;
+    color: white; /* 텍스트 색상을 흰색으로 지정 */
+    transition: all 0.3s ease; /* 호버 효과를 위한 전환 효과 */
+    border: 1px solid #1D3559; /* 테두리 추가 */
+}
+
+.btn:hover {
+    background-color: white; /* 호버 시 배경색을 흰색으로 변경 */
+    color: #1D3559; /* 호버 시 텍스트 색상을 #1D3559로 변경 */
+    border: 2px solid #1D3559; /* 테두리 추가 */
+}
+
+.page-link {
+    border: none;
+}

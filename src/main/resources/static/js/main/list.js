@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#heartButton').click(function () {
+    $('#zzim').click(function () {
         var icon = $(this).find('i');
         // 현재 아이콘의 클래스에 따라 다음 클래스로 변경
         if (icon.hasClass('far')) {

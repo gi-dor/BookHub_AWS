@@ -9,3 +9,53 @@
             "wdth" 100;
     font-size: 20px;
 }
+
+.navbar {
+    background-color: #1D3559;
+}
+
+#dropdownMenuButton {
+    margin-top: 0.1rem;
+}
+
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    border: 2px solid #1D3559;
+}
+
+.form-select {
+    border: none;
+}
+.form-control {
+    border: none;
+}
+
+.form-control:focus {
+    border: white;
+}
+
+
+#submitButton,
+#btn-toggle-category {
+    background-color: #1D3559;
+    color: white;
+    border: 2px solid white;
+    transition: all 0.3s ease; /* 호버 효과를 위한 전환 효과 */
+}
+
+#submitButton:hover,
+#btn-toggle-category:hover {
+    background-color: white; /* 호버 시 배경색을 흰색으로 변경 */
+    color: #1D3559;
+    border: 2px solid #1D3559;
+}
+
+#headerEndLine {
+    border-bottom: 1.5px solid #1D3559;
+    padding-top: 10px;
+}
+
+
+
