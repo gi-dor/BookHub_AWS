@@ -23,10 +23,14 @@ public class MainController {
     }
 
     @GetMapping("/list")
-    public String bookList() {
+    public String BestSellerList() {
         return "main/list";
     }
 
+    @GetMapping("/searchlist")
+    public String searchList() {
+        return "main/searchList";
+    }
 }
 
 

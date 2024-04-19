@@ -1,8 +1,10 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
        layout:decorate="~{layout/base}" >
+
     <div layout:fragment="content" class="container my-3">
         <div class="row mb-3">
             <div class="col-3">
+                <h3 id="book-no" th:text="${book.bookNo}" style="display:none">책 번호</h3>
                 <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
                 <h5 class="d-flex justify-content-center">책 설명</h5>
 
@@ -61,6 +63,7 @@
         <!-- 바텀 네비게이션 바 -->
         <nav class="navbar fixed-bottom navbar-light bg-light">
             <form class="container-fluid justify-content-end">
+                <button class="btn btn-outline-secondary me-3" type="button" onclick="toggleAct(this)"><i id="wish-list" class="bi bi-heart"></i></button>
                 <button class="btn btn-outline-secondary me-3" type="button" onclick="showAlertModal(${book.no})">장바구니</button>
                 <button class="btn btn-outline-success me-3" type="button">선물하기</button>
                 <button class="btn btn-outline-success me-3" type="button">바로 주문</button>
@@ -89,6 +92,7 @@
     <script layout:fragment="script" type="text/javascript">
 
         const url = "http://localhost:8080/product/cart"
+        let bookNo = parseInt($("#book-no").text());
 
         function showAlertModal(bookId){
             const alertModal = new bootstrap.Modal("#alert-modal");
@@ -99,6 +103,30 @@
         async function insertCart(bookId){
             if(bookId){
                 //let response = await fetch()
+            }
+        }
+
+        async function toggleAct(button) {
+            let heartIcon = button.querySelector('#wish-list');
+
+            if (heartIcon.classList.contains('bi-heart-fill')) {
+                heartIcon.classList.remove('bi-heart-fill');
+                heartIcon.classList.add('bi-heart');
+
+                let response = await fetch("/product/wishlist/delete/" + bookNo);
+                console.log(response);
+                if(!response.ok){
+                    console.log("위시리스트 추가 실패");
+                }
+            } else if(heartIcon.classList.contains('bi-heart')) {
+                heartIcon.classList.add('bi-heart-fill');
+                heartIcon.classList.remove('bi-heart');
+
+                let response = await fetch("/product/wishlist/create/" + bookNo);
+                console.log(response);
+                if(!response.ok){
+                    console.log("위시리스트 추가 실패");
+                }
             }
         }
     </script>

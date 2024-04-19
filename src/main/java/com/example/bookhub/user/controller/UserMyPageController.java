@@ -1,9 +1,13 @@
 package com.example.bookhub.user.controller;
 
+import com.example.bookhub.board.vo.Inquiry;
+import com.example.bookhub.product.vo.Buy;
+import com.example.bookhub.product.vo.BuyBook;
 import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
 import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -31,12 +35,24 @@ public class UserMyPageController {
     @GetMapping()
     public String myPage(Model model , Principal principal) {
 
+        // 로그인 ID 사용자 정보 조회
         String userId = principal.getName();
         User user = userService.selectUserById(userId);
+
+        // 쿠폰 갯수 카운팅
         int couponCnt = myPageService.countCoupon(userId);
+
+        // 최근 주문목록 가져오기
+        List<Buy> orderList =  myPageService.getOrderListById(userId);
+
+        // 내가 작성한 1:1 문의 가져오기
+        List<Inquiry> inquiryList = myPageService.getInquiryListById(userId);
+
 
         model.addAttribute("user" , user);
         model.addAttribute("couponCnt",couponCnt);
+        model.addAttribute("orderList",orderList);
+        model.addAttribute("inquiryList",inquiryList);
 
         return "/user/mypage";
     }

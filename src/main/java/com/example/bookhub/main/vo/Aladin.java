@@ -30,7 +30,6 @@ public class Aladin {
         private String description;
         private String isbn13;
         private int itemId;
-        private int priceSales;
         private int priceStandard;
         private String cover;
         private String categoryId;

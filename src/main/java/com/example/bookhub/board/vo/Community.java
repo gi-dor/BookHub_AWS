@@ -15,4 +15,6 @@ public class Community {
     private boolean deleteYn;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private CommunityImages images;
+    private CommunityComment comment;
 }

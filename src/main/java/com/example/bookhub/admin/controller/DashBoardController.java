@@ -1,6 +1,6 @@
 package com.example.bookhub.admin.controller;
 
-import com.example.bookhub.user.vo.User;
+import com.example.bookhub.admin.dto.DayTotalDto;
 import org.springframework.ui.Model;;
 import com.example.bookhub.admin.service.DashBoardService;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +40,10 @@ public class DashBoardController {
         map.put("allBook", cnt);
         model.addAttribute("allBook", cnt);
         return map;
+    }
+
+    @RequestMapping("/getTotalYesterday.do")
+    public @ResponseBody List<DayTotalDto> getTotalYesterday(Model model){
+        return dashBoardService.getTotalDate();
     }
 }

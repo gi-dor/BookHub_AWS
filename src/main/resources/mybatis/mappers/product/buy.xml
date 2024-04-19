@@ -42,7 +42,7 @@
 
     <select id="getPointByUserNo" parameterType="long" resultType="int">
         select
-            point
+            user_point
         from
              USER
         where
