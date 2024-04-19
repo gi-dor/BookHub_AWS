@@ -227,9 +227,13 @@
         $("span[id^=topLevelCategory]").click(function () {
             const categoryNo = $(this).data("topCategoryNo");
 
-            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
             $("#thirdLevelCategories").empty();
             showSecondCategoriesByTopCategoryNo(categoryNo);
+        });
+
+        // 카테고리 클릭시 강조 표시
+        $("div[id$=Categories].card-body").on("click", "span", function () {
+            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
         });
 
         // 대분류 카테고리 번호와 관련된 증분류 카테고리 span 요소로 표시
@@ -263,7 +267,6 @@
         $("#secondLevelCategories").on("click", "span[id^=secondLevelCategory]", function () {
             const categoryNo = $(this).data("secondCategoryNo");
 
-            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
             showThirdCategoriesBySecondCategoryNo(categoryNo);
         });
 
@@ -293,11 +296,6 @@
                 }
             });
         }
-
-        // 소분류 카테고리 클릭 시 강조 표시
-        $("#thirdLevelCategories").on("click", "span[id^=thirdLevelCategory]", function () {
-            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
-        });
 
         // 모달창의 소분류 탭에서 대분류 카테고리 선택 시 관련된 중분류 카테고리 표시
         $('#third-select-top-category').change(function () {
