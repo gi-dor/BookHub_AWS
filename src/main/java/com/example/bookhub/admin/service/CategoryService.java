@@ -35,8 +35,8 @@ public class CategoryService {
         categoryMapper.addTopLevelCategory(categoryName);
     }
 
-    public void addSubCategory(String categoryName, int topCategoryNo) {
-        categoryMapper.addSubCategory(categoryName, topCategoryNo);
+    public void addSubCategory(String categoryName, int categoryNo) {
+        categoryMapper.addSubCategory(categoryName, categoryNo);
     }
 
 }

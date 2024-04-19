@@ -63,6 +63,6 @@
             INSERT INTO BookHub.CATEGORY
             (CATEGORY_NAME, PARENT_CATEGORY_NO)
             VALUES
-            (#{categoryName}, #{topCategoryNo})
+            (#{categoryName}, #{categoryNo})
     </insert>
 </mapper>

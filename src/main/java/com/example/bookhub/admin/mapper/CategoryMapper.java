@@ -18,6 +18,6 @@ public interface CategoryMapper {
 
     void addTopLevelCategory(String categoryName);
 
-    void addSubCategory(String categoryName, int topCategoryNo);
+    void addSubCategory(String categoryName, int categoryNo);
 
 }

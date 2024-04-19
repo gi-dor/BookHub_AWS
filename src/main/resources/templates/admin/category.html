@@ -409,7 +409,7 @@
             $.ajax({
                 url: "/admin/addSubCategory",
                 method: "POST",
-                data: {categoryName: categoryName, topCategoryNo: topCategoryNo},
+                data: {categoryName: categoryName, CategoryNo: topCategoryNo},
                 success: function (secondLevelCategories) {
                     const $secondLevelCategories = $("#secondLevelCategories");
 
@@ -439,7 +439,7 @@
             $.ajax({
                 url: "/admin/addSubCategory",
                 method: "POST",
-                data: {categoryName: categoryName, secondCategoryNo: secondCategoryNo},
+                data: {categoryName: categoryName, CategoryNo: secondCategoryNo},
                 success: function (thirdLevelCategories) {
                     const $thirdLevelCategories = $("#thirdLevelCategories");
 

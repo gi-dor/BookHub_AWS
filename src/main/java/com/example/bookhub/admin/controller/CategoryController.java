@@ -60,9 +60,9 @@ public class CategoryController {
     @PostMapping("/addSubCategory")
     @ResponseBody
     public List<Category> addSubCategory(@RequestParam("categoryName") String categoryName,
-                                         @RequestParam("topCategoryNo") int topCategoryNo) {
-        categoryService.addSubCategory(categoryName, topCategoryNo);
-        return categoryService.getSubCategoriesByCategoryNo(topCategoryNo);
+                                         @RequestParam("CategoryNo") int categoryNo) {
+        categoryService.addSubCategory(categoryName, categoryNo);
+        return categoryService.getSubCategoriesByCategoryNo(categoryNo);
     }
 
 }
