@@ -4,6 +4,8 @@ package com.example.bookhub.product.service;
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
 import com.example.bookhub.product.dto.KakaoReadyResponse;
+import com.example.bookhub.product.exception.kakaoPay.KakaoPayApproveException;
+import com.example.bookhub.product.exception.kakaoPay.KakaoPayReadyException;
 import groovy.util.logging.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,7 @@ public class KakaoPayService {
     private String kakaoAdminKey;
 
     private KakaoReadyResponse kakaoReadyResponse;
+    private KakaoApproveResponse kakaoApproveResponse;
 
     /**
      * 결제 준비
@@ -64,15 +67,13 @@ public class KakaoPayService {
                     new URI(Host + "/v1/payment/ready"),
                     requestEntity,
                     KakaoReadyResponse.class);
-
-            return kakaoReadyResponse.getNext_redirect_pc_url();
-
         } catch (RestClientException e) {
-            e.printStackTrace();
+            throw new KakaoPayReadyException("카카오 결제 준비 실패");
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            throw new KakaoPayReadyException("카카오 결제 준비 실패");
         }
-        return "product/pay/error";
+
+        return kakaoReadyResponse.getNext_redirect_pc_url();
     }
 
 
@@ -98,12 +99,16 @@ public class KakaoPayService {
         // 외부에 보낼 url
         RestTemplate restTemplate = new RestTemplate();
 
-        KakaoApproveResponse approveResponse = restTemplate.postForObject(
-                Host + "/v1/payment/approve",
-                requestEntity,
-                KakaoApproveResponse.class);
+        try {
+            kakaoApproveResponse = restTemplate.postForObject(
+                    Host + "/v1/payment/approve",
+                    requestEntity,
+                    KakaoApproveResponse.class);
+        } catch(RestClientException e){
+            throw new KakaoPayApproveException("카카오 결제 승인 실패");
+        }
 
-        return approveResponse;
+        return kakaoApproveResponse;
     }
 
     private HttpHeaders getHeaders() {
