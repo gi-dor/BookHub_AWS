@@ -14,21 +14,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(KakaoPayReadyException.class)
     public String kakaoPayReadyExceptionHandler(KakaoPayReadyException ex, Model model){
-        log.error(ex.getMessage(), ex);
         model.addAttribute("errorMessage", ex.getMessage());
         return "product/pay/error";
     }
 
     @ExceptionHandler(KakaoPayApproveException.class)
     public String kakaoPayApproveExceptionHandler(KakaoPayApproveException ex, Model model){
-        log.error(ex.getMessage(), ex);
         model.addAttribute("errorMessage", ex.getMessage());
         return "product/pay/error";
     }
 
     @ExceptionHandler(KakaoPayBusinessLogicException.class)
-    public String kakaoPayBusinessLogicExceptionHandler(KakaoPayBusinessLogicException ex, Model model){
-        log.error(ex.getMessage(), ex);
+    public String kakaoPayBusinessLogicExceptionHandler(KakaoPayBusinessLogicException ex, Model model){;
         model.addAttribute("errorMessage", ex.getMessage());
         return "product/pay/error";
     }
