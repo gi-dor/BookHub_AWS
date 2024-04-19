@@ -65,4 +65,24 @@
             VALUES
             (#{categoryName}, #{categoryNo})
     </insert>
+
+    <select id="getTopLevelCategoryByCategoryName" parameterType="String" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+    	        	CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE PARENT_CATEGORY_NO IS NULL
+            AND CATEGORY_NAME = #{value}
+    </select>
+
+    <select id="getSubLevelCategoryByCategoryNameAndSuperCategoryNo" parameterType="map" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+    	        	CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE PARENT_CATEGORY_NO = #{categoryNo}
+            AND CATEGORY_NAME = #{categoryName}
+    </select>
+
+
 </mapper>

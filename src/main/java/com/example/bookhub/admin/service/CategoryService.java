@@ -39,4 +39,11 @@ public class CategoryService {
         categoryMapper.addSubCategory(categoryName, categoryNo);
     }
 
+    public Category getTopLevelCategoryByCategoryName(String categoryName) {
+        return categoryMapper.getTopLevelCategoryByCategoryName(categoryName);
+    }
+
+    public Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo) {
+        return categoryMapper.getSubLevelCategoryByCategoryNameAndSuperCategoryNo(categoryName, categoryNo);
+    }
 }

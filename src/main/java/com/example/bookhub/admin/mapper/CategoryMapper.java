@@ -20,4 +20,7 @@ public interface CategoryMapper {
 
     void addSubCategory(String categoryName, int categoryNo);
 
+    Category getTopLevelCategoryByCategoryName(String categoryName);
+
+    Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo);
 }

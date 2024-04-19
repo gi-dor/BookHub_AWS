@@ -246,11 +246,11 @@
         });
 
         // 대분류 카테고리 번호와 관련된 증분류 카테고리 span 요소로 표시
-        function showSecondCategoriesByTopCategoryNo(categoryNo) {
+        function showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryNo) {
             $.ajax({
                 url: "/admin/getSubCategories",
                 method: "GET",
-                data: {category: categoryNo},
+                data: {categoryNo: topCategoryNo},
                 success: function (secondLevelCategories) {
                     const $secondLevelCategories = $("#secondLevelCategories");
 
@@ -262,6 +262,10 @@
                             .text(secondLevelCategory.name)
                             .attr("data-second-category-no", secondLevelCategory.no)
                             .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
+
+                        if (secondCategoryNo) {
+                            $(`span[data-second-category-no="${secondCategoryNo}"]`).addClass("bg-primary-subtle");
+                        }
 
                         $secondLevelCategories.append($span);
                     });
@@ -280,11 +284,11 @@
         });
 
         // 중분류 카테고리 번호와 관련된 소분류 카테고리 span 요소로 표시
-        function showThirdCategoriesBySecondCategoryNo(categoryNo) {
+        function showThirdCategoriesBySecondCategoryNo(secondCategoryNo) {
             $.ajax({
                 url: "/admin/getSubCategories",
                 method: "GET",
-                data: {category: categoryNo},
+                data: {categoryNo: secondCategoryNo},
                 success: function (thirdLevelCategories) {
                     const $thirdLevelCategories = $("#thirdLevelCategories");
 
@@ -313,11 +317,11 @@
         });
 
         // 대분류 카테고리 번호와 관련된 중분류 카테고리 option 요소로 표시
-        function updateSecondCategoriesOptions(categoryNo) {
+        function updateSecondCategoriesOptions(topCategoryNo) {
             $.ajax({
                 url: "/admin/getSubCategories",
                 method: "GET",
-                data: {category: categoryNo},
+                data: {categoryNo: topCategoryNo},
                 success: function (secondLevelCategories) {
                     var $secondCategorySelect = $('#third-select-second-category option');
                     $secondCategorySelect.not(':first').remove();
@@ -368,16 +372,37 @@
         // 분류별 카테고리 저장
         $("#btn-add-create-modal").click(function () {
             let tab = $(".nav-tabs .nav-link.active").text().trim();
+
+            emptyAllCategories();
+
             if (tab === '대분류') {
                 createTopCategory();
+                return;
             }
             if (tab === "중분류") {
-                createSecondCategory();
+                let topCategoryNo = $("#second-select-top-category").val();
+                highlightCategoryByCategoryNo(topCategoryNo);
+                showSecondCategoriesByTopCategoryNo(topCategoryNo);
+                createSecondCategory(topCategoryNo);
+                return;
             }
             if (tab === "소분류") {
-                createThirdCategory();
+                let topCategoryNo = $("#third-select-top-category").val();
+                let secondCategoryNo = $("#third-select-second-category").val();
+                highlightCategoryByCategoryNo(topCategoryNo);
+                showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryNo);
+                showThirdCategoriesBySecondCategoryNo(secondCategoryNo);
+                createThirdCategory(secondCategoryNo);
+                return;
             }
         });
+
+        //  카테고리 번호와 같은 경우 강조 표시
+        function highlightCategoryByCategoryNo(categoryNo) {
+            $(`span[data-top-category-no="${categoryNo}"]`).addClass("bg-primary-subtle");
+            $(`span[data-second-category-no="${categoryNo}"]`).addClass("bg-primary-subtle");
+            $(`span[data-third-category-no="${categoryNo}"]`).addClass("bg-primary-subtle");
+        }
 
         // 대분류 카테고리 생성
         function createTopCategory() {
@@ -387,20 +412,15 @@
                 url: "/admin/addTopCategory",
                 method: "POST",
                 data: {categoryName: categoryName},
-                success: function (topLevelCategories) {
-                    const $topCategorySpan = $("#topLevelCategories");
+                success: function (topLevelCategory) {
 
-                    $topCategorySpan.empty();
+                    const $span = $("<span>")
+                        .addClass("border p-1 me-1 bg-primary-subtle")
+                        .text(topLevelCategory.name)
+                        .attr("data-top-category-no", topLevelCategory.no)
+                        .attr("id", `topLevelCategory-${topLevelCategory.no}`)
 
-                    topLevelCategories.forEach(topLevelCategory => {
-                        const $span = $("<span>")
-                            .addClass("border p-1 me-1")
-                            .text(topLevelCategory.name)
-                            .attr("data-top-category-no", topLevelCategory.no)
-                            .attr("id", `topLevelCategory-${topLevelCategory.no}`);
-
-                        $topCategorySpan.append($span);
-                    });
+                    $("#topLevelCategories").append($span);
                 },
                 error: function (xhr, status, error) {
                     console.error("에러발생:", error);
@@ -409,28 +429,22 @@
         }
 
         // 중분류 카테고리 생성
-        function createSecondCategory() {
+        function createSecondCategory(topCategoryNo) {
             let categoryName = $("#second-input-second-category").val();
-            let topCategoryNo = $("#second-select-top-category").val();
 
             $.ajax({
                 url: "/admin/addSubCategory",
                 method: "POST",
                 data: {categoryName: categoryName, CategoryNo: topCategoryNo},
-                success: function (secondLevelCategories) {
-                    const $secondLevelCategories = $("#secondLevelCategories");
+                success: function (secondLevelCategory) {
 
-                    $secondLevelCategories.empty();
+                    const $span = $("<span>")
+                        .addClass("border p-1 me-1 bg-primary-subtle")
+                        .text(secondLevelCategory.name)
+                        .attr("data-second-category-no", secondLevelCategory.no)
+                        .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
 
-                    secondLevelCategories.forEach(secondLevelCategory => {
-                        const $span = $("<span>")
-                            .addClass("border p-1 me-1")
-                            .text(secondLevelCategory.name)
-                            .attr("data-second-category-no", secondLevelCategory.no)
-                            .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
-
-                        $secondLevelCategories.append($span);
-                    });
+                    $("#secondLevelCategories").append($span);
                 },
                 error: function (xhr, status, error) {
                     console.error("에러발생:", error);
@@ -439,28 +453,22 @@
         }
 
         // 소분류 카테고리 생성
-        function createThirdCategory() {
+        function createThirdCategory(secondCategoryNo) {
             let categoryName = $("#third-input-third-category").val();
-            let secondCategoryNo = $("#third-select-second-category").val();
 
             $.ajax({
                 url: "/admin/addSubCategory",
                 method: "POST",
                 data: {categoryName: categoryName, CategoryNo: secondCategoryNo},
-                success: function (thirdLevelCategories) {
-                    const $thirdLevelCategories = $("#thirdLevelCategories");
+                success: function (thirdLevelCategory) {
 
-                    $thirdLevelCategories.empty();
+                    const $span = $("<span>")
+                        .addClass("border p-1 me-1 bg-primary-subtle")
+                        .text(thirdLevelCategory.name)
+                        .attr("data-third-category-no", thirdLevelCategory.no)
+                        .attr("id", `thirdLevelCategory-${thirdLevelCategory.no}`);
 
-                    thirdLevelCategories.forEach(thirdLevelCategory => {
-                        const $span = $("<span>")
-                            .addClass("border p-1 me-1")
-                            .text(thirdLevelCategory.name)
-                            .attr("data-third-category-no", thirdLevelCategory.no)
-                            .attr("id", `thirdLevelCategory-${thirdLevelCategory.no}`);
-
-                        $thirdLevelCategories.append($span);
-                    });
+                    $("#thirdLevelCategories").append($span);
                 },
                 error: function (xhr, status, error) {
                     console.error("에러발생:", error);

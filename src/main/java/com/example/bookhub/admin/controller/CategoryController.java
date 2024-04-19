@@ -34,7 +34,7 @@ public class CategoryController {
 
     @GetMapping("/getSubCategories")
     @ResponseBody
-    public List<Category> subCategories(@RequestParam("category") int categoryNo) {
+    public List<Category> subCategories(@RequestParam("categoryNo") int categoryNo) {
         return categoryService.getSubCategoriesByCategoryNo(categoryNo);
     }
 
@@ -52,17 +52,17 @@ public class CategoryController {
 
     @PostMapping("/addTopCategory")
     @ResponseBody
-    public List<Category> addTopLevelCategory(@RequestParam("categoryName") String categoryName) {
+    public Category addTopLevelCategory(@RequestParam("categoryName") String categoryName) {
         categoryService.addTopLevelCategory(categoryName);
-        return categoryService.getAllTopLevelCategories();
+        return categoryService.getTopLevelCategoryByCategoryName(categoryName);
     }
 
     @PostMapping("/addSubCategory")
     @ResponseBody
-    public List<Category> addSubCategory(@RequestParam("categoryName") String categoryName,
-                                         @RequestParam("CategoryNo") int categoryNo) {
+    public Category addSubCategory(@RequestParam("categoryName") String categoryName,
+                                   @RequestParam("CategoryNo") int categoryNo) {
         categoryService.addSubCategory(categoryName, categoryNo);
-        return categoryService.getSubCategoriesByCategoryNo(categoryNo);
+        return categoryService.getSubLevelCategoryByCategoryNameAndSuperCategoryNo(categoryName, categoryNo);
     }
 
 }
