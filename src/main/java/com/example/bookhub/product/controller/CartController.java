@@ -1,13 +1,15 @@
 package com.example.bookhub.product.controller;
 
+import com.example.bookhub.product.dto.CartBookDto;
 import com.example.bookhub.product.service.CartService;
-import com.example.bookhub.product.vo.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -18,9 +20,10 @@ public class CartController {
 
     private final CartService cartService;
 
-    @GetMapping("/list")
-    public String cart(Model model){
-       List<Book> cartBooks = cartService.findCartList(1);
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("")
+    public String cart(Principal principal, Model model){
+       List<CartBookDto> cartBooks = cartService.findCartList(principal.getName());
        model.addAttribute("cartBooks", cartBooks);
 
        return "product/cart/list";

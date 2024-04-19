@@ -1,8 +1,11 @@
 package com.example.bookhub.product.service;
 
 
+import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
 import com.example.bookhub.product.dto.KakaoReadyResponse;
+import com.example.bookhub.product.exception.kakaoPay.KakaoPayApproveException;
+import com.example.bookhub.product.exception.kakaoPay.KakaoPayReadyException;
 import groovy.util.logging.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,11 +33,12 @@ public class KakaoPayService {
     private String kakaoAdminKey;
 
     private KakaoReadyResponse kakaoReadyResponse;
+    private KakaoApproveResponse kakaoApproveResponse;
 
     /**
      * 결제 준비
      */
-    public String kakaoPayReady() {
+    public String kakaoPayReady(BuyForm buyForm) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory()); // 정확한 에러 파악을 위해 생성
 
@@ -47,9 +51,9 @@ public class KakaoPayService {
         params.add("cid", "TC0ONETIME"); // 가맹점 코드 - 테스트용
         params.add("partner_order_id", "1001"); // 주문 번호
         params.add("partner_user_id", "lucy"); // 회원 아이디
-        params.add("item_name", "책"); // 상품 명
-        params.add("quantity", "1"); // 상품 수량
-        params.add("total_amount", "20000"); // 상품 가격
+        params.add("item_name", "북허브 도서"); // 상품 명
+        params.add("quantity", String.valueOf(buyForm.getBuyBookNoList().size())); // 상품 수량
+        params.add("total_amount", String.valueOf(buyForm.getFinalPrice())); // 상품 가격
         params.add("tax_free_amount", "100"); // 상품 비과세 금액
         params.add("approval_url", "http://localhost:8080/kakaoPay/success"); // 성공시 url
         params.add("cancel_url", "http://localhost:8080/kakaoPay/cancel"); // 실패시 url
@@ -63,15 +67,13 @@ public class KakaoPayService {
                     new URI(Host + "/v1/payment/ready"),
                     requestEntity,
                     KakaoReadyResponse.class);
-
-            return kakaoReadyResponse.getNext_redirect_pc_url();
-
         } catch (RestClientException e) {
-            e.printStackTrace();
+            throw new KakaoPayReadyException("카카오 결제 준비 실패");
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            throw new KakaoPayReadyException("카카오 결제 준비 실패");
         }
-        return "product/pay/error";
+
+        return kakaoReadyResponse.getNext_redirect_pc_url();
     }
 
 
@@ -97,12 +99,16 @@ public class KakaoPayService {
         // 외부에 보낼 url
         RestTemplate restTemplate = new RestTemplate();
 
-        KakaoApproveResponse approveResponse = restTemplate.postForObject(
-                Host + "/v1/payment/approve",
-                requestEntity,
-                KakaoApproveResponse.class);
+        try {
+            kakaoApproveResponse = restTemplate.postForObject(
+                    Host + "/v1/payment/approve",
+                    requestEntity,
+                    KakaoApproveResponse.class);
+        } catch(RestClientException e){
+            throw new KakaoPayApproveException("카카오 결제 승인 실패");
+        }
 
-        return approveResponse;
+        return kakaoApproveResponse;
     }
 
     private HttpHeaders getHeaders() {

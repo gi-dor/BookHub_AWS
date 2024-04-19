@@ -8,12 +8,13 @@
         <result column="book_name" property="name"/>
         <result column="book_list_price" property="price"/>
         <result column="cover" property="cover"/>
+        <result column="book_discount_rate" property="discountRate"/>
         <result column="count" property="count"/>
     </resultMap>
 
     <select id="findCartList" parameterType="long" resultMap="CartListResultMap">
         select
-            C.cart_no, B.book_no, B.book_name, B.book_list_price, C.count
+            C.cart_no, B.book_no, B.book_name, B.book_list_price, B.book_discount_rate, C.count
         from
             CART C, BOOK B
         where
@@ -31,11 +32,5 @@
         set count = #{count}
         where cart_no = #{cartNo}
     </update>
-
-    <select id="getBookNoByCartNo" parameterType="long" resultType="long">
-        select book_no
-        from CART
-        where cart_no = #{value}
-    </select>
 
 </mapper>
