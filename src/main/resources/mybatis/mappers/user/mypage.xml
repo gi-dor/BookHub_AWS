@@ -10,7 +10,7 @@
     </select>
 
 
-    <select id="getOrderList" parameterType="string" resultType="com.example.bookhub.product."
+
 
 
 </mapper>
