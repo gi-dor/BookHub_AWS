@@ -44,7 +44,7 @@
 <!--    </insert>-->
 
     <!-- 로그인 아이디 비밀번호로 사용자 정보 가져오기-->
-    <select id="loginByIdAndPassword" parameterType="map" resultMap="UserResultMap">
+    <select id="loginByIdAndPassword" parameterType="map" resultType="com.example.bookhub.user.vo.User">
         SELECT user_no              as no,
                user_id              as id,
                user_password        as password,
@@ -62,52 +62,75 @@
     </select>
 
 
-    <select id="selectUserByNo" parameterType="long" resultMap="UserResultMap">
-        SELECT user_no ,
-               user_id ,
-               user_password ,
-               user_name ,
-               user_email ,
-               user_tel ,
-               user_zip_code ,
-               user_address,
-               user_address_detail ,
-               user_created_date ,
-               user_updated_date
-        FROM USER
+    <select id="selectUserByNo" parameterType="long" resultType="com.example.bookhub.user.vo.User">
+        SELECT
+               u.user_no              as no,
+               u.user_id              as id,
+               u.user_password        as password,
+               u.user_name            as name,
+               u.user_email           as email ,
+               u.user_tel             as tel ,
+               u.user_zip_code        as zipCode ,
+               u.user_address         as address ,
+               u.user_address_detail  as addressDetail ,
+               u.user_created_date    as createdDate,
+               u.user_updated_date    as updatedDate ,
+               u.user_del_yn          as delYn ,
+               u.user_point           as point,
+               g.grade_no             as "userGrade.no",
+               g.grade_name           as "userGrade.name"
+        FROM USER u , USER_GRADE g
         WHERE user_no = #{no}
+        and user_del_yn = 'N'
+        and u.grade_no = g.grade_no
     </select>
 
-    <select id="selectUserById" parameterType="string" resultMap="UserResultMap">
-        SELECT user_no ,
-               user_id ,
-               user_password ,
-               user_name ,
-               user_email ,
-               user_tel ,
-               user_zip_code ,
-               user_address,
-               user_address_detail ,
-               user_created_date ,
-               user_updated_date
-        FROM USER
+    <select id="selectUserById" parameterType="string" resultType="com.example.bookhub.user.vo.User">
+        SELECT
+               u.user_no              as no,
+               u.user_id              as id,
+               u.user_password        as password,
+               u.user_name            as name,
+               u.user_email           as email ,
+               u.user_tel             as tel ,
+               u.user_zip_code        as zipCode ,
+               u.user_address         as address ,
+               u.user_address_detail  as addressDetail ,
+               u.user_created_date    as createdDate,
+               u.user_updated_date    as updatedDate ,
+               u.user_del_yn          as delYn ,
+               u.user_point           as point,
+               g.grade_no             as "userGrade.no",
+               g.grade_name           as "userGrade.name"
+        FROM USER u , USER_GRADE g
         WHERE user_id = #{id}
+        and user_del_yn = 'N'
+        and u.grade_no = g.grade_no
     </select>
 
-    <select id="selectUserByEmail" parameterType="string" resultMap="UserResultMap">
-        SELECT user_no,
-               user_id,
-               user_password,
-               user_name,
-               user_email,
-               user_tel,
-               user_zip_code,
-               user_address,
-               user_address_detail,
-               user_created_date,
-               user_updated_date
-        FROM USER
-        WHERE user_email = #{email}
+
+
+    <select id="selectUserByEmail" parameterType="string" resultType="com.example.bookhub.user.vo.User">
+        SELECT
+               u.user_no              as no,
+               u.user_id              as id,
+               u.user_password        as password,
+               u.user_name            as name,
+               u.user_email           as email ,
+               u.user_tel             as tel ,
+               u.user_zip_code        as zipCode ,
+               u.user_address         as address ,
+               u.user_address_detail  as addressDetail ,
+               u.user_created_date    as createdDate,
+               u.user_updated_date    as updatedDate ,
+               u.user_del_yn          as delYn ,
+               u.user_point           as point,
+               g.grade_no             as "userGrade.no",
+               g.grade_name           as "userGrade.name"
+        FROM USER u , USER_GRADE g
+        WHERE user_id = #{id}
+          and user_del_yn = 'N'
+          and u.grade_no = g.grade_no
     </select>
 
 
@@ -129,15 +152,15 @@
     <update id="updateUser" parameterType="com.example.bookhub.user.vo.User">
         update USER
         set
-            user_name = #{name},
             user_email = #{email},
             user_tel = #{tel},
             user_zip_code = #{zipCode},
             user_address = #{address},
-            user_address_detail = #{addressDetail},
+            user_address_detail = #{addressDetail}
         WHERE user_id = #{id}
-        and user_password = #{password}
     </update>
+
+
 
 
 </mapper>

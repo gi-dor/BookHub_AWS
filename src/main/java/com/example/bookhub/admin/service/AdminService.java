@@ -39,7 +39,7 @@ public class AdminService {
         if(saveAdmin != null){
             throw new AlreadyAdminIdException("[" + form.getId() +"]는 이미 사용중인 아이디입니다");
         }
-
+        // DB에 중복되는 이메일이 있는지 확인
         saveAdmin = adminMapper.getAdminEmail(form.getEmail());
         if(saveAdmin != null){
             throw new AlreadyAdminEmailException("[" + form.getEmail() +"]는 이미 사용중인 이메일입니다");

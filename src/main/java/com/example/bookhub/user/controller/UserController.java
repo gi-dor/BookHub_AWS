@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,38 +31,20 @@ public class UserController {
     private final UserService userService;
 
 
-    // 마이페이지
-    @GetMapping("/mypage")
-    public String myPage(Model model , Principal principal) {
-
-        if (principal == null || principal.getName() == null) {
-            return "redirect:/user/loginForm ";
-        } else {
-            model.addAttribute("id",principal.getName());
-            return "redirect:/user/myPage";
+     // 로그아웃
+/*
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/logout123")
+    public String logout( Principal principal) {
+        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+        if (user != null) {
+            // 로그아웃 처리
+           SecurityContextHolder.getContext().setAuthentication(null);
+//               SecurityContextHolder.clearContext(); // 인증 객체를 모두 제거
         }
+        return "redirect:/";
     }
-
-    // 마이페이지 - 회원정보 조회
-    @GetMapping("/mypage/userInfo")
-    public String userInfo(Model model , @RequestParam(name = "id") String userId) {
-        User user = userService.selectUserById(userId);
-        model.addAttribute("user" , user);
-        return "user/userInfo";
-    }
-
-    /*
-    // 마이페이지 - 회원정보 조회
-    @GetMapping("/mypage/userInfo")
-    public String userInfo2(Model model , Principal principal) {
-        User user = userService.selectUserById(principal.getName());
-        model.addAttribute("user" , user);
-        return "user/userInfo";
-    }
-    */
-
-
-
+*/
 
 
 
@@ -90,9 +73,10 @@ public class UserController {
         }
 
         try {
-        //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
+            //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
             User user = userService.registerUser(form);
-        //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
+            //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
+
             return "redirect:/user/completed?id=" + user.getId();
 
         } catch (RuntimeException ex) {
@@ -102,10 +86,15 @@ public class UserController {
             String message = ex.getMessage();
 
             if("id".equals(message)) {
+                errors.rejectValue("id", null, "사용 할 수 없는 아이디");
+            }
+        /*
+            if("id".equals(message)) {
                 errors.rejectValue("id", null,"사용 할 수 없는 아이디");
             } else if( "email".equals(message)) {
                 errors.rejectValue("email", null, "사용 할 수 없는 이메일");
             }
+       */
 
             return "user/registerForm";
         }

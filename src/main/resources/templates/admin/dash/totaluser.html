@@ -1,0 +1,358 @@
+<html lang="ko"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<div  layout:fragment="content">
+    <div class="pb-5">
+        <!-- 전체적인 그래프 row -->
+        <div class="row g-4 pt-5 pe-5">
+            <!-- 왼쪽 그래프 파트 -->
+            <div class="col-12 col-xxl-6">
+                <div class="mb-8">
+                    <h2 class="mb-2">대시보드 예시</h2>
+                    <h5 class="text-body-tertiary fw-semibold">대시보드 예시 밑에 들어갈 작은 글</h5>
+                </div>
+                <div class="row align-items-center g-4">
+                    <div class="col-12 col-md-auto">
+                        <div class="d-flex align-items-center">
+                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
+                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
+                            <div class="ms-3">
+                                <h4 class="mb-0">EX New Order</h4>
+                                <p class="text-body-secondary">처리해야 할 주문개수</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <div class="d-flex align-items-center">
+                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
+                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
+                            <div class="ms-3">
+                                <h4 class="mb-0">EX New Order</h4>
+                                <p class="text-body-secondary">처리해야 할 주문개수</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <div class="d-flex align-items-center">
+                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
+                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
+                            <div class="ms-3">
+                                <h4 class="mb-0">EX New Order</h4>
+                                <p class="text-body-secondary">처리해야 할 주문개수</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 중간선 그리고 그래프와의 여백   -->
+                <hr class="bg-body-secondary mb-6 mt-4">
+                <!-- 그래프위에 div -->
+                <div class="row flex-between-center mb-4 g-3">
+                    <div class="col-auto">
+                        <h3>EX 월간 매출</h3>
+                        <p class="text-body-tertiary lh-sm mb-0">월간 매출 밑에 들어갈 작은 글</p>
+                    </div>
+                    <div class="col-8 col-sm-4">
+                        <select class="form-select form-select-sm" id="select-gross-revenue-month">
+                            <option>April 1 - 30, 2022</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- 그래프 div chart.js 적용해야함 -->
+                <div>
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div><!-- 왼쪽 그래프 파트 -->
+            <!-- 오른쪽 그래프 파트 -->
+            <div class="col-12 col-xxl-6">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-1">Total Books<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"><span class="badge-label">-6.8%</span></span></h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                    <h4 id="BookText"></h4>
+                                </div>
+                                <div class="d-flex justify-content-center px-4 py-6">
+                                    <!-- Total orders 그래프가 들어가야할 위치 -->
+                                    <div>
+                                        <canvas id="TotalOrders"></canvas>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Completed</h6>
+                                        <h6 class="text-body fw-semibold mb-0">52%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bullet-item bg-primary-subtle me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Pending payment</h6>
+                                        <h6 class="text-body fw-semibold mb-0">48%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-1">All Customers<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"> <span class="badge-label">+26.5%</span></span></h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                    <h4 id="CustomerText"></h4>
+                                </div>
+                                <div class="pb-0 pt-4">
+                                    <!-- All Customers 그래프가 들어가야할 위치 -->
+                                    <div>
+                                        <canvas id="AllCustomer"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-2">Top coupons</h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                </div>
+                                <div class="pb-4 pt-3">
+                                    <!-- Top Coupons 그래프가 들어가야할 위치 -->
+                                    <div>
+                                        <canvas id="TopCoupons"></canvas>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Percentage discount</h6>
+                                        <h6 class="text-body fw-semibold mb-0">72%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary-lighter me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed card discount</h6>
+                                        <h6 class="text-body fw-semibold mb-0">18%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bullet-item bg-info-dark me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed product discount</h6>
+                                        <h6 class="text-body fw-semibold mb-0">10%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-2">Paying vs non paying</h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center pt-3 flex-1">
+                                    <!-- Paying vs non paying 그래프가 들어가야할 위치  -->
+                                    <div>
+                                        <canvas id="Paying"></canvas>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Paying customer</h6>
+                                        <h6 class="text-body fw-semibold mb-0">30%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bullet-item bg-primary-subtle me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Non-paying customer</h6>
+                                        <h6 class="text-body fw-semibold mb-0">70%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- 오른쪽 그래프 파트 -->
+        </div><!-- 전체적인 그래프 row -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function (){
+            getAllCustomer();
+            getAllBooks();
+        });
+        const ctx = document.getElementById('myChart'); // 왼쪽 그래프
+        const allctx = document.getElementById('AllCustomer');  // 오른쪽 우상
+        const topctx = document.getElementById('TopCoupons'); // 오른쪽 좌하
+        const totalctx = document.getElementById('TotalOrders'); // 오른쪽 그래프 좌상
+        const payctx = document.getElementById('Paying');   // 오른쪽 우하
+
+        <!-- Total selles 그래프 -->
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        <!-- Total Orders -->
+        function getAllBooks() {
+            $.ajax({
+                url: "/getAllBookCnt.do",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    let text = document.getElementById("BookText");
+                    text.textContent = data.allBook;
+                    let chart = new Chart(totalctx, {
+                        type: "bar",
+                        data: {
+                            // 표 아래 글씨
+                            labels: ['전체 도서 갯수'], // 'allCustomer'를 따옴표로 감싸서 문자열로 처리
+                            datasets: [{
+                                // 표 위에 글씨
+                                label: '도서 수',
+                                data: [data.allBook], // data.allCustomer를 사용하여 데이터를 가져옴
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function () {
+                    alert("Failed to fetch data from the server.");
+                }
+
+            });
+        }
+
+        <!-- All customers -->
+        function getAllCustomer() {
+            $.ajax({
+                url: "/allCustomer.do", // 데이터를 가져올 URL
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    // DB값에 따라 html 코드에 대한 내용을 바꿔주는 코드
+                    let text = document.getElementById("CustomerText");
+                    text.textContent = data.allCustomer;
+
+                    let chart = new Chart(allctx, {
+                        type: "bar",
+                        data: {
+                            // 표 아래 글씨
+                            labels: ['전체 회원 수'], // 'allCustomer'를 따옴표로 감싸서 문자열로 처리
+                            datasets: [{
+                                // 표 위에 글씨
+                                label: '전체 회원수',
+                                data: [data.allCustomer], // data.allCustomer를 사용하여 데이터를 가져옴
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function () {
+                    alert("Failed to fetch data from the server.");
+                }
+            });
+        }
+        // <!-- All customers -->
+        // new Chart(allctx, {
+        //     type: 'line',
+        //     data: {
+        //         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        //         datasets: [{
+        //             label: '# of Votes',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
+
+
+        <!-- Top coupons -->
+        new Chart(topctx, {
+            type: 'line',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        <!-- Paying -->
+        new Chart(payctx, {
+            type: 'line',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+
+</html>

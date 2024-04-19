@@ -1,0 +1,164 @@
+
+<div th:fragment="navbar">
+<!-- headerTop시작 -->
+    <nav class="navbar navbar-expand-lg" style="background-color: #1D3559;" >
+        <div class="container">
+            <!-- 왼쪽에는 메뉴 -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <!--<a class="navbar-logo" href="" ><img class="mb-4" src="/image/login/logo.png" alt="로고" width="auto" height="100"></a>  로고 이미지 -->
+                    <a class="nav-link text-white" href="/">HOME</a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">국내도서</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">외국도서</a>
+                </li>
+            </ul>
+            <!-- 오른쪽에는 로그인, 회원가입, 마이페이지, 고객센터, 장바구니 -->
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"  sec:authorize="isAnonymous()">
+                    <a id="loginButton"  class="nav-link text-white"  href="/user/login">로그인</a>
+                </li>
+                <li class="nav-item"  sec:authorize="isAuthenticated()">
+                    <a id="logoutButton"  class="nav-link text-white"  href="/user/logout">로그아웃</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a  class="nav-link text-white" href="/user/register">회원가입</a>
+                </li>
+                <li class="nav-item">
+                    <div class="dropdown"  sec:authorize="isAuthenticated()">
+                        <button class="btn dropdown-toggle text-white" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            마이페이지
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                            <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
+                            <li><a class="dropdown-item" href="/mypage/userInfo">회원정보</a></li>
+                            <li><a class="dropdown-item" href="#">주문/배송조회</a></li>
+                            <li><a class="dropdown-item" href="#">구매내역</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">고객센터</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">장바구니</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- headerTop 종료 -->
+
+    <!--headerMiddle,Bottom: 검색창,  카테고리, 나머지메뉴들 -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3">
+                <div class="nav-item col-12" >
+                    <form class="row row-cols-lg-auto g-3 align-items-center p-3" >
+                        <div class="col-3">
+                            <a class="navbar-logo" href=""><img class="mb-4" src="/image/login/logo.png" alt="로고" width="auto" height="120"></a> <!-- 로고 이미지 -->
+                        </div>
+                        <div class="search-wrapper col-9" style="display: flex; align-items: center; border: 2px solid #1D3559;"  >
+                            <div class="search mt-2 mb-2 ms-2 ">
+                                <select class="form-select">
+                                    <option selected>통합검색</option>
+                                    <option value="1">국내도서</option>
+                                    <option value="2">해외도서</option>
+                                </select>
+                            </div>
+                            <div class="search mt-2 mb-2 ms-2 ">
+                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요">
+                            </div>
+                            <div class="search mt-2 mb-2 ms-2 ">
+                                <button type="submit" class="btn btn-primary">검색</button>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <button class="btn btn-outline-primary" id="btn-toggle-category">
+                    도서 카테고리
+                </button>
+            </div>
+            <div class="col-9">
+                <nav class="nav">
+                    <a class="nav-link text-decoration-none text-dark" aria-current="page" href="#" style="font-size: larger;"><strong>베스트셀러</strong></a>
+                    <a class="nav-link text-decoration-none text-dark" href="#" style="font-size: larger;"><strong>신간도서</strong></a>
+                    <a class="nav-link text-decoration-none text-dark" href="#" style="font-size: larger;"><strong>추천도서</strong></a>
+                    <a class="nav-link text-decoration-none text-dark" href="#" style="font-size: larger;"><strong>이벤트</strong></a>
+                    <a class="nav-link text-decoration-none text-dark" href="#" style="font-size: larger;"><strong>커뮤니티</strong></a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row position-fixed d-none z-3 bg-white" id="menu-book-category">
+            <div class="col-12">
+                <div class="row border">
+                    <div class="col-4">
+                        <div class="list-group list-group-flush">
+                            <a class="list-group-item disabled"><strong>국내도서</strong></a>
+                            <a href="#" class="list-group-item ">건강/취미</a>
+                            <a href="#" class="list-group-item ">경제경영</a>
+                            <a href="#" class="list-group-item">공무원 수험서</a>
+                            <a href="#" class="list-group-item">과학</a>
+                            <a href="#" class="list-group-item">대학교재</a>
+                            <a href="#" class="list-group-item">만화</a>
+                            <a href="#" class="list-group-item">사회과학</a>
+                            <a href="#" class="list-group-item">소설/시/희곡</a>
+                            <a href="#" class="list-group-item">수험서/자격증</a>
+                            <a href="#" class="list-group-item">어린이</a>
+                            <a href="#" class="list-group-item">에세이</a>
+                            <a href="#" class="list-group-item">여행</a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item ">역사</a>
+                            <a href="#" class="list-group-item ">예술/대중문화</a>
+                            <a href="#" class="list-group-item ">외국어</a>
+                            <a href="#" class="list-group-item">요리/살림</a>
+                            <a href="#" class="list-group-item">인문학</a>
+                            <a href="#" class="list-group-item">자기계발</a>
+                            <a href="#" class="list-group-item">잡지</a>
+                            <a href="#" class="list-group-item">장르소설</a>
+                            <a href="#" class="list-group-item">종교/역학</a>
+                            <a href="#" class="list-group-item">청소년</a>
+                            <a href="#" class="list-group-item">컴퓨터/모바일</a>
+                            <a href="#" class="list-group-item">초/중/고등학교 참고서</a>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="list-group list-group-flush">
+                            <a class="list-group-item disabled"><strong>외국도서</strong></a>
+                            <a href="#" class="list-group-item ">영미도서</a>
+                            <a href="#" class="list-group-item ">일본도서</a>
+                            <a class="list-group-item disabled">기타언어권</a>
+                            <a href="#" class="list-group-item ">독일 도서</a>
+                            <a href="#" class="list-group-item ">베트남 도서</a>
+                            <a href="#" class="list-group-item ">스페인 도서</a>
+                            <a href="#" class="list-group-item ">프랑스 도서</a>
+                            <a href="#" class="list-group-item ">기타 도서</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3 mb-5" style="border-bottom: 1.5px solid #1D3559; "></div>
+</div>
+<!--headerMiddle,Bottom 종료 -->
+
+<th:block layout:fragment="script">
+    <script src="/js/main/navbar.js"></script>
+</th:block>
+

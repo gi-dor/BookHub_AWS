@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Sign UP</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" >
+
     <style>
         body {
             margin: 100px;
@@ -15,8 +16,9 @@
 <body>
 <div class="container">
     <div class="row mb-3">
-        <div class="col-12">
-            <h2>Sign UP</h2>
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h2 class="fw-bolder">Sign UP</h2>
             <form method="post" th:action="@{/admin/signup}" th:object="${adminRegisterForm}" class="border bg-light p-3">
                 <div class="form-group mb-3">
                     <label class="form-label">아이디</label>
@@ -25,8 +27,13 @@
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">비밀번호</label>
-                    <input type="password" class="form-control" th:field="*{password}"/>
-                    <div th:errors="*{password}" class="text-danger"></div>
+                    <input id="password" type="password" class="form-control" th:field="*{password}"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">비밀번호 확인</label>
+                    <input type="password" class="form-control" id="confirmPassword"/>
+                    <div id="passwordError" class="text-danger"></div>
                 </div>
 
                 <div class="form-group mb-3">
@@ -39,13 +46,28 @@
                     <input type="text" class="form-control" th:field="*{tel}"/>
                     <div th:errors="*{tel}" class="text-danger"></div>
                 </div>
-                <div class="text-end">
+                <div>
                     <button type="submit" class="btn btn-outline-primary">회원가입</button>
                 </div>
             </form>
         </div>
+        <div class="col-3"></div>
     </div>
 </div>
 
 </body>
+<script>
+    document.getElementById('confirmPassword').addEventListener('keyup', function () {
+        let password = document.getElementById('password').value;
+        let confirmPassword = document.getElementById('confirmPassword').value;
+
+        let passwordError = document.getElementById('passwordError');
+        if(password !== confirmPassword){
+            passwordError.innerText = '비밀번호가 일치하지 않습니다';
+        } else {
+            passwordError.innerText = '';
+        }
+    });
+
+</script>
 </html>
