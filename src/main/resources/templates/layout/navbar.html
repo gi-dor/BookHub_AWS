@@ -57,7 +57,7 @@
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
                 <div class="nav-item col-12">
-                    <form class="row g-1 align-items-center p-1">
+                    <form class="row g-1 align-items-center p-1" action="/search" method="get">
                         <div class="col-3">
                             <a class="navbar-logo" href=""><img class="mb-0" src="/image/login/logo.png" alt="로고" width="auto" height="120"></a>
                         </div>
@@ -70,7 +70,7 @@
                                 </select>
                             </div>
                             <div class="search mt-2 mb-2 me-2 col-7">
-                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요">
+                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요" name="keyword">
                             </div>
                             <div class="search mt-2 mb-2 col-2">
                                 <button type="submit" class="btn btn-primary" id="submitButton">검색</button>
