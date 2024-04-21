@@ -2,6 +2,7 @@ package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
+import com.example.bookhub.product.exception.kakaoPay.KakaoPayBusinessLogicException;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.KakaoPayService;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +35,10 @@ public class KakaoPayController {
     @GetMapping("/success")
     public String kakaoPaySuccess(@ModelAttribute BuyForm buyForm, Principal principal,
                                   @RequestParam("pg_token")String pgToken, Model model) {
+
         KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
-//        System.out.println(kakaoApprove.toString());
-//        System.out.println(kakaoApprove.getAmount().toString());
-//        System.out.println(buyForm);
         buyService.createBuy(buyForm, principal.getName());
+        model.addAttribute("finalPrice", buyForm.getFinalPrice());
         return "product/pay/success";
     }
 
@@ -47,7 +47,7 @@ public class KakaoPayController {
      */
     @GetMapping("/cancel")
     public String cancel() {
-        return "/product/pay/error";
+        throw new KakaoPayBusinessLogicException("카카오 결제 진행 중 취소 실패");
     }
 
     /**
@@ -55,6 +55,6 @@ public class KakaoPayController {
      */
     @GetMapping("/fail")
     public String fail() {
-        return "/product/pay/error";
+        throw new KakaoPayBusinessLogicException("카카오 결제 실패");
     }
 }

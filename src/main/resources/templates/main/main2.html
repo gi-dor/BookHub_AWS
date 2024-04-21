@@ -1,0 +1,389 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/main/main.css}" />
+</th:block>
+
+<div layout:fragment="content" class="container">
+    <!-- main 슬라이드 -->
+    <div id="carouselExampleIndicators" class="carousel slide mb-5" data-bs-ride="carousel" >
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5" aria-label="Slide 6"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="1500">
+                <img src="/main/slide1.jpg" class="d-block w-100" alt="slide1">
+            </div>
+            <div class="carousel-item" data-bs-interval="1500">
+                <img src="/main/slide2.jpg" class="d-block w-100" alt="slide2">
+            </div>
+            <div class="carousel-item" data-bs-interval="1500">
+                <img src="/main/slide3.jpg" class="d-block w-100" alt="slide3">
+            </div>
+            <div class="carousel-item" data-bs-interval="1500">
+                <img src="/main/slide4.png" class="d-block w-100" alt="slide4">
+            </div>
+            <div class="carousel-item" data-bs-interval="1500">
+                <img src="/main/slide5.jpg" class="d-block w-100" alt="slide5">
+            </div>
+            <div class="carousel-item" data-bs-interval="1500">
+                <img src="/main/slide6.jpg" class="d-block w-100" alt="slide6">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- 많이 보고 있는 상품 -->
+    <div id="carouselExampleControls" class="carousel slide mb-5" >
+        <h2 class="fw-bold display-5">많이 보고 있는 상품</h2>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="cards-wrapper">
+                    <div class="card d-none d-md-block">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title1</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title2</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title3</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title4</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title5</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="cards-wrapper">
+                    <div class="card d-none d-md-block">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title6</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title7</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title8</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title9</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="image-wrapper">
+                            <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card title10</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!--추천도서 -->
+    <div class="testimonial-slider mb-5">
+            <div id="carouselExampleControls2" class="carousel carousel-dark" data-bs-ride="carousel">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="testimonial-title">
+                                <i class="bi bi-quote display-2"></i>
+                                <h2 class="fw-bold display-5">추천 도서</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="carousel-inner2">
+                                <div class="carousel-item active">
+                                    <div class="cards-wrapper">
+                                        <div class="card d-none d-md-block">
+                                            <div class="image-wrapper">
+                                                <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title1</h5>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title2</h5>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title3</h5>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title4</h5>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="/main/demo.jpg" class="card-img-top" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title5</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!--베스트셀러-->
+    <div class="col-12 mt-5 mb-5">
+        <h2 class="fw-bold display-5">베스트셀러
+            <div class="btn-group mb-4">
+                <button class="btn btn-outline-primary" id="all-btn">전체</button>
+                <button class="btn btn-outline-primary" id="domestic-btn">국내</button>
+                <button class="btn btn-outline-primary" id="international-btn">해외</button>
+            </div>
+        </h2>
+        <div class="card-group mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">1</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="First Best Seller">
+                    <p class="card-text">First best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">2</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="Second Best Seller">
+                    <p class="card-text">Second best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">3</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="Third Best Seller">
+                    <p class="card-text">Third best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">4</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="First Best Seller">
+                    <p class="card-text">First best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">5</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="Second Best Seller">
+                    <p class="card-text">Second best seller description.</p>
+                </div>
+        </div>
+        <div class="card-group mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">6</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="Third Best Seller">
+                    <p class="card-text">Third best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">7</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="First Best Seller">
+                    <p class="card-text">First best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">8</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="Second Best Seller">
+                    <p class="card-text">Second best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">9</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="Third Best Seller">
+                    <p class="card-text">Third best seller description.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">10</h5>
+                    <img class="card-img-top" src="/main/demo.jpg" alt="Third Best Seller">
+                    <p class="card-text">Third best seller description.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!--신간 도서-->
+    <div id="carouselExampleControls4" class="carousel slide  mb-5" >
+        <h2 class="fw-bold display-5">신간도서</h2>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="cards-wrapper">
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title1</h5>
+                        </div>
+                    </div>
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title2</h5>
+                        </div>
+                    </div>
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title3</h5>
+                        </div>
+                    </div>
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title4</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="cards-wrapper">
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title5</h5>
+                        </div>
+                    </div>
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title6</h5>
+                        </div>
+                    </div>
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title7</h5>
+                        </div>
+                    </div>
+                    <div class="newbook card d-none d-md-block">
+                        <div class="image-wrapper" style="width: 18rem;">
+                            <img src="/main/demo.jpg" class="card-img-top newbook-img" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Card title8</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls4" data-bs-slide="prev" id="newbookBtn1">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls4" data-bs-slide="next" id="newbookBtn2">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        </div>
+    </div>
+<th:block layout:fragment="script">
+    <script src="/js/main/navbar.js"></script>
+</th:block>
+</html>

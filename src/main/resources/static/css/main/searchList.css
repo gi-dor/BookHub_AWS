@@ -1,0 +1,104 @@
+
+.navbar .navbar-nav .nav-link {
+    color: #000000;
+    font-size: 1.1em;
+}
+.navbar .navbar-nav .nav-link:hover{
+    color: #808080;
+}
+#checkButton {
+    border: 2px solid #1D3559;
+    background-color: transparent; /* 평소 배경색은 투명 */
+    color: #1D3559; /* 평소 글자색은 #1D3559 */
+    transition: background-color 0.3s ease; /* 호버 시 변화를 부드럽게 적용 */
+}
+
+#checkButton:hover {
+    background-color: #1D3559; /* 호버 시 배경색 변경 */
+    color: #fff; /* 호버 시 글자색 변경 */
+    border-color: #1D3559; /* 호버 시 테두리색 변경 */
+}
+.card {
+    flex-direction: row;
+    max-width: 80em;
+    border: 0;
+}
+.card img {
+    max-width: 80%;
+    margin: auto;
+    padding: 0.5em;
+    border-radius: 0.7em;
+}
+.card-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.text-section {
+    max-width: 90%;
+}
+.cta-section {
+    max-width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.card-text {
+    letter-spacing: 0.4em;
+}
+
+#zzim.fa-heart {
+    font-size: 24px;
+    color: #1D3559;
+}
+
+#buyButton,
+.btn{
+    background-color: #1D3559;
+    color: white;
+    transition: all 0.3s ease; /* 호버 효과를 위한 전환 효과 */
+    border: 1px solid #1D3559;
+}
+
+#buyButton:hover,
+.btn:hover {
+    background-color: white; /* 호버 시 배경색을 흰색으로 변경 */
+    color: #1D3559; /* 호버 시 텍스트 색상을 #1D3559로 변경 */
+    border: 2px solid #1D3559; /* 테두리 추가 */
+}
+
+#cart {
+    background-color: grey;
+    color: white;
+    transition: all 0.3s ease; /* 호버 효과를 위한 전환 효과 */
+    border: 1px solid grey;
+}
+
+#cart:hover {
+    background-color: lightgray;
+    color: #1D3559;
+    border: 2px solid grey;
+}
+
+.pagination .page-link {
+    color: #1D3559; /* 페이지 링크 텍스트 색상 */
+    background-color: white; /* 페이지 링크 배경색 */
+    border-color: white; /* 페이지 링크 테두리 색상 */
+}
+
+.pagination .page-item.active .page-link {
+    color: white; /* 활성화된 페이지 링크 텍스트 색상 */
+    background-color: #1D3559; /* 활성화된 페이지 링크 배경색 */
+    border-color: #1D3559; /* 활성화된 페이지 링크 테두리 색상 */
+}
+
+.form-check-label{
+    color: #1D3559;
+}
+
+.card-img-top {
+    width: 400px;
+    height: 300px; /* 높이를 자동으로 조절하여 비율 유지 */
+}

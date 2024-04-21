@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.CategoryMapper">
+
+    <select id="getAllTopLevelCategories" resultType="com.example.bookhub.admin.vo.Category">
+        SELECT CATEGORY_NO AS no,
+	        	CATEGORY_NAME AS name,
+                PARENT_CATEGORY_NO AS parentNo
+        FROM BookHub.CATEGORY
+        WHERE PARENT_CATEGORY_NO IS NULL
+    </select>
+
+    <select id="getAllSecondLevelCategories" resultType="com.example.bookhub.admin.vo.Category">
+        SELECT CATEGORY_NO AS no,
+        		CATEGORY_NAME AS name,
+                PARENT_CATEGORY_NO AS parentNo
+        FROM BookHub.CATEGORY
+        WHERE PARENT_CATEGORY_NO IN (SELECT CATEGORY_NO
+        							FROM BookHub.CATEGORY
+        							WHERE PARENT_CATEGORY_NO IS NULL);
+    </select>
+
+    <select id="getAllThirdLevelCategories" resultType="com.example.bookhub.admin.vo.Category">
+        SELECT CATEGORY_NO AS no,
+        		CATEGORY_NAME AS name,
+                PARENT_CATEGORY_NO AS parentNo
+        FROM BookHub.CATEGORY
+        WHERE PARENT_CATEGORY_NO IN (SELECT CATEGORY_NO
+        							FROM BookHub.CATEGORY
+        							WHERE PARENT_CATEGORY_NO IN (SELECT CATEGORY_NO
+        														FROM BookHub.CATEGORY
+        														WHERE PARENT_CATEGORY_NO IS NULL))
+    </select>
+
+    <select id="getSubCategoriesByCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+            		CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE PARENT_CATEGORY_NO IN (SELECT CATEGORY_NO
+            							FROM BookHub.CATEGORY
+            							WHERE CATEGORY_NO = #{value})
+    </select>
+
+    <select id="getParentCategoryByCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+            		CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE CATEGORY_NO IN (SELECT PARENT_CATEGORY_NO
+            						FROM BookHub.CATEGORY
+            						WHERE CATEGORY_NO = #{value})
+    </select>
+
+    <insert id="addTopLevelCategory" parameterType="String">
+            INSERT INTO BookHub.CATEGORY
+            (CATEGORY_NAME, PARENT_CATEGORY_NO)
+            VALUES
+            (#{value}, NULL)
+    </insert>
+
+    <insert id="addSubCategory" parameterType="map">
+            INSERT INTO BookHub.CATEGORY
+            (CATEGORY_NAME, PARENT_CATEGORY_NO)
+            VALUES
+            (#{categoryName}, #{categoryNo})
+    </insert>
+
+    <select id="getTopLevelCategoryByCategoryName" parameterType="String" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+    	        	CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE PARENT_CATEGORY_NO IS NULL
+            AND CATEGORY_NAME = #{value}
+    </select>
+
+    <select id="getSubLevelCategoryByCategoryNameAndSuperCategoryNo" parameterType="map" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+    	        	CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE PARENT_CATEGORY_NO = #{categoryNo}
+            AND CATEGORY_NAME = #{categoryName}
+    </select>
+
+
+</mapper>

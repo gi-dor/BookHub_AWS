@@ -7,20 +7,17 @@ import lombok.Setter;
 @Setter
 public class Book {
     private String title;
-    private String link;
     private String author;
     private String pubDate;
     private String description;
-    private String isbn13;
+    private String isbn;
     private int itemId;
     private int priceSales;
     private int priceStandard;
     private String cover;
-    private String categoryIdㅁ;
+    private String categoryId;
     private String categoryName;
     private String publisher;
     private int bestRank;
-
-
 
 }
