@@ -1,35 +1,44 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Community Post Detail</title>
-</head>
-<body>
-<h1>Community Post Detail</h1>
-<div>
-    <strong>Title:</strong> <span th:text="${community.title}"></span>
-</div>
-<div>
-    <strong>Content:</strong> <span th:text="${community.content}"></span>
-</div>
-<div>
-    <strong>Author:</strong> <span th:text="${community.user.getName()}"></span>
-</div>
-<div>
-    <strong>Created Date:</strong> <span th:text="${community.createDate}"></span>
-</div>
-<div>
-    <strong>Last Updated:</strong> <span th:text="${community.updateDate}"></span>
-</div>
-<div>
-    <a th:href="@{/board/community/modify/{no}(no=${community.no})}">Edit</a>
-</div>
-<div>
-    <form th:action="@{/board/community/delete}" method="post">
-        <input type="hidden" name="no" th:value="${community.no}">
-        <button type="submit">Delete</button>
-    </form>
-</div>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<div layout:fragment="content" class="container py-4">
+    <h1 style="text-align: center; font-size: 24px; margin-bottom: 20px;" th:text="${community.title}"></h1>
+    <div style="text-align: right; font-size: 14px; color: #6c757d; margin-bottom: 20px;" th:text="${community.user.getName()} + ' | ' + ${#temporals.format(community.createDate,'yyyy.MM.dd')}"></div>
+    <hr>
+    <textarea style="min-height: 200px; resize: none;" class="form-control content" readonly th:text="${community.content}"></textarea>
+    <img th:src="@{|/image/board/${community.images.imagePath}|}" alt="게시글 이미지" style="max-width: 100%; height: auto;"><hr>
+    <div class="comment-section">
+        <form th:action="@{/board/community/comment/add}" method="post">
+            <input type="hidden" name="communityNo" th:value="${community.no}">
+            <textarea class="form-control" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea>
+            <button type="submit" class="btn btn-primary mt-2">댓글 작성</button>
+        </form>
+    </div>
+    <hr>
 
-</body>
-</html>
+    <div class="comment-section">
+        <div th:if="${#lists.isEmpty(comments)}">
+            <p>댓글이 존재하지 않습니다</p>
+        </div>
+        <div th:unless="${#lists.isEmpty(comments)}">
+            <div th:each="comment : ${comments}" class="comment">
+                <p th:text="${comment.user.getName()} + ' | ' + ${#temporals.format(comment.createDate,'yyyy.MM.dd')}"></p>
+                <p th:text="${comment.content}"></p>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+
+
+
+
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a th:href="@{/board/community/modify/{no}(no=${community.no})}" class="btn btn-primary">수정</a>
+        <form th:action="@{/board/community/delete}" method="post" style="display: inline-block;">
+            <input type="hidden" name="no" th:value="${community.no}">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>
+        </form>
+    </div>
+    <div style="text-align: center;">
+        <a href="/board/community/list" class="btn btn-secondary">목록으로 돌아가기</a>
+</div>

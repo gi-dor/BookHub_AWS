@@ -29,7 +29,7 @@ public class AdminController {
 
     @GetMapping("/home")
     public String home(){
-        return "admin/home";
+        return "admin/dash/totaluser";
     }
 
     @GetMapping("/login")
@@ -92,8 +92,5 @@ public class AdminController {
         return "admin/login";
     }
 
-    @GetMapping("/dash")
-    public String exDash(){
-        return "admin/dash/totaluser";
-    }
+
 }
