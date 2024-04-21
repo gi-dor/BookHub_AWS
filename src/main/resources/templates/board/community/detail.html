@@ -9,7 +9,8 @@
     <div class="comment-section">
         <form th:action="@{/board/community/comment/add}" method="post">
             <input type="hidden" name="communityNo" th:value="${community.no}">
-            <textarea class="form-control" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea>
+            <input type="hidden" name="principal" th:value="${community.user.getName()}">
+            <textarea class="form-control" name="comment" rows="3" placeholder="댓글을 입력하세요"></textarea>
             <button type="submit" class="btn btn-primary mt-2">댓글 작성</button>
         </form>
     </div>

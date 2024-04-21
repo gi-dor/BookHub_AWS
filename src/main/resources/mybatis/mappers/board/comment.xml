@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.board.mapper.CommentMapper">
+
+    <resultMap id="CommunityCommentResultMap" type="com.example.bookhub.board.vo.CommunityComment">
+        <id column="comment_no" property="no"/>
+        <result column="comment_content" property="content"/>
+        <result column="comment_create_date" property="createDate"/>
+        <result column="comment_create_date" property="updateDate"/>
+
+        <association column="community_board_no" property="community"
+                     select="com.example.bookhub.board.mapper.CommunityMapper.getCommunityByNo"/>
+        <association column="comment_user_no" property="user"
+                     select="com.example.bookhub.board.mapper.CommunityMapper.getUserByNo"/>
+        <association property="admin" javaType="com.example.bookhub.admin.vo.Admin">
+            <id column="admin_no" property="no"/>
+            <result column="admin_id" property="id"/>
+        </association>
+    </resultMap>
+
+    <!-- 댓글을 등록하는 쿼리 -->
+    <insert id="addComment" parameterType="com.example.bookhub.board.vo.CommunityComment">
+        <selectKey keyProperty="no" order="AFTER" resultType="Long">
+            SELECT LAST_INSERT_ID() AS no
+        </selectKey>
+        INSERT INTO COMMUNITY_BOARD_COMMENTS (COMMUNITY_BOARD_NO, COMMENT_USER_NO, COMMENT_CONTENT)
+        VALUES (#{community.no}, #{user.no}, #{content})
+    </insert>
+
+    <!-- 페이징 처리한 댓글 목록을 조회하는 쿼리 -->
+    <select id="findByCommunityNoComment" resultMap="CommunityCommentResultMap">
+        SELECT COMMENT_USER_NO, COMMENT_CONTENT, COMMENT_UPDATE_DATE
+        FROM COMMUNITY_BOARD_COMMENTS
+        WHERE COMMENT_DELETE_YN = 0
+        AND COMMUNITY_BOARD_NO = #{community.no}
+        ORDER BY COMMENT_CREATE_DATE
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!-- 게시글에 등록된 댓글의 개수를 조회하는 쿼리 -->
+    <select id="getCommentCount" resultType="int">
+        SELECT COUNT(*)
+        FROM COMMUNITY_BOARD_COMMENTS
+        WHERE COMMENT_DELETE_YN = 0
+        AND COMMUNITY_BOARD_NO = #{value}
+    </select>
+
+
+
+
+
+
+
+
+
+
+</mapper>
