@@ -32,37 +32,7 @@ public class AladinController {
         return null;
     }
 
-
-    @GetMapping("/search")
-    public String searchBooks(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
-        List<Book> search = searchService.getSearchList(keyword);
-        model.addAttribute("Search", search); // 모델에 책 정보를 담아서 HTML로 전달.
-        return "main/searchList"; // searchList.html로 반환
-    }
-
 }
-/*
-    @GetMapping("/search")
-    public String searchBooks1(Model model) {
-        List<Book> search = searchService.getSearchBooks();
-        if (!search.isEmpty()) {
-            model.addAttribute("search", search);
-        } else {
-            model.addAttribute("noSearchResults", true);
-        }
-        return "main/searchList";
-    }
-  */
-
-
-/*api에서 데이터 불러와서 html에서 바로 보이게 하는 코드
-    @GetMapping("/search")
-    public String searchBooksAndRenderHtml(@RequestParam("query") String query, Model model) {
-        List<Book> books = searchService.searchBooks(query);
-        model.addAttribute("books", books); // searchService 인스턴스를 통해 메서드 호출
-        return "main/searchList"; // searchlist.html로 반환
-    }
-*/
 
 
 

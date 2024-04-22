@@ -3,7 +3,8 @@
 <mapper namespace="com.example.bookhub.main.mapper.SearchMapper">
 
     <!-- 상품 조회 -->
-    <select id="getSearchList" resultMap="bookResultMap" parameterType="String">
+    <!-- 출시일 순-->
+    <select id="getSearchPubDate" resultMap="bookResultMap" parameterType="String">
         SELECT BOOK_NAME, BOOK_PUBLISHED_DATE, BOOK_DESCRIPTION, ISBN, BOOK_LIST_PRICE
         FROM BOOK
         <where>
@@ -14,9 +15,47 @@
         ORDER BY BOOK_PUBLISHED_DATE DESC
     </select>
 
-    <!--결과내 검색-->
-
-
+    <!-- SELECT ID (판매량순, 리뷰순, 평점순) 바꿔야함 -->
+    <!--판매량 순
+    <select id="getSearchList" resultMap="bookResultMap" parameterType="String">
+        SELECT BOOK_NAME, BOOK_PUBLISHED_DATE, BOOK_DESCRIPTION, ISBN, BOOK_LIST_PRICE
+        FROM BOOK
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND BOOK_NAME LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        GROUP BY BOOK.ISBN
+        ORDER BY BOOK_SALES_VOLUME DESC
+    </select>
+    -->
+    <!--리뷰 순
+    <select id="getSearchList" resultMap="bookResultMap" parameterType="String">
+        SELECT BOOK_NAME, BOOK_PUBLISHED_DATE, BOOK_DESCRIPTION, ISBN, BOOK_LIST_PRICE
+        FROM BOOK
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND BOOK_NAME LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        GROUP BY BOOK.ISBN
+        ORDER BY BOOK_TOTAL_REPLY_COUNT DESC
+    </select>
+    -->
+    <!--평점 순
+    <select id="getSearchList" resultMap="bookResultMap" parameterType="String">
+        SELECT BOOK_NAME, BOOK_PUBLISHED_DATE, BOOK_DESCRIPTION, ISBN, BOOK_LIST_PRICE
+        FROM BOOK
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND BOOK_NAME LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        GROUP BY BOOK.ISBN
+        ORDER BY BOOK_AVERAGE_RATING DESC
+    </select>
+    -->
+    <!--조회 결과 집합을 객체로 매핑-->
     <resultMap id="bookResultMap" type="com.example.bookhub.main.vo.Book">
         <result column="BOOK_NAME" property="bookName"/>
         <result column="BOOK_PUBLISHED_DATE" property="bookPublishedDate"/>

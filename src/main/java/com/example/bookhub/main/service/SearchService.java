@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public interface SearchService {
-    List<Book> getSearchList(String keyword);
+    List<Book> getPubDate(String keyword);
 
     int booksGetTotal();
 }

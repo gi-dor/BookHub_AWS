@@ -13,7 +13,7 @@ public interface SearchMapper {
      DB에서 조회된 정보를 리스트에 담는다.
      List<Book> 형태로 반환
     */
-    List<Book> getSearchList(String keyword);
+    List<Book> getSearchPubDate(String keyword);
 
 
     /*상품 총 개수*/

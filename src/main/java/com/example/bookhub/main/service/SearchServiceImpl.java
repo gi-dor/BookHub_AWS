@@ -14,9 +14,9 @@ public class SearchServiceImpl implements SearchService {
     private final SearchMapper searchMapper;
 
     @Override
-    // 검색결과 리스트
-    public List<Book> getSearchList(String keyword) {
-        List<Book> books = searchMapper.getSearchList(keyword);
+    // 검색결과 리스트(출시일 순)
+    public List<Book> getPubDate(String keyword) {
+        List<Book> books = searchMapper.getSearchPubDate(keyword);
         for (Book book : books) {
             // bookDescription이 100글자를 초과하는 경우 처음 200글자만을 남긴다.
             if (book.getBookDescription() != null && book.getBookDescription().length() > 100) {
