@@ -1,0 +1,78 @@
+.cards-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.card img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.card {
+    margin: 0 0.5em;
+    box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
+    border: none;
+    border-radius: 0;
+}
+.carousel-inner {
+    padding: 1em;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: #e1e1e1;
+    width: 5vh;
+    height: 5vh;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.testimonial-slider {
+    background-color:#1D3559;
+    padding: 3em 2em;
+}
+.testimonial-title {
+    color: #fff;
+}
+
+.carousel-inner2 {
+    padding: 1em;
+}
+
+.newbook {
+    border: none;
+    text-align: center;
+    border-top-left-radius: 10em;
+    border-top-right-radius: 10em;
+    box-shadow: 0px 0px 10px #1D3559;
+}
+
+.newbook-img {
+    border-top-left-radius: 10em;
+    border-top-right-radius: 10em;
+}
+
+#newbookBtn1,
+#newbookBtn2 {
+    border-radius: 50%;
+    background-color: #1D3559;
+    border-color: #1D3559;
+}
+
+.btn {
+    background-color: #1D3559;
+    color: white; /* 텍스트 색상을 흰색으로 지정 */
+    transition: all 0.3s ease; /* 호버 효과를 위한 전환 효과 */
+    border: 1px solid #1D3559; /* 테두리 추가 */
+}
+
+.btn:hover {
+    background-color: white; /* 호버 시 배경색을 흰색으로 변경 */
+    color: #1D3559; /* 호버 시 텍스트 색상을 #1D3559로 변경 */
+    border: 2px solid #1D3559; /* 테두리 추가 */
+}
+
+.page-link {
+    border: none;
+}

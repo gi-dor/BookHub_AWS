@@ -21,7 +21,7 @@ public class CartController {
     private final CartService cartService;
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/list")
+    @GetMapping("")
     public String cart(Principal principal, Model model){
        List<CartBookDto> cartBooks = cartService.findCartList(principal.getName());
        model.addAttribute("cartBooks", cartBooks);
