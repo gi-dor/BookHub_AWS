@@ -2,9 +2,7 @@ package com.example.bookhub.product.service;
 
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.mapper.BuyMapper;
-import com.example.bookhub.product.vo.Buy;
-import com.example.bookhub.product.vo.BuyBook;
-import com.example.bookhub.product.vo.CouponProduced;
+import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +55,20 @@ public class BuyService {
             buyBook.setBuyNo(generatedNo);
 
             buyMapper.createBuyBook(buyBook);
+        }
+
+        // COUPON_USED 테이블, COUPON_PRODUCED 테이블
+        for(int i = 0; i < buyForm.getCouponProducedNoList().size(); i++){
+            long couponProducedNo = buyForm.getCouponProducedNoList().get(i);
+            int couponDiscountAmount = buyForm.getCouponDiscountAmountList().get(i);
+
+            CouponUsed couponUsed = new CouponUsed();
+            couponUsed.setBuyNo(generatedNo);
+            couponUsed.setCouponProducedNo(couponProducedNo);
+            couponUsed.setDiscountAmount(couponDiscountAmount);
+
+            buyMapper.createCouponUsed(couponUsed);
+            buyMapper.updateCouponProducedUsed(couponProducedNo);
         }
     }
 }
