@@ -1,38 +1,18 @@
 package com.example.bookhub.board.controller;
 
 import com.example.bookhub.board.service.CommentService;
-import com.example.bookhub.board.service.CommunityService;
-import com.example.bookhub.board.vo.Community;
 import com.example.bookhub.board.vo.CommunityComment;
-import com.example.bookhub.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("board/community/comment")
 public class CommentController {
 
     private final CommentService commentService;
-
-
-//    @GetMapping("/list")
-//    public String findByCommunityNoComment(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam Long communityNo) {
-//
-//        List<CommunityComment> comments = commentService.findByCommunityNoComment(page, size, communityNo);
-//
-//        int commentsCount = commentService.getCommentCount(communityNo);
-//
-//        int totalPages = (int) Math.ceil((double) commentsCount / size);
-//    }
 
 
     @PostMapping("/add")
@@ -43,4 +23,17 @@ public class CommentController {
         return "redirect:/board/community/detail/" + communityNo;
     }
 
+    @PostMapping("/modify")
+    public String updateComment(@ModelAttribute("comment") CommunityComment comment, @RequestParam Long communityNo) {
+        commentService.updateComment(comment);
+
+        return "redirect:/board/community/detail/" + communityNo;
+    }
+
+    @PostMapping("/delete")
+    public String deleteComment(@RequestParam Long no, @RequestParam Long communityNo) {
+        commentService.deleteComment(no);
+
+        return "redirect:/board/community/detail/" + communityNo;
+    }
 }

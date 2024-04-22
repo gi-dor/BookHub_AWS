@@ -1,7 +1,9 @@
 package com.example.bookhub.board.controller;
 
+import com.example.bookhub.board.service.CommentService;
 import com.example.bookhub.board.service.CommunityService;
 import com.example.bookhub.board.vo.Community;
+import com.example.bookhub.board.vo.CommunityComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +28,7 @@ public class CommunityController {
 
 
     private final CommunityService communityService;
+    private final CommentService commentService;
 
     @GetMapping("/list")
     public String findAllCommunity(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
@@ -59,9 +62,23 @@ public class CommunityController {
     }
 
     @GetMapping("/detail/{no}")
-    public String getCommunityDetail(@PathVariable Long no, Model model) {
+    public String getCommunityDetail(@PathVariable Long no, Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         Community community = communityService.getCommunityByNo(no);
+
+        Long communityNo = community.getNo();
+
+        List<CommunityComment> comments = commentService.findByCommunityNoComment(page, size, communityNo);
+
+        int commentsCount = commentService.getCommentCount(communityNo);
+
+        int totalPages = (int) Math.ceil((double) commentsCount / size);
+
         model.addAttribute("community", community);
+        model.addAttribute("comments", comments);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+
         return "board/community/detail";
     }
 

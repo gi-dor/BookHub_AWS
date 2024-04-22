@@ -29,22 +29,36 @@
 
     <!-- 페이징 처리한 댓글 목록을 조회하는 쿼리 -->
     <select id="findByCommunityNoComment" resultMap="CommunityCommentResultMap">
-        SELECT COMMENT_USER_NO, COMMENT_CONTENT, COMMENT_UPDATE_DATE
+        SELECT COMMENT_NO, COMMENT_USER_NO, COMMENT_CONTENT, COMMENT_UPDATE_DATE, COMMENT_CREATE_DATE
         FROM COMMUNITY_BOARD_COMMENTS
         WHERE COMMENT_DELETE_YN = 0
-        AND COMMUNITY_BOARD_NO = #{community.no}
-        ORDER BY COMMENT_CREATE_DATE
+        AND COMMUNITY_BOARD_NO = #{communityNo}
+        ORDER BY COMMENT_CREATE_DATE DESC
         LIMIT #{offset}, #{size}
     </select>
 
     <!-- 게시글에 등록된 댓글의 개수를 조회하는 쿼리 -->
-    <select id="getCommentCount" resultType="int">
+    <select id="getCommentCount" resultType="int" parameterType="long">
         SELECT COUNT(*)
         FROM COMMUNITY_BOARD_COMMENTS
         WHERE COMMENT_DELETE_YN = 0
         AND COMMUNITY_BOARD_NO = #{value}
     </select>
 
+    <!-- 댓글 수정 -->
+    <update id="updateComment">
+        UPDATE COMMUNITY_BOARD_COMMENTS
+        SET COMMENT_CONTENT = #{content},
+            COMMENT_UPDATE_DATE = CURRENT_TIMESTAMP
+        WHERE COMMENT_NO = #{no}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <update id="deleteComment">
+        UPDATE COMMUNITY_BOARD_COMMENTS
+        SET COMMENT_DELETE_YN = 1
+        WHERE COMMENT_NO = #{no}
+    </update>
 
 
 

@@ -19,7 +19,6 @@ public class CommentService {
 
     private final CommentMapper commentMapper;
     private final UserMapper userMapper;
-    private final CommunityMapper communityMapper;
 
     /**
      * 페이징 처리된 게시글의 댓글 목록 조회
@@ -36,7 +35,7 @@ public class CommentService {
         communityComment.setCommunity(community);
 
         int offset = (page - 1) * size;
-        return commentMapper.findByCommunityNoComment(offset, size, communityComment);
+        return commentMapper.findByCommunityNoComment(offset, size, communityNo);
     }
 
     /**
@@ -45,13 +44,7 @@ public class CommentService {
      * @return
      */
     public int getCommentCount(Long communityNo) {
-        Community community = new Community();
-        community.setNo(communityNo);
-
-        CommunityComment communityComment = new CommunityComment();
-        communityComment.setCommunity(community);
-
-        return commentMapper.getCommentCount(communityComment);
+        return commentMapper.getCommentCount(communityNo);
     }
 
     /**
@@ -74,4 +67,11 @@ public class CommentService {
         commentMapper.addComment(communityComment);
     }
 
+    public void updateComment(CommunityComment comment) {
+        commentMapper.updateComment(comment);
+    }
+
+    public void deleteComment(Long no) {
+        commentMapper.deleteComment(no);
+    }
 }
