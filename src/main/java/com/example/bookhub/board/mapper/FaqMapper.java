@@ -31,4 +31,6 @@ public interface FaqMapper {
      * @return
      */
     FaqCategory getFaqCategoryByNo(Long no);
+
+    Faq getFaqByNo(Long no);
 }
