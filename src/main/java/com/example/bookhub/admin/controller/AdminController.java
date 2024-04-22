@@ -32,7 +32,7 @@ public class AdminController {
     }
 
     @GetMapping("/login")
-    public String loginForm(Model model){
+    public String loginForm(){
         return "admin/login";
     }
 

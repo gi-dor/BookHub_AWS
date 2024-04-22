@@ -11,7 +11,7 @@ public class DashBoardScheduleService {
 
     private final DashBoardMapper dashBoardMapper;
 
-    @Scheduled(cron = "0 30 9 * * ?")
+    @Scheduled(cron = "0 0 10 * * ?")
     public void saveTotalYesterday() {
         dashBoardMapper.saveTotalYesterday();
     }
