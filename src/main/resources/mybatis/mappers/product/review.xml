@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.product.mapper.ReviewMapper">
+
+    <insert id="createReview" parameterType="com.example.bookhub.product.vo.Review">
+        insert into REVIEW
+        (comment, rate, user_no, review_tag_no, book_no)
+        values
+        (#{comment}, #{rate}, #{user.no}, #{reviewTag.reviewTagNo}, #{book.bookNo})
+
+        <selectKey keyProperty="reviewNo" resultType="long" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+</mapper>
