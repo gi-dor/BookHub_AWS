@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -54,7 +55,7 @@ public class UserMyPageController {
         model.addAttribute("orderList",orderList);
         model.addAttribute("inquiryList",inquiryList);
 
-        return "/user/mypage";
+        return "user/mypage";
     }
 
 
@@ -144,5 +145,43 @@ public class UserMyPageController {
         return  "redirect:/mypage/userInfo";
     }
 
+    @GetMapping("/deleteForm")
+    public String deleteForm(Model model , Principal principal ) {
 
+        String userId = principal.getName();
+        User user = userService.selectUserById(userId);
+
+        model.addAttribute("user",user);
+
+        return "user/deleteUserForm";
+    }
+
+    @PostMapping("/deleteUser")
+    public String deleteUser(Principal principal , String password) {
+
+        try{
+            // 사용자 탈퇴 처리
+            myPageService.deleteUserById(principal.getName(), password);
+            // 로그아웃
+            return "redirect:/user/logout";
+
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/mypage/deleteForm?error"; // 비밀번호 오류 페이지로 리다이렉트
+        }
+
+    }
+
+    /*
+    // Authentication  객체를 사용해 현재 인증된 사용자 정보를 가져와서
+    @PostMapping("/deleteAccount")
+    public String deleteAccount(Authentication authentication) {
+        // 현재 인증된 사용자의 정보 가져오기
+        // UserPricipal 은 Spring Security에서 사용자의 정보를 담는 클래스
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        // 사용자 탈퇴 처리
+        userService.deleteUser(userPrincipal.getId());
+        // 로그아웃
+        return "redirect:/logout";
+    }
+    */
 }
