@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,6 +35,13 @@ public class FaqController {
         return "board/faq/list";
     }
 
+    @GetMapping("/detail/{no}")
+    public String getFaqDetail(@PathVariable Long no, Model model) {
+        Faq faq = faqService.getFaqByNo(no);
+        model.addAttribute("faq", faq);
+        return "board/faq/detail";
+
+    }
 
 
 

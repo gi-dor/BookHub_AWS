@@ -1,59 +1,51 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>공지사항</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" >
-</head>
-<body>
-<div class="container">
-    <h2>자주묻는질문</h2>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">카테고리종류</th>
-            <th scope="col">제목</th>
-            <th scope="col">내용</th>
-            <th scope="col">날짜</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- 공지사항 게시글 반복문 -->
-        <tr th:each="faq : ${faqs}">
-            <td scope="row" th:text="${faq.faqCategory.getName()}"></td>
-            <td th:text="${faq.title}"></td>
-            <td th:text="${faq.content}"></td>>
-            <td th:text="${#temporals.format(faq.createDate, 'yyyy.MM.dd')}"></td>
-        </tr>
-        </tbody>
-        <div class="text-end">
-            <a href="/board/notices/register" class="btn btn-primary">게시글 등록</a>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <!-- 사이드바 -->
+        <div class="col-lg-3">
+            <aside class="sidebar">
+                <h3 style="margin-bottom: 15px;"><strong>고객센터</strong></h3>
+                <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">메인</a></strong></li><br>
+                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">자주 묻는 질문</a></strong>
+                        <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">BEST 10</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">회원</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">도서/상품정보</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">주문/결제</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">배송/수령안내</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">반품/교환/환불</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">서비스</a></li>
+                        </ul>
+                    </li><br>
+                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">1:1 문의</a></strong>
+                        <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">1:1 문의 접수</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">1:1 문의 내역</a></li>
+                        </ul>
+                    </li><br>
+                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">공지사항</a></strong></li>
+                </ul>
+            </aside>
         </div>
-    </table>
-
-
-    <div th:if="${totalPages > 1}" >
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:if="${currentPage > 1}">
-                    <a class="page-link" th:href="@{/board/faq/list(page=1)}">맨 앞</a>
-                </li>
-                <li class="page-item" th:if="${currentPage > 1}">
-                    <a class="page-link" th:href="@{/board/faq/list(page=${currentPage - 1})}">이전</a>
-                </li>
-                <!-- 페이지 번호를 표시 -->
-                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage} ? 'active' : ''">
-                    <a class="page-link" th:href="@{/board/faq/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
-                </li>
-                <li class="page-item" th:if="${currentPage < totalPages}">
-                    <a class="page-link" th:href="@{/board/faq/list(page=${currentPage + 1})}">다음</a>
-                </li>
-                <li class="page-item" th:if="${currentPage < totalPages}">
-                    <a class="page-link" th:href="@{/board/faq/list(page=${totalPages})}">맨 뒤</a>
-                </li>
-            </ul>
-        </nav>
+        <!-- 컨텐츠 영역 -->
+        <div class="col-lg-9">
+            <section id="services" class="services">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                            <div class="icon-box">
+                                <div class="icon"><i class="bx bxl-dribbble"></i></div>
+                                <h4><a href="">Lorem Ipsum</a></h4>
+                                <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                            </div>
+                        </div>
+                        <!-- 나머지 아이콘 박스들 -->
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
 </div>
-</body>
-</html>

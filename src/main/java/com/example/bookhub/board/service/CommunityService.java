@@ -91,6 +91,10 @@ public class CommunityService {
      * @return
      */
     public Community getCommunityByNo(Long no) {
+        
+        
+        
+        
         return communityMapper.getCommunityByNo(no);
     }
 
@@ -154,6 +158,8 @@ public class CommunityService {
             return null;
         }
     }
+
+
 
 
 }
