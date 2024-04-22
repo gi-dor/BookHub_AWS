@@ -29,6 +29,14 @@ public class CartController {
        return "product/cart/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/create/{bookNo}")
+    @ResponseBody
+    public ResponseEntity<String> createCart(@PathVariable("bookNo") long bookNo, Principal principal){
+        String existOrNot = cartService.createCart(bookNo, principal.getName());
+        return ResponseEntity.ok().body("{\"existOrNot\": \"" + existOrNot + "\"}");
+    }
+
     @GetMapping("/delete")
     public String delete(@RequestParam("cartNo") long cartNo){
         cartService.deleteBookByCartNo(cartNo);

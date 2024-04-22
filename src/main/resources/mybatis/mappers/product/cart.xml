@@ -22,6 +22,29 @@
             and C.book_no = B.book_no
     </select>
 
+    <select id="selectCartNoByBookNoAndUserNo" parameterType="map" resultType="long">
+        select
+            cart_no
+        from
+            CART
+        where
+            book_no = #{bookNo}
+            and user_no = #{userNo}
+    </select>
+
+    <insert id="createCart" parameterType="map">
+        insert into CART
+        (book_no, user_no, count)
+        values
+        (#{bookNo}, #{userNo}, 1)
+    </insert>
+
+    <update id="increaseBookCountByCartNo" parameterType="long">
+        update CART
+        set count = count + 1
+        where cart_no = #{value}
+    </update>
+
     <delete id="deleteBookByCartNo" parameterType="long">
         delete from CART
         where cart_no = #{value}

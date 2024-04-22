@@ -62,20 +62,24 @@
 
         <!-- 바텀 네비게이션 바 -->
         <nav class="navbar fixed-bottom navbar-light bg-light">
-            <form class="container-fluid justify-content-end">
+            <div class="container-fluid justify-content-end">
                 <button class="btn btn-outline-secondary me-3" type="button" onclick="toggleAct(this)"><i id="wish-list" class="bi bi-heart"></i></button>
-                <button class="btn btn-outline-secondary me-3" type="button" onclick="showAlertModal(${book.no})">장바구니</button>
+                <button class="btn btn-outline-secondary me-3" type="button" onclick="createOrIncreaseCart()">장바구니</button>
                 <button class="btn btn-outline-success me-3" type="button">선물하기</button>
-                <button class="btn btn-outline-success me-3" type="button">바로 주문</button>
-            </form>
+                <form method="post" action="/product/buy/order">
+                    <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
+                    <input type="hidden" name="buyBookCountList" value=1 />
+                    <button type="submit" class="btn btn-outline-success me-3">바로 주문</button>
+                </form>
+            </div>
         </nav>
 
         <!-- 모달 창 -->
-        <div id="alert-modal" class="modal" tabindex="-1">
+        <div id="modal-move-to-cart" class="modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">상품이 장바구니에 담겼습니다</h5>
+                        <h5 class="modal-title">상품이 장바구니에 담겼습니다.</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -83,7 +87,26 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary">장바구니로 이동</button>
+                        <a type="button" class="btn btn-primary" href="/product/cart">장바구니로 이동</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모달 창 -->
+        <div id="modal-increase-cart" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">이미 장바구니에 존재하는 상품이라 수량이 추가되었습니다.</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>장바구니로 이동하시겠습니까?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <a type="button" class="btn btn-primary" href="/product/cart">장바구니로 이동</a>
                     </div>
                 </div>
             </div>
@@ -93,17 +116,28 @@
 
         const url = "http://localhost:8080/product/cart"
         let bookNo = parseInt($("#book-no").text());
+        const modalMoveToCart = new bootstrap.Modal("#modal-move-to-cart");
+        const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
 
-        function showAlertModal(bookId){
-            const alertModal = new bootstrap.Modal("#alert-modal");
-            insertCart(bookId);
-            alertModal.show();
+        function showAlertModal(existOrNot){
+            console.log(existOrNot);
+            if(existOrNot === "exist"){
+                modalIncreaseCart.show();
+            }
+            else{
+                modalMoveToCart.show();
+            }
         }
 
-        async function insertCart(bookId){
-            if(bookId){
-                //let response = await fetch()
+        async function createOrIncreaseCart(){
+            let response = await fetch("/product/cart/create/" + bookNo);
+            if(!response.ok){
+                console.log("장바구니 추가 실패");
             }
+
+            let jsonData = await response.json();
+
+            await showAlertModal(jsonData.existOrNot);
         }
 
         async function toggleAct(button) {
@@ -114,7 +148,6 @@
                 heartIcon.classList.add('bi-heart');
 
                 let response = await fetch("/product/wishlist/delete/" + bookNo);
-                console.log(response);
                 if(!response.ok){
                     console.log("위시리스트 추가 실패");
                 }
@@ -123,7 +156,6 @@
                 heartIcon.classList.remove('bi-heart');
 
                 let response = await fetch("/product/wishlist/create/" + bookNo);
-                console.log(response);
                 if(!response.ok){
                     console.log("위시리스트 추가 실패");
                 }
