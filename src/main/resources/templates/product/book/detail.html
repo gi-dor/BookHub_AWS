@@ -1,5 +1,8 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
        layout:decorate="~{layout/base}" >
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/product/bookDetail.css}" />
+</th:block>
 
     <div layout:fragment="content" class="container my-3">
         <div class="row mb-3">
@@ -60,6 +63,8 @@
             </div>
         </nav>
 
+        <button class="btn btn-outline-secondary me-3" type="button" onclick="createReview()">리뷰 작성</button>
+
         <!-- 바텀 네비게이션 바 -->
         <nav class="navbar fixed-bottom navbar-light bg-light">
             <div class="container-fluid justify-content-end">
@@ -111,6 +116,95 @@
                 </div>
             </div>
         </div>
+
+        <!-- 리뷰 모달 창 -->
+        <div id="modal-create-review" class="modal" tabindex="-1">
+            <form method="post" action="/product/review/create">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">리뷰 작성</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card mb-3" style="max-width: 540px;">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="..." class="img-fluid rounded-start" alt="...">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
+                                            <h5 class="card-title" th:text="${book.name}"></h5>
+                                            <div class="rate_wrap">
+                                                <div class="rate_box">
+                                                    <label for="rate_1" class="label_star" title="0.5"><span class="blind">0.5점</span></label>
+                                                    <label for="rate_2" class="label_star" title="1"><span class="blind">1점</span></label>
+                                                    <label for="rate_3" class="label_star" title="1.5"><span class="blind">1.5점</span></label>
+                                                    <label for="rate_4" class="label_star" title="2"><span class="blind">2점</span></label>
+                                                    <label for="rate_5" class="label_star" title="2.5"><span class="blind">2.5점</span></label>
+                                                    <label for="rate_6" class="label_star" title="3"><span class="blind">3점</span></label>
+                                                    <label for="rate_7" class="label_star" title="3.5"><span class="blind">3.5점</span></label>
+                                                    <label for="rate_8" class="label_star" title="4"><span class="blind">4점</span></label>
+                                                    <label for="rate_9" class="label_star" title="4.5"><span class="blind">4.5점</span></label>
+                                                    <label for="rate_10" class="label_star" title="5"><span class="blind">5점</span></label>
+                                                    <input type="radio" name="rate" id="rate_1" class="star_radio" value="0.5">
+                                                    <input type="radio" name="rate" id="rate_2" class="star_radio" value="1">
+                                                    <input type="radio" name="rate" id="rate_3" class="star_radio" value="1.5">
+                                                    <input type="radio" name="rate" id="rate_4" class="star_radio" value="2">
+                                                    <input type="radio" name="rate" id="rate_5" class="star_radio" value="2.5">
+                                                    <input type="radio" name="rate" id="rate_6" class="star_radio" value="3">
+                                                    <input type="radio" name="rate" id="rate_7" class="star_radio" value="3.5">
+                                                    <input type="radio" name="rate" id="rate_8" class="star_radio" value="4">
+                                                    <input type="radio" name="rate" id="rate_9" class="star_radio" value="4.5">
+                                                    <input type="radio" name="rate" id="rate_10" class="star_radio" value="5">
+                                                    <span class="rate_bg"></span>
+                                                </div>
+                                            </div>
+                                            <p class="card-text"><small class="text-body-secondary">/10</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3"><bold>감성태그</bold></div>
+                            <p>가장 와 닿는 하나의 키워드를 선택해주세요.</p>
+                            <div class="form-group">
+                                <input type="radio" class="btn-check" name="reviewTagNo" id="option1" value=1 autocomplete="off" checked>
+                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option1">집중돼요</label>
+
+                                <input type="radio" class="btn-check" name="reviewTagNo" id="option2" value=2 autocomplete="off">
+                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option2">도움돼요</label>
+
+                                <input type="radio" class="btn-check" name="reviewTagNo" id="option3" value=3 autocomplete="off">
+                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option3">쉬웠어요</label>
+
+                                <input type="radio" class="btn-check" name="reviewTagNo" id="option4" value=4 autocomplete="off">
+                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option4">재밌어요</label>
+
+                                <input type="radio" class="btn-check" name="reviewTagNo" id="option5" value=5 autocomplete="off">
+                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option5">유익해요</label>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label for="formControlTextarea" class="form-label"><bold>리뷰 작성</bold></label>
+                                <textarea class="form-control custom-textarea" id="formControlTextarea" name="comment" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label for="formFileMultiple" class="form-label"><bold>사진 첨부(선택)</bold></label>
+                                <input class="form-control" type="file" id="formFileMultiple" name="imageFiles" multiple>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            <button type="submit" class="btn btn-primary">등록</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
     <script layout:fragment="script" type="text/javascript">
 
@@ -118,6 +212,7 @@
         let bookNo = parseInt($("#book-no").text());
         const modalMoveToCart = new bootstrap.Modal("#modal-move-to-cart");
         const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
+        const modalCreateReview = new bootstrap.Modal("#modal-create-review");
 
         function showAlertModal(existOrNot){
             console.log(existOrNot);
@@ -160,6 +255,10 @@
                     console.log("위시리스트 추가 실패");
                 }
             }
+        }
+
+        async function createReview(){
+            modalCreateReview.show();
         }
     </script>
 </html>
