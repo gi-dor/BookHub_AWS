@@ -467,7 +467,7 @@
 
         // 모달창의 소분류 탭에서 중분류 카테고리 선택 시 일치하는 대분류 카테고리 선택
         $('#third-select-second-category').change(function () {
-            var categoryNo = $(this).val();
+            let categoryNo = $(this).val();
             selectTopCategory(categoryNo);
         });
 
@@ -480,7 +480,7 @@
                 success: function (topLevelCategory) {
                     $('#third-select-top-category option').each(function () {
                         let option = $(this);
-                        if (option.val() === topLevelCategory.no) {
+                        if (parseInt(option.val()) === topLevelCategory.no) {
                             option.attr('selected', true);
                         } else {
                             option.attr('selected', false);
@@ -824,6 +824,88 @@
                 },
                 complete: function () {
                     highlightCategoryByCategoryNo(modifiedCategoryNo);
+                }
+            });
+        }
+
+        // 삭제 버튼 클릭
+        $("#btn-delete-category").click(function () {
+            let modalTopCategory = $("#topLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+            let modalSecondCategory = $("#secondLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+            let modalThirdCategory = $("#thirdLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+
+            // 소뷴류 삭제 함수 실행
+            if (modalThirdCategory) {
+                let topCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle").data("topCategoryNo");
+                let secondCategoryNo = $("#secondLevelCategories").find("span.bg-primary-subtle").data("secondCategoryNo");
+                let thirdCategoryNo = $("#thirdLevelCategories").find("span.bg-primary-subtle").data("thirdCategoryNo");
+                let secondCategoryName = $("#secondLevelCategories").find("span.bg-primary-subtle").text();
+
+                deleteThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName);
+
+                return;
+            }
+
+            // 중분류 삭제 함수 실행
+            if (modalSecondCategory) {
+                let topCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle").data("topCategoryNo");
+                let secondCategoryNo = $("#secondLevelCategories").find("span.bg-primary-subtle").data("secondCategoryNo");
+
+                deleteSecondCategory(topCategoryNo, secondCategoryNo);
+                return;
+            }
+
+            // 대분류 삭제 함수 실행
+            if (modalTopCategory) {
+                return;
+            }
+        });
+
+        // 소분류 삭제
+        function deleteThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName) {
+
+            if (!confirm("정말로 삭제하시겠습니까?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/delete/thirdCategory",
+                method: "POST",
+                data: {targetCategoryNo: thirdCategoryNo},
+                success: function () {
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                },
+                complete: function () {
+                    highlightCategoryByCategoryNo(topCategoryNo);
+                    showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryName);
+                    showThirdCategoriesBySecondCategoryNo(secondCategoryNo);
+                }
+            });
+        }
+
+        // 중분류 삭제
+        function deleteSecondCategory(topCategoryNo, secondCategoryNo) {
+
+            if (!confirm("정말로 삭제하시겠습니까?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/delete/secondCategory",
+                method: "POST",
+                data: {targetCategoryNo: secondCategoryNo},
+                success: function () {
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                },
+                complete: function () {
+                    highlightCategoryByCategoryNo(topCategoryNo);
+                    showSecondCategoriesByTopCategoryNo(topCategoryNo);
                 }
             });
         }

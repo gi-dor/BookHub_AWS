@@ -110,4 +110,19 @@
         WHERE CATEGORY_NO = #{targetCategoryNo}
         AND PARENT_CATEGORY_NO IS NULL
     </update>
+
+    <delete id="deleteThirdCategory" parameterType="int">
+        DELETE FROM BookHub.CATEGORY
+        WHERE CATEGORY_NO = #{categoryNo};
+    </delete>
+
+    <delete id="deleteThirdCategoryBySecondCategoryNo" parameterType="int">
+            DELETE FROM BookHub.CATEGORY
+            WHERE PARENT_CATEGORY_NO = #{categoryNo};
+    </delete>
+
+    <delete id="deleteSecondCategory" parameterType="int">
+        DELETE FROM BookHub.CATEGORY
+        WHERE CATEGORY_NO = #{categoryNo};
+    </delete>
 </mapper>

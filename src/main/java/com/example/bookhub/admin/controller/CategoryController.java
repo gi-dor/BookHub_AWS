@@ -89,4 +89,16 @@ public class CategoryController {
         return categoryService.getAllTopLevelCategories();
     }
 
+    @PostMapping("/delete/thirdCategory")
+    @ResponseBody
+    public void deleteThirdCategory(@RequestParam("targetCategoryNo") int targetCategoryNo) {
+        categoryService.deleteThirdCategory(targetCategoryNo);
+    }
+
+    @PostMapping("/delete/secondCategory")
+    @ResponseBody
+    public void deleteSecondCategory(@RequestParam("targetCategoryNo") int targetCategoryNo) {
+        categoryService.deleteSecondCategory(targetCategoryNo);
+    }
+
 }

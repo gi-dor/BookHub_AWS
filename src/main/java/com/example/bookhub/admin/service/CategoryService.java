@@ -61,4 +61,13 @@ public class CategoryService {
     public void modifyTopCategory(int targetCategoryNo, String topCategoryName) {
         categoryMapper.modifyTopCategory(targetCategoryNo, topCategoryName);
     }
+
+    public void deleteThirdCategory(int targetCategoryNo) {
+        categoryMapper.deleteThirdCategory(targetCategoryNo);
+    }
+
+    public void deleteSecondCategory(int targetCategoryNo) {
+        categoryMapper.deleteThirdCategoryBySecondCategoryNo(targetCategoryNo);
+        categoryMapper.deleteSecondCategory(targetCategoryNo);
+    }
 }

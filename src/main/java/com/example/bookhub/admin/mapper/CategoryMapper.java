@@ -31,4 +31,10 @@ public interface CategoryMapper {
     void modifySecondCategory(int targetCategoryNo, int parentCategoryNo, String secondCategoryName);
 
     void modifyTopCategory(int targetCategoryNo, String topCategoryName);
+
+    void deleteThirdCategory(int targetCategoryNo);
+
+    void deleteSecondCategory(int targetCategoryNo);
+
+    void deleteThirdCategoryBySecondCategoryNo(int targetCategoryNo);
 }
