@@ -16,4 +16,5 @@ public class Community {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private CommunityImages images;
+
 }
