@@ -28,4 +28,24 @@
         select DAY_TOTAL_DATE as dayTotalDate, DAY_TOTAL_PRICE as dayTotalPrice
         from DAY_TOTAL
     </select>
+
+    <!--
+        DAY_TOTAL 테이블에서 월요일날 실행된다는 가정하에
+        지난주 일요일~토요일 합계를 계산하여 통계테이블(WEEK) 저장
+        WEEK_TOTAL_DATE의 값은 해당 월의 몇번째 주인지 저장(EX. 4월의 3번째 주인 경우 = 2024-04-3)
+    -->
+    <insert id="saveTotalLastWeek">
+        INSERT INTO WEEK_TOTAL (WEEK_TOTAL_DATE, WEEK_TOTAL_PRICE)
+        SELECT
+        CONCAT(
+        DATE_FORMAT(DAY_TOTAL_DATE, '%Y-%m-'),
+        FLOOR((DAYOFMONTH(DAY_TOTAL_DATE) + DAYOFWEEK(DATE_FORMAT(DAY_TOTAL_DATE, '%Y-%m-01')) - 2) / 7) + 1
+        ) AS START_DATE,
+        SUM(DAY_TOTAL_PRICE) AS TOTAL_PRICE
+        FROM DAY_TOTAL
+        WHERE DAY_TOTAL_DATE >= DATE_SUB(CURDATE(), INTERVAL DAYOFWEEK(CURDATE())+6 DAY)
+        AND DAY_TOTAL_DATE &lt; DATE_SUB(CURDATE(), INTERVAL DAYOFWEEK(CURDATE()) DAY)
+        GROUP BY START_DATE
+    </insert>
+
 </mapper>

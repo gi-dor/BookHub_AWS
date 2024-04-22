@@ -17,18 +17,20 @@ public class WishListService {
     private final WishListMapper wishListMapper;
 
     public void createWishList(long bookNo, String userId) {
-        User user = userMapper.selectUserById(userId);
-        Map<String, Object> map = new HashMap<>();
-        map.put("bookNo", bookNo);
-        map.put("userNo", user.getNo());
+        Map map = getUserAndMap(bookNo, userId);
         wishListMapper.createWishList(map);
     }
 
     public void deleteWishList(long bookNo, String userId) {
+        Map map = getUserAndMap(bookNo, userId);
+        wishListMapper.deleteWishList(map);
+    }
+
+    public Map<String, Object> getUserAndMap(long bookNo, String userId){
         User user = userMapper.selectUserById(userId);
         Map<String, Object> map = new HashMap<>();
         map.put("bookNo", bookNo);
         map.put("userNo", user.getNo());
-        wishListMapper.deleteWishList(map);
+        return map;
     }
 }

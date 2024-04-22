@@ -84,5 +84,12 @@
             AND CATEGORY_NAME = #{categoryName}
     </select>
 
+    <select id="findCategoryByName" parameterType="String" resultType="com.example.bookhub.admin.vo.Category">
+            SELECT CATEGORY_NO AS no,
+    	        	CATEGORY_NAME AS name,
+                    PARENT_CATEGORY_NO AS parentNo
+            FROM BookHub.CATEGORY
+            WHERE CATEGORY_NAME = #{categoryName}
+    </select>
 
 </mapper>

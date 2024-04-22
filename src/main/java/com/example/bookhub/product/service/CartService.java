@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,4 +35,20 @@ public class CartService {
         cartMapper.updateBookCountByCartNo(map);
     }
 
+    public String createCart(long bookNo, String userId) {
+        User user = userMapper.selectUserById(userId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("bookNo", bookNo);
+        map.put("userNo", user.getNo());
+        Optional<Long> optional = cartMapper.selectCartNoByBookNoAndUserNo(map);
+        if(optional.isEmpty()){
+            cartMapper.createCart(map);
+            return "new";
+        }
+        else{
+            long cartNo = optional.get();
+            cartMapper.increaseBookCountByCartNo(cartNo);
+            return "exist";
+        }
+    }
 }
