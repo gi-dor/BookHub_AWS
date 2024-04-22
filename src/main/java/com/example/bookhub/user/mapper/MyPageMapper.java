@@ -15,4 +15,5 @@ public interface MyPageMapper {
 
     List<Inquiry> selectInquiryList(String id);
 
+    void deleteUserById(String id);
 }
