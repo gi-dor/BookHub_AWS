@@ -136,9 +136,15 @@
     const modalCoupon = new bootstrap.Modal("#modal-coupon");
 
     $("#total-point-use-amount-tmp").on('keyup', function(event){
-        let inputValue = parseInt($(this).val());
-        let totalPointAmount = $("#total-point-amount").text()
-        if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= totalPointAmount) {
+        let inputValue = $(this).val();
+
+        let numericValue = inputValue.replace(/[^\d]/g, '');
+        $(this).val(numericValue);
+
+        numericValue = parseInt(numericValue);
+        let totalPointAmount = parseInt($("#total-point-amount").text());
+
+        if (!isNaN(numericValue) && numericValue <= totalPointAmount) {
 
         } else {
             $(this).val('');
@@ -217,9 +223,15 @@
 
         // 쿠폰 각각 유효성 검사
         $("#tbody-modal").on('keyup', 'input[name="couponDiscountAmountList"]', function(){
-            let inputValue = parseInt($(this).val());
+            let inputValue = $(this).val();
             let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
-            if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= couponDiscountAmount) {
+
+            let numericValue = inputValue.replace(/[^\d]/g, '');
+            $(this).val(numericValue);
+
+            numericValue = parseInt(numericValue);
+
+            if (!isNaN(numericValue) && numericValue <= couponDiscountAmount) {
 
             } else {
                 $(this).val('');
