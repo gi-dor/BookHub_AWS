@@ -38,7 +38,7 @@
                             <tr>
                                 <td>북허브 쿠폰</td>
                                 <td></td>
-                                <td><input id="total-coupon-discount-amount-tmp" style="width: 80px"/>원</td>
+                                <td><input id="total-coupon-discount-amount-tmp" style="width: 80px" readonly />원</td>
                                 <td><button type="button" class="btn btn-primary" onclick="showCouponUseModal()">사용하기</button></td>
                             </tr>
                             <tr>
@@ -135,6 +135,16 @@
     const $tbody = $("#tbody-modal");
     const modalCoupon = new bootstrap.Modal("#modal-coupon");
 
+    $("#total-point-use-amount-tmp").on('keyup', function(event){
+        let inputValue = parseInt($(this).val());
+        let totalPointAmount = $("#total-point-amount").text()
+        if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= totalPointAmount) {
+
+        } else {
+            $(this).val('');
+        }
+    });
+
     function updatePrices(){
         let totalPrice = 0;
         let totalBookDiscountPrice = 0;
@@ -183,10 +193,10 @@
             let couponProduced = couponList[index];
 
             rows += `
-                   <tr>
+                   <tr id="tr-coupon">
                         <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
                         <td>${couponProduced.coupon.name}</td>
-                        <td>${couponProduced.coupon.price}원</td>
+                        <td><span class="couponDiscountAmount">${couponProduced.coupon.price}</span>원</td>
                         <td><input name="couponDiscountAmountList"
                         value="${couponProduced.coupon.price}" style="width: 70px;"/>원</td>
                    </tr>
@@ -194,11 +204,27 @@
         }
         $tbody.html(rows);
 
-        $(document).on('change', 'input[name="couponProducedNoList"]', function() {
+        // 쿠폰 각각 체크박스 체크여부에 따라 input 값 바뀌도록
+        $("#tbody-modal").on('change', 'input[name="couponProducedNoList"]', function() {
             if (!$(this).prop('checked')) {
                 $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val('0');
             }
+            else if($(this).prop('checked')) {
+                let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
+                $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val(couponDiscountAmount);
+            }
         });
+
+        // 쿠폰 각각 유효성 검사
+        $("#tbody-modal").on('keyup', 'input[name="couponDiscountAmountList"]', function(){
+            let inputValue = parseInt($(this).val());
+            let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
+            if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= couponDiscountAmount) {
+
+            } else {
+                $(this).val('');
+            }
+        })
 
         modalCoupon.show();
     }
