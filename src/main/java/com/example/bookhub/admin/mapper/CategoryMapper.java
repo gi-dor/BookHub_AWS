@@ -37,4 +37,5 @@ public interface CategoryMapper {
     void deleteSecondCategory(int targetCategoryNo);
 
     void deleteThirdCategoryBySecondCategoryNo(int targetCategoryNo);
+
 }

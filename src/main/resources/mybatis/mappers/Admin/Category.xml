@@ -125,4 +125,5 @@
         DELETE FROM BookHub.CATEGORY
         WHERE CATEGORY_NO = #{categoryNo};
     </delete>
+
 </mapper>
