@@ -37,9 +37,7 @@
             		CATEGORY_NAME AS name,
                     PARENT_CATEGORY_NO AS parentNo
             FROM BookHub.CATEGORY
-            WHERE PARENT_CATEGORY_NO IN (SELECT CATEGORY_NO
-            							FROM BookHub.CATEGORY
-            							WHERE CATEGORY_NO = #{value})
+            WHERE PARENT_CATEGORY_NO = #{value}
     </select>
 
     <select id="getParentCategoryByCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
@@ -92,4 +90,24 @@
             WHERE CATEGORY_NAME = #{categoryName}
     </select>
 
+    <update id="modifyThirdCategory" parameterType="map">
+        UPDATE BookHub.CATEGORY
+        SET CATEGORY_NAME = #{thirdCategoryName},
+            PARENT_CATEGORY_NO = #{parentCategoryNo}
+        WHERE CATEGORY_NO = #{targetCategoryNo}
+    </update>
+
+    <update id="modifySecondCategory" parameterType="map">
+        UPDATE BookHub.CATEGORY
+        SET CATEGORY_NAME = #{secondCategoryName},
+            PARENT_CATEGORY_NO = #{parentCategoryNo}
+        WHERE CATEGORY_NO = #{targetCategoryNo}
+    </update>
+
+    <update id="modifyTopCategory" parameterType="map">
+        UPDATE BookHub.CATEGORY
+        SET CATEGORY_NAME = #{topCategoryName}
+        WHERE CATEGORY_NO = #{targetCategoryNo}
+        AND PARENT_CATEGORY_NO IS NULL
+    </update>
 </mapper>

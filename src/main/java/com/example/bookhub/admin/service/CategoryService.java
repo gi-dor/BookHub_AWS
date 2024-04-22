@@ -49,4 +49,16 @@ public class CategoryService {
     public Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo) {
         return categoryMapper.getSubLevelCategoryByCategoryNameAndSuperCategoryNo(categoryName, categoryNo);
     }
+
+    public void modifyThirdCategory(int targetCategoryNo, int parentCategoryNo, String thirdCategoryName) {
+        categoryMapper.modifyThirdCategory(targetCategoryNo, parentCategoryNo, thirdCategoryName);
+    }
+
+    public void modifySecondCategory(int targetCategoryNo, int parentCategoryNo, String secondCategoryName) {
+        categoryMapper.modifySecondCategory(targetCategoryNo, parentCategoryNo, secondCategoryName);
+    }
+
+    public void modifyTopCategory(int targetCategoryNo, String topCategoryName) {
+        categoryMapper.modifyTopCategory(targetCategoryNo, topCategoryName);
+    }
 }
