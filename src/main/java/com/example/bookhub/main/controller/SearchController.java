@@ -1,6 +1,7 @@
 package com.example.bookhub.main.controller;
 
 
+import com.example.bookhub.main.dto.SearchCriteria;
 import com.example.bookhub.main.service.SearchService;
 import com.example.bookhub.main.vo.Book;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class SearchController {
 
     //  출시일 순 검색 했을때
     @GetMapping("/search")
-    public String searchBooks(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
-        List<Book> search = searchService.getPubDate(keyword);
+    public String searchBooks(SearchCriteria searchCriteria, Model model) {
+        List<Book> search = searchService.searchBooks(searchCriteria);
         model.addAttribute("Search", search); // 모델에 책 정보를 담아서 HTML로 전달.
         return "main/searchList"; // searchList.html로 반환
     }

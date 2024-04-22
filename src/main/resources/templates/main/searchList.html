@@ -12,41 +12,35 @@
             <form class="mb-4" action="/search" method="get">
                 <h5 class="fw-bold">결과내 검색</h5>
                 <div class="mb-4">
-                    <input type="text" id="Search2_SearchWord" class="form-control border" placeholder="검색어 입력" name="keyword">
+                    <input type="hidden" name="opt" th:value="${param.opt}">
+                    <input type="hidden" name="keyword" th:value="${param.keyword}">
+                    <input type="text" id="Search2_SearchWord" class="form-control border" placeholder="검색어 입력" name="extraKeyword" th:value="${param.extraKeyword}">
                 </div>
                 <div class="d-flex justify-content-between">
-                    <div class="form-check">
-                        <input type="checkbox" id="chkIsKeyword" class="form-check-input">
-                        <label for="chkIsKeyword" class="form-check-label">검색어 제외</label>
-                    </div>
-                    <button type="button" id="btnSearch2_SearchWord" class="btn btn-primary">적용</button>
+                    <button type="submit" id="btnSearch2_SearchWord" class="btn btn-primary">적용</button>
                 </div>
                 <hr>
         </form>
             <!-- 결과내 검색 끝 -->
 
             <!-- 검색조건 시작 -->
-            <div class="mb-3">
+            <form id="searchForm" class="mb-4" action="/search" method="get">
                 <h5 class="fw-bold">검색 조건</h5>
                 <div class="form-check mb-1">
-                    <input type="checkbox" id="Search2_SearchField_Title" class="form-check-input" checked>
+                    <input type="checkbox" id="Search2_SearchField_Title" class="form-check-input" name="extraTitleOpt" checked>
                     <label for="Search2_SearchField_Title" class="form-check-label">제목</label>
                 </div>
                 <div class="form-check mb-1">
-                    <input type="checkbox" id="Search2_SearchField_Author" class="form-check-input" checked>
+                    <input type="checkbox" id="Search2_SearchField_Author" class="form-check-input" name="extraAuthorOpt" checked>
                     <label for="Search2_SearchField_Author" class="form-check-label">저자</label>
                 </div>
                 <div class="form-check mb-1">
-                    <input type="checkbox" id="Search2_SearchField_Publisher" class="form-check-input" checked>
+                    <input type="checkbox" id="Search2_SearchField_Publisher" class="form-check-input" name="extraPublisherOpt" checked>
                     <label for="Search2_SearchField_Publisher" class="form-check-label">출판사</label>
                 </div>
-                <div class="form-check mb-1">
-                    <input type="checkbox" id="Search2_SearchField_ISBN" class="form-check-input" checked>
-                    <label for="Search2_SearchField_ISBN" class="form-check-label">ISBN</label>
-                </div>
-                <button type="button" class="btn btn-primary" onclick="SearchField_Set();">적용</button>
+                <button type="submit" class="btn btn-primary">적용</button>
                 <hr>
-            </div>
+            </form>
             <!-- 검색조건 끝 -->
 
         </div>
@@ -59,7 +53,7 @@
             <div class="option mb-3">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">판매량순</a>
+                        <a class="nav-link active" aria-current="page" href="#" >판매량순</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">출시일순</a>
@@ -74,6 +68,29 @@
             </div>
 
 
+            <!-- 이거 어떻게할지 고민
+<div class="col-10 mb-5">
+    <h1 class="mb-3">통합검색</h1>
+    옵션선택? 판매량순, 출시일순, 평점순, 리뷰순
+    <div class="option mb-3">
+        <form id="sortForm" action="/search" method="get">
+            <ul class="nav nav-tabs">
+                <li class="nav-item" onclick="submitForm('판매량순')">
+                    <a class="nav-link" aria-current="page">판매량순</a>
+                </li>
+                <li class="nav-item" onclick="submitForm('출시일순')">
+                    <a class="nav-link">출시일순</a>
+                </li>
+                <li class="nav-item" onclick="submitForm('평점순')">
+                    <a class="nav-link" >평점순</a>
+                </li>
+                <li class="nav-item" onclick="submitForm('리뷰순')">
+                    <a class="nav-link">리뷰순</a>
+                </li>
+            </ul>
+        </form>
+    </div>
+-->
 
             <!-- 페이지네이션 및 버튼 -->
             <div class="d-flex justify-content-between align-items-center mb-4">

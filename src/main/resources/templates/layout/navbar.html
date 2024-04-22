@@ -63,14 +63,14 @@
                         </div>
                         <div class="search-wrapper col-9 d-flex align-items-center">
                             <div class="search mt-2 mb-2 me-2 col-3">
-                                <select class="form-select">
+                                <select class="form-select" name="opt">
                                     <option selected>통합검색</option>
                                     <option value="1">국내도서</option>
                                     <option value="2">해외도서</option>
                                 </select>
                             </div>
                             <div class="search mt-2 mb-2 me-2 col-7">
-                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요" name="keyword">
+                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요" name="keyword" th:value="${param.keyword}">
                             </div>
                             <div class="search mt-2 mb-2 col-2">
                                 <button type="submit" class="btn btn-primary" id="submitButton">검색</button>

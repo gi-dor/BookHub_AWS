@@ -11,6 +11,12 @@ $(document).ready(function () {
     });
 });
 
+//판매량순, 출시일순, 평점순, 리뷰순
+function submitForm(sortBy) {
+    document.getElementById('sortForm').action = '/search?sort=' + encodeURIComponent(sortBy);
+    document.getElementById('sortForm').submit('');
+}
+
 <!--페이지네이션-->
 $(document).ready(function() {
     // 페이지네이션 요소들 선택
