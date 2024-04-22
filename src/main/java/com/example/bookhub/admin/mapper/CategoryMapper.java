@@ -23,4 +23,6 @@ public interface CategoryMapper {
     Category getTopLevelCategoryByCategoryName(String categoryName);
 
     Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo);
+
+    String findCategoryByName(String categoryName);
 }

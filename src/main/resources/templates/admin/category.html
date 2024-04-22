@@ -423,7 +423,7 @@
                     $("#topLevelCategories").append($span);
                 },
                 error: function (xhr, status, error) {
-                    console.error("에러발생:", error);
+                    alert("카테고리 이름이 중복되었습니다." + error);
                 }
             });
         }
@@ -447,7 +447,7 @@
                     $("#secondLevelCategories").append($span);
                 },
                 error: function (xhr, status, error) {
-                    console.error("에러발생:", error);
+                    alert("카테고리 이름이 중복되었습니다." + error);
                 }
             });
         }
@@ -471,7 +471,7 @@
                     $("#thirdLevelCategories").append($span);
                 },
                 error: function (xhr, status, error) {
-                    console.error("에러발생:", error);
+                    alert("카테고리 이름이 중복되었습니다." + error);
                 }
             });
         }

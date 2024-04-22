@@ -1,6 +1,7 @@
 package com.example.bookhub.admin.service;
 
 import com.example.bookhub.admin.mapper.CategoryMapper;
+import com.example.bookhub.admin.validator.Validator;
 import com.example.bookhub.admin.vo.Category;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,12 @@ public class CategoryService {
     }
 
     public void addTopLevelCategory(String categoryName) {
+        Validator.isCategoryNameUnique(categoryName, categoryMapper);
         categoryMapper.addTopLevelCategory(categoryName);
     }
 
     public void addSubCategory(String categoryName, int categoryNo) {
+        Validator.isCategoryNameUnique(categoryName, categoryMapper);
         categoryMapper.addSubCategory(categoryName, categoryNo);
     }
 
