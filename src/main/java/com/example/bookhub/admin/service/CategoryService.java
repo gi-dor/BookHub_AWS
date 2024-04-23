@@ -3,6 +3,7 @@ package com.example.bookhub.admin.service;
 import com.example.bookhub.admin.mapper.CategoryMapper;
 import com.example.bookhub.admin.validator.Validator;
 import com.example.bookhub.admin.vo.Category;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,12 @@ public class CategoryService {
     }
 
     public void addTopLevelCategory(String categoryName) {
-        Validator.isCategoryNameUnique(categoryName, categoryMapper);
+        Validator.isCategoryNameUnique(categoryName, null, categoryMapper);
         categoryMapper.addTopLevelCategory(categoryName);
     }
 
     public void addSubCategory(String categoryName, int categoryNo) {
-        Validator.isCategoryNameUnique(categoryName, categoryMapper);
+        Validator.isCategoryNameUnique(categoryName, categoryNo, categoryMapper);
         categoryMapper.addSubCategory(categoryName, categoryNo);
     }
 
@@ -48,5 +49,48 @@ public class CategoryService {
 
     public Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo) {
         return categoryMapper.getSubLevelCategoryByCategoryNameAndSuperCategoryNo(categoryName, categoryNo);
+    }
+
+    public void modifyThirdCategory(int targetCategoryNo, int parentCategoryNo, String thirdCategoryName) {
+        Validator.isCategoryNameUnique(thirdCategoryName, parentCategoryNo, categoryMapper);
+        categoryMapper.modifyThirdCategory(targetCategoryNo, parentCategoryNo, thirdCategoryName);
+    }
+
+    public void modifySecondCategory(int targetCategoryNo, int parentCategoryNo, String secondCategoryName) {
+        Validator.isCategoryNameUnique(secondCategoryName, parentCategoryNo, categoryMapper);
+        categoryMapper.modifySecondCategory(targetCategoryNo, parentCategoryNo, secondCategoryName);
+    }
+
+    public void modifyTopCategory(int targetCategoryNo, String topCategoryName) {
+        Validator.isCategoryNameUnique(topCategoryName, null, categoryMapper);
+        categoryMapper.modifyTopCategory(targetCategoryNo, topCategoryName);
+    }
+
+    public void deleteThirdCategory(int targetCategoryNo) {
+        categoryMapper.deleteThirdCategory(targetCategoryNo);
+    }
+
+    public void deleteSecondCategory(int targetCategoryNo) {
+        categoryMapper.deleteThirdCategoryBySecondCategoryNo(targetCategoryNo);
+        categoryMapper.deleteSecondCategory(targetCategoryNo);
+    }
+
+    public void deleteTopCategory(int targetCategoryNo) {
+        List<Category> secondCategories = categoryMapper.getSubCategoriesByCategoryNo(targetCategoryNo);
+
+        for (Category secondCategory : secondCategories) {
+            deleteSecondCategory((int) secondCategory.getNo());
+        }
+
+        categoryMapper.deleteTopCategory(targetCategoryNo);
+    }
+
+    public List<Category> getTotalSubCategories(int categoryNo) {
+        List<Category> categories = categoryMapper.getSubCategoriesByCategoryNo(categoryNo);
+        List<Category> totalSubCategories = new ArrayList<>(categories);
+        for (Category category : categories) {
+            totalSubCategories.addAll(categoryMapper.getSubCategoriesByCategoryNo((int) category.getNo()));
+        }
+        return totalSubCategories;
     }
 }

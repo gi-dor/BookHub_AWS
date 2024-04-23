@@ -1,0 +1,991 @@
+<html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="category" class="container-fluid">
+    <div class="row">
+        <h1>카테고리 관리</h1>
+        <hr>
+
+        <!-- 버튼 영역 -->
+        <div class="col-12 p-3 d-flex justify-content-between">
+            <!-- 왼쪽 배치 -->
+            <div class="d-flex justify-content-start">
+                <button type="button" class="btn btn-info me-1" id="btn-initialize-category">초기화</button>
+            </div>
+
+            <!-- 오른쪽 배치 -->
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary me-1" id="btn-create-category">추가</button>
+                <button type="button" class="btn btn-success me-1" id="btn-modify-category">수정</button>
+                <button type="button" class="btn btn-danger" id="btn-delete-category">삭제</button>
+            </div>
+        </div>
+
+        <!-- 대분류 영역 -->
+        <div class="col-12 bg-light p-3 mb-3" id="toplevel-category-box">
+            <div class="d-flex align-items-center justify-content-between">
+                <h4>대분류</h4>
+            </div>
+            <div class="card mt-3">
+                <div id="topLevelCategories" class="card-body">
+                    <span th:each="topLevelCategory : ${topLevelCategories}"
+                          th:text="${topLevelCategory.name}"
+                          th:data-top-category-no="${topLevelCategory.no}"
+                          class="border p-1 me-1"
+                          id="topLevelCategory-${topLevelCategory.no}">
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 중분류 영역 -->
+        <div class="col-12 bg-light p-3 mb-3">
+            <h4>중분류</h4>
+            <div class="card mt-3">
+                <div id="secondLevelCategories" class="card-body">
+                    <!-- 중분류 내용 추가 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 소분류 영역 -->
+        <div class="col-12 bg-light p-3">
+            <h4>소분류</h4>
+            <div class="card mt-3">
+                <div id="thirdLevelCategories" class="card-body">
+                    <!-- 소분류 내용 추가 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 카테고리 추가 모달창 -->
+    <div class="modal fade" id="create-modal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">카테고리 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- 탭 구성 -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#top"
+                                    type="button" role="tab" aria-controls="home" aria-selected="true">대분류
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#second"
+                                    type="button" role="tab" aria-controls="profile" aria-selected="false">중분류
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#third"
+                                    type="button" role="tab" aria-controls="contact" aria-selected="false">소분류
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- 탭에 대한 컨텐츠 -->
+                    <div class="tab-content pt-3" id="myTabContent">
+
+                        <!-- 대분류 추가-->
+                        <div class="tab-pane fade show active" id="top" role="tabpanel" aria-labelledby="home-tab">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="top-input-top-category">대분류:</label>
+                                    <input type="text" id="top-input-top-category" name="category">
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- 중분류 추가 -->
+                        <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="profile-tab">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="second-select-top-category">대분류:</label>
+                                    <select id="second-select-top-category" name="topLevelCategory">
+                                        <option disabled selected>대분류 선택</option>
+                                        <option th:each="topLevelCategory : ${topLevelCategories}"
+                                                th:value="${topLevelCategory.no}"
+                                                th:text="${topLevelCategory.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="second-input-second-category">중분류:</label>
+                                    <input type="text" id="second-input-second-category" name="category">
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- 소분류 추가 -->
+                        <div class="tab-pane fade" id="third" role="tabpanel" aria-labelledby="contact-tab">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="third-select-top-category">대분류:</label>
+                                    <select id="third-select-top-category">
+                                        <option disabled selected>대분류 선택</option>
+                                        <option th:each="topLevelCategory : ${topLevelCategories}"
+                                                th:value="${topLevelCategory.no}"
+                                                th:text="${topLevelCategory.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="third-select-second-category">중분류:</label>
+                                    <select id="third-select-second-category">
+                                        <option disabled selected>중분류 선택</option>
+                                        <option th:each="secondLevelCategory : ${secondLevelCategories}"
+                                                th:value="${secondLevelCategory.no}"
+                                                th:text="${secondLevelCategory.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="third-input-third-category">소분류:</label>
+                                    <input type="text" id="third-input-third-category" name="category">
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-add-create-modal">추가</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-close-create-modal">
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 대분류 수정 모달창 -->
+    <div class="modal fade" id="modify-top-category-modal" tabindex="-1" aria-labelledby="modifyTopCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifyTopCategoryModalLabel">카테고리 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group mb-3">
+                            <label for="modify-top-category-top">대분류:</label>
+                            <input type="text" id="modify-top-category-top" name="category">
+                        </div>
+                    </form>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btn-modify-top-category-modal">수정
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                id="btn-close-modify-top-category-modal">닫기
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 중분류 수정 모달창 -->
+    <div class="modal fade" id="modify-second-category-modal" tabindex="-1"
+         aria-labelledby="modifySecondCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifySecondCategoryModalLabel">카테고리 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group mb-3">
+                            <label for="modify-second-category-top">대분류:</label>
+                            <select id="modify-second-category-top">
+                                <option disabled>대분류 선택</option>
+                                <option th:each="topLevelCategory : ${topLevelCategories}"
+                                        th:value="${topLevelCategory.no}"
+                                        th:text="${topLevelCategory.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="modify-second-category-second">중분류:</label>
+                            <input type="text" id="modify-second-category-second" name="category">
+                        </div>
+                    </form>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btn-modify-second-category-modal">수정
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                id="btn-close-modify-second-category-modal">닫기
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 소분류 수정 모달창 -->
+    <div class="modal fade" id="modify-third-category-modal" tabindex="-1"
+         aria-labelledby="modifyThirdCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifyThirdCategoryModalLabel">카테고리 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group mb-3">
+                            <label for="modify-third-category-top">대분류:</label>
+                            <select id="modify-third-category-top">
+                                <option disabled>대분류 선택</option>
+                                <option th:each="topLevelCategory : ${topLevelCategories}"
+                                        th:value="${topLevelCategory.no}"
+                                        th:text="${topLevelCategory.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="modify-third-category-second">중분류:</label>
+                            <select id="modify-third-category-second">
+                                <option disabled>중분류 선택</option>
+                                <!-- 선택된 카테고리 option 태그로 생성 -->
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="modify-third-category-third">소분류:</label>
+                            <input type="text" id="modify-third-category-third" name="category">
+                        </div>
+                    </form>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btn-modify-third-category-modal">수정</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                id="btn-close-modify-third-category-modal">닫기
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script layout:fragment="script" type="text/javascript">
+    $(function () {
+
+        // 추가 버튼 클릭 시 모달창 열기
+        $("#btn-create-category").click(function () {
+            let categoryFormModal = new bootstrap.Modal($("#create-modal"));
+            categoryFormModal.show();
+        });
+
+        // 모달창 닫을 때 입력 내용 초기화
+        $('#create-modal').on('hidden.bs.modal', function () {
+            // 대분류 탭의 입력 요소 초기화
+            $("#top-input-top-category").val("");
+
+            // 중분류 탭의 입력 요소 초기화
+            $("#second-select-top-category option").prop('selected', false).first().prop("selected", true);
+            $("#second-input-second-category").val("");
+
+            // 소분류 탭의 입력 요소 초기화
+            $("#third-select-top-category option").prop('selected', false).first().prop("selected", true);
+            initSecondCategories();
+            $("#third-input-third-category").val("");
+
+            /*
+            // 모달 창 내의 모든 폼 요소를 선택합니다.
+            var forms = $(this).find('form');
+
+            // 각 폼 요소를 초기화합니다.
+            forms.each(function () {
+                // 폼 요소를 기본값으로 재설정합니다.
+                this.reset();
+            });
+            */
+
+            // 탭을 첫 번째 탭으로 리셋합니다.
+            $(this).find('.nav-link').removeClass('active');
+            $(this).find('.nav-link:first').addClass('active');
+            $(this).find('.tab-pane').removeClass('show active');
+            $(this).find('.tab-pane:first').addClass('show active');
+        });
+
+        // 중분류 select 요소 초기화
+        function initSecondCategories() {
+            $.ajax({
+                url: "/admin/getSecondCategories",
+                method: "GET",
+                success: function (secondLevelCategories) {
+                    let $secondCategorySelect = $('#third-select-second-category');
+
+                    $secondCategorySelect.empty();
+                    $secondCategorySelect.append('<option disabled selected>중분류 선택</option>');
+
+                    secondLevelCategories.forEach(secondLevelCategory => {
+                        let option = $('<option>')
+                            .val(secondLevelCategory.no)
+                            .text(secondLevelCategory.name);
+
+                        $secondCategorySelect.append(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("소분류 데이터 요청 실패:", error);
+                }
+            });
+        }
+
+        // 대분류 카테고리 클릭 시 관련된 중분류 카테고리 표시
+        $("#topLevelCategories").on("click", "span", function () {
+            const categoryNo = $(this).data("topCategoryNo");
+
+            $("#thirdLevelCategories").empty();
+            showSecondCategoriesByTopCategoryNo(categoryNo);
+        })
+
+        // 카테고리 클릭시 강조 표시
+        $("div[id$=Categories].card-body").on("click", "span", function () {
+            $(this).addClass("bg-primary-subtle").siblings().removeClass("bg-primary-subtle");
+        });
+
+        // 대분류 카테고리 번호와 관련된 증분류 카테고리 span 요소로 표시
+        function showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryName) {
+            $.ajax({
+                url: "/admin/getSubCategories",
+                method: "GET",
+                data: {categoryNo: topCategoryNo},
+                success: function (secondLevelCategories) {
+                    const $secondLevelCategories = $("#secondLevelCategories");
+
+                    $secondLevelCategories.empty();
+
+                    secondLevelCategories.forEach(secondLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(secondLevelCategory.name)
+                            .attr("data-second-category-no", secondLevelCategory.no)
+                            .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
+
+                        if (secondLevelCategory.name === secondCategoryName) {
+                            $span.addClass("bg-primary-subtle");
+                        }
+
+                        $secondLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("중분류 데이터 요청 실패:", error);
+                }
+            });
+        }
+
+        // 중분류 카테고리 클릭 시 관련된 소분류 카테고리 표시
+        $("#secondLevelCategories").on("click", "span", function () {
+            const categoryNo = $(this).data("secondCategoryNo");
+
+            showThirdCategoriesBySecondCategoryNo(categoryNo);
+        });
+
+        // 중분류 카테고리 번호와 관련된 소분류 카테고리 span 요소로 표시
+        function showThirdCategoriesBySecondCategoryNo(secondCategoryNo, thirdCategoryName) {
+            $.ajax({
+                url: "/admin/getSubCategories",
+                method: "GET",
+                data: {categoryNo: secondCategoryNo},
+                success: function (thirdLevelCategories) {
+                    const $thirdLevelCategories = $("#thirdLevelCategories");
+
+                    $thirdLevelCategories.empty();
+
+                    thirdLevelCategories.forEach(thirdLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(thirdLevelCategory.name)
+                            .attr("data-third-category-no", thirdLevelCategory.no)
+                            .attr("id", `thirdLevelCategory-${thirdLevelCategory.no}`);
+
+                        if (thirdLevelCategory.name === thirdCategoryName) {
+                            $span.addClass("bg-primary-subtle");
+                        }
+
+                        $thirdLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        }
+
+        // 모달창의 소분류 탭에서 대분류 카테고리 선택 시 관련된 중분류 카테고리 표시
+        $('#third-select-top-category').change(function () {
+            let $secondCategorySelector = $('#third-select-second-category option');
+            const categoryNo = $(this).val();
+            updateSecondCategoriesOptions(categoryNo, $secondCategorySelector);
+        });
+
+        // 대분류 카테고리 번호와 관련된 중분류 카테고리 option 요소로 표시
+        function updateSecondCategoriesOptions(topCategoryNo, $selector) {
+            $.ajax({
+                url: "/admin/getSubCategories",
+                method: "GET",
+                data: {categoryNo: topCategoryNo},
+                success: function (secondLevelCategories) {
+                    $selector.not(':first').remove();
+                    $selector.first().prop("selected", true);
+
+                    secondLevelCategories.forEach(secondLevelCategory => {
+                        let option = $('<option>')
+                            .val(secondLevelCategory.no)
+                            .text(secondLevelCategory.name);
+
+                        $selector.parent().append(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        }
+
+        // 모달창의 소분류 탭에서 중분류 카테고리 선택 시 일치하는 대분류 카테고리 선택
+        $('#third-select-second-category').change(function () {
+            let categoryNo = $(this).val();
+            selectTopCategory(categoryNo);
+        });
+
+        // 중분류 카테고리 번호와 관련된 대분류 카테고리 선택
+        function selectTopCategory(categoryNo) {
+            $.ajax({
+                url: "/admin/getParentCategory",
+                method: "GET",
+                data: {categoryNo: categoryNo},
+                success: function (topLevelCategory) {
+                    $('#third-select-top-category option').each(function () {
+                        let option = $(this);
+                        if (parseInt(option.val()) === topLevelCategory.no) {
+                            option.attr('selected', true);
+                        } else {
+                            option.attr('selected', false);
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        }
+
+        // 분류별 카테고리 생성
+        $("#btn-add-create-modal").click(function () {
+            let tab = $(".nav-tabs .nav-link.active").text().trim();
+
+            emptyAllCategories();
+
+            if (tab === '대분류') {
+                createTopCategory();
+                return;
+            }
+            if (tab === "중분류") {
+                let topCategoryNo = $("#second-select-top-category").val();
+                highlightCategoryByCategoryNo(topCategoryNo);
+                showSecondCategoriesByTopCategoryNo(topCategoryNo);
+                createSecondCategory(topCategoryNo);
+                return;
+            }
+            if (tab === "소분류") {
+                let topCategoryNo = $("#third-select-top-category").val();
+                let secondCategoryNo = $("#third-select-second-category").val();
+                let secondCategoryName = $("#third-select-second-category option:selected").text();
+                highlightCategoryByCategoryNo(topCategoryNo);
+                showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryName);
+                showThirdCategoriesBySecondCategoryNo(secondCategoryNo);
+                createThirdCategory(secondCategoryNo);
+                return;
+            }
+        });
+
+        //  카테고리 번호와 같은 경우 강조 표시
+        function highlightCategoryByCategoryNo(categoryNo) {
+            $(`span[data-top-category-no="${categoryNo}"]`).addClass("bg-primary-subtle");
+            $(`span[data-second-category-no="${categoryNo}"]`).addClass("bg-primary-subtle");
+            $(`span[data-third-category-no="${categoryNo}"]`).addClass("bg-primary-subtle");
+        }
+
+        // 대분류 카테고리 생성
+        function createTopCategory() {
+            let categoryName = $("#top-input-top-category").val();
+
+            $.ajax({
+                url: "/admin/addTopCategory",
+                method: "POST",
+                data: {categoryName: categoryName},
+                success: function (topLevelCategory) {
+
+                    const $span = $("<span>")
+                        .addClass("border p-1 me-1 bg-primary-subtle")
+                        .text(topLevelCategory.name)
+                        .attr("data-top-category-no", topLevelCategory.no)
+                        .attr("id", `topLevelCategory-${topLevelCategory.no}`)
+
+                    $("#topLevelCategories").append($span);
+                },
+                error: function (xhr, status, error) {
+                    alert("카테고리 이름이 중복되었습니다." + error);
+                }
+            });
+        }
+
+        // 중분류 카테고리 생성
+        function createSecondCategory(topCategoryNo) {
+            let categoryName = $("#second-input-second-category").val();
+
+            $.ajax({
+                url: "/admin/addSubCategory",
+                method: "POST",
+                data: {categoryName: categoryName, CategoryNo: topCategoryNo},
+                success: function (secondLevelCategory) {
+
+                    const $span = $("<span>")
+                        .addClass("border p-1 me-1 bg-primary-subtle")
+                        .text(secondLevelCategory.name)
+                        .attr("data-second-category-no", secondLevelCategory.no)
+                        .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
+
+                    $("#secondLevelCategories").append($span);
+                },
+                error: function (xhr, status, error) {
+                    alert("카테고리 이름이 중복되었습니다." + error);
+                }
+            });
+        }
+
+        // 소분류 카테고리 생성
+        function createThirdCategory(secondCategoryNo) {
+            let categoryName = $("#third-input-third-category").val();
+
+            $.ajax({
+                url: "/admin/addSubCategory",
+                method: "POST",
+                data: {categoryName: categoryName, CategoryNo: secondCategoryNo},
+                success: function (thirdLevelCategory) {
+
+                    const $span = $("<span>")
+                        .addClass("border p-1 me-1 bg-primary-subtle")
+                        .text(thirdLevelCategory.name)
+                        .attr("data-third-category-no", thirdLevelCategory.no)
+                        .attr("id", `thirdLevelCategory-${thirdLevelCategory.no}`);
+
+                    $("#thirdLevelCategories").append($span);
+                },
+                error: function (xhr, status, error) {
+                    alert("카테고리 이름이 중복되었습니다." + error);
+                }
+            });
+        }
+
+        $("#btn-initialize-category").click(function () {
+            emptyAllCategories();
+        })
+
+        // 카테고리 조회화면 초기화
+        function emptyAllCategories() {
+            $("#topLevelCategories span").removeClass("bg-primary-subtle");
+            $("#secondLevelCategories").empty();
+            $("#thirdLevelCategories").empty();
+        }
+
+        // 수정 버튼 클릭 시 모달창 열기
+        $("#btn-modify-category").click(function () {
+            let modalTopCategory = $("#topLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+            let modalSecondCategory = $("#secondLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+            let modalThirdCategory = $("#thirdLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+
+            // 소분류 수정 모달창
+            if (modalThirdCategory) {
+                let categoryFormModal = new bootstrap.Modal($("#modify-third-category-modal"));
+                categoryFormModal.show();
+
+                let selectedTopCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle")
+                    .attr("data-top-category-no");
+                let selectedSecondCategoryNo = parseInt($("#secondLevelCategories").find("span.bg-primary-subtle")
+                    .attr("data-second-category-no"));
+
+                // 모달창 대분류 select 선택
+                $("#modify-third-category-top option").each(function () {
+                    let option = $(this);
+                    if (option.val() === selectedTopCategoryNo) {
+                        option.attr('selected', true);
+                    } else {
+                        option.attr('selected', false);
+                    }
+                });
+
+                // 모달창 중분류 select 선택
+                $.ajax({
+                    url: "/admin/getSubCategories",
+                    method: "GET",
+                    data: {categoryNo: selectedTopCategoryNo},
+                    success: function (secondLevelCategories) {
+                        let $selector = $("#modify-third-category-second")
+
+                        secondLevelCategories.forEach(secondLevelCategory => {
+                            let option = $("<option>")
+                                .val(secondLevelCategory.no)
+                                .text(secondLevelCategory.name);
+
+                            if (secondLevelCategory.no === selectedSecondCategoryNo) {
+                                option.prop("selected", true);
+                            }
+
+                            $selector.append(option);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("오류 발생", error)
+                    }
+                });
+
+                // 모달창 소분류 input 입력
+                let selectedThirdCategoryName = $("#thirdLevelCategories").find("span.bg-primary-subtle").text();
+                $("#modify-third-category-third").val(selectedThirdCategoryName);
+
+                return;
+            }
+
+            // 중분류 수정 모달창
+            if (modalSecondCategory) {
+                let categoryFormModal = new bootstrap.Modal($("#modify-second-category-modal"));
+                categoryFormModal.show();
+
+                // 모달창 대분류 select 선택
+                let selectedTopCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle")
+                    .attr("data-top-category-no");
+                // 모달창 대분류 select 선택
+                $("#modify-second-category-top option").each(function () {
+                    let option = $(this);
+                    if (option.val() === selectedTopCategoryNo) {
+                        option.attr('selected', true);
+                    } else {
+                        option.attr('selected', false);
+                    }
+                });
+
+                // 모달창 중분류 input 입력
+                let selectedSecondCategoryName = $("#secondLevelCategories").find("span.bg-primary-subtle").text();
+                $("#modify-second-category-second").val(selectedSecondCategoryName);
+
+                return;
+            }
+
+            // 대분류 수정 모달창
+            if (modalTopCategory) {
+                let categoryFormModal = new bootstrap.Modal($("#modify-top-category-modal"));
+                categoryFormModal.show();
+
+                let selectedTopCategoryName = $("#topLevelCategories").find("span.bg-primary-subtle").text();
+                $("#modify-top-category-top").val(selectedTopCategoryName);
+                return;
+            }
+
+            // 카테고리 선택하지 않은 경우 경고창 표시
+            if (modalTopCategory === false) {
+                alert("수정하실 카테고리를 선택해 주세요.");
+            }
+        });
+
+        // 소분류 수정 모달창의 수정 버튼 클릭
+        $("#btn-modify-third-category-modal").click(function () {
+            let modifiedCategoryNo = $("#thirdLevelCategories").find("span.bg-primary-subtle")
+                .attr("data-third-category-no");
+            let secondCategoryNo = $("#modify-third-category-second").val();
+            let thirdCategoryName = $("#modify-third-category-third").val();
+            let topCategoryNo = $("#modify-third-category-top").val();
+
+            modifyThirdCategory(modifiedCategoryNo, topCategoryNo, secondCategoryNo, thirdCategoryName);
+
+        });
+
+        // 소분류 수정
+        function modifyThirdCategory(modifiedCategoryNo, topCategoryNo, secondCategoryNo, thirdCategoryName) {
+            $.ajax({
+                url: "/admin/modify/thirdCategory",
+                method: "POST",
+                data: {
+                    targetCategoryNo: modifiedCategoryNo,
+                    parentCategoryNo: secondCategoryNo,
+                    thirdCategoryName: thirdCategoryName
+                },
+                success: function () {
+                    alert("수정 완료되었습니다.");
+                },
+                error: function (xhr, status, error) {
+                    alert("카테고리 이름이 중복되었습니다." + error);
+                },
+                complete: function () {
+                    // 수정한 카테고리 표시
+                    emptyAllCategories();
+                    highlightCategoryByCategoryNo(topCategoryNo);
+                    showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryNo);
+                    showThirdCategoriesBySecondCategoryNo(secondCategoryNo, thirdCategoryName);
+                }
+            });
+        }
+
+        // 중분류 수정 모달창의 수정 버튼 클릭
+        $("#btn-modify-second-category-modal").click(function () {
+            let modifiedCategoryNo = $("#secondLevelCategories").find("span.bg-primary-subtle")
+                .attr("data-second-category-no");
+            let topCategoryNo = $("#modify-second-category-top").val();
+            let secondCategoryName = $("#modify-second-category-second").val();
+
+            modifySecondCategory(modifiedCategoryNo, topCategoryNo, secondCategoryName,);
+        });
+
+        // 중분류 수정
+        function modifySecondCategory(modifiedCategoryNo, topCategoryNo, secondCategoryName) {
+            $.ajax({
+                url: "/admin/modify/secondCategory",
+                method: "POST",
+                data: {
+                    targetCategoryNo: modifiedCategoryNo,
+                    parentCategoryNo: topCategoryNo,
+                    secondCategoryName: secondCategoryName
+                },
+                success: function () {
+                    alert("수정 완료되었습니다.");
+                },
+                error: function (xhr, status, error) {
+                    alert("카테고리 이름이 중복되었습니다." + error);
+                },
+                complete: function () {
+                    // 수정한 카테고리 표시
+                    emptyAllCategories();
+                    highlightCategoryByCategoryNo(topCategoryNo);
+                    showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryName);
+                }
+            });
+        }
+
+        // 대분류 수정 모달창의 수정 버튼 클릭
+        $("#btn-modify-top-category-modal").click(function () {
+            let modifiedCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle")
+                .attr("data-top-category-no");
+            let topCategoryName = $("#modify-top-category-top").val();
+
+            modifyTopCategory(modifiedCategoryNo, topCategoryName);
+        });
+
+        // 대분류 수정
+        function modifyTopCategory(modifiedCategoryNo, topCategoryName) {
+            $.ajax({
+                url: "/admin/modify/topCategory",
+                method: "POST",
+                data: {
+                    targetCategoryNo: modifiedCategoryNo,
+                    topCategoryName: topCategoryName
+                },
+                success: function (topLevelCategories) {
+                    alert("수정 완료되었습니다.");
+
+                    // 수정한 카테고리 표시
+                    let $topLevelCategories = $("#topLevelCategories");
+                    $topLevelCategories.empty();
+
+                    topLevelCategories.forEach(topLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(topLevelCategory.name)
+                            .attr("data-top-category-no", topLevelCategory.no)
+                            .attr("id", `topLevelCategory-${topLevelCategory.no}`);
+
+                        $topLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert("카테고리 이름이 중복되었습니다." + error);
+                },
+                complete: function () {
+                    highlightCategoryByCategoryNo(modifiedCategoryNo);
+                }
+            });
+        }
+
+        // 삭제 버튼 클릭
+        $("#btn-delete-category").click(function () {
+            let modalTopCategory = $("#topLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+            let modalSecondCategory = $("#secondLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+            let modalThirdCategory = $("#thirdLevelCategories span.bg-primary-subtle").hasClass("bg-primary-subtle");
+
+            // 소분류 삭제 함수 실행
+            if (modalThirdCategory) {
+                let topCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle").data("topCategoryNo");
+                let secondCategoryNo = $("#secondLevelCategories").find("span.bg-primary-subtle").data("secondCategoryNo");
+                let thirdCategoryNo = $("#thirdLevelCategories").find("span.bg-primary-subtle").data("thirdCategoryNo");
+                let secondCategoryName = $("#secondLevelCategories").find("span.bg-primary-subtle").text();
+                let thirdCategoryName = $("#thirdLevelCategories").find("span.bg-primary-subtle").text();
+
+                confirmDeletedThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName, thirdCategoryName);
+                return;
+            }
+
+            // 중분류 삭제 함수 실행
+            if (modalSecondCategory) {
+                let topCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle").data("topCategoryNo");
+                let secondCategoryNo = $("#secondLevelCategories").find("span.bg-primary-subtle").data("secondCategoryNo");
+                let secondCategoryName = $("#secondLevelCategories").find("span.bg-primary-subtle").text();
+
+                confirmDeletedSecondCategory(topCategoryNo, secondCategoryNo, secondCategoryName);
+                return;
+            }
+
+            // 대분류 삭제 함수 실행
+            if (modalTopCategory) {
+                let topCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle").data("topCategoryNo");
+                let topCategoryName = $("#topLevelCategories").find("span.bg-primary-subtle").text();
+
+                confirmDeletedTopCategory(topCategoryNo, topCategoryName);
+                return;
+            }
+        });
+
+        // 소분류 삭제
+        function confirmDeletedThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName, thirdCategoryName) {
+
+            if (!confirm(`[ ${thirdCategoryName} ]을 정말로 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/delete/thirdCategory",
+                method: "POST",
+                data: {targetCategoryNo: thirdCategoryNo},
+                success: function () {
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                },
+                complete: function () {
+                    highlightCategoryByCategoryNo(topCategoryNo);
+                    showSecondCategoriesByTopCategoryNo(topCategoryNo, secondCategoryName);
+                    showThirdCategoriesBySecondCategoryNo(secondCategoryNo);
+                }
+            });
+        }
+
+        // 중분류 삭제
+        function confirmDeletedSecondCategory(topCategoryNo, secondCategoryNo, secondCategoryName) {
+
+            if (!confirm(`[ ${secondCategoryName} ] 정말로 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            if (secondCategoryNo) {
+                $.ajax({
+                    url: "/admin/getSubCategories",
+                    method: "GET",
+                    data: {categoryNo: secondCategoryNo},
+                    success: function (subCategories) {
+                        let deletedSubCategoryNames = subCategories.map(subCategory => subCategory.name).join("\n");
+                        if (confirm(`[ ${secondCategoryName} ]의 하위 카테고리도 함께 삭제됩니다.\n${deletedSubCategoryNames}\n`)) {
+                            deleteSecondCategory(topCategoryNo, secondCategoryNo);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("오류 발생", error);
+                    }
+                });
+            }
+        }
+
+        function deleteSecondCategory(topCategoryNo, secondCategoryNo) {
+            $.ajax({
+                url: "/admin/delete/secondCategory",
+                method: "POST",
+                data: {targetCategoryNo: secondCategoryNo},
+                success: function () {
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                },
+                complete: function () {
+                    emptyAllCategories();
+                    highlightCategoryByCategoryNo(topCategoryNo);
+                    showSecondCategoriesByTopCategoryNo(topCategoryNo);
+                }
+            });
+        }
+
+        // 대분류 삭제
+        function confirmDeletedTopCategory(topCategoryNo, topCategoryName) {
+
+            if (!confirm(`[ ${topCategoryName} ] 정말로 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/getTotalSubCategories",
+                method: "GET",
+                data: {categoryNo: topCategoryNo},
+                success: function (totalSubCategories) {
+                    let deletedSubCategoryNames = totalSubCategories.map(subCategory => subCategory.name).join("\n");
+                    if (confirm(`[ ${topCategoryName} ]의 하위 카테고리도 함께 삭제됩니다.\n${deletedSubCategoryNames}\n`)) {
+                        deleteTopCategory(topCategoryNo);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                }
+            });
+        }
+
+        function deleteTopCategory(topCategoryNo) {
+            $.ajax({
+                url: "/admin/delete/topCategory",
+                method: "POST",
+                data: {targetCategoryNo: topCategoryNo},
+                success: function (topLevelCategories) {
+                    // 삭제한 카테고리 표시
+                    emptyAllCategories();
+
+                    let $topLevelCategories = $("#topLevelCategories");
+                    $topLevelCategories.empty();
+
+                    topLevelCategories.forEach(topLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(topLevelCategory.name)
+                            .attr("data-top-category-no", topLevelCategory.no)
+                            .attr("id", `topLevelCategory-${topLevelCategory.no}`);
+
+                        $topLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                }
+            });
+        }
+    });
+</script>
+
+</html>
