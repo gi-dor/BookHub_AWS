@@ -24,7 +24,7 @@ public interface CategoryMapper {
 
     Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo);
 
-    String findCategoryByName(String categoryName);
+    Category findCategoryByCategoryNameAndCategoryNo(String categoryName, int categoryNo);
 
     void modifyThirdCategory(int targetCategoryNo, int parentCategoryNo, String thirdCategoryName);
 

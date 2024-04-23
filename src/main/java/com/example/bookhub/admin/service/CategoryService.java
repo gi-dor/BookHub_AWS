@@ -34,12 +34,12 @@ public class CategoryService {
     }
 
     public void addTopLevelCategory(String categoryName) {
-        Validator.isCategoryNameUnique(categoryName, categoryMapper);
+        Validator.isCategoryNameUnique(categoryName, null, categoryMapper);
         categoryMapper.addTopLevelCategory(categoryName);
     }
 
     public void addSubCategory(String categoryName, int categoryNo) {
-        Validator.isCategoryNameUnique(categoryName, categoryMapper);
+        Validator.isCategoryNameUnique(categoryName, categoryNo, categoryMapper);
         categoryMapper.addSubCategory(categoryName, categoryNo);
     }
 
