@@ -842,7 +842,7 @@
                 let secondCategoryName = $("#secondLevelCategories").find("span.bg-primary-subtle").text();
                 let thirdCategoryName = $("#thirdLevelCategories").find("span.bg-primary-subtle").text();
 
-                deleteThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName, thirdCategoryName);
+                confirmDeletedThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName, thirdCategoryName);
                 return;
             }
 
@@ -852,18 +852,22 @@
                 let secondCategoryNo = $("#secondLevelCategories").find("span.bg-primary-subtle").data("secondCategoryNo");
                 let secondCategoryName = $("#secondLevelCategories").find("span.bg-primary-subtle").text();
 
-                deleteSecondCategory(topCategoryNo, secondCategoryNo, secondCategoryName);
+                confirmDeletedSecondCategory(topCategoryNo, secondCategoryNo, secondCategoryName);
                 return;
             }
 
             // 대분류 삭제 함수 실행
             if (modalTopCategory) {
+                let topCategoryNo = $("#topLevelCategories").find("span.bg-primary-subtle").data("topCategoryNo");
+                let topCategoryName = $("#topLevelCategories").find("span.bg-primary-subtle").text();
+
+                confirmDeletedTopCategory(topCategoryNo, topCategoryName);
                 return;
             }
         });
 
         // 소분류 삭제
-        function deleteThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName, thirdCategoryName) {
+        function confirmDeletedThirdCategory(topCategoryNo, secondCategoryNo, thirdCategoryNo, secondCategoryName, thirdCategoryName) {
 
             if (!confirm(`[ ${thirdCategoryName} ]을 정말로 삭제하시겠습니까?`)) {
                 return;
@@ -888,31 +892,31 @@
         }
 
         // 중분류 삭제
-        function deleteSecondCategory(topCategoryNo, secondCategoryNo, secondCategoryName) {
+        function confirmDeletedSecondCategory(topCategoryNo, secondCategoryNo, secondCategoryName) {
 
             if (!confirm(`[ ${secondCategoryName} ] 정말로 삭제하시겠습니까?`)) {
                 return;
             }
 
-            let deletedSubCategoryNames;
             if (secondCategoryNo) {
                 $.ajax({
                     url: "/admin/getSubCategories",
                     method: "GET",
                     data: {categoryNo: secondCategoryNo},
                     success: function (subCategories) {
-                        deletedSubCategoryNames = subCategories.map(subCategory => subCategory.name).join("\n");
-
+                        let deletedSubCategoryNames = subCategories.map(subCategory => subCategory.name).join("\n");
+                        if (confirm(`[ ${secondCategoryName} ]의 하위 카테고리도 함께 삭제됩니다.\n${deletedSubCategoryNames}\n`)) {
+                            deleteSecondCategory(topCategoryNo, secondCategoryNo);
+                        }
                     },
                     error: function (xhr, status, error) {
                         console.error("오류 발생", error);
                     }
                 });
             }
-            if (!confirm(`[ ${secondCategoryName} ]의 하위 카테고리도 함께 삭제됩니다.\n${deletedSubCategoryNames}\n`)) {
-                return;
-            }
+        }
 
+        function deleteSecondCategory(topCategoryNo, secondCategoryNo) {
             $.ajax({
                 url: "/admin/delete/secondCategory",
                 method: "POST",
@@ -931,6 +935,56 @@
             });
         }
 
+        // 대분류 삭제
+        function confirmDeletedTopCategory(topCategoryNo, topCategoryName) {
+
+            if (!confirm(`[ ${topCategoryName} ] 정말로 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/getTotalSubCategories",
+                method: "GET",
+                data: {categoryNo: topCategoryNo},
+                success: function (totalSubCategories) {
+                    let deletedSubCategoryNames = totalSubCategories.map(subCategory => subCategory.name).join("\n");
+                    if (confirm(`[ ${topCategoryName} ]의 하위 카테고리도 함께 삭제됩니다.\n${deletedSubCategoryNames}\n`)) {
+                        deleteTopCategory(topCategoryNo);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                }
+            });
+        }
+
+        function deleteTopCategory(topCategoryNo) {
+            $.ajax({
+                url: "/admin/delete/topCategory",
+                method: "POST",
+                data: {targetCategoryNo: topCategoryNo},
+                success: function (topLevelCategories) {
+                    // 삭제한 카테고리 표시
+                    emptyAllCategories();
+                    
+                    let $topLevelCategories = $("#topLevelCategories");
+                    $topLevelCategories.empty();
+
+                    topLevelCategories.forEach(topLevelCategory => {
+                        const $span = $("<span>")
+                            .addClass("border p-1 me-1")
+                            .text(topLevelCategory.name)
+                            .attr("data-top-category-no", topLevelCategory.no)
+                            .attr("id", `topLevelCategory-${topLevelCategory.no}`);
+
+                        $topLevelCategories.append($span);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                }
+            });
+        }
     });
 </script>
 

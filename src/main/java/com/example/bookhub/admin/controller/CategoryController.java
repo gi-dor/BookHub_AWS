@@ -34,7 +34,7 @@ public class CategoryController {
 
     @GetMapping("/getSubCategories")
     @ResponseBody
-    public List<Category> subCategories(@RequestParam("categoryNo") int categoryNo) {
+    public List<Category> getSubCategories(@RequestParam("categoryNo") int categoryNo) {
         return categoryService.getSubCategoriesByCategoryNo(categoryNo);
     }
 
@@ -99,6 +99,19 @@ public class CategoryController {
     @ResponseBody
     public void deleteSecondCategory(@RequestParam("targetCategoryNo") int targetCategoryNo) {
         categoryService.deleteSecondCategory(targetCategoryNo);
+    }
+
+    @PostMapping("/delete/topCategory")
+    @ResponseBody
+    public List<Category> deleteTopCategory(@RequestParam("targetCategoryNo") int targetCategoryNo) {
+        categoryService.deleteTopCategory(targetCategoryNo);
+        return categoryService.getAllTopLevelCategories();
+    }
+
+    @GetMapping("/getTotalSubCategories")
+    @ResponseBody
+    public List<Category> getTotalSubCategories(@RequestParam("categoryNo") int categoryNo) {
+        return categoryService.getTotalSubCategories(categoryNo);
     }
 
 }

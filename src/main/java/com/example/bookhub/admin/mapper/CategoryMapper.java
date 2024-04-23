@@ -38,4 +38,5 @@ public interface CategoryMapper {
 
     void deleteThirdCategoryBySecondCategoryNo(int targetCategoryNo);
 
+    void deleteTopCategory(int targetCategoryNo);
 }

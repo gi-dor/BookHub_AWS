@@ -126,4 +126,9 @@
         WHERE CATEGORY_NO = #{categoryNo};
     </delete>
 
+    <delete id="deleteTopCategory" parameterType="int">
+        DELETE FROM BookHub.CATEGORY
+        WHERE CATEGORY_NO = #{categoryNo};
+    </delete>
+
 </mapper>

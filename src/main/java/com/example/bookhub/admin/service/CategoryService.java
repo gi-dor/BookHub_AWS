@@ -3,6 +3,7 @@ package com.example.bookhub.admin.service;
 import com.example.bookhub.admin.mapper.CategoryMapper;
 import com.example.bookhub.admin.validator.Validator;
 import com.example.bookhub.admin.vo.Category;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -71,4 +72,22 @@ public class CategoryService {
         categoryMapper.deleteSecondCategory(targetCategoryNo);
     }
 
+    public void deleteTopCategory(int targetCategoryNo) {
+        List<Category> secondCategories = categoryMapper.getSubCategoriesByCategoryNo(targetCategoryNo);
+
+        for (Category secondCategory : secondCategories) {
+            deleteSecondCategory((int) secondCategory.getNo());
+        }
+
+        categoryMapper.deleteTopCategory(targetCategoryNo);
+    }
+
+    public List<Category> getTotalSubCategories(int categoryNo) {
+        List<Category> categories = categoryMapper.getSubCategoriesByCategoryNo(categoryNo);
+        List<Category> totalSubCategories = new ArrayList<>(categories);
+        for (Category category : categories) {
+            totalSubCategories.addAll(categoryMapper.getSubCategoriesByCategoryNo((int) category.getNo()));
+        }
+        return totalSubCategories;
+    }
 }
