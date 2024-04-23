@@ -32,13 +32,20 @@ public class UserSignupForm {
     @Pattern(regexp="^[가-힣]{2,}$" ,  message ="알맞은 형식이 아닙니다")
     private String name;
 
+    @NotBlank(message = "이메일은 필수입력값입니다.")
+    private String email1;
+    private String email2;
 
-    @Email(message = "유효한 이메일 형식이 아닙니다")
-    private String email;
 
+//   @Pattern(regexp="^\\d{2,3}-\\d{3,4}-\\d{4}$" , message = "유효한 전화번호 형식이 아닙니다")
 
-   // @Pattern(regexp="^\\d{2,3}-\\d{3,4}-\\d{4}$" , message = "유효한 전화번호 형식이 아닙니다")
-    private  String tel;
+    private  String tel1;
+
+    @Pattern(regexp="^[0-9]{4}$" , message = "유효한 전화번호 형식이 아닙니다")
+    private  String tel2;
+
+    @Pattern(regexp="^[0-9]{4}$" , message = "유효한 전화번호 형식이 아닙니다")
+    private  String tel3;
 
     private String zipCode;
     private String address;
@@ -51,8 +58,8 @@ public class UserSignupForm {
         user.setId(id);
         user.setPassword(passwordEncoder.encode(password));
         user.setName(name);
-        user.setEmail(email);
-        user.setTel(tel);
+        user.setEmail(email1 + "@" + email2);
+        user.setTel(tel1 + "-" + tel2 + "-" + tel3 );
         user.setZipCode(zipCode);
         user.setAddress(address);
         user.setAddressDetail(addressDetail);
