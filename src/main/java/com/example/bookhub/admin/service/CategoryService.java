@@ -52,14 +52,17 @@ public class CategoryService {
     }
 
     public void modifyThirdCategory(int targetCategoryNo, int parentCategoryNo, String thirdCategoryName) {
+        Validator.isCategoryNameUnique(thirdCategoryName, parentCategoryNo, categoryMapper);
         categoryMapper.modifyThirdCategory(targetCategoryNo, parentCategoryNo, thirdCategoryName);
     }
 
     public void modifySecondCategory(int targetCategoryNo, int parentCategoryNo, String secondCategoryName) {
+        Validator.isCategoryNameUnique(secondCategoryName, parentCategoryNo, categoryMapper);
         categoryMapper.modifySecondCategory(targetCategoryNo, parentCategoryNo, secondCategoryName);
     }
 
     public void modifyTopCategory(int targetCategoryNo, String topCategoryName) {
+        Validator.isCategoryNameUnique(topCategoryName, null, categoryMapper);
         categoryMapper.modifyTopCategory(targetCategoryNo, topCategoryName);
     }
 
