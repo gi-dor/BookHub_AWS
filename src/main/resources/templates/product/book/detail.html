@@ -64,6 +64,21 @@
         </nav>
 
         <button class="btn btn-outline-secondary me-3" type="button" onclick="createReview()">리뷰 작성</button>
+        <ul class="nav nav-underline">
+            <li class="nav-item">
+                <div class="nav-link" aria-current="page" href="">Active</div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link" href="">Link</div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link" href="">Link</div>
+            </li>
+        </ul>
+
+        <div class="col-12">
+            <div id="div-reviews"></div>
+        </div>
 
         <!-- 바텀 네비게이션 바 -->
         <nav class="navbar fixed-bottom navbar-light bg-light">
@@ -130,7 +145,7 @@
                             <div class="card mb-3" style="max-width: 540px;">
                                 <div class="row g-0">
                                     <div class="col-md-4">
-                                        <img src="..." class="img-fluid rounded-start" alt="...">
+                                        <img src="" class="img-fluid rounded-start" alt="...">
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body">
@@ -214,6 +229,8 @@
         const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
         const modalCreateReview = new bootstrap.Modal("#modal-create-review");
 
+        const $reviewDiv = $("#div-reviews");
+
         function showAlertModal(existOrNot){
             console.log(existOrNot);
             if(existOrNot === "exist"){
@@ -260,5 +277,82 @@
         async function createReview(){
             modalCreateReview.show();
         }
+
+
+        function toggleCardContent(event, id) {
+            event.preventDefault(); // 링크의 기본 동작 방지
+
+            let cardContent = document.getElementById('cardContent-' + id);
+            let toggleLink = document.getElementById('toggleLink-' + id);
+
+            // 텍스트가 숨겨져 있으면 보이도록 하고, 보이고 있으면 숨기도록 토글
+            if (cardContent.classList.contains('collapsed')) {
+                cardContent.classList.remove('collapsed');
+                toggleLink.innerText = '접기'; // 펼쳐보기 텍스트를 '접기'로 변경
+                toggleLink.querySelector('svg').classList.add('rotate'); // 화살표 회전 효과 추가
+            } else {
+                cardContent.classList.add('collapsed');
+                toggleLink.innerText = '펼치기'; // 접기 텍스트를 '펼치기'로 변경
+                toggleLink.querySelector('svg').classList.remove('rotate'); // 화살표 회전 효과 제거
+            }
+        }
+
+        async function getReviews(bookNo){
+            let response = await fetch("/product/review/" + bookNo);
+
+            if(!response.ok){
+                alert("리뷰 조회에 실패하였습니다");
+                return;
+            }
+
+            let reviewList = await response.json();
+            let rows = "";
+            for(let index =  0; index < reviewList.length; index++){
+                let review = reviewList[index];
+
+                rows += `
+                        <div class="row g-0 rounded overflow-hidden mb-4 h-md-250 position-relative border">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <div class="d-flex justify-content-between">
+                                    <span>
+                                        <span class="badge rounded-pill text-bg-light">종이책</span>
+                                        <span class="badge rounded-pill text-bg-dark">구매자</span>
+                                        <span class="ms-3" >${review.user.id}</span>
+                                        <span class="ms-3" >${review.createdDate}</span>
+                                        <span class="ms-3">신고/차단</span>
+                                    </span>
+                                    <span>
+                                        <span>${review.reviewTag.name}</span>
+                                        <span>${review.rate}</span>
+                                    </span>
+                                </div>
+                                <p class="card-text mb-auto mt-3 collapsed" id="cardContent-${review.reviewNo}" >
+                                   ${review.comment}
+                                </p>
+                                <a href="#" class="icon-link gap-1 icon-link-hover stretched-link" id="toggleLink-${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
+                                    펼치기
+                                    <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+                                </a>
+                                <div class="d-flex justify-content-end">
+                                    <span>
+                                         <i class="bi bi-hand-thumbs-up"></i>
+                                         <span class="me-3">${review.recommendCount}</span>
+                                    </span>
+                                    <span>
+                                        <i class="bi bi-chat-dots"></i>
+                                        <span class="me-3">${review.replyCount}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-auto d-none d-lg-block">
+                                <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                            </div>
+                        </div>
+                `;
+            }
+            $reviewDiv.html(rows);
+        }
+
+        getReviews(bookNo);
     </script>
 </html>

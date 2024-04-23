@@ -2,6 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.product.mapper.ReviewMapper">
 
+    <resultMap id="ReviewListResultMap" type="com.example.bookhub.product.vo.Review">
+        <id column="review_no" property="reviewNo"/>
+        <result column="comment" property="comment"/>
+        <result column="rate" property="rate"/>
+        <result column="recommend_count" property="recommendCount"/>
+        <result column="accuse_count" property="accuseCount"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+        <result column="reply_count" property="replyCount"/>
+        <result column="buyer" property="buyer"/>
+        <association column="user_no" property="user"
+                     select="com.example.bookhub.product.mapper.ReviewMapper.getUserByNo"/>
+        <association column="review_tag_no" property="reviewTag"
+                     select="com.example.bookhub.product.mapper.ReviewMapper.getReviewTagByNo"/>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.example.bookhub.user.vo.User">
+        <id column="user_no" property="no"/>
+        <result column="user_id" property="id"/>
+    </resultMap>
+
+    <resultMap id="ReviewTagResultMap" type="com.example.bookhub.product.vo.ReviewTag">
+        <id column="review_tag_no" property="reviewTagNo"/>
+        <result column="review_tag_name" property="name"/>
+    </resultMap>
+
     <insert id="createReview" parameterType="com.example.bookhub.product.vo.Review">
         insert into REVIEW
         (comment, rate, user_no, review_tag_no, book_no)
@@ -12,4 +38,46 @@
             select last_insert_id()
         </selectKey>
     </insert>
+
+
+    <!--association-->
+    <select id="getUserByNo" parameterType="long" resultMap="UserResultMap">
+        select
+            user_no,
+            user_id
+        from
+            USER
+        where
+            user_no = #{value}
+    </select>
+
+    <!--association-->
+    <select id="getReviewTagByNo" parameterType="long" resultMap="ReviewTagResultMap">
+        select
+            review_tag_no,
+            review_tag_name
+        from
+            REVIEW_TAG
+        where
+            review_tag_no = #{value}
+    </select>
+
+    <select id="getReviewsByBookNo" parameterType="long" resultMap="ReviewListResultMap">
+        select
+            review_no,
+            comment,
+            rate,
+            recommend_count,
+            accuse_count,
+            created_date,
+            updated_date,
+            user_no,
+            review_tag_no,
+            reply_count,
+            buyer
+        from
+            REVIEW
+        where
+            book_no = #{value}
+    </select>
 </mapper>

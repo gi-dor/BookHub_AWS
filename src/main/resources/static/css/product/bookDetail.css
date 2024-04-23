@@ -47,3 +47,19 @@ textarea.custom-textarea:focus {
 .rate_box .star_radio:nth-of-type(10):checked ~ .rate_bg{width:100%;}
 
 .blind{position:absolute;clip:rect(0 0 0 0);margin:-1px;width:1px;height: 1px;overflow:hidden;}
+
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.collapsed {
+    overflow: hidden; /* 넘치는 텍스트 숨기기 */
+    max-height: 100px; /* 초기에 표시할 최대 높이 (200글자 정도) */
+}
+#toggleLink {
+    cursor: pointer; /* 클릭 가능한 커서 */
+    color: blue; /* 링크 색상 */
+}
