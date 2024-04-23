@@ -17,6 +17,7 @@
                             <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
                             <div class="ms-3">
                                 <a href="/admin/individual/noanswer" style="text-decoration-line: none">
+                                    <i class="fas fa-solid fa-headset"></i>
                                     <h4 class="mb-0">답변 미완료된 문의</h4>
                                     <h5 class="text-body-secondary" th:text="${noAnswer} + '개'"></h5>
                                 </a>
@@ -28,6 +29,7 @@
                             <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
                             <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
                             <div class="ms-3">
+                                <i class="fas fa-solid fa-check"></i>
                                 <h4 class="mb-0">답변 완료된 문의</h4>
                                 <h5 class="text-body-secondary" th:text="${answer} + 개"></h5>
                             </div>
@@ -55,7 +57,7 @@
                 </div>
                 <!-- 그래프 div chart.js 적용해야함 -->
                 <div>
-                    <canvas id="myChart"></canvas>
+                    <canvas id="myChart" class="pb-5"></canvas>
                 </div>
             </div><!-- 왼쪽 그래프 파트 -->
             <!-- 오른쪽 그래프 파트 -->
