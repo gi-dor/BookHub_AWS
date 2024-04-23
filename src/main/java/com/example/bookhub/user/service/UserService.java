@@ -49,8 +49,13 @@ public class UserService implements UserDetailsService {
 
         // 데이터베이스에서 가져온 사용자 정보가 없다면(null이면) 예외를 발생시킵니다.
         if(user == null) {
-            throw new UsernameNotFoundException("Id 찾을수 없습니다 : " +id);
+            throw new UsernameNotFoundException("등록되지 않은 사용자이거나 탈퇴처리된 사용자입니다. : " +id);
         }
+
+        if ("Y".equals(user.getDelYn())) {
+            throw new UsernameNotFoundException("회원탈퇴 처리된 계정입니다 : " +id);
+        }
+
 
         // UserDetailsImpl 클래스의 객체를 생성합니다. 이 객체는 사용자의 인증 및 권한 정보를 제공하기위해 사용한다
         UserDetailsImpl userDetails = new UserDetailsImpl();

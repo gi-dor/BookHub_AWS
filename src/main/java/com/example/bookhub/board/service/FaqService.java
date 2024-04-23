@@ -25,13 +25,13 @@ public class FaqService {
         return faqMapper.findAllFaq(offset, size);
     }
 
+    /**
+     * FAQ의 개수 조회
+     * @return
+     */
     public int getTotalFaqCount() {
         return faqMapper.getTotalFaqCount();
     }
-
-
-
-
 
     /**
      *  카테고리 번호를 불러와 카테고리의 번호와 이름을 조회
@@ -42,4 +42,10 @@ public class FaqService {
         return faqMapper.getFaqCategoryByNo(categoryNo);
     }
 
+    public Faq getFaqByNo(Long no) {
+
+
+
+        return faqMapper.getFaqByNo(no);
+    }
 }

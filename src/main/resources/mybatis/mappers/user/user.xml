@@ -104,7 +104,7 @@
                g.grade_name           as "userGrade.name"
         FROM USER u , USER_GRADE g
         WHERE user_id = #{id}
-        and user_del_yn = 'N'
+--         and user_del_yn = 'N'
         and u.grade_no = g.grade_no
     </select>
 

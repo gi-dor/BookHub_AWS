@@ -69,4 +69,22 @@
         (#{buyNo}, #{bookNo}, #{count})
     </insert>
 
+    <insert id="createCouponUsed" parameterType="com.example.bookhub.product.vo.CouponUsed">
+        insert into COUPON_USED
+        (discount_amount, coupon_produced_no, buy_no)
+        values
+        (#{discountAmount}, #{couponProducedNo}, #{buyNo})
+    </insert>
+
+    <update id="updateCouponProducedUsed" parameterType="long" >
+        update COUPON_PRODUCED
+        set used='Y'
+        where coupon_produced_no = #{value}
+    </update>
+
+    <update id="updatePointUsed" parameterType="map">
+        update USER
+        set user_point = user_point - #{totalPointUseAmount}
+        where user_no = #{userNo}
+    </update>
 </mapper>

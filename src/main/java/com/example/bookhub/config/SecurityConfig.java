@@ -16,8 +16,8 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain (HttpSecurity http) throws Exception{
-        // csrf 공격을 방지하는 기술 비활성화
-        http.csrf(csrf -> csrf.disable());
+        http.csrf(csrf -> csrf.disable());   // csrf 방지 - CSRF 공격은 사용자가 의도하지 않은 요청을 악의적으로 전송하는 것을 막는데 사용
+        http.cors(cors -> cors.disable());   // cors 방지 - 다른 도메인에서의 리소스 요청을 허용하거나 차단하는 보안 메커니즘
         http.authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest.requestMatchers("/**").permitAll());
 
 
