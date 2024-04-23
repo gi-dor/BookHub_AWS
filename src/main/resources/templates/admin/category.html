@@ -353,12 +353,12 @@
         }
 
         // 대분류 카테고리 클릭 시 관련된 중분류 카테고리 표시
-        $("span[id^=topLevelCategory]").click(function () {
+        $("#topLevelCategories").on("click", "span", function () {
             const categoryNo = $(this).data("topCategoryNo");
 
             $("#thirdLevelCategories").empty();
             showSecondCategoriesByTopCategoryNo(categoryNo);
-        });
+        })
 
         // 카테고리 클릭시 강조 표시
         $("div[id$=Categories].card-body").on("click", "span", function () {
@@ -397,7 +397,7 @@
         }
 
         // 중분류 카테고리 클릭 시 관련된 소분류 카테고리 표시
-        $("#secondLevelCategories").on("click", "span[id^=secondLevelCategory]", function () {
+        $("#secondLevelCategories").on("click", "span", function () {
             const categoryNo = $(this).data("secondCategoryNo");
 
             showThirdCategoriesBySecondCategoryNo(categoryNo);
@@ -966,7 +966,7 @@
                 success: function (topLevelCategories) {
                     // 삭제한 카테고리 표시
                     emptyAllCategories();
-                    
+
                     let $topLevelCategories = $("#topLevelCategories");
                     $topLevelCategories.empty();
 
