@@ -80,4 +80,11 @@
         where
             book_no = #{value}
     </select>
+
+    <insert id="createReviewImage" parameterType="com.example.bookhub.product.vo.ReviewImage">
+        insert into REVIEW_IMAGE
+        (image_path, review_no)
+        values
+        (#{imagePath}, #{review.reviewNo})
+    </insert>
 </mapper>

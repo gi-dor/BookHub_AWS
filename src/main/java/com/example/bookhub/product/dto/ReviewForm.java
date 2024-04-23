@@ -1,6 +1,9 @@
 package com.example.bookhub.product.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Data
 public class ReviewForm {
@@ -9,5 +12,5 @@ public class ReviewForm {
     private float rate;
     private long reviewTagNo;
     private String comment;
-    private String imageFiles;
+    private List<MultipartFile> imageList;
 }

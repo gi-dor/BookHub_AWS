@@ -134,7 +134,7 @@
 
         <!-- 리뷰 모달 창 -->
         <div id="modal-create-review" class="modal" tabindex="-1">
-            <form method="post" action="/product/review/create">
+            <form method="post" action="/product/review/create" enctype="multipart/form-data">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -208,7 +208,7 @@
 
                             <div class="form-group mt-3">
                                 <label for="formFileMultiple" class="form-label"><bold>사진 첨부(선택)</bold></label>
-                                <input class="form-control" type="file" id="formFileMultiple" name="imageFiles" multiple>
+                                <input type="file" class="form-control" id="formFileMultiple" name="imageList" multiple th:required accept="image/*">
                             </div>
 
                         </div>
