@@ -29,7 +29,7 @@ public class CategoryController {
         model.addAttribute("secondLevelCategories", secondLevelCategories);
         model.addAttribute("thirdLevelCategories", thirdLevelCategories);
 
-        return "admin/items/category";
+        return "admin/product/category";
     }
 
     @GetMapping("/getSubCategories")
