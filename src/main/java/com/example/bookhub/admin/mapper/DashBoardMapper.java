@@ -19,4 +19,9 @@ public interface DashBoardMapper {
     // 통게 테이블 값 가져오기
     List<DayTotalDto> getTotalDate();
 
+    // 답변이 완료되지 않은 문의 건수
+    int noAnswerCnt();
+    int answerCnt();
+
+
 }

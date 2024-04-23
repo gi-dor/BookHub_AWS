@@ -25,4 +25,13 @@ public class DashBoardService {
         return dashBoardMapper.getTotalDate();
     }
 
+    public int noAnswerCnt(){
+        return dashBoardMapper.noAnswerCnt();
+    }
+
+    public int answerCnt(){
+        return dashBoardMapper.answerCnt();
+    }
+
+
 }

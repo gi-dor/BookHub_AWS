@@ -4,6 +4,7 @@ import com.example.bookhub.admin.dto.AdminRegisterForm;
 import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
+import com.example.bookhub.admin.service.DashBoardService;
 import com.example.bookhub.admin.vo.Admin;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -23,9 +27,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
 
     private final AdminService adminService;
+    private final DashBoardService dashBoardService;
+
+    @GetMapping("/home/about")
+    public String cover(){
+        return "admin/home";
+    }
+
 
     @GetMapping("/home")
-    public String home(){
+    public String home(Model model){
+        int noAnswerCnt = dashBoardService.noAnswerCnt();
+        int answerCnt = dashBoardService.answerCnt();
+        model.addAttribute("noAnswer", noAnswerCnt);
+        model.addAttribute("answer", answerCnt);
         return "admin/dash/totaluser";
     }
 

@@ -7,8 +7,8 @@
             <!-- 왼쪽 그래프 파트 -->
             <div class="col-12 col-xxl-6">
                 <div class="mb-8">
-                    <h2 class="mb-2">대시보드 예시</h2>
-                    <h5 class="text-body-tertiary fw-semibold">대시보드 예시 밑에 들어갈 작은 글</h5>
+                    <h2 class="mb-2">관리자 퀵 대시보드</h2>
+                    <h5 class="text-body-tertiary fw-semibold"></h5>
                 </div>
                 <div class="row align-items-center g-4">
                     <div class="col-12 col-md-auto">
@@ -16,8 +16,10 @@
                             <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
                             <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
                             <div class="ms-3">
-                                <h4 class="mb-0">EX New Order</h4>
-                                <p class="text-body-secondary">처리해야 할 주문개수</p>
+                                <a href="/admin/individual/noanswer" style="text-decoration-line: none">
+                                    <h4 class="mb-0">답변 미완료된 문의</h4>
+                                    <h5 class="text-body-secondary" th:text="${noAnswer} + '개'"></h5>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -26,8 +28,8 @@
                             <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
                             <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
                             <div class="ms-3">
-                                <h4 class="mb-0">EX New Order</h4>
-                                <p class="text-body-secondary">처리해야 할 주문개수</p>
+                                <h4 class="mb-0">답변 완료된 문의</h4>
+                                <h5 class="text-body-secondary" th:text="${answer} + 개"></h5>
                             </div>
                         </div>
                     </div>
@@ -47,13 +49,8 @@
                 <!-- 그래프위에 div -->
                 <div class="row flex-between-center mb-4 g-3">
                     <div class="col-auto">
-                        <h3>주간 매출</h3>
-                        <p class="text-body-tertiary lh-sm mb-0">최근 7일치의 매출액이 조회됩니다</p>
-                    </div>
-                    <div class="col-8 col-sm-4">
-                        <select class="form-select form-select-sm" id="select-gross-revenue-month">
-                            <option>April 1 - 30, 2022</option>
-                        </select>
+                        <h3>최근 7일치의 매출</h3>
+                        <p class="text-body-tertiary lh-sm mb-0">매일 오전 10시에 업데이트 됩니다</p>
                     </div>
                 </div>
                 <!-- 그래프 div chart.js 적용해야함 -->

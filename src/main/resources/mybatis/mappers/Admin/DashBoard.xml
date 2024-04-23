@@ -24,9 +24,15 @@
         GROUP BY DATE_FORMAT(BUY_DATE, '%Y-%m-%d')
     </insert>
 
+    <!-- 최근 7일치의 데이터를 출력  -->
     <select id="getTotalDate" resultType="com.example.bookhub.admin.dto.DayTotalDto">
-        select DAY_TOTAL_DATE as dayTotalDate, DAY_TOTAL_PRICE as dayTotalPrice
-        from DAY_TOTAL
+        SELECT * FROM (
+            SELECT DAY_TOTAL_DATE AS dayTotalDate, DAY_TOTAL_PRICE AS dayTotalPrice
+            FROM BookHub.DAY_TOTAL
+            ORDER BY DAY_TOTAL_DATE DESC
+            LIMIT 7
+        ) AS recent_data
+        ORDER BY dayTotalDate ASC
     </select>
 
     <!--
@@ -47,5 +53,25 @@
         AND DAY_TOTAL_DATE &lt; DATE_SUB(CURDATE(), INTERVAL DAYOFWEEK(CURDATE()) DAY)
         GROUP BY START_DATE
     </insert>
+
+    <!-- 답변 미완료된 문의 수 -->
+    <select id="noAnswerCnt" resultType="int">
+        SELECT count(*)
+        FROM INDIVIDUAL_INQUIRIES i
+                 JOIN BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
+                 join BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
+        WHERE i.INDIVIDUAL_INQUIRY_ANSWER_YN = 0
+          AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 0;
+    </select>
+
+    <!-- 답변 완료된 문의 수 -->
+    <select id="answerCnt" resultType="int">
+        SELECT count(*)
+        FROM INDIVIDUAL_INQUIRIES i
+                 JOIN BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
+                 join BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
+        WHERE i.INDIVIDUAL_INQUIRY_ANSWER_YN = 1
+          AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 1;
+    </select>
 
 </mapper>

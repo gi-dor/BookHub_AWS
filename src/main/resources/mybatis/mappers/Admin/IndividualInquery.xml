@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.IndividualMapper">
+
+    <select id="getNoAnswerList" resultType="com.example.bookhub.admin.dto.IndividualDto">
+        SELECT i.INDIVIDUAL_INQUIRY_NO as individualNo,
+               c.CATEGORY_NAME as "categoryName.name",
+               u.user_name as "userName.name",
+               i.INDIVIDUAL_INQUIRY_CONTENT as individualTitle,
+               i.INDIVIDUAL_INQUIRY_UPDATE_DATE as individualUpdateDate
+        FROM BookHub.INDIVIDUAL_INQUIRIES i
+                 JOIN BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
+                 join BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
+        WHERE i.INDIVIDUAL_INQUIRY_ANSWER_YN = 0
+          AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
+    </select>
+</mapper>
