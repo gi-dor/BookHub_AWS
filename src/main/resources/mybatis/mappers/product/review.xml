@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.product.mapper.ReviewMapper">
 
-    <resultMap id="ReviewListResultMap" type="com.example.bookhub.product.vo.Review">
+    <resultMap id="ReviewListResultMap" type="com.example.bookhub.product.dto.ReviewImageDto">
         <id column="review_no" property="reviewNo"/>
         <result column="comment" property="comment"/>
         <result column="rate" property="rate"/>
@@ -16,6 +16,8 @@
                      select="com.example.bookhub.product.mapper.ReviewMapper.getUserByNo"/>
         <association column="review_tag_no" property="reviewTag"
                      select="com.example.bookhub.product.mapper.ReviewMapper.getReviewTagByNo"/>
+        <collection property="reviewImageList" column="review_no" javaType="List" ofType="com.example.bookhub.product.vo.ReviewImage"
+                    select="com.example.bookhub.product.mapper.ReviewMapper.getReviewImageListByReviewNo"/>
     </resultMap>
 
     <resultMap id="UserResultMap" type="com.example.bookhub.user.vo.User">
@@ -26,6 +28,11 @@
     <resultMap id="ReviewTagResultMap" type="com.example.bookhub.product.vo.ReviewTag">
         <id column="review_tag_no" property="reviewTagNo"/>
         <result column="review_tag_name" property="name"/>
+    </resultMap>
+
+    <resultMap id="ReviewImageListResultMap" type="com.example.bookhub.product.vo.ReviewImage">
+        <id column="review_image_no" property="reviewImageNo"/>
+        <result column="image_path" property="imagePath"/>
     </resultMap>
 
     <insert id="createReview" parameterType="com.example.bookhub.product.vo.Review">
@@ -62,6 +69,17 @@
             review_tag_no = #{value}
     </select>
 
+    <!--collection-->
+    <select id="getReviewImageListByReviewNo" parameterType="long" resultMap="ReviewImageListResultMap">
+        select
+            review_image_no,
+            image_path
+        from
+            REVIEW_IMAGE
+        where
+            review_no = #{value}
+    </select>
+
     <select id="getReviewsByBookNo" parameterType="long" resultMap="ReviewListResultMap">
         select
             review_no,
@@ -76,7 +94,7 @@
             reply_count,
             buyer
         from
-            REVIEW
+            REVIEW R
         where
             book_no = #{value}
     </select>
@@ -87,4 +105,5 @@
         values
         (#{imagePath}, #{review.reviewNo})
     </insert>
+
 </mapper>

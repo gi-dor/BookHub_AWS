@@ -1,6 +1,7 @@
 package com.example.bookhub.product.service;
 
 import com.example.bookhub.product.dto.ReviewForm;
+import com.example.bookhub.product.dto.ReviewImageDto;
 import com.example.bookhub.product.mapper.ReviewMapper;
 import com.example.bookhub.product.vo.Book;
 import com.example.bookhub.product.vo.Review;
@@ -64,7 +65,7 @@ public class ReviewService {
             }
     }
 
-    public List<Review> getReviewsByBookNo(long bookNo) {
+    public List<ReviewImageDto> getReviewsByBookNo(long bookNo) {
         return reviewMapper.getReviewsByBookNo(bookNo);
     }
 
@@ -85,4 +86,5 @@ public class ReviewService {
 
         return fileName;
     }
+
 }

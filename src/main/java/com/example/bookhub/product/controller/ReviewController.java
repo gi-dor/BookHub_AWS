@@ -1,8 +1,8 @@
 package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.ReviewForm;
+import com.example.bookhub.product.dto.ReviewImageDto;
 import com.example.bookhub.product.service.ReviewService;
-import com.example.bookhub.product.vo.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,10 +29,10 @@ public class ReviewController {
 
     @GetMapping("/{bookNo}")
     @ResponseBody
-    public ResponseEntity<List<Review>> getReviews(@PathVariable("bookNo") long bookNo){
-        List<Review> reviewList = reviewService.getReviewsByBookNo(bookNo);
-        System.out.println(reviewList);
-        return ResponseEntity.ok().body(reviewList);
+    public ResponseEntity<List<ReviewImageDto>> getReviews(@PathVariable("bookNo") long bookNo){
+        List<ReviewImageDto> reviewImageDtoList = reviewService.getReviewsByBookNo(bookNo);
+        System.out.println(reviewImageDtoList);
+        return ResponseEntity.ok().body(reviewImageDtoList);
     }
 
 }

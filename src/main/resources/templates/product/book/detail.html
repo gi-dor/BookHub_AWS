@@ -289,11 +289,9 @@
             if (cardContent.classList.contains('collapsed')) {
                 cardContent.classList.remove('collapsed');
                 toggleLink.innerText = '접기'; // 펼쳐보기 텍스트를 '접기'로 변경
-                toggleLink.querySelector('svg').classList.add('rotate'); // 화살표 회전 효과 추가
             } else {
                 cardContent.classList.add('collapsed');
                 toggleLink.innerText = '펼치기'; // 접기 텍스트를 '펼치기'로 변경
-                toggleLink.querySelector('svg').classList.remove('rotate'); // 화살표 회전 효과 제거
             }
         }
 
@@ -305,10 +303,11 @@
                 return;
             }
 
-            let reviewList = await response.json();
+            let reviewImageDtoList = await response.json();
+            console.log(reviewImageDtoList)
             let rows = "";
-            for(let index =  0; index < reviewList.length; index++){
-                let review = reviewList[index];
+            for(let index =  0; index < reviewImageDtoList.length; index++){
+                let review = reviewImageDtoList[index];
 
                 rows += `
                         <div class="row g-0 rounded overflow-hidden mb-4 h-md-250 position-relative border">
@@ -345,7 +344,7 @@
                                 </div>
                             </div>
                             <div class="col-auto d-none d-lg-block">
-                                <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                                <img src="/image/product/${review.reviewImageList[0]?.imagePath}" alt="리뷰 이미지" style="width: 200px; height: 200px"/>
                             </div>
                         </div>
                 `;
