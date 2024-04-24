@@ -106,4 +106,29 @@
         (#{imagePath}, #{review.reviewNo})
     </insert>
 
+    <select id="getByReviewNoAndUserNo" resultType="long">
+        select
+            review_recommend_user_no
+        from
+            REVIEW_RECOMMEND_USER
+        where
+            review_no = #{reviewNo}
+            and user_no = #{userNo}
+    </select>
+
+    <insert id="createReviewRecommendUser" parameterType="com.example.bookhub.product.vo.ReviewRecommendUser">
+        insert into REVIEW_RECOMMEND_USER
+        (review_no, user_no)
+        values
+        (#{review.reviewNo}, #{user.no})
+    </insert>
+
+    <delete id="deleteReviewRecommendUser" parameterType="com.example.bookhub.product.vo.ReviewRecommendUser">
+        delete from
+            REVIEW_RECOMMEND_USER
+        where
+            review_no = #{review.reviewNo}
+            and user_no = #{user.no}
+    </delete>
+
 </mapper>

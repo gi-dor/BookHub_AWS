@@ -3,10 +3,7 @@ package com.example.bookhub.product.service;
 import com.example.bookhub.product.dto.ReviewForm;
 import com.example.bookhub.product.dto.ReviewImageDto;
 import com.example.bookhub.product.mapper.ReviewMapper;
-import com.example.bookhub.product.vo.Book;
-import com.example.bookhub.product.vo.Review;
-import com.example.bookhub.product.vo.ReviewImage;
-import com.example.bookhub.product.vo.ReviewTag;
+import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -87,4 +85,27 @@ public class ReviewService {
         return fileName;
     }
 
+    public String recommend(long reviewNo, String userId) {
+
+        ReviewRecommendUser reviewRecommendUser = new ReviewRecommendUser();
+
+        Review review = new Review();
+        review.setReviewNo(reviewNo);
+        reviewRecommendUser.setReview(review);
+
+        User user = userMapper.selectUserById(userId);
+        reviewRecommendUser.setUser(user);
+
+        // 이미 추천했는지 여부 확인
+        Optional<ReviewRecommendUser> optional = reviewMapper.getByReviewNoAndUserNo(reviewNo, user.getNo());
+
+        if(optional.isEmpty()){
+            reviewMapper.createReviewRecommendUser(reviewRecommendUser);
+            return "recommend";
+        }
+        else{
+            reviewMapper.deleteReviewRecommendUser(reviewRecommendUser);
+            return "cancel";
+        }
+    }
 }

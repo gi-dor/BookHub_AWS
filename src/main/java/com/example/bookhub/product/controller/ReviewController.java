@@ -37,4 +37,11 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewImageDtoList);
     }
 
+    @GetMapping("/recommend/{reviewNo}")
+    @ResponseBody
+    public ResponseEntity<String> recommend(@PathVariable("reviewNo") long reviewNo, Principal principal){
+        String recommendOrNot = reviewService.recommend(reviewNo, principal.getName());
+        return ResponseEntity.ok().body(recommendOrNot);
+    }
+
 }

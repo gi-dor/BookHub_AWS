@@ -231,6 +231,27 @@
 
         const $reviewDiv = $("#div-reviews");
 
+        $("#div-reviews").on("click", ".recommend", function(event){
+            let reviewNo = $(this).closest(".review").find(".review-no").text();
+
+            $.get("/product/review/recommend/" + reviewNo, function(data){
+                console.log('요청 성공:', data);
+                let recommendToggle = document.querySelector(`#recommend-${reviewNo}`);
+                if(data == "recommend"){
+                    recommendToggle.classList.remove('bi-hand-thumbs-up');
+                    recommendToggle.classList.add('bi-hand-thumbs-up-fill');
+                }
+                else if(data == "cancel"){
+                    recommendToggle.classList.remove('bi-hand-thumbs-up-fill');
+                    recommendToggle.classList.add('bi-hand-thumbs-up');
+                }
+            }).fail(function(xhr, status, error) {
+
+                console.error('요청 실패:', status, error);
+            });
+        })
+
+        // 장바구니 추가 시 모달
         function showAlertModal(existOrNot){
             console.log(existOrNot);
             if(existOrNot === "exist"){
@@ -241,6 +262,7 @@
             }
         }
 
+        // 장바구니 추가 비동기
         async function createOrIncreaseCart(){
             let response = await fetch("/product/cart/create/" + bookNo);
             if(!response.ok){
@@ -252,6 +274,7 @@
             await showAlertModal(jsonData.existOrNot);
         }
 
+        // 찜하기 토글 및 비동기
         async function toggleAct(button) {
             let heartIcon = button.querySelector('#wish-list');
 
@@ -274,27 +297,29 @@
             }
         }
 
+        // 리뷰 생성 모달 창
         async function createReview(){
             modalCreateReview.show();
         }
 
-
+        // 리뷰 펼치기/접기 토글
         function toggleCardContent(event, id) {
-            event.preventDefault(); // 링크의 기본 동작 방지
+            event.preventDefault();
+            event.stopPropagation();
 
             let cardContent = document.getElementById('cardContent-' + id);
             let toggleLink = document.getElementById('toggleLink-' + id);
 
-            // 텍스트가 숨겨져 있으면 보이도록 하고, 보이고 있으면 숨기도록 토글
             if (cardContent.classList.contains('collapsed')) {
                 cardContent.classList.remove('collapsed');
-                toggleLink.innerText = '접기'; // 펼쳐보기 텍스트를 '접기'로 변경
+                toggleLink.innerHTML = '<i class="bi bi-chevron-double-up"></i>';
             } else {
                 cardContent.classList.add('collapsed');
-                toggleLink.innerText = '펼치기'; // 접기 텍스트를 '펼치기'로 변경
+                toggleLink.innerHTML = '<i class="bi bi-chevron-double-down"></i>';
             }
         }
 
+        // 리뷰들 조회
         async function getReviews(bookNo){
             let response = await fetch("/product/review/" + bookNo);
 
@@ -315,10 +340,11 @@
                 }
 
                 rows += `
-                        <div class="row g-0 rounded overflow-hidden mb-4 h-md-250 position-relative border">
-                            <div class="col p-4 d-flex flex-column position-static">
+                        <div class="row g-0 rounded overflow-hidden mb-4 h-md-250 position-relative border review">
+                            <div class="col p-4  position-static">
                                 <div class="d-flex justify-content-between">
                                     <span>
+                                        <span class="review-no" style="display:none;">${review.reviewNo}</span>
                                         <span class="badge rounded-pill text-bg-light">종이책</span>
                                         ${buyerBadge}
                                         <span class="ms-3" >${review.user.id}</span>
@@ -330,22 +356,23 @@
                                         <span>${review.rate}</span>
                                     </span>
                                 </div>
-                                <p class="card-text mb-auto mt-3 collapsed" id="cardContent-${review.reviewNo}" >
+                                <p class="card-text mb-auto mt-3 collapsed " id="cardContent-${review.reviewNo}" >
                                    ${review.comment}
                                 </p>
-                                <a href="#" class="icon-link gap-1 icon-link-hover stretched-link" id="toggleLink-${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
-                                    펼치기
-                                    <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-                                </a>
-                                <div class="d-flex justify-content-end">
-                                    <span>
-                                         <i class="bi bi-hand-thumbs-up"></i>
-                                         <span class="me-3">${review.recommendCount}</span>
-                                    </span>
-                                    <span>
-                                        <i class="bi bi-chat-dots"></i>
-                                        <span class="me-3">${review.replyCount}</span>
-                                    </span>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <a href="#" class="" id="toggleLink-${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
+                                        <i class="bi bi-chevron-double-down"></i>
+                                    </a>
+                                    <div>
+                                        <span class="recommend">
+                                             <i class="bi bi-hand-thumbs-up" id="recommend-${review.reviewNo}"></i>
+                                             <span class="me-3">${review.recommendCount}</span>
+                                        </span>
+                                        <span>
+                                            <i class="bi bi-chat-dots"></i>
+                                            <span class="me-3">${review.replyCount}</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-auto d-none d-lg-block">
