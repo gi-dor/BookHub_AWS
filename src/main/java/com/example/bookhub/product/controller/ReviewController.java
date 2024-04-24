@@ -5,6 +5,7 @@ import com.example.bookhub.product.dto.ReviewImageDto;
 import com.example.bookhub.product.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String create(ReviewForm reviewForm, Principal principal){
         long bookNo = reviewForm.getBookNo();
