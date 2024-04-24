@@ -72,6 +72,14 @@
         WHERE user_id = #{id}
     </update>
 
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword">
+        update USER
+        set USER_PASSWORD = #{password}
+        where user_id =  #{id}
+    </update>
+
+
 
 
 </mapper>

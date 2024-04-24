@@ -2,10 +2,11 @@ package com.example.bookhub.user.controller;
 
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
-import com.example.bookhub.product.vo.BuyBook;
+import com.example.bookhub.user.dto.ChangePasswordForm;
 import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
+import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -29,6 +32,7 @@ public class UserMyPageController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final MyPageService myPageService;
+    PasswordEncoder passwordEncoder;
 
 
     // 마이페이지
@@ -55,7 +59,7 @@ public class UserMyPageController {
         model.addAttribute("orderList",orderList);
         model.addAttribute("inquiryList",inquiryList);
 
-        return "user/mypage";
+        return "/user/mypage/myPageMain";
     }
 
 
@@ -75,7 +79,7 @@ public class UserMyPageController {
         String userId = principal.getName();
         User user = userService.selectUserById(userId);
         model.addAttribute("user" , user);
-        return "user/userInfo";
+        return "user/mypage/userInfo";
 
     }
 
@@ -116,7 +120,7 @@ public class UserMyPageController {
         // 회원 정보를 입력칸에 채워넣기
         model.addAttribute("user",user);
 
-        return "user/modifyUserInfo";
+        return "user/mypage/modifyUserInfo";
     }
 
 
@@ -153,7 +157,7 @@ public class UserMyPageController {
 
         model.addAttribute("user",user);
 
-        return "user/deleteUserForm";
+        return "user/mypage/deleteUserForm";
     }
 
     @PostMapping("/deleteUser")
@@ -184,4 +188,25 @@ public class UserMyPageController {
         return "redirect:/logout";
     }
     */
+
+
+    @PostMapping("/changePassword")
+    @ResponseBody
+    public String changePassword(Principal principal,
+                                 @Valid ChangePasswordForm form ,
+                                 BindingResult errors) {
+
+        if (errors.hasErrors()) {
+           return "fail";
+        }
+
+        try {
+            String id = principal.getName();
+            myPageService.updatePassword(id, form);
+            return "success";
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return "fail";
+        }
+    }
 }
