@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.ProductMapper">
+    <select id="getTotalRows" resultType="int">
+        SELECT
+                count(*)
+        FROM
+                BookHub.BOOK B
+                INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
+                INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
+                INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
+        <where>
+            <if test="opt != null">
+                <choose>
+                    <when test="opt == 'productName'">
+                        B.BOOK_NAME like '%' || #{keyword} || '%'
+                    </when>
+                    <when test="opt == 'author'">
+                        A.AUTHOR_NAME = #{keyword}
+                    </when>
+                    <when test="opt == 'publisher'">
+                        P.PUBLISHER_NAME = #{keyword}
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+<!--    <select id="getBooks" parameterType="com.sample.web.dto.Criteria" resultType="com.sample.vo.Product">-->
+<!--    		SELECT-->
+<!--                    BOOK_IMAGE_THUMBNAIL			AS no,-->
+<!--    				BOOK_NAME           			AS bookName,-->
+<!--    				AUTHOR_NAME			            AS authorName,-->
+<!--                    BOOK_LIST_PRICE			        AS price,-->
+<!--                    BOOK_DISCOUNT_RATE		        AS discountRate,-->
+<!--    		        BOOK_STOCK                      AS stock,-->
+<!--                    BOOK_DISCONTINUING_YN           AS discontinuingYn,-->
+<!--                    BOOK_PUBLISHED_DATE             AS publishedDate-->
+
+<!--    		FROM	(SELECT-->
+<!--                            BOOK_IMAGE_THUMBNAIL,-->
+<!--           			        BOOK_NAME,-->
+<!--           				    AUTHOR_NAME,-->
+<!--                            BOOK_LIST_PRICE,-->
+<!--                            BOOK_DISCOUNT_RATE,-->
+<!--           		            BOOK_STOCK,-->
+<!--                            BOOK_DISCONTINUING_YN,-->
+<!--                            BOOK_PUBLISHED_DATE-->
+<!--    						<choose>-->
+<!--    							<when test="sort == 'productName'">-->
+<!--    								row_number() OVER(ORDER BY product_no DESC) row_num-->
+<!--    							</when>-->
+<!--    							<when test="sort == 'highPrice'">-->
+<!--    								row_number() OVER(ORDER BY product_name ASC) row_num-->
+<!--    							</when>-->
+<!--    							<when test="sort == 'lowPrice'">-->
+<!--    								row_number() OVER(ORDER BY product_price ASC) row_num-->
+<!--    							</when>-->
+<!--    							<when test="sort == 'highSellingPrice'">-->
+<!--    								row_number() OVER(ORDER BY product_price DESC) row_num-->
+<!--    							</when>-->
+<!--								<when test="sort == 'lowSellingPrice'">-->
+<!--    								row_number() OVER(ORDER BY product_price DESC) row_num-->
+<!--    							</when>-->
+<!--								<when test="sort == 'highStock'">-->
+<!--    								row_number() OVER(ORDER BY product_price DESC) row_num-->
+<!--    							</when>-->
+<!--								<when test="sort == 'lowStock'">-->
+<!--    								row_number() OVER(ORDER BY product_price DESC) row_num-->
+<!--    							</when>-->
+<!--								<when test="sort == 'recentlyPublished'">-->
+<!--    								row_number() OVER(ORDER BY product_price DESC) row_num-->
+<!--    							</when>-->
+<!--    						</choose>-->
+
+<!--    				FROM-->
+<!--							BookHub.BOOK B-->
+
+<!--    				<where>-->
+<!--    					<if test="opt != null">-->
+<!--    						<choose>-->
+<!--    							<when test="opt == 'name'">-->
+<!--    								product_name like '%' || #{keyword} || '%'-->
+<!--    							</when>-->
+<!--    							<when test="opt == 'price'">-->
+<!--    								product_price BETWEEN 0 AND to_number(#{keyword})-->
+<!--    							</when>-->
+<!--    						</choose>-->
+<!--    					</if>-->
+<!--    				</where>-->
+<!--    				)-->
+
+<!--    		WHERE-->
+<!--    				OFFSET #{offset} LIMIT #{limit}-->
+<!--    	</select>-->
+</mapper>

@@ -12,9 +12,9 @@
                         <table class="table">
                             <tbody>
                             <tr>
-                                <td class="bg-light" style="width: 100px;">검색어</td>
+                                <td class="bg-light">검색어</td>
                                 <td>
-                                    <select name="" class="form-control-sm">
+                                    <select name="opt" class="form-control-sm">
                                         <option value="all">전체</option>
                                         <option value="name">상품명</option>
                                         <option value="author">저자</option>
@@ -24,7 +24,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="bg-light" style="width: 100px;">카테고리</td>
+                                <td class="bg-light">카테고리</td>
                                 <td>
                                     <select name="category" class="form-control-sm">
                                         <option disabled selected>대분류 선택</option>
@@ -43,7 +43,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="bg-light" style="width: 100px;">기간 검색</td>
+                                <td class="bg-light">기간 검색</td>
                                 <td>
                                     <div class="d-flex">
                                         <select name="" class="form-control-sm me-2">
@@ -70,16 +70,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="bg-light" style="width: 100px;">판매 상태</td>
+                                <td class="bg-light">판매 상태</td>
                                 <td>
                                     <input type="checkbox" class="form-check-input" checked> 전체
                                     <input type="checkbox" class="form-check-input"> 정상
-                                    <input type="checkbox" class="form-check-input"> 품절
+                                    <input type="checkbox" class="form-check-input"> 절판
                                     <input type="checkbox" class="form-check-input"> 판매 중지
                                 </td>
                             </tr>
                             <tr>
-                                <td class="bg-light" style="width: 100px;">재고</td>
+                                <td class="bg-light">재고</td>
                                 <td>
                                     <select name="" class="form-control-sm">
                                         <option disabled selected>전체</option>
@@ -93,7 +93,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="bg-light" style="width: 100px;">브랜드(출판사)</td>
+                                <td class="bg-light">브랜드(출판사)</td>
                                 <td>
                                     <select name="" class="form-control-sm">
                                         <option disabled selected>전체</option>
@@ -118,7 +118,7 @@
                             <div class="text-left">전체: <b>n</b> 개 조회</div>
                             <div class="d-flex">
                                 <!-- 조회 개수 설정 -->
-                                <select class="form-control-sm me-2" onchange="changeRows()">
+                                <select class="form-control-sm me-2" onchange="changeRows()" name="rows">
                                     <option value="10">10개씩</option>
                                     <option value="50">50개씩</option>
                                     <option value="100">100개씩</option>
@@ -126,7 +126,7 @@
                                 </select>
 
                                 <!-- 조회 정렬 설정-->
-                                <select class="form-control-sm" onchange="changeRows()">
+                                <select class="form-control-sm" name="sort" onchange="changeRows()">
                                     <option value="productName">상품명 순</option>
                                     <option value="highPrice">정가 높은 순</option>
                                     <option value="lowPrice">정가 낮은 순</option>
@@ -134,8 +134,7 @@
                                     <option value="lowSellingPrice">판매가 낮은 순</option>
                                     <option value="highStock">재고 많은 순</option>
                                     <option value="lowStock">재고 적은 순</option>
-                                    <option value="recentlyAdded">최근 등록 순</option>
-                                    <option value="recentlyModified">최근 수정 순</option>
+                                    <option value="recentlyPublished">최근 출판일 순</option>
                                 </select>
                             </div>
                         </div>
@@ -219,6 +218,48 @@
                             </tr>
                             </tbody>
                         </table>
+
+                        <!-- 페이징 처리-->
+                        <!--
+                                     th:if="${조건식}"
+                                         조건식이 true로 판정되면 해당 HTML 컨텐츠가 화면에 출력된다.
+
+                                     ${paging}은 Page<T> 객체를 조회한다.
+                                         ${paging.number} 		: 현재 페이지 번호가 반환된다.
+                                         ${paging.size} 		: 한 페이지당 출력할 데이터 개수가 반환된다.
+                                         ${paging.totalPages} 	: 총 페이지 개수가 반환된다.
+                                         ${paging.empty}		: Page<T> 객체에 content(조회결과)가 없으면 true를 반환한다.
+                                         ${paging.first}		: 첫번째 페이지인 경우 true를 반환한다.
+                                         ${paging.last}			: 마지막 페이지인 경우 true를 반환한다.
+                                         ${paging.hasPrevious} 	: 현재 페이지의 이전 페이지가 존재하면 true를 반환한다.
+                                         ${paging.hasNext} 		: 현재 페이지의 다음 페이지가 존재하면 true를 반환한다.
+
+						-->
+                        <!--<div th:if="${!paging.isEmpty()}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                                    <a th:href="@{/post/list(page=${paging.number - 1})}" class="page-link">이전</a>
+                                </li>
+
+                                &lt;!&ndash;
+                                    th:classappend="${조건식} ? 값1 : 값2"
+                                    th:classappend="${조건식} ? 값1"
+                                        조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
+                                        조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
+                                        * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                                 &ndash;&gt;
+                                <li th:each="num : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                                    th:if="${num>paging.number - 2 and num <= paging.number + 2}"
+                                    class="page-item"
+                                    th:classappend="${num == paging.number} ? 'active'">
+                                    <a th:href="@{/post/list(page=${num})}" th:text="${num + 1}" class="page-link">1</a>
+                                </li>
+
+                                <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                                    <a th:href="@{/post/list(page=${paging.number + 1})}" class="page-link">다음</a>
+                                </li>
+                            </ul>
+                        </div>-->
 
                     </form>
                 </div>
