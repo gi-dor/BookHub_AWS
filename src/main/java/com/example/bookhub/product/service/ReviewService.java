@@ -100,12 +100,16 @@ public class ReviewService {
         Optional<ReviewRecommendUser> optional = reviewMapper.getByReviewNoAndUserNo(reviewNo, user.getNo());
 
         if(optional.isEmpty()){
+            String recommendStatus = "recommend";
             reviewMapper.createReviewRecommendUser(reviewRecommendUser);
-            return "recommend";
+            reviewMapper.updateReviewRecommendCount(reviewNo, recommendStatus);
+            return recommendStatus;
         }
         else{
+            String recommendStatus = "cancel";
             reviewMapper.deleteReviewRecommendUser(reviewRecommendUser);
-            return "cancel";
+            reviewMapper.updateReviewRecommendCount(reviewNo, recommendStatus);
+            return recommendStatus;
         }
     }
 }

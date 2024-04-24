@@ -18,4 +18,5 @@ public interface ReviewMapper {
     Optional<ReviewRecommendUser> getByReviewNoAndUserNo(@Param("reviewNo") long reviewNo, @Param("userNo") long userNo);
     void createReviewRecommendUser(ReviewRecommendUser reviewRecommendUser);
     void deleteReviewRecommendUser(ReviewRecommendUser reviewRecommendUser);
+    void updateReviewRecommendCount(@Param("reviewNo") long reviewNo, @Param("recommendStatus") String recommendStatus);
 }

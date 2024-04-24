@@ -236,14 +236,20 @@
 
             $.get("/product/review/recommend/" + reviewNo, function(data){
                 console.log('요청 성공:', data);
-                let recommendToggle = document.querySelector(`#recommend-${reviewNo}`);
+
+                let $recommendToggle = $(`#recommend-${reviewNo}`);
+                let $recommendCount = $(`#recommend-count-${reviewNo}`);
+                let recommendCountNum = parseInt($recommendCount.text());
+
                 if(data == "recommend"){
-                    recommendToggle.classList.remove('bi-hand-thumbs-up');
-                    recommendToggle.classList.add('bi-hand-thumbs-up-fill');
+                    $recommendToggle.removeClass('bi-hand-thumbs-up');
+                    $recommendToggle.addClass('bi-hand-thumbs-up-fill');
+                    $recommendCount.text(recommendCountNum + 1);
                 }
                 else if(data == "cancel"){
-                    recommendToggle.classList.remove('bi-hand-thumbs-up-fill');
-                    recommendToggle.classList.add('bi-hand-thumbs-up');
+                    $recommendToggle.removeClass('bi-hand-thumbs-up-fill');
+                    $recommendToggle.addClass('bi-hand-thumbs-up');
+                    $recommendCount.text(recommendCountNum - 1);
                 }
             }).fail(function(xhr, status, error) {
 
@@ -366,7 +372,7 @@
                                     <div>
                                         <span class="recommend">
                                              <i class="bi bi-hand-thumbs-up" id="recommend-${review.reviewNo}"></i>
-                                             <span class="me-3">${review.recommendCount}</span>
+                                             <span class="me-3 " id="recommend-count-${review.reviewNo}">${review.recommendCount}</span>
                                         </span>
                                         <span>
                                             <i class="bi bi-chat-dots"></i>

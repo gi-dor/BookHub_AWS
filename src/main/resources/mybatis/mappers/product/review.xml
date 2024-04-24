@@ -131,4 +131,20 @@
             and user_no = #{user.no}
     </delete>
 
+    <update id="updateReviewRecommendCount">
+        update
+            REVIEW
+        <set>
+            <choose>
+                <when test="recommendStatus == 'recommend'">
+                    recommend_count = recommend_count + 1
+                </when>
+                <when test="recommendStatus == 'cancel'">
+                    recommend_count = recommend_count - 1
+                </when>
+            </choose>
+        </set>
+        where review_no = #{reviewNo}
+    </update>
+
 </mapper>
