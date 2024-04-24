@@ -1,0 +1,188 @@
+<html lang="ko"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<div  layout:fragment="content">
+    <div class="pb-5">
+        <!-- 전체적인 그래프 row -->
+        <div class="row g-4 pt-5 pe-5">
+            <!-- 왼쪽 그래프 파트 -->
+            <div class="col-12 col-xxl-6">
+                <div class="mb-8">
+                    <h2 class="mb-2 pb-3">관리자 퀵 대시보드</h2>
+                    <h5 class="text-body-tertiary fw-semibold"></h5>
+                </div>
+                <div class="row align-items-center g-4">
+                    <div class="col-12 col-md-auto">
+                        <div class="d-flex align-items-center">
+                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
+                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
+                            <div class="ms-3">
+                                <a href="/admin/individual/noanswer" style="text-decoration-line: none">
+                                    <i class="fas fa-solid fa-headset"></i>
+                                    <h4 class="mb-0">답변 미완료된 문의</h4>
+                                    <h5 class="text-body-secondary" th:text="${noAnswer} + '개'"></h5>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <div class="d-flex align-items-center">
+                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
+                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
+                            <div class="ms-3">
+                                <i class="fas fa-solid fa-check"></i>
+                                <h4 class="mb-0">답변 완료된 문의</h4>
+                                <h5 class="text-body-secondary" th:text="${answer} + 개"></h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-auto">
+                        <div class="d-flex align-items-center">
+                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그
+                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
+                            <div class="ms-3">
+                                <h4 class="mb-0">EX New Order</h4>
+                                <p class="text-body-secondary">처리해야 할 주문개수</p>
+                            </div> -->
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 중간선 그리고 그래프와의 여백   -->
+                <hr class="bg-body-secondary mb-6 mt-4">
+                <!-- 그래프위에 div -->
+                <div class="row flex-between-center mb-4 g-3">
+                    <div class="col-auto">
+                        <h3>최근 일주일의 매출</h3>
+                        <p class="text-body-tertiary lh-sm mb-0">매일 오전 10시에 업데이트 됩니다</p>
+                    </div>
+                </div>
+                <!-- 그래프 div chart.js 적용해야함 -->
+                <div>
+                    <canvas id="myChart" class="pb-5"></canvas>
+                </div>
+            </div><!-- 왼쪽 그래프 파트 -->
+            <!-- 오른쪽 그래프 파트 -->
+            <div class="col-12 col-xxl-6">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-1">Total Books<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"><span class="badge-label">-6.8%</span></span></h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                    <h4 id="BookText"></h4>
+                                </div>
+                                <div class="d-flex justify-content-center px-4 py-6">
+                                    <!-- Total orders 그래프가 들어가야할 위치 -->
+                                    <div>
+                                        <canvas id="TotalOrders"></canvas>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Completed</h6>
+                                        <h6 class="text-body fw-semibold mb-0">52%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bullet-item bg-primary-subtle me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Pending payment</h6>
+                                        <h6 class="text-body fw-semibold mb-0">48%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-1">All Customers<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"> <span class="badge-label">+26.5%</span></span></h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                    <h4 id="CustomerText"></h4>
+                                </div>
+                                <div class="pb-0 pt-4">
+                                    <!-- All Customers 그래프가 들어가야할 위치 -->
+                                    <div>
+                                        <canvas id="AllCustomer"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-2">Grade</h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                </div>
+                                <div class="pb-4 pt-3">
+                                    <!-- Top Coupons 그래프가 들어가야할 위치 -->
+                                    <div>
+                                        <canvas id="TopCoupons"></canvas>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Percentage discount</h6>
+                                        <h6 class="text-body fw-semibold mb-0">72%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary-lighter me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed card discount</h6>
+                                        <h6 class="text-body fw-semibold mb-0">18%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bullet-item bg-info-dark me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed product discount</h6>
+                                        <h6 class="text-body fw-semibold mb-0">10%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-2">Paying vs non paying</h5>
+                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center pt-3 flex-1">
+                                    <!-- Paying vs non paying 그래프가 들어가야할 위치  -->
+                                    <div>
+                                        <canvas id="Paying"></canvas>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Paying customer</h6>
+                                        <h6 class="text-body fw-semibold mb-0">30%</h6>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bullet-item bg-primary-subtle me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">Non-paying customer</h6>
+                                        <h6 class="text-body fw-semibold mb-0">70%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- 오른쪽 그래프 파트 -->
+        </div><!-- 전체적인 그래프 row -->
+    </div>
+</div>>
+</html>

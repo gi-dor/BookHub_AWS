@@ -1,25 +1,37 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.DayTotalDto;
-import org.springframework.ui.Model;;
+import com.example.bookhub.admin.dto.ratioDto;
+import org.springframework.ui.Model;
 import com.example.bookhub.admin.service.DashBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/dash")
 public class DashBoardController {
 
     private final DashBoardService dashBoardService;
-    private final RestTemplate restTemplate;
+
+
+    @GetMapping("/dailyDash")
+    public String dailyDash(){
+        return "/admin/dash/dailyDash";
+    }
+
+    @GetMapping("/weekDash")
+    public String weekDash(){
+        return "/admin/dash/weekDash";
+    }
+
 
     // 총 회원 수
     @RequestMapping("/allCustomer.do")
@@ -45,7 +57,7 @@ public class DashBoardController {
 
     // 최근 7일치의 매출 현황
     @RequestMapping("/getTotalYesterday.do")
-    public @ResponseBody List<DayTotalDto> getTotalYesterday(Model model){
+    public @ResponseBody List<DayTotalDto> getTotalYesterday(){
         return dashBoardService.getTotalDate();
     }
 
@@ -56,5 +68,10 @@ public class DashBoardController {
         map.put("noAnswer", cnt);
         model.addAttribute("noAnswer", cnt);
         return map;
+    }
+
+    @RequestMapping("/ratio.do")
+    public @ResponseBody List<ratioDto> getRatio(){
+        return dashBoardService.getRatios();
     }
 }

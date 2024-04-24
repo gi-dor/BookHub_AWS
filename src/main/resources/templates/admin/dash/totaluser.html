@@ -7,7 +7,7 @@
             <!-- 왼쪽 그래프 파트 -->
             <div class="col-12 col-xxl-6">
                 <div class="mb-8">
-                    <h2 class="mb-2">관리자 퀵 대시보드</h2>
+                    <h2 class="mb-2 pb-3">관리자 퀵 대시보드</h2>
                     <h5 class="text-body-tertiary fw-semibold"></h5>
                 </div>
                 <div class="row align-items-center g-4">
@@ -35,23 +35,25 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-12 col-md-auto">
                         <div class="d-flex align-items-center">
-                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
+                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그
                             <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
                             <div class="ms-3">
                                 <h4 class="mb-0">EX New Order</h4>
                                 <p class="text-body-secondary">처리해야 할 주문개수</p>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
+
                 </div>
                 <!-- 중간선 그리고 그래프와의 여백   -->
                 <hr class="bg-body-secondary mb-6 mt-4">
                 <!-- 그래프위에 div -->
                 <div class="row flex-between-center mb-4 g-3">
                     <div class="col-auto">
-                        <h3>최근 7일치의 매출</h3>
+                        <h3>최근 일주일의 매출</h3>
                         <p class="text-body-tertiary lh-sm mb-0">매일 오전 10시에 업데이트 됩니다</p>
                     </div>
                 </div>
@@ -118,32 +120,41 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <h5 class="mb-2">Top coupons</h5>
-                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                        <h5 class="mb-2">Review</h5>
+                                        <h6 class="text-body-tertiary">Last 5 Content</h6>
                                     </div>
                                 </div>
                                 <div class="pb-4 pt-3">
                                     <!-- Top Coupons 그래프가 들어가야할 위치 -->
-                                    <div>
-                                        <canvas id="TopCoupons"></canvas>
+                                    <table class="table">
+                                        <colgroup>
+                                            <col>
+                                            <col>
+                                            <col>
+                                        </colgroup>
+                                        <thead>
+                                            <th>책 이름</th>
+                                            <th>내용</th>
+                                            <th>작성자</th>
+                                            <th>작성일</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="list : ${reviews}">
+                                                <td th:text="${list.bookName.name}"></td>
+                                                <td th:text="${list.reviewComment}"></td>
+                                                <td th:text="${list.userName.name}"></td>
+                                                <td th:text="${#temporals.format(list.reviewUpdateDate, 'yyyy-MM-dd')}"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="bullet-item bg-primary me-2"></div>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">평균 별점:</h6>
+                                        <h6 class="text-body fw-semibold mb-0 ps-2" th:text="${avgRate} + '/5'"></h6>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="bullet-item bg-primary me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Percentage discount</h6>
-                                        <h6 class="text-body fw-semibold mb-0">72%</h6>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="bullet-item bg-primary-lighter me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed card discount</h6>
-                                        <h6 class="text-body fw-semibold mb-0">18%</h6>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="bullet-item bg-info-dark me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed product discount</h6>
-                                        <h6 class="text-body fw-semibold mb-0">10%</h6>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -153,8 +164,9 @@
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <h5 class="mb-2">Paying vs non paying</h5>
-                                        <h6 class="text-body-tertiary">Last 7 days</h6>
+                                        <h5 class="mb-2">Individual inquiry</h5>
+                                        <h6 class="text-body-tertiary">Incomplete</h6>
+
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center pt-3 flex-1">
@@ -166,13 +178,13 @@
                                 <div class="mt-3">
                                     <div class="d-flex align-items-center mb-2">
                                         <div class="bullet-item bg-primary me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Paying customer</h6>
-                                        <h6 class="text-body fw-semibold mb-0">30%</h6>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">미답변률: </h6>
+                                        <h6 class="text-body fw-semibold mb-0 ps-2" th:text="${noAnswerRatio} + '%'">30%</h6>
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <div class="bullet-item bg-primary-subtle me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Non-paying customer</h6>
-                                        <h6 class="text-body fw-semibold mb-0">70%</h6>
+                                        <h6 class="text-body fw-semibold flex-1 mb-0">답변률: </h6>
+                                        <h6 class="text-body fw-semibold mb-0 ps-2" th:text="${answerRatio} + '%'">70%</h6>
                                     </div>
                                 </div>
                             </div>
@@ -188,6 +200,7 @@
             getAllCustomer();
             getAllBooks();
             getTotalYesterDay();
+            getRatios();
         });
         const ctx = document.getElementById('myChart'); // 왼쪽 그래프
         const allctx = document.getElementById('AllCustomer');  // 오른쪽 우상
@@ -201,7 +214,7 @@
             // let valueList = [];
 
             $.ajax({
-                url: "/getTotalYesterday.do",
+                url: "/dash/getTotalYesterday.do",
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -236,7 +249,7 @@
         <!-- Total Orders -->
         function getAllBooks() {
             $.ajax({
-                url: "/getAllBookCnt.do",
+                url: "/dash/getAllBookCnt.do",
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -275,7 +288,7 @@
         <!-- All customers -->
         function getAllCustomer() {
             $.ajax({
-                url: "/allCustomer.do", // 데이터를 가져올 URL
+                url: "/dash/allCustomer.do", // 데이터를 가져올 URL
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -331,46 +344,40 @@
         //     }
         // });
 
-
         <!-- Top coupons -->
-        new Chart(topctx, {
-            type: 'line',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        function getRatios() {
+            $.ajax({
+                url: "/dash/ratio.do",
+                type: "GET",
+                dataType: "json",
+                success: function (data){
+                    let chart = new Chart(payctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['답변률', '미답변률'],
+                            datasets: [{
+                                label: '1:1 문의',
+                                data: [data[0].complete, data[0].incomplete],
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                backgroundColor: 'rgba(255, 205, 86, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            parsing: {
+                                xAsisKey: '',
+                                yAxisKey: ''
+                            }
+                        }
+                    });
+                },
+                error: function(){
+                    alert("Failed to fetch data from the server.");
                 }
-            }
-        });
+            });
+        }
 
-        <!-- Paying -->
-        new Chart(payctx, {
-            type: 'line',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+
     </script>
 </div>
 
