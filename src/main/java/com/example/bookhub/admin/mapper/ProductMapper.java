@@ -11,5 +11,5 @@ public interface ProductMapper {
     int getTotalRows(@Param("opt") String opt, @Param("keyword") String keyword);
 
     List<Book> getBooks(@Param("opt") String opt, @Param("keyword") String keyword, @Param("offset") int offset,
-                        @Param("limit") int limit);
+                        @Param("limit") int limit, @Param("sort") String sort);
 }

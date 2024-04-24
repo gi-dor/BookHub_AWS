@@ -1,6 +1,6 @@
 <html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<div layout:fragment="productList" class="container-fluid">
+<div layout:fragment="list" class="container-fluid">
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
@@ -130,8 +130,10 @@
                                     <option value="productName">상품명 순</option>
                                     <option value="highPrice">정가 높은 순</option>
                                     <option value="lowPrice">정가 낮은 순</option>
+                                    <!--
                                     <option value="highSellingPrice">판매가 높은 순</option>
                                     <option value="lowSellingPrice">판매가 낮은 순</option>
+                                    -->
                                     <option value="highStock">재고 많은 순</option>
                                     <option value="lowStock">재고 적은 순</option>
                                     <option value="recentlyPublished">최근 출판일 순</option>
@@ -156,13 +158,13 @@
                         </div>
 
                         <!-- 조회 리스트 -->
-                        <table class="table">
+                        <table class="table text-center">
                             <colgroup>
-                                <col width="5%">
-                                <col width="5%">
+                                <col width="3%">
+                                <col width="4%">
                                 <col width="15%">
                                 <col width="*">
-                                <col width="5%">
+                                <col width="8%">
                                 <col width="9%">
                                 <col width="9%">
                                 <col width="9%">
@@ -171,7 +173,7 @@
                                 <col width="10%">
                             </colgroup>
                             <thead>
-                            <tr class="text-center">
+                            <tr>
                                 <th><input type="checkbox"></th>
                                 <th>번호</th>
                                 <th>이미지</th>
@@ -181,36 +183,39 @@
                                 <th>판매가</th>
                                 <th>재고</th>
                                 <th>판매상태</th>
-                                <th>등록일/수정일</th>
+                                <th>출판일</th>
                                 <th>관리</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="post, loop :${paging}">
+                            <tr th:each="books : ${books}">
                                 <!--
                                 	** 게시글 순번 **
 
                                     1. 마지막 숫자부터 시작
-                                        전체 게시글 개수 - (현재 페이지번호 * 페이지당 게시글 개수) + 인덱스
+                                        전체 게시글 개수 - (현재 페이지번호 * 페이지당 게시글 개수) + index
                                         ${paging.totalElements - (paging.number*paging.size) - loop.index}
 
                                     2. 1번부터 시작
-                                        (현재 페이지번호 * 페이지당 게시글 개수) + 카운트
+                                        (현재 페이지번호 * 페이지당 게시글 개수) + count
                                         ${(paging.number*paging.size) + loop.count}
                                 -->
                                 <td><input type="checkbox"></td>
-                                <td th:text="${(paging.number*paging.size) + loop.count}">1</td>
+                                <td th:each="paging, loop : ${paging}"
+                                    th:text="${(paging.currentPage*paging.rows) + loop.count}">1
+                                </td>
                                 <td>이미지</td>
-                                <td><a th:href="@{/post/detail(id=${post.id})}" th:text="${post.title}">나는 읽고 쓰고 버린다</a>
+                                <td>
+                                    <a th:href="@{/books/detail(id=${books.no})}" th:text="${books.bookName}">
+                                        나는 읽고 쓰고 버린다
+                                    </a>
                                 </td>
-                                <td th:text="${post.user.name}">손웅정</td>
-                                <td>17,000</td>
-                                <td>15,300</td>
-                                <td>1,000</td>
-                                <td>판매중</td>
-                                <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd')}">2019-02-15 17:53 \n
-                                    2019-02-20 11:07
-                                </td>
+                                <td th:text="${books.authorName}">손웅정</td>
+                                <td th:text="${books.price}">17,000</td>
+                                <td th:text="${books.discountRate}">15,300</td>
+                                <td th:text="${books.stock}">1,000</td>
+                                <td th:text="${books.discontinuingYn}">판매중</td>
+                                <!--<td th:text="${#temporals.format(books.publishedDate, 'yyyy-MM-dd')}">2019-02-15</td>-->
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
@@ -235,31 +240,34 @@
                                          ${paging.hasNext} 		: 현재 페이지의 다음 페이지가 존재하면 true를 반환한다.
 
 						-->
-                        <!--<div th:if="${!paging.isEmpty()}">
+                        <div th:if="${!paging.isEmpty()}">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                                    <a th:href="@{/post/list(page=${paging.number - 1})}" class="page-link">이전</a>
+                                    <a th:href="@{/admin/product/list(page=${paging.currentPage - 1})}"
+                                       class="page-link">이전</a>
                                 </li>
 
-                                &lt;!&ndash;
+                                <!--
                                     th:classappend="${조건식} ? 값1 : 값2"
                                     th:classappend="${조건식} ? 값1"
                                         조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
                                         조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
                                         * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
-                                 &ndash;&gt;
+                                 -->
                                 <li th:each="num : ${#numbers.sequence(0, paging.totalPages - 1)}"
-                                    th:if="${num>paging.number - 2 and num <= paging.number + 2}"
+                                    th:if="${num>paging.currentPage - 2 and num <= paging.currentPage + 2}"
                                     class="page-item"
-                                    th:classappend="${num == paging.number} ? 'active'">
-                                    <a th:href="@{/post/list(page=${num})}" th:text="${num + 1}" class="page-link">1</a>
+                                    th:classappend="${num == paging.currentPage} ? 'active'">
+                                    <a th:href="@{/admin/product/list(page=${num})}" th:text="${num + 1}"
+                                       class="page-link">1</a>
                                 </li>
 
                                 <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                                    <a th:href="@{/post/list(page=${paging.number + 1})}" class="page-link">다음</a>
+                                    <a th:href="@{/admin/product/list(page=${paging.currentPage + 1})}"
+                                       class="page-link">다음</a>
                                 </li>
                             </ul>
-                        </div>-->
+                        </div>
 
                     </form>
                 </div>

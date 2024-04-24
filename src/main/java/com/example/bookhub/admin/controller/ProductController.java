@@ -16,14 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class ProductController {
 
-    /*
-        select
-        from
-        where condition
-        offset 20 limit 10
-
-     */
-
     private final ProductService productService;
 
     @GetMapping("/list")
@@ -35,10 +27,11 @@ public class ProductController {
                        Model model) {
 
         Pagination paging = productService.getPagination(opt, keyword, page, rows);
-        List<Book> books = productService.getBooks(opt, keyword, paging.getBegin(), rows);
+        List<Book> books = productService.getBooks(opt, keyword, paging.getBegin(), rows, sort);
 
         model.addAttribute("paging", paging);
         model.addAttribute("books", books);
+
         return "admin/product/list";
     }
 }
