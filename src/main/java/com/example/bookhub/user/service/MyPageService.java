@@ -2,17 +2,12 @@ package com.example.bookhub.user.service;
 
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
-import com.example.bookhub.product.vo.BuyBook;
 import com.example.bookhub.user.dto.ChangePasswordForm;
-import com.example.bookhub.user.dto.UserDetailsImpl;
+import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.mapper.MyPageMapper;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
-import com.example.bookhub.user.vo.WishList;
-import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -79,9 +74,14 @@ public class MyPageService {
     }
 
 
-    public List<WishList> getWishListById(String id) {
+    public List<WishListDTO> getWishListById(String id) {
         User user = userMapper.selectUserById(id);
         return  myPageMapper.selectWishListById(user.getId());
     }
 
+
+//    public void deleteWishListByNo(String id, int no) {
+//        User user = userMapper.selectUserById(id);
+//     return null;
+//    }
 }

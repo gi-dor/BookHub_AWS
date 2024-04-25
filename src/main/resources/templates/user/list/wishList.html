@@ -19,91 +19,31 @@
             <h3 id="listTitle">찜 목록</h3>
             <br>
             <div class="row">
-                <div class="col-6">
-                    <div class="card border-light mb-3" style="max-width: 20rem;">
-                        <div class="card-header">책 제목</div>
+                <div class="col-6" th:each="book : ${wishList}">
+                    <div class="card border-light mb-3" >
+                        <div class="card-header" th:text="${book.name}">책 제목</div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-8">이미지</div>
-                                <div class="col-4">
-                                    <p class="card-text">지은이 , 옮긴이</p>
-                                    <p class="card-text">가격</p>
-                                    <button class="btn btn-secondary btn-sm">삭제</button>
+                                <div class="col-3">
+                                    <img th:src="${book.bookImages}" class="img-fluid" alt="Book Image">
+                                </div>
+                                <div class="col-9">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <span class="card-text me-3 fs-6 small" th:text="${book.authors}">지은이 , 옮긴이</span>
+                                            <p class="card-text" th:text="${book.price}">가격</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-secondary btn-sm" style="margin-left: 30px;">삭제</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br>
-                <div class="col-6">
-                    <div class="card border-light mb-3" style="max-width: 20rem;">
-                        <div class="card-header">책 제목</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-8">11</div>
-                                <div class="col-4">22</div>
-                            </div>
-                            <h4 class="card-title">Light card title</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="card border-light mb-3" style="max-width: 20rem;">
-                <div class="card-header">책 제목</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-8">11</div>
-                        <div class="col-4">22</div>
-                    </div>
-                    <h4 class="card-title">Light card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-            <div style="margin:0 0 30px 0;">
-                <table class="table" style="text-align: center;">
-                    <colgroup>
-                        <col width="50%">
-                        <col width="">
-                        <col width="">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th style="background-color: #1D3559; color: white" >제목</th>
-                            <th style="background-color: #1D3559; color: white">작가</th>
-                            <th style="background-color: #1D3559; color: white">가격</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
 
         <div class="col-1"></div>

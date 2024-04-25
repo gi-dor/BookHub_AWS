@@ -1,9 +1,9 @@
 package com.example.bookhub.user.controller;
 
+import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
-import com.example.bookhub.user.vo.WishList;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
@@ -32,12 +33,19 @@ public class UserMyPageListController {
         User user = userService.selectUserById(userId);
 
         // 찜목록 조회
-        List<WishList> wishList = myPageService.getWishListById(user.getId());
+        List<WishListDTO> wishList = myPageService.getWishListById(user.getId());
 
         model.addAttribute("wishList",wishList);
 
         return "/user/list/wishList";
     }
+
+//    @PostMapping("/deleteWishList")
+//    public String deleteWishList(Principal principal , int no) {
+//        myPageService.deleteWishListByNo(principal.getName() , no );
+//
+//    }
+
 
 
     @GetMapping("/orderList")

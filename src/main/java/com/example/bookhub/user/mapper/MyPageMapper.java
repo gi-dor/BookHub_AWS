@@ -2,7 +2,7 @@ package com.example.bookhub.user.mapper;
 
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
-import com.example.bookhub.user.vo.WishList;
+import com.example.bookhub.user.dto.WishListDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,5 +20,5 @@ public interface MyPageMapper {
 
     void updatePassword(@Param("id") String id, @Param("password") String password);
 
-    List<WishList> selectWishListById(String id);
+    List<WishListDTO> selectWishListById(String id);
 }
