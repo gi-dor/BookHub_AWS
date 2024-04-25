@@ -1,14 +1,14 @@
 package com.example.bookhub.board.controller;
 
+import com.example.bookhub.board.dto.FaqListDto;
 import com.example.bookhub.board.service.FaqService;
 import com.example.bookhub.board.vo.Faq;
+import com.example.bookhub.board.vo.FaqCategory;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,18 +19,16 @@ public class FaqController {
 
     private final FaqService faqService;
 
+
     @GetMapping("/list")
-    public String findAllFaq(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    public String findAllFaq(@RequestParam(name="cat", required = false, defaultValue = "0") int cat, @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "1") int page, Model model) {
+        FaqListDto dto = faqService.getFaqList(cat, keyword, page);
 
-        List<Faq> faqs = faqService.findAllFaq(page, size);
+        List<FaqCategory> faqCategory = faqService.findAllCategories();
 
-        int totalFaqsCount = faqService.getTotalFaqCount();
-
-        int totalPages = (int) Math.ceil((double) totalFaqsCount / size);
-
-        model.addAttribute("faqs", faqs);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("categories", faqCategory);
+        model.addAttribute("faqs", dto.getFaqs());
+        model.addAttribute("page", dto.getPagination());
 
         return "board/faq/list";
     }
@@ -42,15 +40,5 @@ public class FaqController {
         return "board/faq/detail";
 
     }
-
-
-
-
-
-
-
-
-
-
 
 }

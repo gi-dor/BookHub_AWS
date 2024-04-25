@@ -14,16 +14,15 @@ public interface CommunityMapper {
     /**
      * 페이징 처리된 공지사항 목록 조회
      * @param offset
-     * @param size
      * @return
      */
-    List<Community> findAllCommunity(@Param("offset") int offset, @Param("size") int size);
+    List<Community> findAllCommunity(@Param("keyword") String keyword, @Param("offset") int offset);
 
     /**
      * 전체 공지사항 개수 조회
      * @return
      */
-    int getTotalCommunitiesCount();
+    int getTotalCommunitiesCount(String keyword);
 
     /**
      * 유저의 번호로 유저 조회
@@ -64,25 +63,11 @@ public interface CommunityMapper {
     void deleteCommunity(Long no);
 
     /**
-     * 게시글 제목 혹은 내용으로 검색
-     * @param keyword 검색 키워드
+     * 조회수 증가
+     * @param no
      * @return
      */
-    List<Community> searchCommunityByTitleOrContent(String keyword);
-
-    /**
-     * 게시글 제목으로 검색
-     * @param keyword
-     * @return
-     */
-    List<Community> searchCommunityByTitle(String keyword);
-
-    /**
-     * 게시글 내용으로 검색
-     * @param keyword
-     * @return
-     */
-    List<Community> searchCommunityByContent(String keyword);
+    void viewCount(Long no);
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.bookhub.board.controller;
 
+import com.example.bookhub.board.dto.CommunityListDto;
 import com.example.bookhub.board.service.CommentService;
 import com.example.bookhub.board.service.CommunityService;
 import com.example.bookhub.board.vo.Community;
@@ -31,17 +32,12 @@ public class CommunityController {
     private final CommentService commentService;
 
     @GetMapping("/list")
-    public String findAllCommunity(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    public String findAllCommunity(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String keyword) {
 
-        List<Community> communities = communityService.findAllCommunity(page, size);
+        CommunityListDto dto = communityService.findAllCommunity(keyword, page);
 
-        int totalNoticesCount = communityService.getTotalCommunitiesCount();
-
-        int totalPages = (int) Math.ceil((double) totalNoticesCount / size);
-
-        model.addAttribute("communities", communities);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("communities", dto.getCommunities());
+        model.addAttribute("page", dto.getPagination());
 
         return "board/community/list";
     }
@@ -64,13 +60,12 @@ public class CommunityController {
     @GetMapping("/detail/{no}")
     public String getCommunityDetail(@PathVariable Long no, Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         Community community = communityService.getCommunityByNo(no);
+        communityService.viewCount(no);
 
         Long communityNo = community.getNo();
-
         List<CommunityComment> comments = commentService.findByCommunityNoComment(page, size, communityNo);
 
         int commentsCount = commentService.getCommentCount(communityNo);
-
         int totalPages = (int) Math.ceil((double) commentsCount / size);
 
         model.addAttribute("community", community);
@@ -100,15 +95,6 @@ public class CommunityController {
         communityService.deleteCommunity(no);
 
         return "redirect:/board/community/list";
-    }
-
-    @PostMapping("/search")
-    public String searchCommunity(@RequestParam("keyword") String keyword,
-                                  @RequestParam("searchOption") String searchOption,
-                                  Model model) {
-        List<Community> searchResults = communityService.searchCommunity(keyword, searchOption);
-        model.addAttribute("searchResults", searchResults);
-        return "/board/community/list";
     }
 
 

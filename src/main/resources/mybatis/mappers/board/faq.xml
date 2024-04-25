@@ -24,25 +24,48 @@
 
     <!--전체 FAQ 목록을 조회-->
     <select id="findAllFaq" resultMap="FaqListResultMap">
-        SELECT
-            FAQ_NO, FAQ_TITLE, FAQ_CONTENT, FAQ_CATEGORY_NO
+        SELECT *
         FROM FAQS
-        ORDER BY FAQ_CATEGORY_NO DESC
-        LIMIT #{offset}, #{size}
+        <where>
+            <if test="cat != 0">
+                FAQ_CATEGORY_NO = #{cat}
+            </if>
+            <if test="keyword != null">
+                AND (FAQ_TITLE LIKE CONCAT('%', #{keyword}, '%')
+                OR FAQ_CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        LIMIT #{offset}, 10
     </select>
 
     <!-- FAQ의 총 개수를 조회하는 쿼리-->
     <select id="getTotalFaqCount" resultType="int">
         SELECT COUNT(*)
         FROM FAQS
+        <where>
+            <if test="cat != 0">
+                FAQ_CATEGORY_NO = #{cat}
+            </if>
+            <if test="keyword != null">
+                AND (FAQ_TITLE LIKE CONCAT('%', #{keyword}, '%')
+                OR FAQ_CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
     </select>
 
 
-    <!--FAQ 카테고리 목록을 조회 -->
+    <!--FAQ 카테고리 목록을 번호로 조회 -->
     <select id="getFaqCategoryByNo" parameterType="long" resultMap="FaqCategoriesListMap">
         SELECT FAQ_CATEGORY_NO, FAQ_CATEGORY_NAME
         FROM FAQ_CATEGORIES
         WHERE FAQ_CATEGORY_NO = #{value}
+    </select>
+
+    <!-- FAQ 카테고리의 목록을 조회 -->
+    <select id="findAllCategories" resultMap="FaqCategoriesListMap">
+        SELECT *
+        FROM FAQ_CATEGORIES
+        ORDER BY FAQ_CATEGORY_NO
     </select>
 
     <!-- FAQ 상세 페이지 조회 -->
@@ -51,6 +74,5 @@
         FROM FAQS
         WHERE FAQ_NO = #{value}
     </select>
-    
 
 </mapper>
