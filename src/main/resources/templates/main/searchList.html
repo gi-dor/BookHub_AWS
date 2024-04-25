@@ -38,44 +38,20 @@
             <div class="searchSort mb-3">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#" data-sort="sales" >판매량순</a>
+                        <a class="nav-link" aria-current="page" href="#" data-sort="sales" >판매량순</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-sort="pubdate">출시일순</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="#" >평점순</a>
+                        <a class="nav-link"  href="#" data-sort="avgrating" >평점순</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" >리뷰순</a>
+                        <a class="nav-link" href="#" data-sort="reviewcnt" >리뷰순</a>
                     </li>
                 </ul>
             </div>
 
-
-            <!-- 이거 어떻게할지 고민
-<div class="col-10 mb-5">
-    <h1 class="mb-3">통합검색</h1>
-    옵션선택? 판매량순, 출시일순, 평점순, 리뷰순
-    <div class="option mb-3">
-        <form id="sortForm" action="/search" method="get">
-            <ul class="nav nav-tabs">
-                <li class="nav-item" onclick="submitForm('판매량순')">
-                    <a class="nav-link" aria-current="page">판매량순</a>
-                </li>
-                <li class="nav-item" onclick="submitForm('출시일순')">
-                    <a class="nav-link">출시일순</a>
-                </li>
-                <li class="nav-item" onclick="submitForm('평점순')">
-                    <a class="nav-link" >평점순</a>
-                </li>
-                <li class="nav-item" onclick="submitForm('리뷰순')">
-                    <a class="nav-link">리뷰순</a>
-                </li>
-            </ul>
-        </form>
-    </div>
--->
 
             <!-- 페이지네이션 및 버튼 -->
             <div class="pagination d-flex justify-content-between align-items-center mb-4">
@@ -107,7 +83,7 @@
                                    class="page-link"
                                    th:classappend="${criteria.last ? 'disabled' : '' }"
                                    aria-label="Next"
-                                   th:attr="data-page=${criteria.page + 1}">>
+                                   th:attr="data-page=${criteria.page + 1}">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
@@ -179,25 +155,5 @@
 <th:block layout:fragment="script">
     <script src="/js/main/searchList.js"></script>
     <script src="/js/main/navbar.js"></script>
-    <script>
-        function submitExtra() {
-
-            $("#form-extra-search input[name=page]").val(1);
-            $("#form-extra-search input[name=sort]").val("sales");
-            $("#form-extra-search").trigger("submit");
-        }
-        $(".searchSort a ").click(function (event) {
-            event.preventDefault();
-            $("#form-extra-search input[name=page]").val(1);
-            $("#form-extra-search input[name=sort]").val($(this).attr("data-sort"));
-            $("#form-extra-search").trigger("submit");
-        });
-
-        $(".pagination a").click(function(event) {
-            event.preventDefault();
-            $("#form-extra-search input[name=page]").val($(this).attr("data-page"));
-            $("#form-extra-search").trigger("submit");
-        })
-    </script>
 </th:block>
 </html>
