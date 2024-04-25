@@ -58,15 +58,16 @@
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
                 <div class="nav-item col-12">
-                    <form class="row g-1 align-items-center p-1" action="/search" method="get">
+                    <div class="row g-1 align-items-center p-1" >
                         <div class="col-3">
                             <a class="navbar-logo" href="/">
                                 <img class="mb-0" src="/image/login/logo.png" alt="로고" width="auto" height="120">
                             </a>
                         </div>
-                        <div class="search-wrapper col-9 d-flex align-items-center">
-
-                                    <option selected>통합검색</option>
+                        <form class="search-wrapper col-9 d-flex align-items-center"  action="/search" method="get">
+                            <div class="search mt-2 mb-2 me-2 col-3">
+                                <select class="form-select" name="opt">
+                                    <option value="3">통합검색</option>
                                     <option value="1">국내도서</option>
                                     <option value="2">해외도서</option>
                                 </select>
@@ -77,8 +78,8 @@
                             <div class="search mt-2 mb-2 col-2">
                                 <button type="submit" class="btn btn-primary" id="submitButton">검색</button>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
