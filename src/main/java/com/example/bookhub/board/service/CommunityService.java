@@ -1,5 +1,7 @@
 package com.example.bookhub.board.service;
 
+import com.example.bookhub.board.Pagination;
+import com.example.bookhub.board.dto.CommunityListDto;
 import com.example.bookhub.board.mapper.CommunityMapper;
 import com.example.bookhub.board.vo.Community;
 import com.example.bookhub.board.vo.CommunityImages;
@@ -32,21 +34,15 @@ public class CommunityService {
     private String uploadDir;
 
 
-    /**
-     * 페이징 처리된 커뮤니티 목록을 조회
-     * @return
-     */
-    public List<Community> findAllCommunity(int page, int size) {
-        int offset = (page - 1) * size;
-        return communityMapper.findAllCommunity(offset, size);
-    }
+    public CommunityListDto findAllCommunity(String keyword, int page) {
 
-    /**
-     * 전체 커뮤니티 게시글 개수를 조회
-     * @return
-     */
-    public int getTotalCommunitiesCount() {
-        return communityMapper.getTotalCommunitiesCount();
+        int totalCount = communityMapper.getTotalCommunitiesCount(keyword);
+        Pagination pagination = new Pagination(page, totalCount);
+        int offset = pagination.getBegin();
+
+        List<Community> communities = communityMapper.findAllCommunity(keyword, offset);
+
+        return new CommunityListDto(communities, pagination);
     }
 
     /**
@@ -91,13 +87,18 @@ public class CommunityService {
      * @return
      */
     public Community getCommunityByNo(Long no) {
-        
-        
-        
-        
+
         return communityMapper.getCommunityByNo(no);
     }
 
+    /**
+     * 조회수 증가
+     * @param no
+     * @return
+     */
+    public void viewCount(Long no) {
+        communityMapper.viewCount(no);
+    }
     /**
      * 커뮤니티 게시글 수정
      * @param community
@@ -114,24 +115,6 @@ public class CommunityService {
         communityMapper.deleteCommunity(no);
     }
 
-    /**
-     * 게시글 검색
-     * @param keyword
-     * @return
-     */
-    // enum 클래스로 코딩해보기
-    public List<Community> searchCommunity(String keyword, String searchOption) {
-
-        if (searchOption.equals("title")) {
-            return communityMapper.searchCommunityByTitle(keyword);
-        } else if (searchOption.equals("content")) {
-            return communityMapper.searchCommunityByContent(keyword);
-        } else if (searchOption.equals("titleContent")) {
-            return communityMapper.searchCommunityByTitleOrContent(keyword);
-        } else {
-            return new ArrayList<>();
-        }
-    }
 
     public String saveImage(MultipartFile image) {
         try {

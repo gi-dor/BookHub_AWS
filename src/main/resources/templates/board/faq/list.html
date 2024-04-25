@@ -1,5 +1,7 @@
+
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
+
 
 <div layout:fragment="content" class="container">
     <div class="row">
@@ -8,16 +10,10 @@
             <aside class="sidebar">
                 <h3 style="margin-bottom: 15px;"><strong>고객센터</strong></h3>
                 <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
-                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">메인</a></strong></li><br>
-                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">자주 묻는 질문</a></strong>
-                        <ul style="list-style: none; padding: 0; margin-top: 10px;">
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">BEST 10</a></li>
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">회원</a></li>
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">도서/상품정보</a></li>
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">주문/결제</a></li>
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">배송/수령안내</a></li>
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">반품/교환/환불</a></li>
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">서비스</a></li>
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">메인</a></strong></li><br>
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">자주 묻는 질문</a></strong>
+                        <ul th:each=" category : ${categories}" style="list-style: none; padding: 0; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;"><a th:text="${category.name}" th:href="@{/board/faq/list(cat=${category.no})}" style="color: black; text-decoration: none;">BEST 10</a></li>
                         </ul>
                     </li><br>
                     <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">1:1 문의</a></strong>
@@ -30,22 +26,109 @@
                 </ul>
             </aside>
         </div>
-        <!-- 컨텐츠 영역 -->
         <div class="col-lg-9">
-            <section id="services" class="services">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                            <div class="icon-box">
-                                <div class="icon"><i class="bx bxl-dribbble"></i></div>
-                                <h4><a href="">Lorem Ipsum</a></h4>
-                                <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-                            </div>
+            <div class="row">
+                <h2 class="col-mb-4">자주 묻는 질문</h2>
+
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="searchForm" th:action="@{/board/faq/list}" method="get" class="d-flex align-items-center justify-content-center">
+                                <input type="hidden" name="page">
+                                <div class="me-2" style="flex: 1;">
+                                    <input id="keywordInput" type="text" name="keyword" th:value="${param.keyword}" placeholder="궁금한 점을 검색해보세요" class="form-control" style="width: 100%; text-align: center;">
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-primary">검색</button>
+                                </div>
+                            </form>
                         </div>
-                        <!-- 나머지 아이콘 박스들 -->
                     </div>
                 </div>
-            </section>
+
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <a href="#" class="stretched-link" th:href="@{/board/faq/list}">
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: black; text-decoration: none;">전체</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4" th:each=" category : ${categories}">
+                    <div class="card">
+                        <a  class="stretched-link" th:href="@{/board/faq/list(cat=${category.no})}">
+                            <div class="card-body">
+                                <h5 th:text="${category.name}" class="card-title" style="color: black; text-decoration: none;">링크 1</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- faq 리스트 -->
+                <div class="col-md-12">
+                    <ul id="faqList" class="list-group">
+                        <!-- Thymeleaf를 이용하여 게시글 데이터를 가져와서 표시 -->
+                        <li class="list-group-item" th:each="faq : ${faqs}">
+                            <!-- 클릭 이벤트를 추가하여 제목을 클릭하면 내용을 토글함 -->
+                            <a href="#" th:text="${faq.title}" onclick="toggleContent(this)" style="color: black; text-decoration: none;"></a>
+                            <!-- 내용을 숨겨둘 div -->
+                            <div class="faq-content" style="display: none; border-top: 1px solid #ccc; padding-top: 10px;">
+                                <p th:text="${faq.content}"></p> <!-- faqs.content에 해당하는 내용을 표시 -->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 페이징 -->
+                <div class="col-mb-4">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <!-- 이전 페이지 링크 -->
+                            <li class="page-item">
+                                <a class="page-link" th:attr="data-page=${page.currentPage - 1}" onclick="page(event)" th:href="@{/board/faq/list(page=${page.currentPage - 1})}" th:if="${page.currentPage > 1}">이전</a>
+                                <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                            </li>
+                            <!-- 페이지 번호를 표시 -->
+                            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
+                                <a class="page-link" th:attr="data-page=${pageNumber}" onclick="page(event)" th:href="@{/board/faq/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                            </li>
+                            <!-- 다음 페이지 링크 -->
+                            <li class="page-item">
+                                <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)" th:href="@{/board/faq/list(page=${page.currentPage + 1})}" th:if="${page.currentPage < page.totalPages}">다음</a>
+                                <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
         </div>
     </div>
+</div>
+<div layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 클릭 이벤트 처리 함수
+        function toggleContent(element) {
+            // 클릭된 제목의 부모 요소(li)에서 다음 요소인 내용을 찾음
+            var content = element.parentElement.querySelector('.faq-content');
+            // 내용이 보이는지 확인하고 토글함
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+            } else {
+                content.style.display = 'none';
+            }
+        }
+
+        function page(event) {
+            event.preventDefault();
+            let page = event.target.getAttribute("data-page");
+            document.querySelector("input[name=page]").value = page;
+
+            document.querySelector("#searchForm").submit();
+        }
+
+
+
+    </script>
 </div>
