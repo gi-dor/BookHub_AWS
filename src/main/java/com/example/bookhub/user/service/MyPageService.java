@@ -8,6 +8,7 @@ import com.example.bookhub.user.dto.UserDetailsImpl;
 import com.example.bookhub.user.mapper.MyPageMapper;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
+import com.example.bookhub.user.vo.WishList;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +76,12 @@ public class MyPageService {
       // form.setChangePassword(passwordEncoder.encode(form.getChangePassword()));
 
         myPageMapper.updatePassword(id, passwordEncoder.encode(form.getChangePassword()));
+    }
+
+
+    public List<WishList> getWishListById(String id) {
+        User user = userMapper.selectUserById(id);
+        return  myPageMapper.selectWishListById(user.getId());
     }
 
 }
