@@ -3,15 +3,22 @@ package com.example.bookhub.user.service;
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.product.vo.BuyBook;
+import com.example.bookhub.user.dto.ChangePasswordForm;
 import com.example.bookhub.user.dto.UserDetailsImpl;
 import com.example.bookhub.user.mapper.MyPageMapper;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
+import com.example.bookhub.user.vo.WishList;
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
@@ -49,6 +56,32 @@ public class MyPageService {
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    public void updatePassword(String id, ChangePasswordForm form) {
+
+        // 사용자 ID를 사용하여 데이터베이스에서 해당 사용자 정보를 가져오기
+        User user = userMapper.selectUserById(id);
+
+        // DB에서 가져온 사용자 비밀번호 가져오기
+        String originalPassword = user.getPassword();
+
+        // 사용자가 입력한 비밀번호 form.getPassword()
+        // DB에서 가져온 비밀번호 originalPassword
+        if (!passwordEncoder.matches(form.getPassword(), originalPassword)) {
+            log.error("서비스 - 비밀번호가 일치하지 않은경우 id 확인 ",id);
+            throw new RuntimeException("비밀번호 불일치");
+        }
+
+      // form.setChangePassword(passwordEncoder.encode(form.getChangePassword()));
+
+        myPageMapper.updatePassword(id, passwordEncoder.encode(form.getChangePassword()));
+    }
+
+
+    public List<WishList> getWishListById(String id) {
+        User user = userMapper.selectUserById(id);
+        return  myPageMapper.selectWishListById(user.getId());
     }
 
 }

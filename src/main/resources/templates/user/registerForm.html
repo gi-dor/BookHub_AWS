@@ -14,12 +14,39 @@
                         <div class="form-group mb-3">
                             <label class="form-label">아이디</label>
                             <div class="row" >
-                                <div class="col-5">
-                                    <input type="text" class="form-control" th:field="*{id}" />
+                                <div class="col-3">
+                                    <input type="text" class="form-control" th:field="*{id}" id="id" placeholder="아이디 입력" />
                                     <div th:errors="*{id}" class="text-danger"></div>
                                 </div>
-                                <div class="col-7">
+                                <div class="col-2">
+                                    <button class="btn btn-secondary" type="button" onclick="idCheck()"  id="btn-check-id" >중복체크</button>
+                                </div>
+                                <div class="col-6">
+                                    <span class="id_ok">사용 가능한 아이디입니다.</span>
+                                    <span class="id_already">누군가 이 아이디를 사용하고 있어요.</span>
                                     <p class="form-text" style="font-family: Arial, sans-serif; color: grey;">영어 소문자와 숫자만 사용하여 5~20자리여야 합니다.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">이메일</label>
+                            <div class="row">
+                                <div class="col-3">
+                                    <input type="text" class="form-control" id="emailId" th:field="*{email1}"  placeholder="이메일 입력" />
+                                    <div th:errors="*{email1}" class="text-danger"></div>
+                                    <br>
+<!--                                    <input type="text" class="form-control" placeholder="인증번호 입력" id="emailCode">-->
+                                </div>
+                                @
+                                <div class="col-4">
+                                    <select id="emailAddress" class="form-select" th:field="*{email2}">
+                                        <option value="google.com">google.com</option>
+                                        <option value="naver.com">naver.com</option>
+                                        <option value="daum.net">daum.net</option>
+                                    </select>
+                                    <br>
+<!--                                    <button type="button" id="emailCodeButton" class="btn btn-secondary">인증번호 받기</button>-->
                                 </div>
                             </div>
                         </div>
@@ -29,7 +56,7 @@
                             <label class="form-label">비밀번호</label>
                             <div class="row">
                                 <div class="col-5">
-                                    <input type="password" class="form-control" id="password" th:field="*{password}" />
+                                    <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="비밀번호 입력" />
                                     <div th:errors="*{password}" class="text-danger"></div>
                                 </div>
                                 <div class="col-7">
@@ -42,7 +69,7 @@
                             <label class="form-label">비밀번호 확인</label>
                             <div class="row">
                                 <div class="col-5">
-                                    <input type="password" class="form-control" id="confirmPassword" />
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="비밀번호 재입력"/>
                                 </div>
                                 <div class="col-7">
                                     <div id="passwordMatchMessage" class="text-danger"></div>
@@ -64,62 +91,41 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label class="form-label">이메일</label>
-                            <div class="row">
-                                <div class="col-5">
-                                    <input type="text" class="form-control" th:field="*{email}" />
-                                    <div th:errors="*{email}" class="text-danger"></div>
-                                </div>
-                                <div class="col-7">
-                                    <p class="form-text" style="font-family: Arial, sans-serif; color: grey;"> ex. noreplay@noreplay.com </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group mb-3">
                             <label class="form-label">주소</label>
                             <div class="row mb-1">
                                 <div class="col-4">
-                                    <input type="text" id="sample6_postcode" class="form-control"  th:field="*{zipCode}">
+                                    <input type="text" id="sample6_postcode" class="form-control"  th:field="*{zipCode}" placeholder="우편번호">
                                 </div>
                                 <div class="col-8">
                                     <input type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
                                 </div>
                             </div>
-                            <input type="text" id="sample6_address"  th:field="*{address}" placeholder="주소" class="form-control mb-1" >
-                            <input type="text" id="sample6_detailAddress"  th:field="*{addressDetail}" placeholder="상세주소" class="form-control">
+                            <div class="row mb-1">
+                                <div class="col-7">
+                                    <input type="text" id="sample6_address"  th:field="*{address}" placeholder="주소" class="form-control mb-1" >
+                                    <input type="text" id="sample6_detailAddress"  th:field="*{addressDetail}" placeholder="상세주소" class="form-control">
+                                </div>
+                            </div>
                         </div>
-
-<!--                        <div class="form-group mb-3">-->
-<!--                            <label class="form-label">전화번호</label>-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-4">-->
-<!--                                    <select id="tell_1" name="ArrTel[0]" class="form-select">-->
-<!--                                        <option selected value="010">010</option>-->
-<!--                                        <option value="011">011</option>-->
-<!--                                        <option value="017">017</option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                                <div class="col-4">-->
-<!--                                    <input type="text" class="form-control" id="tell_2" name="ArrTel[1]">-->
-<!--                                </div>-->
-<!--                                <div class="col-4">-->
-<!--                                    <input type="text" class="form-control" id="tell_3" name="ArrTel[2]">-->
-<!--                                </div>-->
-<!--                                <div th:errors="*{ArrTel}" class="text-danger"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
 
                         <div class="form-group mb-3">
                             <div class="row">
-                                <div class="col-5">
-                                    <label class="form-label">전화번호</label>
-                                        <input type="text" class="form-control" th:field="*{tel}" />
-                                        <div th:errors="*{tel}" class="text-danger"></div>
+                                <label class="form-label">전화번호</label>
+                                <div class="col-2">
+                                    <select id="telAdd" class="form-select" th:field="*{tel1}">
+                                        <option value="010">010</option>
+                                        <option value="011">011</option>
+                                        <option value="016">016</option>
+                                        <option value="017">017</option>
+                                    </select>
                                 </div>
-                                <div class="col-7">
-                                    <p class="form-text" style="font-family: Arial, sans-serif; color: grey;"> ex. 010-XXXX-XXXX </p>
+                                <div class="col-2">
+                                        <input type="text" class="form-control" th:field="*{tel2}" />
+                                        <div th:errors="*{tel2}" class="text-danger"></div>
+                                </div>
+                                <div class="col-2">
+                                    <input type="text" class="form-control" th:field="*{tel3}" />
+                                    <div th:errors="*{tel3}" class="text-danger"></div>
                                 </div>
                             </div>
                         </div>
@@ -143,5 +149,31 @@
 
     <!-- 비밀번호 , 확인비밀번호 일치 여부 -->
     <script src="/js/user/registerForm.js"></script>
+
+    <script>
+        function idCheck(){
+            let id = $('#id').val(); // id의 값이 'id'인 입련칸의 값을 저장
+            $.ajax({
+                url:'/user/idCheck' , // 컨트롤러에서 요청 받을 주소
+                type:'post',          // post 방식으로 전달
+                data:{id:id},         // 서버로 보낼 데이터 id는 위에있는 $('#id').val(); // name=홍길동&id=hong
+                success:function (cnt) {    // 요청이 성공할 때의 콜백함수 , cnt는 서버에서 받은 응답데이터
+                    if(cnt == 0) {          // cnt 값이 0 이면 - 사용 가능하다는 뜻
+                        $('.id_ok').css("display","inline-block");
+                        $('.id_already').css("display","none");
+                    } else {                // cnt 값이 1이면 - 사용 불가능한 아이디
+                        $('.id_ok').css("display","none");
+                        $('.id_already').css("display","inline-block");
+                        alert("아이디를 다시 입력해주세요");
+                        $('#id').val('');   // id 요소의 값 빈칸으로 만들어버리기
+                    }
+                },
+                error:function (){
+                    alert("에러입니다 , 무언가 잘못된거 같은데요?");
+                }
+            });
+        };
+    </script>
 </th:block>
+
 </html>

@@ -28,6 +28,7 @@ public class Buy {
     private BuyStatus buyStatus;
     private BuyDeliveryRequest buyDeliveryRequest;
     private User user;
+    private String orderId;
     private BuyBook buyBook;
     private Book book;
     private int cnt;

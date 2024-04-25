@@ -72,6 +72,31 @@
         WHERE user_id = #{id}
     </update>
 
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword">
+        update USER
+        set USER_PASSWORD = #{password}
+        where user_id =  #{id}
+    </update>
+
+
+    <select id="selectWishListById">
+        select
+            w.WISH_LIST_NO              as no,
+            w.WISH_LIST_CREATED_DATE    as wishListCreatedDate      ,
+            b.BOOK_NAME                 as "book.bookName"          ,
+            i.BOOK_IMAGE_COVER          as "bookImages.imageCover"  ,
+            a.AUTHOR_NO                 as "bookAuthor.author.name"
+
+        from BOOK b , USER u , USER_WISHLIST w , BOOK_IMAGES i , AUTHOR a , BOOK_AUTHOR ba
+        where u.USER_NO = w.USER_NO
+        and   b.BOOK_NO = w.BOOK_NO
+        and   i.BOOK_NO = b.BOOK_NO
+        and   a.AUTHOR_NO = ba.AUTHOR_NO
+        and   ba.BOOK_NO = b.BOOK_NO
+        and   u.USER_ID = #{id}
+    </select>
+
 
 
 </mapper>

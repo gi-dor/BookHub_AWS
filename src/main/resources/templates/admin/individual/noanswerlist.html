@@ -1,0 +1,39 @@
+<html lang="ko"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<div  layout:fragment="content">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2>답변 미완료된 문의</h2>
+
+            <table class="table">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>카테고리</th>
+                        <th>제목</th>
+                        <th>고객이름</th>
+                        <th>등록일</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="list : ${noanswer} ">
+                        <td th:text="${list.individualNo}"></td>
+                        <td th:text="${list.categoryName.name}"></td>
+                        <td th:text="${list.individualTitle}"></td>
+                        <td th:text="${list.userName.name}"></td>
+                        <td th:text="${#temporals.format(list.individualUpdateDate, 'yyyy.MM.dd')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</html>

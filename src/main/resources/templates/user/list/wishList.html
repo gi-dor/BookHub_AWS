@@ -1,0 +1,124 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<!-- ##### css  ##### -->
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/user/listCommon.css}" />
+</th:block>
+
+<!-- ###### content 시작 ###### -->
+<div layout:fragment="content" class="container my-3">
+    <div class="row mt-5">
+
+        <!-- 마이페이지 사이드 바 시작 ################-->
+        <div th:replace="~{layout/myPageSidebar :: myPageSidebar} "></div>  <!-- col-3 가지고 있음 -->
+        <!-- 마이페이지 사이드 바 종료 ################-->
+
+
+        <div class="col-8">
+            <h3 id="listTitle">찜 목록</h3>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card border-light mb-3" style="max-width: 20rem;">
+                        <div class="card-header">책 제목</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">이미지</div>
+                                <div class="col-4">
+                                    <p class="card-text">지은이 , 옮긴이</p>
+                                    <p class="card-text">가격</p>
+                                    <button class="btn btn-secondary btn-sm">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="col-6">
+                    <div class="card border-light mb-3" style="max-width: 20rem;">
+                        <div class="card-header">책 제목</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">11</div>
+                                <div class="col-4">22</div>
+                            </div>
+                            <h4 class="card-title">Light card title</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card border-light mb-3" style="max-width: 20rem;">
+                <div class="card-header">책 제목</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-8">11</div>
+                        <div class="col-4">22</div>
+                    </div>
+                    <h4 class="card-title">Light card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <div style="margin:0 0 30px 0;">
+                <table class="table" style="text-align: center;">
+                    <colgroup>
+                        <col width="50%">
+                        <col width="">
+                        <col width="">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th style="background-color: #1D3559; color: white" >제목</th>
+                            <th style="background-color: #1D3559; color: white">작가</th>
+                            <th style="background-color: #1D3559; color: white">가격</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>샘플제목</td>
+                            <td>샘플작가</td>
+                            <td>가격</td>
+                        </tr>
+                        <tr>
+                            <td>샘플제목</td>
+                            <td>샘플작가</td>
+                            <td>가격</td>
+                        </tr>
+                        <tr>
+                            <td>샘플제목</td>
+                            <td>샘플작가</td>
+                            <td>가격</td>
+                        </tr>
+                        <tr>
+                            <td>샘플제목</td>
+                            <td>샘플작가</td>
+                            <td>가격</td>
+                        </tr>
+                        <tr>
+                            <td>샘플제목</td>
+                            <td>샘플작가</td>
+                            <td>가격</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="col-1"></div>
+
+        <!-- ##### row 종료 ##### -->
+    </div>
+</div>
+
+<!-- ###### Javascript ##### -->
+<th:block layout:fragment="script">
+    <script>
+
+    </script>
+
+    <script src="#"></script>
+</th:block>
+
+</html>
