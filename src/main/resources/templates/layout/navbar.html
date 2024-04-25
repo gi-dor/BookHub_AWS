@@ -7,7 +7,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                   
-                    <a class="nav-link text-white" href="#">HOME</a>
+                    <a class="nav-link text-white" href="/">HOME</a>
 
                 </li>
                 <li class="nav-item">
@@ -29,13 +29,14 @@
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a  class="nav-link text-white" href="/user/register">회원가입</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item"  sec:authorize="isAuthenticated()">
                     <div class="dropdown">
                         <button class="btn dropdown-toggle text-white border-0 mt-0.5" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             마이페이지
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-                            <li><a class="dropdown-item" href="#">나의 계정</a></li>
+                            <li><a class="dropdown-item" href="/mypage">나의 정보</a></li>
+                            <li><a class="dropdown-item" href="#">찜 목록</a></li>
                             <li><a class="dropdown-item" href="#">주문/배송조회</a></li>
                             <li><a class="dropdown-item" href="#">구매내역</a></li>
                         </ul>
@@ -57,20 +58,21 @@
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
                 <div class="nav-item col-12">
-                    <form class="row g-1 align-items-center p-1">
+                    <form class="row g-1 align-items-center p-1" action="/search" method="get">
                         <div class="col-3">
-                            <a class="navbar-logo" href=""><img class="mb-0" src="/image/login/logo.png" alt="로고" width="auto" height="120"></a>
+                            <a class="navbar-logo" href="/">
+                                <img class="mb-0" src="/image/login/logo.png" alt="로고" width="auto" height="120">
+                            </a>
                         </div>
                         <div class="search-wrapper col-9 d-flex align-items-center">
-                            <div class="search mt-2 mb-2 me-2 col-3">
-                                <select class="form-select">
+
                                     <option selected>통합검색</option>
                                     <option value="1">국내도서</option>
                                     <option value="2">해외도서</option>
                                 </select>
                             </div>
                             <div class="search mt-2 mb-2 me-2 col-7">
-                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요">
+                                <input id="searchInput" class="form-control" type="text" placeholder="검색어를 입력하세요" name="keyword" th:value="${param.keyword}">
                             </div>
                             <div class="search mt-2 mb-2 col-2">
                                 <button type="submit" class="btn btn-primary" id="submitButton">검색</button>

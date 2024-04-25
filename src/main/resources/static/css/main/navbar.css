@@ -26,16 +26,13 @@
     border: 2px solid #1D3559;
 }
 
-.form-select {
+#formSelect {
     border: none;
 }
-.form-control {
+#searchInput {
     border: none;
 }
 
-.form-control:focus {
-    border: white;
-}
 
 
 #submitButton,

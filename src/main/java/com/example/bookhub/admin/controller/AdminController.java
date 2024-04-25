@@ -5,7 +5,6 @@ import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
 import com.example.bookhub.admin.vo.Admin;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -33,7 +30,7 @@ public class AdminController {
     }
 
     @GetMapping("/login")
-    public String loginForm(Model model){
+    public String loginForm(){
         return "admin/login";
     }
 

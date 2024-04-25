@@ -21,3 +21,12 @@
     font-style: normal;
     font-size: 50px;
 }
+
+input[type="text"][name="email"],
+input[type="text"][name="tel"],
+input[type="text"][name="zipCode"],
+input[type="text"][name="address"],
+input[type="text"][name="addressDetail"] {
+    border: 1px solid #ced4da; /* Add a border with a color */
+    border-radius: 4px; /* Optional: Add some border radius for rounded corners */
+}

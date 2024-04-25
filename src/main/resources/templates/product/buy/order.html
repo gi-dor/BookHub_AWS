@@ -15,6 +15,7 @@
                                 <td><img src=""></td>
                                 <td th:text="${buyBook.name}"></td>
                                 <td class="buy-book-price" th:text="${buyBook.price}"></td>
+                                <td class="buy-book-discount-rate" th:text="${buyBook.discountRate}"></td>
                                 <td class="buy-book-count" th:text="${buyBookCountList.get(iterStat.index)}"></td>
                             </tr>
                             </tbody>
@@ -38,7 +39,7 @@
                             <tr>
                                 <td>북허브 쿠폰</td>
                                 <td></td>
-                                <td><input id="total-coupon-discount-amount-tmp" style="width: 80px"/>원</td>
+                                <td><input id="total-coupon-discount-amount-tmp" style="width: 80px" readonly />원</td>
                                 <td><button type="button" class="btn btn-primary" onclick="showCouponUseModal()">사용하기</button></td>
                             </tr>
                             <tr>
@@ -135,6 +136,22 @@
     const $tbody = $("#tbody-modal");
     const modalCoupon = new bootstrap.Modal("#modal-coupon");
 
+    $("#total-point-use-amount-tmp").on('keyup', function(event){
+        let inputValue = $(this).val();
+
+        let numericValue = inputValue.replace(/[^\d]/g, '');
+        $(this).val(numericValue);
+
+        numericValue = parseInt(numericValue);
+        let totalPointAmount = parseInt($("#total-point-amount").text());
+
+        if (!isNaN(numericValue) && numericValue <= totalPointAmount) {
+
+        } else {
+            $(this).val('');
+        }
+    });
+
     function updatePrices(){
         let totalPrice = 0;
         let totalBookDiscountPrice = 0;
@@ -142,8 +159,9 @@
         $("tbody tr td[class=buy-book-price]").each(function(){
             let price = parseInt($(this).text());
             let count = parseInt($(this).closest('tr').find('.buy-book-count').text());
+            let discountRate = parseFloat($(this).closest('tr').find('.buy-book-discount-rate').text());
             totalPrice += price * count;
-            totalBookDiscountPrice += (price * count *  0.1);
+            totalBookDiscountPrice += (price * count * discountRate);
         });
         $("#total-price").val(totalPrice);
         $("#total-book-discount-price").val(totalBookDiscountPrice);
@@ -183,29 +201,51 @@
             let couponProduced = couponList[index];
 
             rows += `
-                   <tr>
-                        <td><input type="checkbox" name="selectedCouponList" value="${couponProduced.couponProducedNo}" checked/></td>
+                   <tr id="tr-coupon">
+                        <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
                         <td>${couponProduced.coupon.name}</td>
-                        <td>${couponProduced.coupon.price}원</td>
-                        <td><input name="coupon-payment-amount"
+                        <td><span class="couponDiscountAmount">${couponProduced.coupon.price}</span>원</td>
+                        <td><input name="couponDiscountAmountList"
                         value="${couponProduced.coupon.price}" style="width: 70px;"/>원</td>
                    </tr>
             `;
         }
         $tbody.html(rows);
 
-        $(document).on('change', 'input[name="selectedCouponList"]', function() {
+        // 쿠폰 각각 체크박스 체크여부에 따라 input 값 바뀌도록
+        $("#tbody-modal").on('change', 'input[name="couponProducedNoList"]', function() {
             if (!$(this).prop('checked')) {
-                $(this).closest('tr').find('input[name="coupon-payment-amount"]').val('0');
+                $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val('0');
+            }
+            else if($(this).prop('checked')) {
+                let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
+                $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val(couponDiscountAmount);
             }
         });
+
+        // 쿠폰 각각 유효성 검사
+        $("#tbody-modal").on('keyup', 'input[name="couponDiscountAmountList"]', function(){
+            let inputValue = $(this).val();
+            let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
+
+            let numericValue = inputValue.replace(/[^\d]/g, '');
+            $(this).val(numericValue);
+
+            numericValue = parseInt(numericValue);
+
+            if (!isNaN(numericValue) && numericValue <= couponDiscountAmount) {
+
+            } else {
+                $(this).val('');
+            }
+        })
 
         modalCoupon.show();
     }
 
     function useSelectedCoupon(){
         let totalCouponDiscountAmount = 0;
-        $("#tbody-modal tr:has(:checkbox:checked) input[name^=coupon-payment-amount]").each(function(){
+        $("#tbody-modal tr:has(:checkbox:checked) input[name^=couponDiscountAmountList]").each(function(){
             totalCouponDiscountAmount += parseInt($(this).val());
         });
         $("#total-coupon-discount-amount-tmp").val(totalCouponDiscountAmount);

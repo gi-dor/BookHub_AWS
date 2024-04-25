@@ -52,10 +52,10 @@
     <insert id="createBuy" parameterType="com.example.bookhub.product.vo.Buy" >
         insert into BUY
         (total_price, total_book_discount_price, total_coupon_discount_amount, total_point_use_amount, final_price, point_accumulation_amount,
-         common_entrance_approach, common_entrance_password, buy_pay_method_no, buy_status_no, buy_delivery_request_no, user_no, delivery_no)
+         common_entrance_approach, common_entrance_password, buy_pay_method_no, buy_status_no, buy_delivery_request_no, user_no, delivery_no, order_id)
         values
         (#{totalPrice}, #{totalBookDiscountPrice}, #{totalCouponDiscountAmount}, #{totalPointUseAmount}, #{finalPrice}, 1000,
-         "...", "1234", 1, 1, 1, #{user.no}, 1)
+         "...", "1234", 1, 1, 1, #{user.no}, 1, #{orderId})
 
          <selectKey keyProperty="buyNo" resultType="long" order="AFTER">
              select last_insert_id()
@@ -69,4 +69,22 @@
         (#{buyNo}, #{bookNo}, #{count})
     </insert>
 
+    <insert id="createCouponUsed" parameterType="com.example.bookhub.product.vo.CouponUsed">
+        insert into COUPON_USED
+        (discount_amount, coupon_produced_no, buy_no)
+        values
+        (#{discountAmount}, #{couponProducedNo}, #{buyNo})
+    </insert>
+
+    <update id="updateCouponProducedUsed" parameterType="long" >
+        update COUPON_PRODUCED
+        set used='Y'
+        where coupon_produced_no = #{value}
+    </update>
+
+    <update id="updatePointUsed" parameterType="map">
+        update USER
+        set user_point = user_point - #{totalPointUseAmount}
+        where user_no = #{userNo}
+    </update>
 </mapper>

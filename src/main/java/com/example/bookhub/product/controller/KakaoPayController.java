@@ -37,7 +37,7 @@ public class KakaoPayController {
                                   @RequestParam("pg_token")String pgToken, Model model) {
 
         KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
-        buyService.createBuy(buyForm, principal.getName());
+        buyService.createBuy(buyForm, kakaoApprove.getTid(), principal.getName());
         model.addAttribute("finalPrice", buyForm.getFinalPrice());
         return "product/pay/success";
     }
