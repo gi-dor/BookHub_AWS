@@ -115,7 +115,7 @@
                     <form action="">
                         <input type="hidden" name="page"/>
                         <div class="my-3 d-flex justify-content-between">
-                            <div class="text-left">전체: <b>n</b> 개 조회</div>
+                            <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
                             <div class="d-flex">
                                 <!-- 조회 개수 설정 -->
                                 <select class="form-control-sm me-2" onchange="changeRows()" name="rows">
@@ -188,23 +188,23 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="books : ${books}">
-                                <!--
-                                	** 게시글 순번 **
+                            <!--
+                                ** 게시글 순번 **
 
-                                    1. 마지막 숫자부터 시작
-                                        전체 게시글 개수 - (현재 페이지번호 * 페이지당 게시글 개수) + index
-                                        ${paging.totalElements - (paging.number*paging.size) - loop.index}
+                                1. 마지막 숫자부터 시작
+                                    전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
+                                    ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
 
-                                    2. 1번부터 시작
-                                        (현재 페이지번호 * 페이지당 게시글 개수) + count
-                                        ${(paging.number*paging.size) + loop.count}
-                                -->
+                                2. 1번부터 시작
+                                    ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
+                                    ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
+                            -->
+                            <tr th:each="books, loop : ${books}">
                                 <td><input type="checkbox"></td>
-                                <td th:each="paging, loop : ${paging}"
-                                    th:text="${(paging.currentPage*paging.rows) + loop.count}">1
+                                <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
+                                    1
                                 </td>
-                                <td>이미지</td>
+                                <td><img th:src="${books.image}"/></td>
                                 <td>
                                     <a th:href="@{/books/detail(id=${books.no})}" th:text="${books.bookName}">
                                         나는 읽고 쓰고 버린다
@@ -212,10 +212,10 @@
                                 </td>
                                 <td th:text="${books.authorName}">손웅정</td>
                                 <td th:text="${books.price}">17,000</td>
-                                <td th:text="${books.discountRate}">15,300</td>
+                                <td th:text="${books.price * (1 - books.discountRate)}">15,300</td>
                                 <td th:text="${books.stock}">1,000</td>
                                 <td th:text="${books.discontinuingYn}">판매중</td>
-                                <!--<td th:text="${#temporals.format(books.publishedDate, 'yyyy-MM-dd')}">2019-02-15</td>-->
+                                <td th:text="${#dates.format(books.publishedDate, 'yyyy-MM-dd')}">2019-02-15</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
@@ -226,52 +226,33 @@
 
                         <!-- 페이징 처리-->
                         <!--
-                                     th:if="${조건식}"
-                                         조건식이 true로 판정되면 해당 HTML 컨텐츠가 화면에 출력된다.
+                               th:classappend="${조건식} ? 값1 : 값2"
+                               th:classappend="${조건식} ? 값1"
+                                   조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
+                                   조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
+                                   * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                        -->
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                                <a th:href="@{/admin/product/list(page=${paging.currentPage - 1})}"
+                                   class="page-link">이전</a>
+                            </li>
 
-                                     ${paging}은 Page<T> 객체를 조회한다.
-                                         ${paging.number} 		: 현재 페이지 번호가 반환된다.
-                                         ${paging.size} 		: 한 페이지당 출력할 데이터 개수가 반환된다.
-                                         ${paging.totalPages} 	: 총 페이지 개수가 반환된다.
-                                         ${paging.empty}		: Page<T> 객체에 content(조회결과)가 없으면 true를 반환한다.
-                                         ${paging.first}		: 첫번째 페이지인 경우 true를 반환한다.
-                                         ${paging.last}			: 마지막 페이지인 경우 true를 반환한다.
-                                         ${paging.hasPrevious} 	: 현재 페이지의 이전 페이지가 존재하면 true를 반환한다.
-                                         ${paging.hasNext} 		: 현재 페이지의 다음 페이지가 존재하면 true를 반환한다.
+                            <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
+                                th:if="${num >= 1 and num <= paging.totalPages}"
+                                class="page-item"
+                                th:classappend="${num == paging.currentPage} ? 'active'">
+                                <a th:href="@{/admin/product/list(page=${num})}" th:text="${num}"
+                                   class="page-link">1</a>
+                            </li>
 
-						-->
-                        <div th:if="${!paging.isEmpty()}">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                                    <a th:href="@{/admin/product/list(page=${paging.currentPage - 1})}"
-                                       class="page-link">이전</a>
-                                </li>
-
-                                <!--
-                                    th:classappend="${조건식} ? 값1 : 값2"
-                                    th:classappend="${조건식} ? 값1"
-                                        조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
-                                        조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
-                                        * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
-                                 -->
-                                <li th:each="num : ${#numbers.sequence(0, paging.totalPages - 1)}"
-                                    th:if="${num>paging.currentPage - 2 and num <= paging.currentPage + 2}"
-                                    class="page-item"
-                                    th:classappend="${num == paging.currentPage} ? 'active'">
-                                    <a th:href="@{/admin/product/list(page=${num})}" th:text="${num + 1}"
-                                       class="page-link">1</a>
-                                </li>
-
-                                <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                                    <a th:href="@{/admin/product/list(page=${paging.currentPage + 1})}"
-                                       class="page-link">다음</a>
-                                </li>
-                            </ul>
-                        </div>
-
+                            <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                                <a th:href="@{/admin/product/list(page=${paging.currentPage + 1})}"
+                                   class="page-link">다음</a>
+                            </li>
+                        </ul>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>

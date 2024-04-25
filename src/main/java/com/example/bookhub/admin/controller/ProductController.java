@@ -1,8 +1,8 @@
 package com.example.bookhub.admin.controller;
 
+import com.example.bookhub.admin.dto.BookList;
 import com.example.bookhub.admin.dto.Pagination;
 import com.example.bookhub.admin.service.ProductService;
-import com.example.bookhub.product.vo.Book;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ public class ProductController {
                        Model model) {
 
         Pagination paging = productService.getPagination(opt, keyword, page, rows);
-        List<Book> books = productService.getBooks(opt, keyword, paging.getBegin(), rows, sort);
+        List<BookList> books = productService.getBooks(opt, keyword, paging.getBegin(), rows, sort);
 
         model.addAttribute("paging", paging);
         model.addAttribute("books", books);

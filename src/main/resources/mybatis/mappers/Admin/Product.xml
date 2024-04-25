@@ -29,7 +29,7 @@
     <select id="getBooks" resultType="com.example.bookhub.admin.dto.BookList">
     		SELECT
                     BOOK_NO                         AS no,
-    		        BOOK_IMAGE_THUMBNAIL			AS image,
+    		        BOOK_IMAGE_COVER			AS image,
     				BOOK_NAME           			AS bookName,
     				AUTHOR_NAME			            AS authorName,
                     BOOK_LIST_PRICE			        AS price,
@@ -40,7 +40,7 @@
 
     		FROM	(SELECT
                             B.BOOK_NO,
-                            BI.BOOK_IMAGE_THUMBNAIL,
+                            BI.BOOK_IMAGE_COVER,
            			        B.BOOK_NAME,
            				    A.AUTHOR_NAME,
                             B.BOOK_LIST_PRICE,
@@ -99,7 +99,7 @@
                             </choose>
                         </if>
                     </where>
-    				) AS test
+    				) AS subQuery
 
             LIMIT #{limit} OFFSET #{offset}
     	</select>
