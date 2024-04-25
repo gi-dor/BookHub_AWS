@@ -149,6 +149,7 @@ public class UserMyPageController {
         return  "redirect:/mypage/userInfo";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/deleteForm")
     public String deleteForm(Model model , Principal principal ) {
 
@@ -160,6 +161,7 @@ public class UserMyPageController {
         return "user/mypage/deleteUserForm";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteUser")
     public String deleteUser(Principal principal , String password) {
 
@@ -196,11 +198,13 @@ public class UserMyPageController {
                                  @Valid ChangePasswordForm form ,
                                  BindingResult errors) {
 
+        // 입력 폼에 유효성 검사 에러가 있을 경우, "fail" 문자열을 반환
         if (errors.hasErrors()) {
            return "fail";
         }
 
         try {
+            // 사용자의 아이디를 principal 객체로 획득
             String id = principal.getName();
             myPageService.updatePassword(id, form);
             return "success";
