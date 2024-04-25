@@ -2,12 +2,16 @@ package com.example.bookhub.main.service;
 
 import com.example.bookhub.main.mapper.AladinMapper;
 import com.example.bookhub.main.vo.Aladin;
-import com.example.bookhub.main.vo.Book;
+import com.example.bookhub.product.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -15,92 +19,144 @@ public class AladinService {
     private final RestTemplate restTemplate;
     private final AladinMapper aladinMapper;
 
+
     // 알라딘 api는 한번에 최대 200개의 데이터만 가져올 수 있다.
+    @Transactional
     public void fetchItemsFromAladin() {
+
         String baseUrl = "https://www.aladin.co.kr/ttb/api/ItemList.aspx";
         String apiKey = "ttbdlwldmsgo1703001";
         String queryType = "Bestseller";
-        int maxResults = 200;
+        String categoryId = "2551";
+        int maxResults = 50;
+        int start = 4;
         String searchTarget = "Book";
         String output = "js";
         String version = "20131101";
 
-        for (int i = 0; i < 5; i++) {
-            int start = i * maxResults;
-            String apiUrl = baseUrl + "?ttbkey=" + apiKey + "&QueryType=" + queryType + "&MaxResults=" + maxResults + "&start=" + start + "&SearchTarget=" + searchTarget + "&output=" + output + "&Version=" + version;
 
-            ResponseEntity<Aladin> responseEntity = restTemplate.getForEntity(apiUrl, Aladin.class);
-            Aladin aladin = responseEntity.getBody();
-            //List<Aladin.Item> items = aladin.getItem();
-            //saveItems(items);
-        }
-
-
-    }
-/*
-    private void saveItems(List<Aladin.Item> items) {
-        for (Aladin.Item item : items) {
-            Book book = mapToBook(item);
-            aladinMapper.insertBook(book);
-        }
-    }
-
-    private Book mapToBook(Aladin.Item item) {
-        Book book = new Book();
-        book.setTitle(item.getTitle());
-        book.setPubDate(item.getPubDate());
-        book.setDescription(item.getDescription());
-        book.setPriceStandard(item.getPriceStandard());
-        book.setBestRank(item.getBestRank());
-        return book;
-    }
-*/
-    /*api에서 검색조회한것 불러오는 코드
-    private final RestTemplate restTemplate;
-
-    public List<Book> searchBooks(String query) {
-        String baseUrl = "https://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
-        String apiKey = "ttbdlwldmsgo1703001";
-        String queryType = "Title"; // 제목 검색으로 가정
-        int maxResults = 200;
-        int start = 1; // 시작 인덱스
-        String searchTarget = "Book";
-        String output = "js";
-        String version = "20131101";
-
-        // API 호출
-        String apiUrl = baseUrl + "?ttbkey=" + apiKey + "&Query=" + query + "&QueryType=" + queryType +
-                        "&MaxResults=" + maxResults + "&start=" + start + "&SearchTarget=" + searchTarget +
-                        "&output=" + output + "&Version=" + version;
+        String apiUrl = baseUrl + "?ttbkey=" + apiKey + "&QueryType=" + queryType + "&MaxResults=" + maxResults + "&start=" + start + "&CategoryId=" + categoryId + "&SearchTarget=" + searchTarget + "&output=" + output + "&Version=" + version;
 
         ResponseEntity<Aladin> responseEntity = restTemplate.getForEntity(apiUrl, Aladin.class);
         Aladin aladin = responseEntity.getBody();
+        List<Aladin.Item> items = aladin.getItem();
 
-        System.out.println("API Response: " + aladin);
 
-        if (aladin != null && aladin.getItem() != null) {
-            // Aladin.Item 객체를 Book 객체로 변환하여 리스트에 저장
-            List<Book> books = new ArrayList<>();
-            for (Aladin.Item item : aladin.getItem()) {
-                Book book = mapToBook(item);
-                books.add(book);
+        savePublisher(items);
+        saveAuthor(items);
+        saveBook(items);
+
+    }
+
+    private void saveBook(List<Aladin.Item> items) {
+        Category cat = new Category();
+        cat.setCategoryNo(21);
+
+        for (Aladin.Item item : items) {
+            Book book = new Book();
+            book.setName(item.getTitle());
+            book.setIsbn(item.getIsbn13());
+            book.setDescription(item.getDescription());
+            book.setDiscountRate(0.15f);
+            book.setDiscontinuingYn('Y');
+            book.setPublishedDate(getDate(item.getPubDate()));
+            book.setPrice(item.getPriceStandard());
+            book.setCategory(cat);
+            Publisher p = aladinMapper.getPublisherByName(item.getPublisher());
+            book.setPublisher(p);
+
+            aladinMapper.insertBook(book);
+
+
+            String text = item.getAuthor().substring(0, item.getAuthor().length());
+            List<Map<String, Object>> list = getBookAuthor(book.getBookNo(), text);
+            System.out.println(list);
+            for (Map<String, Object> map : list) {
+                aladinMapper.insertBookAuthor(map);
             }
-            return books;
-        } else {
+
+            Map<String, Object> img = new HashMap<>();
+            img.put("bookNo", book.getBookNo());
+            img.put("cover", item.getCover());
+
+            aladinMapper.insertBookImage(img);
+
+        }
+    }
+
+    private Date getDate(String text) {
+        try {
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+            return f.parse(text);
+        } catch (ParseException e) {
             return null;
         }
     }
 
-    private Book mapToBook(Aladin.Item item) {
-        Book book = new Book();
-        book.setCover(item.getCover());
-        book.setTitle(item.getTitle());
-        book.setAuthor(item.getAuthor());
-        book.setPubDate(item.getPubDate());
-        book.setDescription(item.getDescription());
-        book.setPriceStandard(item.getPriceStandard());
-        return book;
+    private void savePublisher(List<Aladin.Item> items) {
+        for (Aladin.Item item : items) {
+            Publisher publisher = aladinMapper.getPublisherByName(item.getPublisher());
+            if (publisher == null) {
+
+                publisher = new Publisher();
+                publisher.setName(item.getPublisher());
+                aladinMapper.insertPublisher(publisher);
+            }
+        }
     }
 
-*/
+    public List<Map<String, Object>> getBookAuthor(long bookNo, String text) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String[] values = text.split(",");
+
+        for (String value : values) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("bookNo", bookNo);
+            String name;
+            if (value.endsWith(")")) {
+                name = value.substring(0, value.indexOf("(")).trim();
+                String type = value.substring(value.indexOf("(") + 1, value.indexOf(")"));
+                map.put("type", type);
+            } else {
+                name = value.trim();
+            }
+            Author savedAuthor = aladinMapper.getAuthorByName(name);
+            map.put("no", savedAuthor.getAuthorNo());
+
+            list.add(map);
+        }
+
+        return list;
+    }
+
+    private void saveAuthor(List<Aladin.Item> items) {
+        for (Aladin.Item item : items) {
+            String text = item.getAuthor().substring(0, item.getAuthor().length());
+            String[] values = text.split(",");
+
+            for (String value : values) {
+                String name;
+                if (value.endsWith(")")) {
+                    name = value.substring(0, value.indexOf("(")).trim();
+                } else {
+                    name = value.trim();
+                }
+                System.out.println(name);
+
+                Author savedAuthor = aladinMapper.getAuthorByName(name);
+                if (savedAuthor == null) {
+                    Author author = new Author();
+                    author.setName(name.trim());
+                    aladinMapper.insertAuthor(author);
+                }
+            }
+
+
+        }
+
+    }
+
 }
+
+
+

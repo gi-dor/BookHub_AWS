@@ -13,7 +13,7 @@
         </tr>
         </thead>
         <!-- 기존의 게시글 목록 표시 -->
-        <tbody th:if="${searchResults == null or searchResults.isEmpty()}">
+        <tbody >
         <tr th:each="community : ${communities}">
             <td th:text="${community.no}"></td>
             <td><a th:href="@{/board/community/detail/{id}(id=${community.no})}" th:text="${community.title}" style="color: black; text-decoration: none;"></a></td>
@@ -21,67 +21,37 @@
             <td th:text="${#temporals.format(community.createDate,'yyyy.MM.dd')}"></td>
         </tr>
         </tbody>
-
-        <!-- 검색 결과 표시 -->
-        <tbody th:if="${searchResults != null and not #lists.isEmpty(searchResults)}">
-        <tr th:each="result : ${searchResults}">
-            <td th:text="${result.no}"></td>
-            <td><a th:href="@{/board/community/detail/{id}(id=${result.no})}" th:text="${result.title}" style="color: black; text-decoration: none;"></a></td>
-            <td th:text="${result.user.getName()}"></td>
-            <td th:text="${#temporals.format(result.createDate,'yyyy.MM.dd')}"></td>
-        </tr>
-        </tbody>
-
-        <!-- 검색 결과가 없는 경우 -->
-        <tbody th:if="${searchResults != null and #lists.isEmpty(searchResults)}">
-        <tr>
-            <td colspan="4" class="text-center">검색 결과가 없습니다.</td>
-        </tr>
-        </tbody>
-        <div class="text-end">
-            <a href="/board/community/register" class="btn btn-outline-secondary">게시글 등록</a>
-        </div>
     </table>
 
-    <div th:if="${totalPages > 1}">
+    <div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center pagination-sm">
                 <!-- 이전 페이지 링크 -->
                 <li class="page-item">
-                    <a class="page-link" th:href="@{/board/community/list(page=${currentPage - 1})}" th:if="${currentPage > 1}">이전</a>
-                    <span class="page-link disabled" th:unless="${currentPage > 1}">이전</span>
+                    <a class="page-link" th:attr="data-page=${page.currentPage - 1}" onclick="page(event)" th:href="@{/board/community/list(page=${page.currentPage - 1})}" th:if="${page.currentPage > 1}">이전</a>
+                    <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
                 </li>
                 <!-- 페이지 번호를 표시 -->
-                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage} ? 'active' : ''">
-                    <a class="page-link" th:href="@{/board/community/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
+                    <a class="page-link" th:attr="data-page=${pageNumber}" onclick="page(event)" th:href="@{/board/community/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
                 </li>
                 <!-- 다음 페이지 링크 -->
                 <li class="page-item">
-                    <a class="page-link" th:href="@{/board/community/list(page=${currentPage + 1})}" th:if="${currentPage < totalPages}">다음</a>
-                    <span class="page-link disabled" th:unless="${currentPage < totalPages}">다음</span>
+                    <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)" th:href="@{/board/community/list(page=${page.currentPage + 1})}" th:if="${page.currentPage < page.totalPages}">다음</a>
+                    <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
                 </li>
             </ul>
         </nav>
     </div>
 
+
+
     <div class="col-md-6 "> <!-- 열의 순서를 변경하여 폼을 왼쪽으로 이동 -->
-        <form th:action="@{/board/community/search}" method="post" class="d-flex align-items-center text-end">
-            <div class="dropdown me-2">
-                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    제목
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#" onclick="setSearchOption('title', '제목')">제목</a>
-                    <a class="dropdown-item" href="#" onclick="setSearchOption('content', '내용')">내용</a>
-                    <a class="dropdown-item" href="#" onclick="setSearchOption('titleContent', '제목+내용')">제목+내용</a>
-                </div>
-            </div>
+        <form id="searchForm" th:action="@{/board/community/list}" method="get" class="d-flex align-items-center text-end">
+            <input type="hidden" name="page">
             <div class="me-2">
-                <input type="text" name="keyword" placeholder="검색어를 입력하세요">
+                <input id="keywordInput" type="text" name="keyword" th:value="${param.keyword}" placeholder="검색어를 입력하세요">
             </div>
-            <!-- 검색 기준 hidden input 필드 -->
-            <input type="hidden" id="searchOption" name="searchOption" value="title">
             <div>
                 <button type="submit">검색</button>
             </div>
@@ -97,5 +67,15 @@
         document.getElementById('dropdownMenuButton').innerText = text;
 
     }
+
+
+    function page(event) {
+        event.preventDefault();
+        let page = event.target.getAttribute("data-page");
+        document.querySelector("input[name=page]").value = page;
+
+        document.querySelector("#searchForm").submit();
+    }
+
 </script>
 </div>

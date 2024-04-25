@@ -1,7 +1,7 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
 <div layout:fragment="content" class="container my-3">
-    <form method="post" action="/product/buy/order">
+    <form id="form-cart" method="post" action="/product/buy/order">
     <div class="row mb-3">
             <div class="col-9">
                 <h3>장바구니</h3>
@@ -24,8 +24,8 @@
                         </thead>
                         <tbody id="table-cart-tbody">
                              <tr th:each="cartBook: ${cartBooks}">
-                                 <td><input type="checkbox" name="cart-no" th:value="${cartBook.cartNo}"></td>
-                                 <input type="hidden" name="buyBookNoList" th:value="${cartBook.bookNo}" />
+                                 <td><input type="checkbox" name="buyBookNoList" th:value="${cartBook.bookNo}"></td>
+                                 <input type="hidden" name="cart-no" th:value="${cartBook.cartNo}" />
                                  <td></td>
                                  <td>
                                      <div th:text="${cartBook.name}">책 제목</div>
@@ -92,16 +92,16 @@
     // 체크박스
     $("#checkbox-all").change(function() {
         let currentCheckedStatus = $(this).prop('checked');
-        $(":checkbox[name=cart-no]").prop("checked", currentCheckedStatus);
+        $(":checkbox[name=buyBookNoList]").prop("checked", currentCheckedStatus);
 
         updatePrices();
     });
 
     $("#checkbox-all").trigger('click');
 
-    $(":checkbox[name=cart-no]").change(function(){
-        let len = $(":checkbox[name=cart-no]").length;
-        let checkedLen = $(":checked[name=cart-no]:checked").length;
+    $(":checkbox[name=buyBookNoList]").change(function(){
+        let len = $(":checkbox[name=buyBookNoList]").length;
+        let checkedLen = $(":checked[name=buyBookNoList]:checked").length;
         if(len == checkedLen){
             $("#checkbox-all").prop('checked', true);
         } else {
@@ -109,6 +109,14 @@
         }
         updatePrices();
     });
+
+    // 체크안된 도서 수량 disabled
+    $("#form-cart").submit(function() {
+        $("#form-cart").find("#table-cart-tbody tr").not(":has(:checkbox:checked)").each(function(index, tr) {
+            $(tr).find("input").prop("disabled", true);
+        })
+        return true;
+    })
 
     // 수량 변경
     $("#table-cart-tbody").on('click', '.count-minus', function(event){

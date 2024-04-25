@@ -40,7 +40,7 @@ public class CartController {
     @GetMapping("/delete")
     public String delete(@RequestParam("cartNo") long cartNo){
         cartService.deleteBookByCartNo(cartNo);
-        return "redirect:/product/cart/list";
+        return "redirect:/product/cart";
     }
 
     @GetMapping("/update/count")

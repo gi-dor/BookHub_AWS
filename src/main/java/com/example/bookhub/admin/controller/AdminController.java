@@ -1,9 +1,12 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.AdminRegisterForm;
+import com.example.bookhub.admin.dto.ReviewDto;
+import com.example.bookhub.admin.dto.ratioDto;
 import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
+import com.example.bookhub.admin.service.DashBoardService;
 import com.example.bookhub.admin.vo.Admin;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -23,9 +28,31 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
 
     private final AdminService adminService;
+    private final DashBoardService dashBoardService;
+
+    @GetMapping("/home/about")
+    public String cover(){
+        return "admin/home";
+    }
+
 
     @GetMapping("/home")
-    public String home(){
+    public String home(Model model){
+        int noAnswerCnt = dashBoardService.noAnswerCnt();
+        int answerCnt = dashBoardService.answerCnt();
+        List<ReviewDto> dto = dashBoardService.getReviews();
+        double avgRate = dashBoardService.averageRate();
+        int noAnswerRatio = dashBoardService.noAnswerRatio();
+        int answerRatio = dashBoardService.answerRatio();
+        List<ratioDto> ratio = dashBoardService.getRatios();
+
+        model.addAttribute("noAnswer", noAnswerCnt);
+        model.addAttribute("answer", answerCnt);
+        model.addAttribute("reviews", dto);
+        model.addAttribute("avgRate", avgRate);
+        model.addAttribute("noAnswerRatio", noAnswerRatio);
+        model.addAttribute("answerRatio", answerRatio);
+        model.addAttribute("ratio", ratio);
         return "admin/dash/totaluser";
     }
 
@@ -86,7 +113,7 @@ public class AdminController {
     public String logout(HttpSession session){
         // 세션을 파기하는 역할을 수행
         session.invalidate();
-        return "admin/login";
+        return "main";
     }
 
 

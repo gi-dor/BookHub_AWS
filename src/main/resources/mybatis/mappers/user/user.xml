@@ -19,13 +19,26 @@
 
 
 
-    <insert id="insertUser" parameterType="com.example.bookhub.user.dto.UserSignupForm">
-    insert into USER
-    ( user_id , user_password , user_name , user_email ,
-     user_tel ,user_zip_code , user_address, user_address_detail )
-    values
-    ( #{id} , #{password} , #{name} , #{email} , #{tel} ,
-     #{zipCode}, #{address}, #{addressDetail} )
+    <insert id="insertUser" parameterType="com.example.bookhub.user.vo.User">
+        insert into USER (
+        user_id ,
+        user_password ,
+        user_name ,
+        user_email ,
+        user_tel ,
+        user_zip_code ,
+        user_address,
+        user_address_detail
+        ) values (
+                  #{id} ,
+                  #{password} ,
+                  #{name} ,
+                  #{email},
+                  #{tel} ,
+                  #{zipCode},
+                  #{address},
+                  #{addressDetail}
+        )
     </insert>
 
 

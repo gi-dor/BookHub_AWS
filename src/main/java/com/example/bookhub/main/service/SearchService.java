@@ -1,15 +1,15 @@
 package com.example.bookhub.main.service;
 
 
+import com.example.bookhub.main.dto.BookListDto;
 import com.example.bookhub.main.dto.SearchCriteria;
-import com.example.bookhub.main.vo.Book;
-import java.util.List;
 
 
 public interface SearchService {
-    List<Book> searchBooks(SearchCriteria searchCriteria);
+    BookListDto searchBooks(SearchCriteria searchCriteria);
 
-    //int booksGetTotal();
+
+
 }
 
 

@@ -22,8 +22,6 @@ public class Book {
     private char discontinuingYn;
     private float discountRate;
     private int salesVolume;
-    private String index;
-    private int totalReplyCount;
-    private float averageRating;
-    private int stock;
+    private BookAuthor bookAuthor;
+
 }

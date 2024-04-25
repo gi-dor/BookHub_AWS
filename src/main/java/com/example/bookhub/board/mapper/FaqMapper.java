@@ -11,19 +11,19 @@ import java.util.List;
 public interface FaqMapper {
 
     /**
-     * 페이징 처리된 FAQ 목록 조회
+     * 페이징 처리된 faq 리스트 조회
+     * @param keyword
      * @param offset
-     * @param size
      * @return
      */
-    List<Faq> findAllFaq(@Param("offset") int offset, @Param("size") int size);
+    List<Faq> findAllFaq(@Param("cat") int cat, @Param("keyword") String keyword, @Param("offset") int offset);
 
     /**
-     * 전체 FAQ 개수 조회
+     * faq list의 전체 개수 조회
+     * @param keyword
      * @return
      */
-    int getTotalFaqCount();
-
+    int getTotalFaqCount(@Param("cat") int cat, @Param("keyword") String keyword);
 
     /**
      * FAQ카테고리의 번호로 FAQ카테고리를 조회
@@ -32,5 +32,17 @@ public interface FaqMapper {
      */
     FaqCategory getFaqCategoryByNo(Long no);
 
+    /**
+     * FAQ를 번호로 상세조회
+     * @param no
+     * @return
+     */
     Faq getFaqByNo(Long no);
+
+    /**
+     * FAQ Category 전체 조회
+     * @return
+     */
+    List<FaqCategory> findAllCategories();
+
 }

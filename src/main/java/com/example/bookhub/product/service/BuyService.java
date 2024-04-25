@@ -30,7 +30,7 @@ public class BuyService {
     }
 
     @Transactional
-    public void createBuy(BuyForm buyForm, String userId) {
+    public void createBuy(BuyForm buyForm, String tid, String userId) {
         // BUY 테이블
         Buy buy = Buy.builder()
                 .totalPrice(buyForm.getTotalPrice())
@@ -39,6 +39,8 @@ public class BuyService {
                 .totalPointUseAmount(buyForm.getTotalPointUseAmount())
                 .finalPrice(buyForm.getFinalPrice())
                 .build();
+
+        buy.setOrderId(tid);
 
         User user = userMapper.selectUserById(userId);
         buy.setUser(user);
@@ -84,4 +86,5 @@ public class BuyService {
         map.put("totalPointUseAmount", totalPointUseAmount);
         buyMapper.updatePointUsed(map);
     }
+
 }

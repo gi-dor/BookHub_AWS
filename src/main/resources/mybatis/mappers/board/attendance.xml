@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.board.mapper.AttendanceMapper">
+
+<!-- 유저의 출석정보를 조회하는 쿼리 -->
+<select id="userAttendanceCheckByNo" resultType="int" >
+    SELECT
+        ATTENDANCE_CHECK_NO         AS no,
+        ATTENDANCE_CHECK_USER_NO    AS "user.no",
+        ATTENDANCE_CHECK_DATE       AS checkDate,
+        ATTENDANCE_DATE             AS count,
+        ATTENDANCE_CHECK_YN         AS checkYn
+    FROM ATTENDANCE_CHECKS
+    WHERE ATTENDANCE_CHECK_USER_NO = #{no}
+</select>
+
+<!-- 유저의 번호로 출석체크 이벤트 생성 -->
+<insert id="insertAttendance" parameterType="com.example.bookhub.board.vo.Attendance">
+    INSERT INTO ATTENDANCE_CHECKS (ATTENDANCE_CHECK_USER_NO)
+    VALUES (#{no})
+</insert>
+
+<!-- 출석체크 일 수 증가 -->
+<update id="updateAttendance">
+    UPDATE ATTENDANCE_CHECKS
+    SET ATTENDANCE_DATE = ATTENDANCE_DATE + 1,
+        ATTENDANCE_CHECK_DATE = CURRENT_TIMESTAMP
+    WHERE ATTENDANCE_CHECK_USER_NO = #{no}
+</update>
+
+<!-- 출석일 수 초기화 -->
+<update id="resetAttendanceCount">
+    UPDATE ATTENDANCE_CHECKS
+    SET ATTENDANCE_DATE = 0
+    WHERE ATTENDANCE_DATE = 28
+    AND ATTENDANCE_CHECK_USER_NO = #{no}
+</update>
+
+
+
+</mapper>
