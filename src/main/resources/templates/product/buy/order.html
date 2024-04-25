@@ -15,6 +15,7 @@
                                 <td><img src=""></td>
                                 <td th:text="${buyBook.name}"></td>
                                 <td class="buy-book-price" th:text="${buyBook.price}"></td>
+                                <td class="buy-book-discount-rate" th:text="${buyBook.discountRate}"></td>
                                 <td class="buy-book-count" th:text="${buyBookCountList.get(iterStat.index)}"></td>
                             </tr>
                             </tbody>
@@ -158,8 +159,9 @@
         $("tbody tr td[class=buy-book-price]").each(function(){
             let price = parseInt($(this).text());
             let count = parseInt($(this).closest('tr').find('.buy-book-count').text());
+            let discountRate = parseFloat($(this).closest('tr').find('.buy-book-discount-rate').text());
             totalPrice += price * count;
-            totalBookDiscountPrice += (price * count *  0.1);
+            totalBookDiscountPrice += (price * count * discountRate);
         });
         $("#total-price").val(totalPrice);
         $("#total-book-discount-price").val(totalBookDiscountPrice);

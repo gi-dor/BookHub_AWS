@@ -1,7 +1,7 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
 <div layout:fragment="content" class="container my-3">
-    <form method="post" action="/product/buy/order">
+    <form id="form-cart" method="post" action="/product/buy/order">
     <div class="row mb-3">
             <div class="col-9">
                 <h3>장바구니</h3>
@@ -109,6 +109,14 @@
         }
         updatePrices();
     });
+
+    // 체크안된 도서 수량 disabled
+    $("#form-cart").submit(function() {
+        $("#form-cart").find("#table-cart-tbody tr").not(":has(:checkbox:checked)").each(function(index, tr) {
+            $(tr).find("input").prop("disabled", true);
+        })
+        return true;
+    })
 
     // 수량 변경
     $("#table-cart-tbody").on('click', '.count-minus', function(event){
