@@ -8,33 +8,38 @@
 
                 <!-- 필터 선택 영역-->
                 <div class="col-12 bg-light p-3 mb-3">
-                    <form action="">
+                    <form method="post" th:action="@{/admin/product/filter}" th:object="${productFilter}">
                         <table class="table">
                             <tbody>
                             <tr>
                                 <td class="bg-light">검색어</td>
                                 <td>
                                     <select name="opt" class="form-control-sm">
-                                        <option value="all">전체</option>
-                                        <option value="name">상품명</option>
-                                        <option value="author">저자</option>
-                                        <option value="publisher">출판사</option>
+                                        <option value="all" th:selected="${opt} == 'all'">전체</option>
+                                        <option value="name" th:selected="${opt} == 'name'">상품명</option>
+                                        <option value="author" th:selected="${opt} == 'author'">저자</option>
+                                        <option value="publisher" th:selected="${opt} == 'publisher'">출판사</option>
                                     </select>
-                                    <input type="text" name="keyword" placeholder="검색어를 입력하세요" class="form-control-sm">
+                                    <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
+                                           class="form-control-sm">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="bg-light">카테고리</td>
                                 <td>
-                                    <select name="category" class="form-control-sm">
+                                    <select name="topCategory" class="form-control-sm">
                                         <option disabled selected>대분류 선택</option>
-                                        <!-- 대분류 영역 -->
+                                        <option th:each="topLevelCategory : ${topLevelCategories}"
+                                                th:value="${topLevelCategory.no}"
+                                                th:text="${topLevelCategory.name}"
+                                                th:if="${topCategory eq topLevelCategory ? 'selected' : ''}">
+                                        </option>
                                     </select>
-                                    <select name="category" class="form-control-sm">
+                                    <select name="secondCategory" class="form-control-sm">
                                         <option disabled selected>중분류 선택</option>
                                         <!-- 중분류 영역 -->
                                     </select>
-                                    <select name="category" class="form-control-sm">
+                                    <select name="thirdCategory" class="form-control-sm">
                                         <option disabled selected>소분류 선택</option>
                                         <!-- 소분류 영역 -->
                                     </select>
@@ -46,12 +51,16 @@
                                 <td class="bg-light">기간 검색</td>
                                 <td>
                                     <div class="d-flex">
-                                        <select name="" class="form-control-sm me-2">
-                                            <option value="">등록일</option>
-                                            <option value="">수정일</option>
+                                        <select name="period" class="form-control-sm me-2">
+                                            <option value="createdDate" th:selected="${period} == 'createdDate'">등록일
+                                            </option>
+                                            <option value="updatedDate" th:selected="${period} == 'updatedDate'">수정일
+                                            </option>
+                                            <option value="updatedDate" th:selected="${period} == 'updatedDate'">출판일
+                                            </option>
                                         </select>
-                                        <input type="date" class="form-control-sm me-2"> -
-                                        <input type="date" class="form-control-sm ms-2 me-2">
+                                        <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
+                                        <input th:field="*{lessDate}" type="date" class="form-control-sm ms-2 me-2">
                                         <div class="input-group">
                                             <button class="btn btn-outline-secondary btn-sm" type="button">오늘
                                             </button>
@@ -73,31 +82,38 @@
                                 <td class="bg-light">판매 상태</td>
                                 <td>
                                     <input type="checkbox" class="form-check-input" checked> 전체
-                                    <input type="checkbox" class="form-check-input"> 정상
-                                    <input type="checkbox" class="form-check-input"> 절판
-                                    <input type="checkbox" class="form-check-input"> 판매 중지
+                                    <input type="checkbox" class="form-check-input" name="available"
+                                           th:value="*{available}"> 정상
+                                    <input type="checkbox" class="form-check-input" name="discontinued"
+                                           th:value="*{discontinued}"> 절판
+                                    <input type="checkbox" class="form-check-input" name="soldOut"
+                                           th:value="*{soldOut}"> 품절
                                 </td>
                             </tr>
                             <tr>
                                 <td class="bg-light">재고</td>
                                 <td>
-                                    <select name="" class="form-control-sm">
+                                    <select class="form-control-sm">
                                         <option disabled selected>전체</option>
                                         <option value="10">10개 이하</option>
                                         <option value="30">30개 이하</option>
                                         <option value="50">50개 이하</option>
                                         <option value="100">100개 이하</option>
                                     </select>
-                                    <input type="number" class="form-control-sm"> 개 이상 -
-                                    <input type="number" class="form-control-sm"> 개 이하
+                                    <input th:field="*{moreStock}" type="number" class="form-control-sm"> 개 이상 -
+                                    <input th:field="*{lessStock}" type="number" class="form-control-sm"> 개 이하
                                 </td>
                             </tr>
                             <tr>
                                 <td class="bg-light">브랜드(출판사)</td>
                                 <td>
-                                    <select name="" class="form-control-sm">
+                                    <select name="publisher" class="form-control-sm">
                                         <option disabled selected>전체</option>
-                                        <!-- 브랜드(출판사) 영역 -->
+                                        <option th:each="pub : ${publishers}"
+                                                th:value="${pub.no}"
+                                                th:text="${pub.name}"
+                                                th:if="${publisher eq  pub.no ? 'selected' : ''}">
+                                        </option>
                                     </select>
                                 </td>
                             </tr>
@@ -130,12 +146,12 @@
                                     <option value="productName">상품명 순</option>
                                     <option value="highPrice">정가 높은 순</option>
                                     <option value="lowPrice">정가 낮은 순</option>
-                                    <!--
                                     <option value="highSellingPrice">판매가 높은 순</option>
                                     <option value="lowSellingPrice">판매가 낮은 순</option>
-                                    -->
                                     <option value="highStock">재고 많은 순</option>
                                     <option value="lowStock">재고 적은 순</option>
+                                    <option value="recentlyCreated">최근 등록일 순</option>
+                                    <option value="recentlyUpdated">최근 수정일 순</option>
                                     <option value="recentlyPublished">최근 출판일 순</option>
                                 </select>
                             </div>
@@ -183,7 +199,7 @@
                                 <th>판매가</th>
                                 <th>재고</th>
                                 <th>판매상태</th>
-                                <th>출판일</th>
+                                <th>등록일/수정일</th>
                                 <th>관리</th>
                             </tr>
                             </thead>
@@ -211,11 +227,11 @@
                                     </a>
                                 </td>
                                 <td th:text="${books.authorName}">손웅정</td>
-                                <td th:text="${books.price}">17,000</td>
-                                <td th:text="${books.price * (1 - books.discountRate)}">15,300</td>
+                                <td th:text="${books.listPrice}">17,000</td>
+                                <td th:text="${books.sellingPrice}">15,300</td>
                                 <td th:text="${books.stock}">1,000</td>
-                                <td th:text="${books.discontinuingYn}">판매중</td>
-                                <td th:text="${#dates.format(books.publishedDate, 'yyyy-MM-dd')}">2019-02-15</td>
+                                <td th:text="${books.status}">정상</td>
+                                <td th:text="${#dates.format(books.createdDate, 'yyyy-MM-dd')}">2019-02-15</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
@@ -257,4 +273,45 @@
         </div>
     </div>
 </div>
+
+<script layout:fragment="listScript" type="text/javascript">
+    $(function () {
+        $("select[name='topCategory']").click(function () {
+            let $secondCategorySelector = $("select[name='secondCategory'] option");
+            const categoryNo = $(this).val();
+            getSubCategoryOptions(categoryNo, $secondCategorySelector);
+        })
+
+        $("select[name='secondCategory']").click(function () {
+            let $thirdCategorySelector = $("select[name='thirdCategory'] option");
+            const categoryNo = $(this).val();
+            getSubCategoryOptions(categoryNo, $thirdCategorySelector);
+        })
+
+        function getSubCategoryOptions(superCategoryNo, $selector) {
+            $.ajax({
+                url: "/admin/getSubCategories",
+                method: "GET",
+                data: {categoryNo: superCategoryNo},
+                success: function (subCategories) {
+                    $selector.not(':first').remove();
+                    $selector.first().prop("selected", true);
+
+                    subCategories.forEach(secondLevelCategory => {
+                        let option = $('<option>')
+                            .val(secondLevelCategory.no)
+                            .text(secondLevelCategory.name);
+
+                        $selector.parent().append(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        }
+    })
+
+</script>
+
 </html>

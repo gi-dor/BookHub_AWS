@@ -29,13 +29,15 @@
     <select id="getBooks" resultType="com.example.bookhub.admin.dto.BookList">
     		SELECT
                     BOOK_NO                         AS no,
-    		        BOOK_IMAGE_COVER			AS image,
+    		        BOOK_IMAGE_COVER			    AS image,
     				BOOK_NAME           			AS bookName,
     				AUTHOR_NAME			            AS authorName,
-                    BOOK_LIST_PRICE			        AS price,
-                    BOOK_DISCOUNT_RATE		        AS discountRate,
-    		        BOOK_STOCK                      AS stock,
-                    BOOK_DISCONTINUING_YN           AS discontinuingYn,
+                    BOOK_LIST_PRICE			        AS listPrice,
+                    BOOK_SELLING_PRICE			    AS sellingPrice,
+                    BOOK_STOCK                      AS stock,
+                    BOOK_STATUS                     AS status,
+                    BOOK_CREATED_DATE               AS createdDate,
+                    BOOK_UPDATED_DATE               AS updatedDate,
                     BOOK_PUBLISHED_DATE             AS publishedDate
 
     		FROM	(SELECT
@@ -44,10 +46,12 @@
            			        B.BOOK_NAME,
            				    A.AUTHOR_NAME,
                             B.BOOK_LIST_PRICE,
-                            B.BOOK_DISCOUNT_RATE,
+                            ROUND(B.BOOK_LIST_PRICE * (1 - B.BOOK_DISCOUNT_RATE)) AS BOOK_SELLING_PRICE,
                             B.BOOK_STOCK,
-                            B.BOOK_DISCONTINUING_YN,
-                            B.BOOK_PUBLISHED_DATE,
+    		                B.BOOK_STATUS,
+    		                B.BOOK_CREATED_DATE,
+    		                B.BOOK_UPDATED_DATE,
+    		                B.BOOK_PUBLISHED_DATE,
     						<choose>
     							<when test="sort == 'productName'">
     								row_number() OVER(ORDER BY BOOK_NAME ASC) AS row_num
@@ -58,21 +62,25 @@
     							<when test="sort == 'lowPrice'">
     								row_number() OVER(ORDER BY BOOK_LIST_PRICE ASC) AS row_num
     							</when>
-    							<!--
     		                    <when test="sort == 'highSellingPrice'">
-    								row_number() OVER(ORDER BY product_price DESC) AS row_num
+    								row_number() OVER(ORDER BY BOOK_SELLING_PRICE DESC) AS row_num
     							</when>
 								<when test="sort == 'lowSellingPrice'">
-    								row_number() OVER(ORDER BY product_price DESC) AS row_num
+    								row_number() OVER(ORDER BY BOOK_SELLING_PRICE ASC) AS row_num
     							</when>
-    		                    -->
 								<when test="sort == 'highStock'">
     								row_number() OVER(ORDER BY BOOK_STOCK DESC) AS row_num
     							</when>
 								<when test="sort == 'lowStock'">
     								row_number() OVER(ORDER BY BOOK_STOCK ASC) AS row_num
     							</when>
-								<when test="sort == 'recentlyPublished'">
+								<when test="sort == 'recentlyCreated'">
+    								row_number() OVER(ORDER BY BOOK_CREATED_DATE DESC) AS row_num
+    							</when>
+                                <when test="sort == 'recentlyUpdated'">
+    								row_number() OVER(ORDER BY BOOK_UPDATED_DATE DESC) AS row_num
+    							</when>
+                                <when test="sort == 'recentlyPublished'">
     								row_number() OVER(ORDER BY BOOK_PUBLISHED_DATE DESC) AS row_num
     							</when>
     						</choose>
@@ -103,4 +111,12 @@
 
             LIMIT #{limit} OFFSET #{offset}
     	</select>
+
+        <select id="getPublishers" resultType="com.example.bookhub.product.vo.Publisher">
+                SELECT
+                    PUBLISHER_NO AS no,
+                    PUBLISHER_NAME AS name
+                FROM
+                    BookHub.PUBLISHER
+        </select>
 </mapper>

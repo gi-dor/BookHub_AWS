@@ -13,9 +13,11 @@ public class BookList {
     private String image;
     private String bookName;
     private String authorName;
-    private int price;
-    private float discountRate;
+    private int listPrice;
+    private int sellingPrice;
     private int stock;
-    private char discontinuingYn;
+    private String status;
+    private Date createdDate;
+    private Date updatedDate;
     private Date publishedDate;
 }

@@ -1,6 +1,7 @@
 package com.example.bookhub.admin.mapper;
 
 import com.example.bookhub.admin.dto.BookList;
+import com.example.bookhub.product.vo.Publisher;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,4 +13,6 @@ public interface ProductMapper {
 
     List<BookList> getBooks(@Param("opt") String opt, @Param("keyword") String keyword, @Param("offset") int offset,
                             @Param("limit") int limit, @Param("sort") String sort);
+
+    List<Publisher> getPublishers();
 }
