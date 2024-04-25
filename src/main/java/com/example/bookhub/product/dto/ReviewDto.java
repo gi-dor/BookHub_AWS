@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class ReviewImageDto {
+public class ReviewDto {
 
     private long reviewNo;
     private String comment;
@@ -19,6 +19,7 @@ public class ReviewImageDto {
     private int accuseCount;
     private Date createdDate;
     private Date updatedDate;
+    private String recommended;
     private ReviewTag reviewTag;
     private int replyCount;
     private String buyer;

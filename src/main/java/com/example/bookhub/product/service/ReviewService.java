@@ -1,7 +1,7 @@
 package com.example.bookhub.product.service;
 
 import com.example.bookhub.product.dto.ReviewForm;
-import com.example.bookhub.product.dto.ReviewImageDto;
+import com.example.bookhub.product.dto.ReviewDto;
 import com.example.bookhub.product.mapper.ReviewMapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
@@ -63,8 +63,10 @@ public class ReviewService {
             }
     }
 
-    public List<ReviewImageDto> getReviewsByBookNo(long bookNo) {
-        return reviewMapper.getReviewsByBookNo(bookNo);
+    public List<ReviewDto> getReviewsByBookNo(long bookNo, String userId) {
+
+        User user = userMapper.selectUserById(userId);
+        return reviewMapper.getReviewsByBookNo(bookNo, user.getNo());
     }
 
     public String uploadImage(MultipartFile image) {

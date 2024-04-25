@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.product.mapper.ReviewMapper">
 
-    <resultMap id="ReviewListResultMap" type="com.example.bookhub.product.dto.ReviewImageDto">
+    <resultMap id="ReviewListResultMap" type="com.example.bookhub.product.dto.ReviewDto">
         <id column="review_no" property="reviewNo"/>
         <result column="comment" property="comment"/>
         <result column="rate" property="rate"/>
@@ -12,6 +12,7 @@
         <result column="updated_date" property="updatedDate"/>
         <result column="reply_count" property="replyCount"/>
         <result column="buyer" property="buyer"/>
+        <result column="recommended" property="recommended" />
         <association column="user_no" property="user"
                      select="com.example.bookhub.product.mapper.ReviewMapper.getUserByNo"/>
         <association column="review_tag_no" property="reviewTag"
@@ -80,6 +81,7 @@
             review_no = #{value}
     </select>
 
+
     <select id="getReviewsByBookNo" parameterType="long" resultMap="ReviewListResultMap">
         select
             review_no,
@@ -93,10 +95,23 @@
             review_tag_no,
             reply_count,
             buyer
+            <choose>
+                <when test="userNo != 0">
+                    ,
+                    IFNULL((SELECT 'Y'
+                            FROM REVIEW_RECOMMEND_USER U
+                            WHERE U.REVIEW_NO = R.REVIEW_NO
+                              AND U.USER_NO = #{userNo}), 'N') recommended
+                </when>
+                <otherwise>
+                    ,
+                    'N'  recommended
+                </otherwise>
+            </choose>
         from
             REVIEW R
         where
-            book_no = #{value}
+            book_no = #{bookNo}
     </select>
 
     <insert id="createReviewImage" parameterType="com.example.bookhub.product.vo.ReviewImage">

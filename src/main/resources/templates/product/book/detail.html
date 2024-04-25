@@ -334,16 +334,18 @@
                 return;
             }
 
-            let reviewImageDtoList = await response.json();
-            console.log(reviewImageDtoList)
+            let reviewDtoList = await response.json();
+            console.log(reviewDtoList)
             let rows = "";
-            for(let index =  0; index < reviewImageDtoList.length; index++){
-                let review = reviewImageDtoList[index];
+            for(let index =  0; index < reviewDtoList.length; index++){
+                let review = reviewDtoList[index];
 
                 let buyerBadge = '';
                 if (review.buyer === 'Y') {
                     buyerBadge = '<span class="badge rounded-pill text-bg-dark">구매자</span>';
                 }
+
+                let recommendIcon = review.recommended === 'Y' ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
 
                 rows += `
                         <div class="row g-0 rounded overflow-hidden mb-4 h-md-250 position-relative border review">
@@ -371,7 +373,7 @@
                                     </a>
                                     <div>
                                         <span class="recommend">
-                                             <i class="bi bi-hand-thumbs-up" id="recommend-${review.reviewNo}"></i>
+                                             <i class="${recommendIcon}" id="recommend-${review.reviewNo}"></i>
                                              <span class="me-3 " id="recommend-count-${review.reviewNo}">${review.recommendCount}</span>
                                         </span>
                                         <span>
