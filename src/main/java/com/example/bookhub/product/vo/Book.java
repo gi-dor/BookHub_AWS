@@ -23,4 +23,5 @@ public class Book {
     private float discountRate;
     private int salesVolume;
     private BookAuthor bookAuthor;
+
 }
