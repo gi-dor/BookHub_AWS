@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Title</title>
+    <title>관리자 페이지</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/admin/sidebars2.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js}"></script>
     <script th:src="@{/js/admin/color-modes.js}"></script>
@@ -106,6 +107,7 @@
         <div class="col-10 mt-3">
             <th:block layout:fragment="content"></th:block>
             <th:block layout:fragment="category"></th:block>
+            <th:block layout:fragment="list"></th:block>
         </div>
     </div>
     <div th:replace="~{/layout/footer :: footer}"></div>

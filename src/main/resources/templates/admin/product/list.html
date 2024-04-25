@@ -1,0 +1,260 @@
+<html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="list" class="container-fluid">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h1 class="fs-3">상품 조회</h1>
+
+                <!-- 필터 선택 영역-->
+                <div class="col-12 bg-light p-3 mb-3">
+                    <form action="">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <td class="bg-light">검색어</td>
+                                <td>
+                                    <select name="opt" class="form-control-sm">
+                                        <option value="all">전체</option>
+                                        <option value="name">상품명</option>
+                                        <option value="author">저자</option>
+                                        <option value="publisher">출판사</option>
+                                    </select>
+                                    <input type="text" name="keyword" placeholder="검색어를 입력하세요" class="form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light">카테고리</td>
+                                <td>
+                                    <select name="category" class="form-control-sm">
+                                        <option disabled selected>대분류 선택</option>
+                                        <!-- 대분류 영역 -->
+                                    </select>
+                                    <select name="category" class="form-control-sm">
+                                        <option disabled selected>중분류 선택</option>
+                                        <!-- 중분류 영역 -->
+                                    </select>
+                                    <select name="category" class="form-control-sm">
+                                        <option disabled selected>소분류 선택</option>
+                                        <!-- 소분류 영역 -->
+                                    </select>
+                                    <input type="checkbox" class="form-check-input">
+                                    <label class="form-check-label ml-1">카테고리 미등록</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light">기간 검색</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <select name="" class="form-control-sm me-2">
+                                            <option value="">등록일</option>
+                                            <option value="">수정일</option>
+                                        </select>
+                                        <input type="date" class="form-control-sm me-2"> -
+                                        <input type="date" class="form-control-sm ms-2 me-2">
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button">오늘
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm" type="button">3일간
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm" type="button">일주일
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm" type="button">1개월
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm" type="button">3개월
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm" type="button">전체
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light">판매 상태</td>
+                                <td>
+                                    <input type="checkbox" class="form-check-input" checked> 전체
+                                    <input type="checkbox" class="form-check-input"> 정상
+                                    <input type="checkbox" class="form-check-input"> 절판
+                                    <input type="checkbox" class="form-check-input"> 판매 중지
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light">재고</td>
+                                <td>
+                                    <select name="" class="form-control-sm">
+                                        <option disabled selected>전체</option>
+                                        <option value="10">10개 이하</option>
+                                        <option value="30">30개 이하</option>
+                                        <option value="50">50개 이하</option>
+                                        <option value="100">100개 이하</option>
+                                    </select>
+                                    <input type="number" class="form-control-sm"> 개 이상 -
+                                    <input type="number" class="form-control-sm"> 개 이하
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light">브랜드(출판사)</td>
+                                <td>
+                                    <select name="" class="form-control-sm">
+                                        <option disabled selected>전체</option>
+                                        <!-- 브랜드(출판사) 영역 -->
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm">초기화</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 조회 결과 영역 -->
+                <div class="col-12 bg-light p-3 mb-3">
+                    <form action="">
+                        <input type="hidden" name="page"/>
+                        <div class="my-3 d-flex justify-content-between">
+                            <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
+                            <div class="d-flex">
+                                <!-- 조회 개수 설정 -->
+                                <select class="form-control-sm me-2" onchange="changeRows()" name="rows">
+                                    <option value="10">10개씩</option>
+                                    <option value="50">50개씩</option>
+                                    <option value="100">100개씩</option>
+                                    <option value="200">200개씩</option>
+                                </select>
+
+                                <!-- 조회 정렬 설정-->
+                                <select class="form-control-sm" name="sort" onchange="changeRows()">
+                                    <option value="productName">상품명 순</option>
+                                    <option value="highPrice">정가 높은 순</option>
+                                    <option value="lowPrice">정가 낮은 순</option>
+                                    <!--
+                                    <option value="highSellingPrice">판매가 높은 순</option>
+                                    <option value="lowSellingPrice">판매가 낮은 순</option>
+                                    -->
+                                    <option value="highStock">재고 많은 순</option>
+                                    <option value="lowStock">재고 적은 순</option>
+                                    <option value="recentlyPublished">최근 출판일 순</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- 선택 삭제 버튼 / 엑셀 버튼 -->
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="text-left">
+                                <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        onclick="removeChecked()">선택 삭제
+                                </button>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="excel()">
+                                    엑셀
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 조회 리스트 -->
+                        <table class="table text-center">
+                            <colgroup>
+                                <col width="3%">
+                                <col width="4%">
+                                <col width="15%">
+                                <col width="*">
+                                <col width="8%">
+                                <col width="9%">
+                                <col width="9%">
+                                <col width="9%">
+                                <col width="9%">
+                                <col width="10%">
+                                <col width="10%">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>번호</th>
+                                <th>이미지</th>
+                                <th>상품명</th>
+                                <th>저자</th>
+                                <th>정가</th>
+                                <th>판매가</th>
+                                <th>재고</th>
+                                <th>판매상태</th>
+                                <th>출판일</th>
+                                <th>관리</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--
+                                ** 게시글 순번 **
+
+                                1. 마지막 숫자부터 시작
+                                    전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
+                                    ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
+
+                                2. 1번부터 시작
+                                    ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
+                                    ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
+                            -->
+                            <tr th:each="books, loop : ${books}">
+                                <td><input type="checkbox"></td>
+                                <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
+                                    1
+                                </td>
+                                <td><img th:src="${books.image}"/></td>
+                                <td>
+                                    <a th:href="@{/books/detail(id=${books.no})}" th:text="${books.bookName}">
+                                        나는 읽고 쓰고 버린다
+                                    </a>
+                                </td>
+                                <td th:text="${books.authorName}">손웅정</td>
+                                <td th:text="${books.price}">17,000</td>
+                                <td th:text="${books.price * (1 - books.discountRate)}">15,300</td>
+                                <td th:text="${books.stock}">1,000</td>
+                                <td th:text="${books.discontinuingYn}">판매중</td>
+                                <td th:text="${#dates.format(books.publishedDate, 'yyyy-MM-dd')}">2019-02-15</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- 페이징 처리-->
+                        <!--
+                               th:classappend="${조건식} ? 값1 : 값2"
+                               th:classappend="${조건식} ? 값1"
+                                   조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
+                                   조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
+                                   * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                        -->
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                                <a th:href="@{/admin/product/list(page=${paging.currentPage - 1})}"
+                                   class="page-link">이전</a>
+                            </li>
+
+                            <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
+                                th:if="${num >= 1 and num <= paging.totalPages}"
+                                class="page-item"
+                                th:classappend="${num == paging.currentPage} ? 'active'">
+                                <a th:href="@{/admin/product/list(page=${num})}" th:text="${num}"
+                                   class="page-link">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                                <a th:href="@{/admin/product/list(page=${paging.currentPage + 1})}"
+                                   class="page-link">다음</a>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,5 +1,7 @@
 package com.example.bookhub.board.service;
 
+import com.example.bookhub.board.Pagination;
+import com.example.bookhub.board.dto.FaqListDto;
 import com.example.bookhub.board.mapper.FaqMapper;
 import com.example.bookhub.board.vo.Faq;
 import com.example.bookhub.board.vo.FaqCategory;
@@ -15,23 +17,22 @@ public class FaqService {
     private final FaqMapper faqMapper;
 
     /**
-     * 페이징 처리된 FAQ 목록 조회
+     * 페이징 처리된 전체 리스트 혹은 검색 키워드 리스트 조회
+     * @param keyword
      * @param page
-     * @param size
      * @return
      */
-    public List<Faq> findAllFaq(int page, int size) {
-        int offset = (page - 1) * size;
-        return faqMapper.findAllFaq(offset, size);
+    public FaqListDto getFaqList(int cat, String keyword, int page) {
+
+        int totalCount = faqMapper.getTotalFaqCount(cat, keyword);
+        Pagination pagination = new Pagination(page, totalCount);
+        int offset = pagination.getBegin();
+
+        List<Faq> faqs = faqMapper.findAllFaq(cat, keyword, offset);
+
+        return new FaqListDto(faqs, pagination);
     }
 
-    /**
-     * FAQ의 개수 조회
-     * @return
-     */
-    public int getTotalFaqCount() {
-        return faqMapper.getTotalFaqCount();
-    }
 
     /**
      *  카테고리 번호를 불러와 카테고리의 번호와 이름을 조회
@@ -42,10 +43,22 @@ public class FaqService {
         return faqMapper.getFaqCategoryByNo(categoryNo);
     }
 
+    /**
+     * FAQ의 상세 조회
+     * @param no
+     * @return
+     */
     public Faq getFaqByNo(Long no) {
-
-
-
         return faqMapper.getFaqByNo(no);
     }
+
+    /**
+     * FAQ category 전체 조회
+     * @return
+     */
+    public List<FaqCategory> findAllCategories() {
+        return faqMapper.findAllCategories();
+    }
+
+    
 }
