@@ -24,5 +24,19 @@ public interface CategoryMapper {
 
     Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo);
 
-    String findCategoryByName(String categoryName);
+    Category findCategoryByCategoryNameAndCategoryNo(String categoryName, int categoryNo);
+
+    void modifyThirdCategory(int targetCategoryNo, int parentCategoryNo, String thirdCategoryName);
+
+    void modifySecondCategory(int targetCategoryNo, int parentCategoryNo, String secondCategoryName);
+
+    void modifyTopCategory(int targetCategoryNo, String topCategoryName);
+
+    void deleteThirdCategory(int targetCategoryNo);
+
+    void deleteSecondCategory(int targetCategoryNo);
+
+    void deleteThirdCategoryBySecondCategoryNo(int targetCategoryNo);
+
+    void deleteTopCategory(int targetCategoryNo);
 }

@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.board.mapper.CommunityMapper">
 
-
     <resultMap type="com.example.bookhub.board.vo.Community" id="CommunityListResultMap">
         <id column="community_board_no" property="no"/>
         <result column="community_board_title" property="title"/>
@@ -10,6 +9,7 @@
         <result column="community_board_delete_yn" property="deleteYn"/>
         <result column="community_board_create_date" property="createDate"/>
         <result column="community_board_update_date" property="updateDate"/>
+        <result column="community_board_count" property="count" />
 
         <association column="community_board_user_no" property="user"
                      select="com.example.bookhub.board.mapper.CommunityMapper.getUserByNo"/>
@@ -18,6 +18,7 @@
             <result column="community_board_images_path" property="imagePath" />
         </association>
     </resultMap>
+
 
     <resultMap type="com.example.bookhub.user.vo.User" id="CommunityGetUserNameResultMap">
         <id column="user_no" property="no" />
@@ -35,16 +36,21 @@
     </resultMap>
 
 
-
     <!--
         페이징처리한 커뮤니티 목록을 조회하는 쿼리
     -->
     <select id="findAllCommunity" resultMap="CommunityListResultMap">
-        SELECT COMMUNITY_BOARD_NO, COMMUNITY_BOARD_TITLE, COMMUNITY_BOARD_CONTENT , COMMUNITY_BOARD_USER_NO, COMMUNITY_BOARD_CREATE_DATE
+        SELECT *
         FROM COMMUNITY_BOARDS
-        WHERE COMMUNITY_BOARD_DELETE_YN = 0
+        <where>
+            AND COMMUNITY_BOARD_DELETE_YN = 0
+            <if test="keyword != null">
+                AND (COMMUNITY_BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
+                OR COMMUNITY_BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
         ORDER BY COMMUNITY_BOARD_CREATE_DATE DESC
-        LIMIT #{offset}, #{size}
+        LIMIT #{offset}, 10
     </select>
 
     <!--
@@ -53,7 +59,13 @@
     <select id="getTotalCommunitiesCount" resultType="int">
         SELECT COUNT(*)
         FROM COMMUNITY_BOARDS
-        WHERE COMMUNITY_BOARD_DELETE_YN = 0
+        <where>
+            AND COMMUNITY_BOARD_DELETE_YN = 0
+            <if test="keyword != null">
+                AND (COMMUNITY_BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
+                OR COMMUNITY_BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
     </select>
 
 
@@ -105,27 +117,10 @@
         WHERE COMMUNITY_BOARD_NO = #{no}
     </update>
 
-    <!-- 커뮤니티 게시글 제목 혹은 내용으로 검색 -->
-    <select id="searchCommunityByTitleOrContent" parameterType="String" resultMap="CommunityListResultMap">
-        SELECT *
-        FROM COMMUNITY_BOARDS
-        WHERE COMMUNITY_BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
-        OR COMMUNITY_BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%')
-    </select>
-
-    <!-- 커뮤니티 게시글 제목으로 검색 -->
-    <select id="searchCommunityByTitle" parameterType="String" resultMap="CommunityListResultMap">
-        SELECT *
-        FROM COMMUNITY_BOARDS
-        WHERE COMMUNITY_BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
-    </select>
-
-    <!-- 커뮤니티 게시글 내용으로 검색 -->
-    <select id="searchCommunityByContent" parameterType="String" resultMap="CommunityListResultMap">
-        SELECT *
-        FROM COMMUNITY_BOARDS
-        WHERE COMMUNITY_BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%')
-    </select>
-
+    <update id="viewCount">
+        UPDATE COMMUNITY_BOARDS
+        SET COMMUNITY_BOARD_COUNT = COMMUNITY_BOARD_COUNT + 1
+        WHERE COMMUNITY_BOARD_NO = #{no}
+    </update>
 
 </mapper>

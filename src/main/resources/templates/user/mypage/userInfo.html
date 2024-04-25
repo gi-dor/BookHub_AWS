@@ -1,0 +1,199 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/user/userInfo.css}" />
+</th:block>
+
+<div layout:fragment="content" class="container my-3">
+    <div class="row mt-5">
+        <!-- 마이페이지 사이드 바 시작 ################-->
+        <div th:replace="~{layout/myPageSidebar :: myPageSidebar} "></div>
+        <!-- 마이페이지 사이드 바 종료 ################-->
+
+
+        <div class="col-8">
+            <h3 id="memberInfoTitle">회원 정보</h3>
+            <br>
+                <form th:action="@{/mypage/modifyUserInfoForm}" method="get">
+                    <table class="table">
+                        <colgroup>
+                            <col width="30%">
+                            <col width="">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>  </th>
+                                <th colspan="3"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th class="table-secondary">아이디</th>
+                            <td colspan="3" th:text="${user.id}">샘플아이디</td>
+                        </tr>
+                        <tr>
+                            <th class="table-secondary">비밀번호</th>
+                            <td colspan="3">
+                                <button type="button" class="btn btn-secondary" id="passwordButton" onclick="showModal()"> 비밀번호 변경</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="table-secondary">이름</th>
+                            <td colspan="3" th:text="${user.name}">test 기선</td>
+                        </tr>
+                        <tr>
+                            <th class="table-secondary">휴대폰</th>
+                            <td colspan="3" th:text="${user.tel}">010-1234-4567</td>
+                        </tr>
+                        <tr>
+                            <th class="table-secondary">이메일</th>
+                            <td colspan="2" th:text="${user.email}">sample@gmail.com</td>
+                            <td>
+<!--                            <button type="button" class="btn btn-secondary"> 이메일 변경</button>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="table-secondary">주소</th>
+                            <div class="row mb-1">
+<!--                                <td th:text="${user.fullAddress}"></td>-->
+                                <td>
+                                    <span th:text="${user.zipCode}">우편번호</span> <br>
+                                    <span th:text="${user.address}">기본 주소</span><br>
+                                    <span th:text="${user.addressDetail}">상세주소</span>
+                                </td>
+                            </div>
+                        </tr>
+                        <tr>
+                            <th class="table-secondary">회원 가입 일자</th>
+                            <td colspan="3" th:text="${#temporals.format(user.createdDate, 'yyyy-MM-dd')}">2024.04.10</td>
+                        </tr>
+                        <!--
+                        <tr>
+                            <th class="table-secondary">비밀번호 변경</th>
+                                <td colspan="3">
+                                    <button type="button" class="btn btn-secondary"> 비밀번호 변경</button>
+                                </td>
+                        </tr>
+                        -->
+                        </tbody>
+                </table>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-secondary">회원정보 수정</button>
+                    <a class="btn btn-secondary" href="/mypage">취소</a>
+                </div>
+            </form>
+        </div>
+        <div class="col-2">
+        </div>
+
+
+        <!-- modal -->
+        <div class="modal" tabindex="-1" id="modal-user-password">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">비밀번호 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-9">
+                                    <input type="password" class="form-control" id="prev-password" name="password" placeholder="기존 비밀번호" style="margin-bottom: 5px;" />
+                                    <input type="password" class="form-control" id="new-password" name="changePassword" placeholder="새로운 비밀번호" style="margin-bottom: 5px;"/>
+                                    <input type="password" class="form-control" id="new-confirm-password" name="confirmNewPassword" placeholder="새로운 비밀번호 재입력" style="margin-bottom: 5px;"/>
+                                    <div th:errors="${user.password}" class="text-danger"></div>
+                                    <div id="passwordMatchMessage" class="text-danger2"></div>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-secondary" onclick="modalPassword()">비밀번호 변경</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+<th:block layout:fragment="script">
+
+<script>
+
+    const openModal = document.getElementById('passwordButton');
+
+    function showModal() {
+        const myModal = new bootstrap.Modal(document.getElementById('modal-user-password'));
+        myModal.show();
+    }
+
+    // 모달창 입력한 값 지우기
+    function removeText() {
+        $('#prev-password').val('');
+        $('#new-password').val('');
+        $('#new-confirm-password').val('');
+    }
+
+    function modalPassword() {
+        let password = $('#prev-password').val();
+        let newPassword = $('#new-password').val();
+        let confirmNewPassword = $('#new-confirm-password').val();
+
+        // 입력값이 비어 있는지 확인
+        if (!password || !newPassword || !confirmNewPassword) {
+            alert('비밀번호를  입력하세요.');
+            removeText();
+
+            return;
+        }
+
+        // 새로운 비밀번호와 확인 비밀번호가 일치하는지 확인
+        if (newPassword !== confirmNewPassword) {
+            alert('새로운 비밀번호가 일치하지 않습니다.');
+            removeText();
+
+            return;
+        }
+
+        $.ajax({
+            url:'/mypage/changePassword' ,
+            type:'post',
+            data:{
+                password: password,
+                changePassword: newPassword,
+                confirmNewPassword: confirmNewPassword
+            },
+            success:function (data) {
+                if (data == "success") {
+                    alert("비밀번호가 성공적으로 변경되었습니다 ")
+                    removeText();
+
+                    // 변경 성공 시 모달 닫기
+                    $('#modal-user-password').modal('hide');
+                } else {
+                    alert('비밀번호 변경에 실패했습니다.');
+
+                    // 모달창 입력한 값 지우기
+                    removeText();
+                }
+            },
+            error: function (status , error) {
+                alert('서버 오류: ' + error + ', 상태 코드: ' + status);
+            }
+        });
+    };
+</script>
+
+
+
+</th:block>
+</html>

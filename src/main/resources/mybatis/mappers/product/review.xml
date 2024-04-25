@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.product.mapper.ReviewMapper">
+
+    <resultMap id="ReviewListResultMap" type="com.example.bookhub.product.dto.ReviewDto">
+        <id column="review_no" property="reviewNo"/>
+        <result column="comment" property="comment"/>
+        <result column="rate" property="rate"/>
+        <result column="recommend_count" property="recommendCount"/>
+        <result column="accuse_count" property="accuseCount"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+        <result column="reply_count" property="replyCount"/>
+        <result column="buyer" property="buyer"/>
+        <result column="recommended" property="recommended" />
+        <association column="user_no" property="user"
+                     select="com.example.bookhub.product.mapper.ReviewMapper.getUserByNo"/>
+        <association column="review_tag_no" property="reviewTag"
+                     select="com.example.bookhub.product.mapper.ReviewMapper.getReviewTagByNo"/>
+        <collection property="reviewImageList" column="review_no" javaType="List" ofType="com.example.bookhub.product.vo.ReviewImage"
+                    select="com.example.bookhub.product.mapper.ReviewMapper.getReviewImageListByReviewNo"/>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.example.bookhub.user.vo.User">
+        <id column="user_no" property="no"/>
+        <result column="user_id" property="id"/>
+    </resultMap>
+
+    <resultMap id="ReviewTagResultMap" type="com.example.bookhub.product.vo.ReviewTag">
+        <id column="review_tag_no" property="reviewTagNo"/>
+        <result column="review_tag_name" property="name"/>
+    </resultMap>
+
+    <resultMap id="ReviewImageListResultMap" type="com.example.bookhub.product.vo.ReviewImage">
+        <id column="review_image_no" property="reviewImageNo"/>
+        <result column="image_path" property="imagePath"/>
+    </resultMap>
+
+    <insert id="createReview" parameterType="com.example.bookhub.product.vo.Review">
+        insert into REVIEW
+        (comment, rate, user_no, review_tag_no, book_no)
+        values
+        (#{comment}, #{rate}, #{user.no}, #{reviewTag.reviewTagNo}, #{book.bookNo})
+
+        <selectKey keyProperty="reviewNo" resultType="long" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+
+    <!--association-->
+    <select id="getUserByNo" parameterType="long" resultMap="UserResultMap">
+        select
+            user_no,
+            user_id
+        from
+            USER
+        where
+            user_no = #{value}
+    </select>
+
+    <!--association-->
+    <select id="getReviewTagByNo" parameterType="long" resultMap="ReviewTagResultMap">
+        select
+            review_tag_no,
+            review_tag_name
+        from
+            REVIEW_TAG
+        where
+            review_tag_no = #{value}
+    </select>
+
+    <!--collection-->
+    <select id="getReviewImageListByReviewNo" parameterType="long" resultMap="ReviewImageListResultMap">
+        select
+            review_image_no,
+            image_path
+        from
+            REVIEW_IMAGE
+        where
+            review_no = #{value}
+    </select>
+
+
+    <select id="getReviewsByBookNo" parameterType="long" resultMap="ReviewListResultMap">
+        select
+            review_no,
+            comment,
+            rate,
+            recommend_count,
+            accuse_count,
+            created_date,
+            updated_date,
+            user_no,
+            review_tag_no,
+            reply_count,
+            buyer
+            <choose>
+                <when test="userNo != 0">
+                    ,
+                    IFNULL((SELECT 'Y'
+                            FROM REVIEW_RECOMMEND_USER U
+                            WHERE U.REVIEW_NO = R.REVIEW_NO
+                              AND U.USER_NO = #{userNo}), 'N') recommended
+                </when>
+                <otherwise>
+                    ,
+                    'N'  recommended
+                </otherwise>
+            </choose>
+        from
+            REVIEW R
+        where
+            book_no = #{bookNo}
+    </select>
+
+    <insert id="createReviewImage" parameterType="com.example.bookhub.product.vo.ReviewImage">
+        insert into REVIEW_IMAGE
+        (image_path, review_no)
+        values
+        (#{imagePath}, #{review.reviewNo})
+    </insert>
+
+    <select id="getByReviewNoAndUserNo" resultType="long">
+        select
+            review_recommend_user_no
+        from
+            REVIEW_RECOMMEND_USER
+        where
+            review_no = #{reviewNo}
+            and user_no = #{userNo}
+    </select>
+
+    <insert id="createReviewRecommendUser" parameterType="com.example.bookhub.product.vo.ReviewRecommendUser">
+        insert into REVIEW_RECOMMEND_USER
+        (review_no, user_no)
+        values
+        (#{review.reviewNo}, #{user.no})
+    </insert>
+
+    <delete id="deleteReviewRecommendUser" parameterType="com.example.bookhub.product.vo.ReviewRecommendUser">
+        delete from
+            REVIEW_RECOMMEND_USER
+        where
+            review_no = #{review.reviewNo}
+            and user_no = #{user.no}
+    </delete>
+
+    <update id="updateReviewRecommendCount">
+        update
+            REVIEW
+        <set>
+            <choose>
+                <when test="recommendStatus == 'recommend'">
+                    recommend_count = recommend_count + 1
+                </when>
+                <when test="recommendStatus == 'cancel'">
+                    recommend_count = recommend_count - 1
+                </when>
+            </choose>
+        </set>
+        where review_no = #{reviewNo}
+    </update>
+
+</mapper>

@@ -29,18 +29,18 @@ public class CategoryController {
         model.addAttribute("secondLevelCategories", secondLevelCategories);
         model.addAttribute("thirdLevelCategories", thirdLevelCategories);
 
-        return "admin/category";
+        return "admin/product/category";
     }
 
     @GetMapping("/getSubCategories")
     @ResponseBody
-    public List<Category> subCategories(@RequestParam("categoryNo") int categoryNo) {
+    public List<Category> getSubCategories(@RequestParam("categoryNo") int categoryNo) {
         return categoryService.getSubCategoriesByCategoryNo(categoryNo);
     }
 
     @GetMapping("/getParentCategory")
     @ResponseBody
-    public Category parentCategory(@RequestParam("category") int categoryNo) {
+    public Category parentCategory(@RequestParam("categoryNo") int categoryNo) {
         return categoryService.getParentCategoryByCategoryNo(categoryNo);
     }
 
@@ -63,6 +63,55 @@ public class CategoryController {
                                    @RequestParam("CategoryNo") int categoryNo) {
         categoryService.addSubCategory(categoryName, categoryNo);
         return categoryService.getSubLevelCategoryByCategoryNameAndSuperCategoryNo(categoryName, categoryNo);
+    }
+
+    @PostMapping("/modify/thirdCategory")
+    @ResponseBody
+    public void modifyThirdCategory(@RequestParam("targetCategoryNo") int targetCategoryNo,
+                                    @RequestParam("parentCategoryNo") int parentCategoryNo,
+                                    @RequestParam("thirdCategoryName") String thirdCategoryName) {
+        categoryService.modifyThirdCategory(targetCategoryNo, parentCategoryNo, thirdCategoryName);
+    }
+
+    @PostMapping("/modify/secondCategory")
+    @ResponseBody
+    public void modifySecondCategory(@RequestParam("targetCategoryNo") int targetCategoryNo,
+                                     @RequestParam("parentCategoryNo") int parentCategoryNo,
+                                     @RequestParam("secondCategoryName") String secondCategoryName) {
+        categoryService.modifySecondCategory(targetCategoryNo, parentCategoryNo, secondCategoryName);
+    }
+
+    @PostMapping("/modify/topCategory")
+    @ResponseBody
+    public List<Category> modifyTopCategory(@RequestParam("targetCategoryNo") int targetCategoryNo,
+                                            @RequestParam("topCategoryName") String topCategoryName) {
+        categoryService.modifyTopCategory(targetCategoryNo, topCategoryName);
+        return categoryService.getAllTopLevelCategories();
+    }
+
+    @PostMapping("/delete/thirdCategory")
+    @ResponseBody
+    public void deleteThirdCategory(@RequestParam("targetCategoryNo") int targetCategoryNo) {
+        categoryService.deleteThirdCategory(targetCategoryNo);
+    }
+
+    @PostMapping("/delete/secondCategory")
+    @ResponseBody
+    public void deleteSecondCategory(@RequestParam("targetCategoryNo") int targetCategoryNo) {
+        categoryService.deleteSecondCategory(targetCategoryNo);
+    }
+
+    @PostMapping("/delete/topCategory")
+    @ResponseBody
+    public List<Category> deleteTopCategory(@RequestParam("targetCategoryNo") int targetCategoryNo) {
+        categoryService.deleteTopCategory(targetCategoryNo);
+        return categoryService.getAllTopLevelCategories();
+    }
+
+    @GetMapping("/getTotalSubCategories")
+    @ResponseBody
+    public List<Category> getTotalSubCategories(@RequestParam("categoryNo") int categoryNo) {
+        return categoryService.getTotalSubCategories(categoryNo);
     }
 
 }

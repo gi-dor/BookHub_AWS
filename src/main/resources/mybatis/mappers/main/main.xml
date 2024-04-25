@@ -2,15 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.main.mapper.AladinMapper">
 
-    <!-- 수정해야함
-    <insert id="insertBook" parameterType="com.example.bookhub.main.vo.Book">
+    <insert id="insertBook" parameterType="com.example.bookhub.product.vo.Book">
+        <selectKey keyProperty="bookNo" order="AFTER" resultType="Long">
+            SELECT LAST_INSERT_ID() AS no
+        </selectKey>
         INSERT INTO BOOK
-            (title, link, pub_date, description, isbn13, price_standard, best_rank)
+        (BOOK_NAME, ISBN, BOOK_DESCRIPTION, BOOK_DISCOUNT_RATE, BOOK_DISCONTINUING_YN, BOOK_PUBLISHED_DATE, BOOK_LIST_PRICE, CATEGORY_NO, PUBLISHER_NO)
         VALUES
-            (#{bookName}, #{bookPublishedDate}, #{bookPublishedDate}, #{bookDescription}, #{isbn}, #{bookListPrice}, #{priceStandard}, #{bestRank})
+            (#{name}, #{isbn}, #{description}, #{discountRate}, #{discontinuingYn}, #{publishedDate}, #{price}, #{category.categoryNo}, #{publisher.publisherNo})
     </insert>
-    -->
+
+    <insert id="insertBookImage" parameterType="map">
+        INSERT INTO BOOK_IMAGES (BOOK_NO, BOOK_IMAGE_COVER)
+        VALUES (#{bookNo}, #{cover})
+    </insert>
 
 
+    <insert id="insertPublisher" parameterType="com.example.bookhub.product.vo.Publisher">
+        insert into PUBLISHER(PUBLISHER_NAME) VALUES(#{name})
+    </insert>
+
+    <select id="getPublisherByName" parameterType="string" resultType="com.example.bookhub.product.vo.Publisher">
+        SELECT PUBLISHER_NO as publisherNo, PUBLISHER_NAME as name
+        FROM PUBLISHER
+        WHERE PUBLISHER_NAME = #{value}
+    </select>
+
+    <insert id="insertAuthor" parameterType="com.example.bookhub.product.vo.Author">
+        insert into AUTHOR(AUTHOR_NAME) VALUES(#{name})
+    </insert>
+
+    <insert id="insertBookAuthor" parameterType="map">
+        INSERT INTO BOOK_AUTHOR (BOOK_NO, AUTHOR_NO, AUTHOR_TYPE)
+        VALUES (#{bookNo}, #{no}, #{type})
+    </insert>
+
+    <select id="getAuthorByName" parameterType="string" resultType="com.example.bookhub.product.vo.Author">
+        SELECT AUTHOR_NO as authorNo, AUTHOR_NAME as name
+        FROM AUTHOR
+        WHERE AUTHOR_NAME = #{value}
+    </select>
 
 </mapper>

@@ -39,6 +39,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.webjars:bootstrap:5.3.3'
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3.1'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 
 }
