@@ -127,71 +127,71 @@
 </div>
 <th:block layout:fragment="script">
 
-    <script>
+<script>
 
-        const openModal = document.getElementById('passwordButton');
+    const openModal = document.getElementById('passwordButton');
 
-        function showModal() {
-            const myModal = new bootstrap.Modal(document.getElementById('modal-user-password'));
-            myModal.show();
+    function showModal() {
+        const myModal = new bootstrap.Modal(document.getElementById('modal-user-password'));
+        myModal.show();
+    }
+
+    // 모달창 입력한 값 지우기
+    function removeText() {
+        $('#prev-password').val('');
+        $('#new-password').val('');
+        $('#new-confirm-password').val('');
+    }
+
+    function modalPassword() {
+        let password = $('#prev-password').val();
+        let newPassword = $('#new-password').val();
+        let confirmNewPassword = $('#new-confirm-password').val();
+
+        // 입력값이 비어 있는지 확인
+        if (!password || !newPassword || !confirmNewPassword) {
+            alert('비밀번호를  입력하세요.');
+            removeText();
+
+            return;
         }
 
-        // 모달창 입력한 값 지우기
-        function removeText() {
-            $('#prev-password').val('');
-            $('#new-password').val('');
-            $('#new-confirm-password').val('');
+        // 새로운 비밀번호와 확인 비밀번호가 일치하는지 확인
+        if (newPassword !== confirmNewPassword) {
+            alert('새로운 비밀번호가 일치하지 않습니다.');
+            removeText();
+
+            return;
         }
 
-        function modalPassword() {
-            let password = $('#prev-password').val();
-            let newPassword = $('#new-password').val();
-            let confirmNewPassword = $('#new-confirm-password').val();
+        $.ajax({
+            url:'/mypage/changePassword' ,
+            type:'post',
+            data:{
+                password: password,
+                changePassword: newPassword,
+                confirmNewPassword: confirmNewPassword
+            },
+            success:function (data) {
+                if (data == "success") {
+                    alert("비밀번호가 성공적으로 변경되었습니다 ")
+                    removeText();
 
-            // 입력값이 비어 있는지 확인
-            if (!password || !newPassword || !confirmNewPassword) {
-                alert('비밀번호를  입력하세요.');
-                removeText();
+                    // 변경 성공 시 모달 닫기
+                    $('#modal-user-password').modal('hide');
+                } else {
+                    alert('비밀번호 변경에 실패했습니다.');
 
-                return;
-            }
-
-            // 새로운 비밀번호와 확인 비밀번호가 일치하는지 확인
-            if (newPassword !== confirmNewPassword) {
-                alert('새로운 비밀번호가 일치하지 않습니다.');
-                removeText();
-
-                return;
-            }
-
-            $.ajax({
-                url:'/mypage/changePassword' ,
-                type:'post',
-                data:{
-                    password: password,
-                    changePassword: newPassword,
-                    confirmNewPassword: confirmNewPassword
-                },
-                success:function (data) {
-                    if (data == "success") {
-                        alert("비밀번호가 성공적으로 변경되었습니다 ")
-                        removeText();
-
-                        // 변경 성공 시 모달 닫기
-                        $('#modal-user-password').modal('hide');
-                    } else {
-                        alert('비밀번호 변경에 실패했습니다.');
-
-                        // 모달창 입력한 값 지우기
-                        removeText();
-                    }
-                },
-                error: function (status , error) {
-                    alert('서버 오류: ' + error + ', 상태 코드: ' + status);
+                    // 모달창 입력한 값 지우기
+                    removeText();
                 }
-            });
-        };
-    </script>
+            },
+            error: function (status , error) {
+                alert('서버 오류: ' + error + ', 상태 코드: ' + status);
+            }
+        });
+    };
+</script>
 
 
 
