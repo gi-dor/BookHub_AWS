@@ -2,9 +2,11 @@ package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
+import com.example.bookhub.product.dto.KakaoCancelResponse;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayBusinessLogicException;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.KakaoPayService;
+import com.example.bookhub.product.vo.Buy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -37,7 +39,11 @@ public class KakaoPayController {
                                   @RequestParam("pg_token")String pgToken, Model model) {
 
         KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
-        buyService.createBuy(buyForm, kakaoApprove.getTid(), principal.getName());
+        if(kakaoApprove != null) {
+            buyService.createBuy(buyForm, kakaoApprove.getTid(), principal.getName());
+        }
+
+        model.addAttribute("successMessage", "결제 성공");
         model.addAttribute("finalPrice", buyForm.getFinalPrice());
         return "product/pay/success";
     }
@@ -56,5 +62,20 @@ public class KakaoPayController {
     @GetMapping("/fail")
     public String fail() {
         throw new KakaoPayBusinessLogicException("카카오 결제 실패");
+    }
+
+    @PostMapping("/refund")
+    public String refund(long buyNo, Model model, Principal principal) {
+        Buy buy = buyService.getBuyByBuyNo(buyNo);
+        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy);
+        if(kakaoCancelResponse != null) {
+            buyService.createRefund(buy.getBuyNo(), principal.getName());
+        }
+
+        int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();
+        model.addAttribute("successMessage", "결제 취소 성공");
+        model.addAttribute("finalPrice", finalPrice);
+
+        return "product/pay/success";
     }
 }

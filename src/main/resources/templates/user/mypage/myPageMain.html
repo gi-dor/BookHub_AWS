@@ -91,10 +91,13 @@
                         <th>주문 상품</th>
                         <th>주문 상태</th>
                         <th> 가격 </th>
+                        <th>주문 취소</th>
                     </tr>
                     </thead>
                     <tbody>
                         <tr th:each="order : ${orderList}">
+                            <form method="post" th:action="@{/kakaoPay/refund}">
+                                <input type="hidden" name="buyNo" th:value="${order.buyNo}"/>
                             <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}"></td>
                             <td><a href="#" th:text="${order.buyNo}"></a></td>
                             <td>
@@ -105,7 +108,8 @@
                             </td>
                             <td th:text="${order.buyStatus.name}"></td>
                             <td th:text="${order.finalPrice}"></td>
-                        </tr>
+                            <td><button type="submit" class="btn btn-secondary btn-sm">주문 취소</button></td>
+                            </form>
                     </tbody>
                 </table>
             </div>

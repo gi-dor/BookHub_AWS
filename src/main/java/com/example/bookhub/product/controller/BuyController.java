@@ -4,6 +4,7 @@ import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.vo.Book;
+import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.product.vo.CouponProduced;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
