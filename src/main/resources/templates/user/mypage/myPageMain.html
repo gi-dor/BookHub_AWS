@@ -72,38 +72,43 @@
             <!-- ########## 포인트 , 등급 , 쿠폰 , 이름 끝 ########## -->
             <br>
             <!-- ####   주문내역 검색 결과 시작  ### --->
-            <table class="table" style="text-align: center">
-                <colgroup>
-                    <col width="">
-                    <col width="">
-                    <col width="">
-                    <col width="">
-                    <col width="">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>주문 일자</th>
-                    <th>주문 번호</th>
-                    <th>주문 상품</th>
-                    <th>주문 상태</th>
-                    <th> 가격 </th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="order : ${orderList}">
-                        <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}"></td>
-                        <td><a href="#" th:text="${order.buyNo}"></a></td>
-                        <td>
-                            <!-- 주문에 대한 상품 목록 -->
-                            <span th:text="${order.book.name}"></span>
-                            <!-- 만약 주문한 상품이 여러 개인 경우 -->
-                            <span th:if="${order.cnt > 1}" th:text="' 외 ' + ${order.cnt} + '개' "></span>
-                        </td>
-                        <td th:text="${order.buyStatus.name}"></td>
-                        <td th:text="${order.finalPrice}"></td>
+            <div style="margin:0 0 30px 0;">
+                <a href="#">
+                    <img src="/image/userInfo/recentlyOrderList.jpg" alt="" style="margin:0 0 10px 0; width: auto; height: 35px;">
+                </a>
+                <table class="table" style="text-align: center">
+                    <colgroup>
+                        <col width="">
+                        <col width="">
+                        <col width="">
+                        <col width="">
+                        <col width="">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>주문 일자</th>
+                        <th>주문 번호</th>
+                        <th>주문 상품</th>
+                        <th>주문 상태</th>
+                        <th> 가격 </th>
                     </tr>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orderList}">
+                            <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}"></td>
+                            <td><a href="#" th:text="${order.buyNo}"></a></td>
+                            <td>
+                                <!-- 주문에 대한 상품 목록 -->
+                                <span th:text="${order.book.name}"></span>
+                                <!-- 만약 주문한 상품이 여러 개인 경우 -->
+                                <span th:if="${order.cnt > 1}" th:text="' 외 ' + ${order.cnt} + '개' "></span>
+                            </td>
+                            <td th:text="${order.buyStatus.name}"></td>
+                            <td th:text="${order.finalPrice}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <!-- ####   주문내역 검색 결과 종료  ### --->
             <br>
             <!--#####  나의 1:1 문의 시작 ##### -->
