@@ -1,9 +1,9 @@
 package com.example.bookhub.product.controller;
 
+import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
-import com.example.bookhub.product.vo.Book;
 import com.example.bookhub.product.vo.CouponProduced;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +33,9 @@ public class BuyController {
             Model model)
     {
 
-        List<Book> buyBookList = new ArrayList<>();
+        List<BookDto> buyBookList = new ArrayList<>();
         for(long buyBookNo : buyForm.getBuyBookNoList()){
-            Book buyBook = bookService.getBookDetailByNo(buyBookNo);
+            BookDto buyBook = bookService.getBookDetailByNo(buyBookNo);
             buyBookList.add(buyBook);
         }
         model.addAttribute("buyBookList", buyBookList);
