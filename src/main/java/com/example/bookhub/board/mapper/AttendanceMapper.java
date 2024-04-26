@@ -1,5 +1,6 @@
 package com.example.bookhub.board.mapper;
 
+import com.example.bookhub.board.vo.Attendance;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +12,7 @@ public interface AttendanceMapper {
      * @param userNo
      * @return
      */
-    int userAttendanceCheckByNo(@Param("no") long userNo);
+    Attendance userAttendanceCheckByNo(@Param("no") long userNo);
 
     /**
      * 출석체크 이벤트 등록

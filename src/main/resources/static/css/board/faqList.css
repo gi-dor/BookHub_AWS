@@ -1,0 +1,4 @@
+/* 카드 제목에 있는 밑줄 제거 */
+.card-title {
+    text-decoration: none;
+}
