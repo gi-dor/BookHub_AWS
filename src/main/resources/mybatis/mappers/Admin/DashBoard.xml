@@ -35,6 +35,13 @@
         ORDER BY dayTotalDate ASC
     </select>
 
+    <!-- 해당하는 날짜의 값을 받아서 그 해당하는 날짜의 결과 출력 -->
+    <select id="getYesterDay" resultType="com.example.bookhub.admin.dto.DayTotalDto" parameterType="String">
+        SELECT DAY_TOTAL_DATE AS dayTotalDate, DAY_TOTAL_PRICE AS dayTotalPrice
+        FROM DAY_TOTAL
+        WHERE DAY_TOTAL_DATE = #{value}
+    </select>
+
     <!--
         DAY_TOTAL 테이블에서 월요일날 실행된다는 가정하에
         지난주 일요일~토요일 합계를 계산하여 통계테이블(WEEK) 저장
@@ -134,5 +141,7 @@
                       JOIN BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
              WHERE i.INDIVIDUAL_INQUIRY_DELETE_YN = 0) AS incomplete
     </select>
+
+
 
 </mapper>

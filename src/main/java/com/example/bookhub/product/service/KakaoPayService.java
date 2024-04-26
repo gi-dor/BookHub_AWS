@@ -3,9 +3,11 @@ package com.example.bookhub.product.service;
 
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
+import com.example.bookhub.product.dto.KakaoCancelResponse;
 import com.example.bookhub.product.dto.KakaoReadyResponse;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayApproveException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayReadyException;
+import com.example.bookhub.product.vo.Buy;
 import groovy.util.logging.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +36,7 @@ public class KakaoPayService {
 
     private KakaoReadyResponse kakaoReadyResponse;
     private KakaoApproveResponse kakaoApproveResponse;
+    private KakaoCancelResponse kakaoCancelResponse;
 
     /**
      * 결제 준비
@@ -54,7 +57,7 @@ public class KakaoPayService {
         params.add("item_name", "북허브 도서"); // 상품 명
         params.add("quantity", String.valueOf(buyForm.getBuyBookNoList().size())); // 상품 수량
         params.add("total_amount", String.valueOf(buyForm.getFinalPrice())); // 상품 가격
-        params.add("tax_free_amount", "100"); // 상품 비과세 금액
+        params.add("tax_free_amount", "0"); // 상품 비과세 금액
         params.add("approval_url", "http://localhost:8080/kakaoPay/success"); // 성공시 url
         params.add("cancel_url", "http://localhost:8080/kakaoPay/cancel"); // 실패시 url
         params.add("fail_url", "http://localhost:8080/kakaoPay/fail");
@@ -109,6 +112,38 @@ public class KakaoPayService {
         }
 
         return kakaoApproveResponse;
+    }
+
+    /**
+     * 결제 환불
+     *
+     */
+    public KakaoCancelResponse kakaoCancel(Buy buy) {
+
+        // 카카오페이 요청
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        parameters.add("cid", "TC0ONETIME");
+        parameters.add("tid", buy.getOrderId());
+        parameters.add("cancel_amount", String.valueOf(buy.getFinalPrice()));
+        parameters.add("cancel_tax_free_amount", "0"); // 환불 비과세 금액 일단 0으로 설정
+        parameters.add("cancel_vat_amount", "0"); // 환불 부가세 금액 일단 0으로 설정
+
+        // 파라미터, 헤더
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+        // 외부에 보낼 url
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            kakaoCancelResponse = restTemplate.postForObject(
+                    "https://kapi.kakao.com/v1/payment/cancel",
+                    requestEntity,
+                    KakaoCancelResponse.class);
+        } catch(RestClientException e){
+            throw new KakaoPayApproveException("카카오 결제 취소 실패");
+        }
+
+        return kakaoCancelResponse;
     }
 
     private HttpHeaders getHeaders() {

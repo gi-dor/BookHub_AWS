@@ -14,7 +14,7 @@
                 <div id="carouselExample" class="carousel slide" style="width: 300px; height: 500px; margin: 0 auto;" >
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="" class="d-block w-100" alt="...">
+                            <img th:src="${book.imageCover}" class="d-block w-100" alt="...">
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -257,6 +257,10 @@
             });
         })
 
+        $("#div-reviews").on("click", ".chat", function(event){
+
+        })
+
         // 장바구니 추가 시 모달
         function showAlertModal(existOrNot){
             console.log(existOrNot);
@@ -348,7 +352,7 @@
                 let recommendIcon = review.recommended === 'Y' ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
 
                 rows += `
-                        <div class="row g-0 rounded overflow-hidden mb-4 h-md-250 position-relative border review">
+                        <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
                             <div class="col p-4  position-static">
                                 <div class="d-flex justify-content-between">
                                     <span>
@@ -376,7 +380,7 @@
                                              <i class="${recommendIcon}" id="recommend-${review.reviewNo}"></i>
                                              <span class="me-3 " id="recommend-count-${review.reviewNo}">${review.recommendCount}</span>
                                         </span>
-                                        <span>
+                                        <span class="reply">
                                             <i class="bi bi-chat-dots"></i>
                                             <span class="me-3">${review.replyCount}</span>
                                         </span>
@@ -387,6 +391,42 @@
                                 <img src="/image/product/${review.reviewImageList[0]?.imagePath}" alt="리뷰 이미지" style="width: 200px; height: 200px"/>
                             </div>
                         </div>
+
+                        <!-- 댓글 목록 및 작성폼 -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <!-- 댓글 목록 -->
+                                <div class="card my-3">
+                                    <div class="card-body py-1 px-2">
+                                         <div class="d-flex justify-content-between">
+                                                <div>
+                                                        <span class="badge bg-light text-dark">홍길동</span>
+                                                        <span class="badge bg-light text-dark">2024-03-21</span>
+                                                </div>
+                                                <div>
+                                                        <a class="btn btn-sm btn-outline-success">추천</a>
+                                                        <a class="btn btn-sm btn-outline-secondary">수정</a>
+                                                        <a class="btn btn-sm btn-outline-secondary">삭제</a>
+                                                </div>
+                                        </div>
+                                        <p class="card=text ps-2 small" style="white-space: pre-line;">댓글내용입니다 내용입니다 내용입니다.</p>
+                                    </div>
+                                </div>
+
+                                <!-- 댓글 작성폼 -->
+                                <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
+                                    <input type="hidden" name="bookNo" value="${bookNo}"/>
+                                    <input type="hidden" name="reviewNo" value="${review.reviewNo}"/>
+                                   <div class="row g-3">
+                                        <div class="col-12 position-relative">
+                                                <textarea rows="3" class="form-control" name="comment"></textarea>
+                                                <button type="submit" class="btn btn-outline-dark btn-sm position-absolute" style="bottom: 15px; right: 25px;">댓글 등록</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <br>
                 `;
             }
             $reviewDiv.html(rows);
@@ -395,3 +435,4 @@
         getReviews(bookNo);
     </script>
 </html>
+

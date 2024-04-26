@@ -2,14 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.board.mapper.AttendanceMapper">
 
+    <resultMap id="attendanceResultMap" type="com.example.bookhub.board.vo.Attendance">
+        <id column="attendance_check_no" property="no"/>
+        <result column="attendance_check_date" property="checkDate"/>
+        <result column="attendance_date" property="count"/>
+        <result column="attendance_check_yn" property="checkYn"/>
+
+        <association column="attendance_check_user_no" property="user"
+                     select="com.example.bookhub.board.mapper.CommunityMapper.getUserByNo"/>
+    </resultMap>
+
+
 <!-- 유저의 출석정보를 조회하는 쿼리 -->
-<select id="userAttendanceCheckByNo" resultType="int" >
-    SELECT
-        ATTENDANCE_CHECK_NO         AS no,
-        ATTENDANCE_CHECK_USER_NO    AS "user.no",
-        ATTENDANCE_CHECK_DATE       AS checkDate,
-        ATTENDANCE_DATE             AS count,
-        ATTENDANCE_CHECK_YN         AS checkYn
+<select id="userAttendanceCheckByNo" resultMap="attendanceResultMap" >
+    SELECT *
     FROM ATTENDANCE_CHECKS
     WHERE ATTENDANCE_CHECK_USER_NO = #{no}
 </select>
@@ -32,10 +38,7 @@
 <update id="resetAttendanceCount">
     UPDATE ATTENDANCE_CHECKS
     SET ATTENDANCE_DATE = 0
-    WHERE ATTENDANCE_DATE = 28
-    AND ATTENDANCE_CHECK_USER_NO = #{no}
+    WHERE ATTENDANCE_CHECK_USER_NO = #{no}
 </update>
-
-
 
 </mapper>

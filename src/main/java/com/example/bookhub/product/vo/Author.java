@@ -1,11 +1,10 @@
 package com.example.bookhub.product.vo;
 
 
+import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-import java.time.LocalDateTime;
-
 public class Author {
     private long authorNo;
     private String name;

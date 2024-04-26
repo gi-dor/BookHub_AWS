@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.product.mapper.BookMapper">
 
-    <resultMap type="com.example.bookhub.product.vo.Book" id="BookDetailResultMap">
+    <resultMap type="com.example.bookhub.product.dto.BookDto" id="BookDetailResultMap">
         <id column="book_no" property="bookNo"/>
+        <result column="book_image_cover" property="imageCover"/>
         <result column="book_name" property="name"/>
         <result column="book_published_date" property="publishedDate"/>
         <result column="book_description" property="description"/>
@@ -21,6 +22,13 @@
                      select="com.example.bookhub.product.mapper.BookMapper.getCategoryByNo"/>
         <association column="publisher_no" property="publisher"
                      select="com.example.bookhub.product.mapper.BookMapper.getPublisherByNo"/>
+    </resultMap>
+
+    <resultMap type="com.example.bookhub.product.vo.BookImages" id="BookImagesResultMap">
+        <id column="book_image_no" property="no"/>
+        <result column="book_image_thumbnail" property="imageThumbnail"/>
+        <result column="book_image_cover" property="imageCover"/>
+        <result column="book_image_description" property="imageDescription"/>
     </resultMap>
 
     <resultMap type="com.example.bookhub.product.vo.Category" id="CategoryResultMap">
@@ -54,26 +62,28 @@
 
     <select id="getBookDetailByNo" parameterType="long" resultMap="BookDetailResultMap">
         select
-            BOOK_NO,
-            BOOK_NAME,
-            BOOK_PUBLISHED_DATE,
-            BOOK_DESCRIPTION,
-            ISBN,
-            BOOK_LIST_PRICE,
-            PUBLISHER_NO,
-            CATEGORY_NO,
-            BOOK_PAGES,
-            BOOK_LANGUAGE,
-            BOOK_WEIGHT,
-            BOOK_TOTAL_NUMBER,
-            BOOK_SIZE,
-            BOOK_DISCONTINUING_YN,
-            BOOK_DISCOUNT_RATE,
-            BOOK_SALES_VOLUME
+            B.BOOK_NO,
+            BI.BOOK_IMAGE_COVER,
+            B.BOOK_NAME,
+            B.BOOK_PUBLISHED_DATE,
+            B.BOOK_DESCRIPTION,
+            B.ISBN,
+            B.BOOK_LIST_PRICE,
+            B.PUBLISHER_NO,
+            B.CATEGORY_NO,
+            B.BOOK_PAGES,
+            B.BOOK_LANGUAGE,
+            B.BOOK_WEIGHT,
+            B.BOOK_TOTAL_NUMBER,
+            B.BOOK_SIZE,
+            B.BOOK_DISCONTINUING_YN,
+            B.BOOK_DISCOUNT_RATE,
+            B.BOOK_SALES_VOLUME
         from
-            BOOK B
+            BOOK B, BOOK_IMAGES BI
         where
-            BOOK_NO = #{value}
+            B.BOOK_NO = #{value}
+            and B.BOOK_NO = BI.BOOK_NO
     </select>
 
 </mapper>

@@ -4,6 +4,33 @@
 <!-- ##### css  ##### -->
 <th:block layout:fragment="style">
     <link rel="stylesheet" th:href="@{/css/user/listCommon.css}" />
+    <style>
+        .page-link {
+            color: #000;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .page-item.active .page-link {
+            z-index: 1;
+            color: #555;
+            font-weight:bold;
+            background-color: #f1f1f1;
+            border-color: #ccc;
+
+        }
+
+        .page-link:focus, .page-link:hover {
+            color: #000;
+            background-color: #fafafa;
+            border-color: #ccc;
+        }
+
+        #titleLink1 , titleLink2 {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
 </th:block>
 
 <!-- ###### content 시작 ###### -->
@@ -19,94 +46,66 @@
             <h3 id="listTitle">찜 목록</h3>
             <br>
             <div class="row">
-                <div class="col-6">
-                    <div class="card border-light mb-3" style="max-width: 20rem;">
-                        <div class="card-header">책 제목</div>
+                <div class="col-6" th:each="book : ${wishList}">
+                    <div class="card border-light mb-3" >
+                        <a id="titleLink1" th:href="@{/product/book/detail(bookNo=${book.bookNo})}">
+                            <div class="card-header" th:text="${book.name}">책 제목</div>
+                        </a>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-8">이미지</div>
-                                <div class="col-4">
-                                    <p class="card-text">지은이 , 옮긴이</p>
-                                    <p class="card-text">가격</p>
-                                    <button class="btn btn-secondary btn-sm">삭제</button>
+                                <div class="col-3">
+                                    <a id="titleLink2" th:href="@{/product/book/detail(bookNo=${book.bookNo})}">
+                                        <img th:src="${book.bookImages}" class="img-fluid" alt="Book Image">
+                                    </a>
+                                </div>
+                                <div class="col-9">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <span class="card-text me-3 fs-6 small" th:text="${book.authors}">지은이 , 옮긴이</span>
+                                            <p class="card-text" th:text="${book.price}">가격</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-secondary btn-sm" onclick="deleteWishList()" style="margin-left: 30px;">삭제</button>
+<!--                                            <a th:href=@{/mypage/list/deleteWishList(wishNo=${book.wishNo})}" class="btn btn-secondary btn-sm"  style="margin-left: 30px;">삭제</a>&ndash;&gt;-->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br>
-                <div class="col-6">
-                    <div class="card border-light mb-3" style="max-width: 20rem;">
-                        <div class="card-header">책 제목</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-8">11</div>
-                                <div class="col-4">22</div>
-                            </div>
-                            <h4 class="card-title">Light card title</h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="card border-light mb-3" style="max-width: 20rem;">
-                <div class="card-header">책 제목</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-8">11</div>
-                        <div class="col-4">22</div>
-                    </div>
-                    <h4 class="card-title">Light card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-            <div style="margin:0 0 30px 0;">
-                <table class="table" style="text-align: center;">
-                    <colgroup>
-                        <col width="50%">
-                        <col width="">
-                        <col width="">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th style="background-color: #1D3559; color: white" >제목</th>
-                            <th style="background-color: #1D3559; color: white">작가</th>
-                            <th style="background-color: #1D3559; color: white">가격</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                        <tr>
-                            <td>샘플제목</td>
-                            <td>샘플작가</td>
-                            <td>가격</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
 
         <div class="col-1"></div>
+
+        <div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center pagination-sm">
+                    <!-- 이전 페이지 링크 -->
+                    <li class="page-item">
+                        <a class="page-link" th:attr="data-page=${page.currentPage - 1}"  onclick="page(event)"
+                           th:href="@{/mypage/list/wishList(page=${page.currentPage - 1})}"
+                           th:if="${page.currentPage > 1}">이전</a>
+                        <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                    </li>
+                    <!-- 페이지 번호를 표시하기 위한 리스트 아이템 -->
+                    <li class="page-item" th:each="pageNo : ${#numbers.sequence(page.beginPage, page.endPage)}"
+                        th:class="${pageNo == page.currentPage} ? 'active' : ''">        <!-- 현재 페이지와 페이지 번호를 비교하여 활성화 클래스를 동적으로 설정 -->
+                        <a class="page-link" th:attr="data-page=${pageNo}" onclick="page(event)"
+                           th:href="@{/mypage/list/wishList(page=${pageNo})}" th:text="${pageNo}"></a>
+                    </li>
+                    <!-- 다음 페이지 링크 -->
+                    <li class="page-item">
+                        <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)"
+                           th:href="@{/mypage/list/wishList(page=${page.currentPage + 1})}"
+                           th:if="${page.currentPage < page.totalPages}">다음</a>
+                        <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
 
         <!-- ##### row 종료 ##### -->
     </div>

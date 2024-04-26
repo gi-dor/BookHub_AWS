@@ -26,7 +26,7 @@
                              <tr th:each="cartBook: ${cartBooks}">
                                  <td><input type="checkbox" name="buyBookNoList" th:value="${cartBook.bookNo}"></td>
                                  <input type="hidden" name="cart-no" th:value="${cartBook.cartNo}" />
-                                 <td></td>
+                                 <td><img th:src="${cartBook.imageCover}"/></td>
                                  <td>
                                      <div th:text="${cartBook.name}">책 제목</div>
                                      <div class="cart-book-price" th:text="${cartBook.price}">가격</div>
