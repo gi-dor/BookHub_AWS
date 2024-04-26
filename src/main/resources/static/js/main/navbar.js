@@ -1,4 +1,4 @@
-// 검색어 입력창 클릭시 변경
+
 const searchInput = document.getElementById('searchInput');
 
 searchInput.addEventListener('focus', function() {
