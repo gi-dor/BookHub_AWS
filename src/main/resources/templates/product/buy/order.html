@@ -12,7 +12,7 @@
                         <table class="table">
                             <tbody>
                             <tr th:each="buyBook, iterStat : ${buyBookList}">
-                                <td><img src=""></td>
+                                <td><img th:src="${buyBook.imageCover}"></td>
                                 <td th:text="${buyBook.name}"></td>
                                 <td class="buy-book-price" th:text="${buyBook.price}"></td>
                                 <td class="buy-book-discount-rate" th:text="${buyBook.discountRate}"></td>
