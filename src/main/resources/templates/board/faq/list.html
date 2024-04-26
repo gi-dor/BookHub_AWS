@@ -1,6 +1,9 @@
 
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/board/faqList.css}" />
+</th:block>
 
 
 <div layout:fragment="content" class="container">

@@ -87,4 +87,5 @@
         set user_point = user_point - #{totalPointUseAmount}
         where user_no = #{userNo}
     </update>
+
 </mapper>

@@ -7,6 +7,8 @@ import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+
 @Service
 @RequiredArgsConstructor
 public class AttendanceService {
@@ -18,9 +20,9 @@ public class AttendanceService {
      * 출석체크 이벤트 참여
      * @param userNO
      */
-    public void insertAttendance(long userNO) {
+    public void insertAttendance(long userNo) {
 
-        attendanceMapper.insertAttendance(userNO);
+        attendanceMapper.insertAttendance(userNo);
     }
 
     /**
@@ -28,7 +30,7 @@ public class AttendanceService {
      * @param userNo
      * @return
      */
-    public int userAttendanceCheck(long userNo) {
+    public Attendance userAttendanceCheck(long userNo) {
 
         return attendanceMapper.userAttendanceCheckByNo(userNo);
     }

@@ -36,6 +36,7 @@
         and b.BUY_STATUS_NO = bs.BUY_STATUS_NO
         and b.BUY_DELIVERY_REQUEST_NO = bdr.BUY_DELIVERY_REQUEST_NO
         and u.USER_ID = #{value}
+        and b.REFUND_YN = 'N'
       ORDER BY
           b.BUY_NO DESC
           LIMIT 3;

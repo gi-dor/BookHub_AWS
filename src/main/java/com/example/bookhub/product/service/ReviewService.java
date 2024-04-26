@@ -2,6 +2,7 @@ package com.example.bookhub.product.service;
 
 import com.example.bookhub.product.dto.ReviewForm;
 import com.example.bookhub.product.dto.ReviewDto;
+import com.example.bookhub.product.dto.ReviewReplyForm;
 import com.example.bookhub.product.mapper.ReviewMapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
@@ -113,5 +114,21 @@ public class ReviewService {
             reviewMapper.updateReviewRecommendCount(reviewNo, recommendStatus);
             return recommendStatus;
         }
+    }
+
+    public void createReviewReply(ReviewReplyForm reviewReplyForm, String userId) {
+
+        Review review = new Review();
+        review.setReviewNo(reviewReplyForm.getReviewNo());
+
+        User user = userMapper.selectUserById(userId);
+
+        ReviewReply reviewReply = ReviewReply.builder()
+                .comment(reviewReplyForm.getComment())
+                .review(review)
+                .user(user)
+                .build();
+
+        reviewMapper.createReviewReply(reviewReply);
     }
 }
