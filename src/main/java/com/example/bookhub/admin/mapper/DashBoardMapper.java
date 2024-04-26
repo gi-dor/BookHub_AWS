@@ -20,6 +20,7 @@ public interface DashBoardMapper {
 
     // 통게 테이블 값 가져오기
     List<DayTotalDto> getTotalDate();
+    DayTotalDto getYesterDay(String value);
 
     // 답변이 완료되지 않은 문의 건수
     int noAnswerCnt();
@@ -33,6 +34,8 @@ public interface DashBoardMapper {
     int noAnswerRatio();
     int answerRatio();
 
+    // 답변미답변 그래프
     List<ratioDto> getRatio();
+
 
 }
