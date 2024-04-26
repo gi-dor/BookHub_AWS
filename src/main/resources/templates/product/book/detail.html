@@ -414,10 +414,12 @@
                                 </div>
 
                                 <!-- 댓글 작성폼 -->
-                                <form class="border p-3 mb-3" method="post">
+                                <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
+                                    <input type="hidden" name="bookNo" value="${bookNo}"/>
+                                    <input type="hidden" name="reviewNo" value="${review.reviewNo}"/>
                                    <div class="row g-3">
                                         <div class="col-12 position-relative">
-                                                <textarea rows="3" class="form-control" name="content"></textarea>
+                                                <textarea rows="3" class="form-control" name="comment"></textarea>
                                                 <button type="submit" class="btn btn-outline-dark btn-sm position-absolute" style="bottom: 15px; right: 25px;">댓글 등록</button>
                                         </div>
                                     </div>
