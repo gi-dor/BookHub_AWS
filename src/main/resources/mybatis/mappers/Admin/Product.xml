@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.admin.mapper.ProductMapper">
+
     <select id="getTotalRows" resultType="int">
         SELECT
                 count(*)
@@ -10,16 +11,16 @@
                 INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
                 INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
         <where>
-            <if test="opt != null">
+            <if test="filter.opt != null">
                 <choose>
-                    <when test="opt == 'productName'">
-                        B.BOOK_NAME like '%' || #{keyword} || '%'
+                    <when test="filter.opt == 'productName'">
+                        B.BOOK_NAME like '%' || #{filter.keyword} || '%'
                     </when>
-                    <when test="opt == 'author'">
-                        A.AUTHOR_NAME = #{keyword}
+                    <when test="filter.opt == 'author'">
+                        A.AUTHOR_NAME = #{filter.keyword}
                     </when>
-                    <when test="opt == 'publisher'">
-                        P.PUBLISHER_NAME = #{keyword}
+                    <when test="filter.opt == 'publisher'">
+                        P.PUBLISHER_NAME = #{filter.keyword}
                     </when>
                 </choose>
             </if>
@@ -91,20 +92,79 @@
                             INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
                             INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
                             INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
+                            INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
 
                     <where>
-                        <if test="opt != null">
+    		            <!-- 검색어 -->
+                        <if test="filter.opt != null">
                             <choose>
-                                <when test="opt == 'productName'">
-                                    B.BOOK_NAME like '%' || #{keyword} || '%'
+                                <when test="filter.opt == 'productName'">
+                                    AND B.BOOK_NAME like '%' || #{filter.keyword} || '%'
                                 </when>
-                                <when test="opt == 'author'">
-                                    A.AUTHOR_NAME = #{keyword}
+                                <when test="filter.opt == 'author'">
+                                    AND A.AUTHOR_NAME = #{filter.keyword}
                                 </when>
-                                <when test="opt == 'publisher'">
-                                    P.PUBLISHER_NAME = #{keyword}
+                                <when test="filter.opt == 'publisher'">
+                                    AND P.PUBLISHER_NAME = #{filter.keyword}
                                 </when>
                             </choose>
+                        </if>
+
+                        <!-- 카테고리 -->
+                        <if test="filter.topCategoryNo != 0">
+                            <choose>
+                                <when test="filter.thirdCategoryNo != 0">
+                                    AND CA.CATEGORY_NO = #{filter.thirdCategoryNo}
+                                </when>
+                                <when test="filter.secondCategoryNo != 0">
+                                    AND CA.CATEGORY_NO = #{filter.secondCategoryNo}
+                                </when>
+                                <when test="filter.topCategoryNo != 0">
+                                    AND CA.CATEGORY_NO = #{filter.topCategoryNo}
+                                </when>
+                            </choose>
+                        </if>
+
+    		            <!-- 기간 검색 -->
+                        <if test="filter.period != null">
+                            <choose>
+                                <when test="filter.period == 'createdDate'">
+                                    AND B.BOOK_CREATED_DATE BETWEEN COALESCE(#{filter.moreDate}, '0001-01-01 00:00:00')
+    		                                                AND COALESCE(#{filter.lessDate} + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                                </when>
+                                <when test="filter.period == 'updatedDate'">
+                                    AND B.BOOK_CREATED_DATE BETWEEN COALESCE(#{filter.moreDate}, '0001-01-01 00:00:00')
+                                                            AND COALESCE(#{filter.lessDate} + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                                </when>
+                                <when test="filter.period == 'publishedDate'">
+                                    AND B.BOOK_CREATED_DATE BETWEEN COALESCE(#{filter.moreDate}, '0001-01-01 00:00:00')
+    		                                                AND COALESCE(#{filter.lessDate} + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                                </when>
+                            </choose>
+                        </if>
+
+    		            <!-- 판매 상태 -->
+                        <if test="filter.available != null">
+    		                AND B.BOOK_STATUS = #{filter.available}
+                        </if>
+                        <if test="filter.discontinued != null">
+                            AND B.BOOK_STATUS = #{filter.discontinued}
+                        </if>
+                        <if test="filter.soldOut != null">
+                            AND B.BOOK_STATUS = #{filter.soldOut}
+                        </if>
+
+    		            <!-- 재고 -->
+    		            <if test="filter.moreStock != 0">
+                            AND B.BOOK_STOCK > #{filter.moreStock}
+                        </if>
+                        <if test="filter.lessStock != 0">
+                            AND B.BOOK_STOCK &lt; #{filter.lessStock}
+                        </if>
+
+                        <!-- 출판사 -->
+                        <if test="filter.publisherNo != 0">
+                            AND P.PUBLISHER_NO = #{filter.publisherNo}
                         </if>
                     </where>
     				) AS subQuery

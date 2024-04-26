@@ -7,8 +7,8 @@
                 <h1 class="fs-3">상품 조회</h1>
 
                 <!-- 필터 선택 영역-->
-                <div class="col-12 bg-light p-3 mb-3">
-                    <form method="post" th:action="@{/admin/product/filter}" th:object="${productFilter}">
+                <form th:action="@{/admin/product/list}" th:object="${productFilter}">
+                    <div class="col-12 bg-light p-3 mb-3">
                         <table class="table">
                             <tbody>
                             <tr>
@@ -27,19 +27,19 @@
                             <tr>
                                 <td class="bg-light">카테고리</td>
                                 <td>
-                                    <select name="topCategory" class="form-control-sm">
+                                    <select name="topCategoryNo" class="form-control-sm">
                                         <option disabled selected>대분류 선택</option>
                                         <option th:each="topLevelCategory : ${topLevelCategories}"
                                                 th:value="${topLevelCategory.no}"
                                                 th:text="${topLevelCategory.name}"
-                                                th:if="${topCategory eq topLevelCategory ? 'selected' : ''}">
+                                                th:if="${topCategoryNo eq topLevelCategory ? 'selected' : ''}">
                                         </option>
                                     </select>
-                                    <select name="secondCategory" class="form-control-sm">
+                                    <select name="secondCategoryNo" class="form-control-sm">
                                         <option disabled selected>중분류 선택</option>
                                         <!-- 중분류 영역 -->
                                     </select>
-                                    <select name="thirdCategory" class="form-control-sm">
+                                    <select name="thirdCategoryNo" class="form-control-sm">
                                         <option disabled selected>소분류 선택</option>
                                         <!-- 소분류 영역 -->
                                     </select>
@@ -56,7 +56,7 @@
                                             </option>
                                             <option value="updatedDate" th:selected="${period} == 'updatedDate'">수정일
                                             </option>
-                                            <option value="updatedDate" th:selected="${period} == 'updatedDate'">출판일
+                                            <option value="updatedDate" th:selected="${period} == 'publishedDate'">출판일
                                             </option>
                                         </select>
                                         <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
@@ -105,14 +105,14 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="bg-light">브랜드(출판사)</td>
+                                <td class="bg-light">출판사</td>
                                 <td>
-                                    <select name="publisher" class="form-control-sm">
+                                    <select name="publisherNo" class="form-control-sm">
                                         <option disabled selected>전체</option>
                                         <option th:each="pub : ${publishers}"
                                                 th:value="${pub.no}"
                                                 th:text="${pub.name}"
-                                                th:if="${publisher eq  pub.no ? 'selected' : ''}">
+                                                th:if="${publisherNo eq  pub.no ? 'selected' : ''}">
                                         </option>
                                     </select>
                                 </td>
@@ -123,12 +123,10 @@
                             <button type="submit" class="btn btn-primary btn-sm">검색</button>
                             <button type="button" class="btn btn-outline-secondary btn-sm">초기화</button>
                         </div>
-                    </form>
-                </div>
+                    </div>
 
-                <!-- 조회 결과 영역 -->
-                <div class="col-12 bg-light p-3 mb-3">
-                    <form action="">
+                    <!-- 조회 결과 영역 -->
+                    <div class="col-12 bg-light p-3 mb-3">
                         <input type="hidden" name="page"/>
                         <div class="my-3 d-flex justify-content-between">
                             <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
@@ -267,8 +265,8 @@
                                    class="page-link">다음</a>
                             </li>
                         </ul>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -276,14 +274,14 @@
 
 <script layout:fragment="listScript" type="text/javascript">
     $(function () {
-        $("select[name='topCategory']").click(function () {
-            let $secondCategorySelector = $("select[name='secondCategory'] option");
+        $("select[name='topCategoryNo']").click(function () {
+            let $secondCategorySelector = $("select[name='secondCategoryNo'] option");
             const categoryNo = $(this).val();
             getSubCategoryOptions(categoryNo, $secondCategorySelector);
         })
 
-        $("select[name='secondCategory']").click(function () {
-            let $thirdCategorySelector = $("select[name='thirdCategory'] option");
+        $("select[name='secondCategoryNo']").click(function () {
+            let $thirdCategorySelector = $("select[name='thirdCategoryNo'] option");
             const categoryNo = $(this).val();
             getSubCategoryOptions(categoryNo, $thirdCategorySelector);
         })

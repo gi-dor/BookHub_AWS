@@ -8,9 +8,9 @@ import lombok.Setter;
 public class ProductFilter {
     private String opt;
     private String keyword;
-    private String topCategory;
-    private String secondCategory;
-    private String thirdCategory;
+    private long topCategoryNo;
+    private long secondCategoryNo;
+    private long thirdCategoryNo;
     private String period;
     private String moreDate;
     private String lessDate;
@@ -19,6 +19,6 @@ public class ProductFilter {
     private String soldOut;
     private int moreStock;
     private int lessStock;
-    private long publisher;
+    private long publisherNo;
 
 }
