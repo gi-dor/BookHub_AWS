@@ -6,6 +6,7 @@ import com.example.bookhub.product.dto.KakaoCancelResponse;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayBusinessLogicException;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.KakaoPayService;
+import com.example.bookhub.product.service.RefundService;
 import com.example.bookhub.product.vo.Buy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,7 @@ public class KakaoPayController {
 
     private final KakaoPayService kakaoPayService;
     private final BuyService buyService;
+    private final RefundService refundService;
 
     /**
      * 결제요청
@@ -66,10 +68,10 @@ public class KakaoPayController {
 
     @PostMapping("/refund")
     public String refund(long buyNo, Model model, Principal principal) {
-        Buy buy = buyService.getBuyByBuyNo(buyNo);
+        Buy buy = refundService.getBuyByBuyNo(buyNo);
         KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy);
         if(kakaoCancelResponse != null) {
-            buyService.createRefund(buy.getBuyNo(), principal.getName());
+            refundService.refund(buy, principal.getName());
         }
 
         int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();

@@ -15,6 +15,4 @@ public interface BuyMapper {
     void createCouponUsed(CouponUsed couponUsed);
     void updateCouponProducedUsed(long couponProducedNo);
     void updatePointUsed(Map<String, Object> map);
-    Buy getBuyByBuyNo(long buyNo);
-    void createRefund(Refund refund);
 }

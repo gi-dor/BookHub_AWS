@@ -15,18 +15,6 @@
         <result column="coupon_price" property="price"/>
     </resultMap>
 
-    <resultMap id="BuyDetailMap" type="com.example.bookhub.product.vo.Buy">
-        <id column="buy_no" property="buyNo"/>
-        <result column="total_price" property="totalPrice"/>
-        <result column="total_book_discount_amount" property="totalBookDiscountAmount"/>
-        <result column="total_point_use_amount" property="totalPointUseAmount"/>
-        <result column="final_price" property="finalPrice"/>
-        <result column="point_accumulation_amount" property="pointAccumulationAmount"/>
-        <result column="buy_date" property="buyDate"/>
-        <result column="gift" property="gift"/>
-        <result column="order_id" property="orderId"/>
-    </resultMap>
-
     <!-- association -->
     <select id="getCouponByNo" parameterType="long" resultMap="CouponResultMap">
         select
@@ -100,25 +88,4 @@
         where user_no = #{userNo}
     </update>
 
-    <select id="getBuyByBuyNo" parameterType="long" resultMap="BuyDetailMap">
-        select buy_no,
-               total_price,
-               total_book_discount_price,
-               total_coupon_discount_amount,
-               total_point_use_amount,
-               final_price,
-               point_accumulation_amount,
-               buy_date,
-               gift,
-               order_id
-        from BUY
-        where buy_no = #{value}
-    </select>
-
-    <select id="createRefund" parameterType="com.example.bookhub.product.vo.Refund">
-        insert into REFUND
-        (buy_no, user_no)
-        values
-        (#{buy.buyNo}, #{user.no})
-    </select>
 </mapper>

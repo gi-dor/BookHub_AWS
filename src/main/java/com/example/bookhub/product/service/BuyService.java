@@ -87,22 +87,4 @@ public class BuyService {
         buyMapper.updatePointUsed(map);
     }
 
-    public Buy getBuyByBuyNo(long buyNo) {
-        return buyMapper.getBuyByBuyNo(buyNo);
-    }
-
-    public void createRefund(long buyNo, String userId) {
-
-        Refund refund = new Refund();
-
-        Buy buy = new Buy();
-        buy.setBuyNo(buyNo);
-        refund.setBuy(buy);
-
-        User user = userMapper.selectUserById(userId);
-        user.setNo(user.getNo());
-        refund.setUser(user);
-
-        buyMapper.createRefund(refund);
-    }
 }
