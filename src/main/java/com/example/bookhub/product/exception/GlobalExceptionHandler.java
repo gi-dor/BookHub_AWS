@@ -3,6 +3,7 @@ package com.example.bookhub.product.exception;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayApproveException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayBusinessLogicException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayReadyException;
+import com.example.bookhub.product.exception.kakaoPay.KakaoPayRefundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(KakaoPayBusinessLogicException.class)
     public String kakaoPayBusinessLogicExceptionHandler(KakaoPayBusinessLogicException ex, Model model){;
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "product/pay/error";
+    }
+
+    @ExceptionHandler(KakaoPayRefundException.class)
+    public String kakaoPayRefundExceptionHandler(KakaoPayRefundException ex, Model model){;
         model.addAttribute("errorMessage", ex.getMessage());
         return "product/pay/error";
     }

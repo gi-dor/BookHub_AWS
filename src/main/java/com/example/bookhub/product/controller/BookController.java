@@ -1,7 +1,9 @@
 package com.example.bookhub.product.controller;
 
+import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.vo.Book;
+import com.example.bookhub.product.vo.BookImages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +20,7 @@ public class BookController {
 
     @GetMapping("/detail")
     public String home(@RequestParam("bookNo") long bookNo, Model model){
-        Book book = bookService.getBookDetailByNo(bookNo);
+        BookDto book = bookService.getBookDetailByNo(bookNo);
         model.addAttribute("book", book);
 
         return "product/book/detail";

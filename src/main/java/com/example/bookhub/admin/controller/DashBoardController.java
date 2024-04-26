@@ -61,6 +61,11 @@ public class DashBoardController {
         return dashBoardService.getTotalDate();
     }
 
+    @RequestMapping("/getYesterDay.do")
+    public @ResponseBody DayTotalDto getYesterDay(String value){
+        return dashBoardService.getYesterDay(value);
+    }
+
     @RequestMapping("/noAnswerCnt.do")
     public @ResponseBody Map<String, Object> getUserCnt(Model model){
         int cnt = dashBoardService.noAnswerCnt();
