@@ -44,4 +44,38 @@
         where
             buy_no = #{value}
     </update>
+
+    <select id="getCouponProducedNosByBuyNo" parameterType="long" resultType="long">
+        select
+            coupon_produced_no
+        from
+            COUPON_USED
+        where
+            buy_no = #{value}
+    </select>
+
+    <delete id="deleteCouponUsedByBuyNo" parameterType="long">
+        delete from
+            COUPON_USED
+        where
+            buy_no = #{value}
+    </delete>
+
+    <update id="updateCouponProducedUsedByBuyNo" parameterType="long">
+        update
+            COUPON_PRODUCED
+        set
+            used = 'N'
+        where
+            coupon_produced_no = #{value}
+    </update>
+
+    <update id="updatePointUsedByUserNo">
+        update
+            USER
+        set
+            user_point = user_point + #{totalPointUseAmount}
+        where
+            user_no = #{userNo}
+    </update>
 </mapper>

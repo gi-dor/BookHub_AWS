@@ -7,6 +7,9 @@ import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,11 +22,13 @@ public class RefundService {
         return refundMapper.getBuyByBuyNo(buyNo);
     }
 
+    @Transactional
     public void refund(Buy buy, String userId){
         User user = userMapper.selectUserById(userId);
 
         createRefund(buy.getBuyNo(), user);
         updateRefundYn(buy.getBuyNo());
+        revertCouponAndPoint(buy, user.getNo());
     }
 
     public void createRefund(long buyNo, User user) {
@@ -44,4 +49,12 @@ public class RefundService {
         refundMapper.updateRefundYn(buyNo);
     }
 
+    public void revertCouponAndPoint(Buy buy, long userNo){
+        List<Long> couponProducedNoList = refundMapper.getCouponProducedNosByBuyNo(buy.getBuyNo());
+        refundMapper.deleteCouponUsedByBuyNo(buy.getBuyNo());
+        for(long couponProducedNo : couponProducedNoList){
+            refundMapper.updateCouponProducedUsedByBuyNo(couponProducedNo);
+        }
+        refundMapper.updatePointUsedByUserNo(userNo, buy.getTotalPointUseAmount());
+    }
 }
