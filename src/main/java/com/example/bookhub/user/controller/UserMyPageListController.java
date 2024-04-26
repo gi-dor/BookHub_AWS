@@ -1,9 +1,11 @@
 package com.example.bookhub.user.controller;
 
+import com.example.bookhub.user.dto.PageWishListDTO;
+import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
-import com.example.bookhub.user.vo.WishList;
+import com.example.bookhub.user.vo.UserPagination;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -25,19 +29,40 @@ public class UserMyPageListController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/wishList")
-    public String wishList(Model model , Principal principal) {
+    public String wishList(@RequestParam(name="page" , required = false , defaultValue="1") int page ,
+                           Model model ,
+                           Principal principal) {
 
         // 로그인 ID 사용자 정보 조회
         String userId = principal.getName();
         User user = userService.selectUserById(userId);
 
         // 찜목록 조회
-        List<WishList> wishList = myPageService.getWishListById(user.getId());
+        PageWishListDTO wishList = myPageService.getWishListById(user.getId() , page);
 
-        model.addAttribute("wishList",wishList);
+        model.addAttribute("wishList",wishList.getWishListDTO());
+        model.addAttribute("page" , wishList.getUserPagination());
 
         return "/user/list/wishList";
     }
+
+
+    /*   하는중
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/deleteWishList")
+    public String deleteWishList(Principal principal , Long wishNo) {
+
+        String id =  principal.getName();
+
+        try{
+            myPageService.deleteWishListByIdAndBookNo(wishNo,id );
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/mypage/list/wishList";
+    }
+    */
 
 
     @GetMapping("/orderList")
