@@ -15,7 +15,7 @@
                 <div class="mb-4">
                     <input type="hidden" name="opt" th:value="${param.opt}">
                     <input type="hidden" name="keyword" th:value="${param.keyword}">
-                    <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, 'sales')}"/>
+                    <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '0')}"/>
                     <input type="hidden" name="page" th:value="${#strings.defaultString(param.page, 1)}"/>
                     <input type="text" id="Search2_SearchWord" class="form-control border" placeholder="검색어 입력" name="extraKeyword" th:value="${param.extraKeyword}">
                 </div>
@@ -34,20 +34,20 @@
         <!-- Main content -->
         <div class="col-10 mb-5">
             <h1 class="mb-3">통합검색</h1>
-            <!--옵션선택? 판매량순, 출시일순, 평점순, 리뷰순 -->
+            <!--옵션선택? 판매량순, 출간일순, 평점순, 리뷰순 -->
             <div class="searchSort mb-3">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#" data-sort="sales" >판매량순</a>
+                        <a class="nav-link" aria-current="page" href="#" data-sort="0">판매량순</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-sort="pubdate">출시일순</a>
+                        <a class="nav-link" href="#" data-sort="1">출간일순</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="#" data-sort="avgrating" >평점순</a>
+                        <a class="nav-link" href="#" data-sort="2">평점순</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-sort="reviewcnt" >리뷰순</a>
+                        <a class="nav-link" href="#" data-sort="3">리뷰순</a>
                     </li>
                 </ul>
             </div>

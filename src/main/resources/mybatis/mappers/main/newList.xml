@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.bookhub.main.mapper.SearchMapper">
-
-    <select id="searchBooks" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
+<mapper namespace="com.example.bookhub.main.mapper.NewBookMapper">
+    <select id="newBookList" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
         SELECT
         B.BOOK_NO,
         B.BOOK_NAME,
@@ -14,9 +13,11 @@
         BA.AUTHOR_TYPE,
         A.AUTHOR_NAME,
         BI.BOOK_IMAGE_COVER,
-        P.PUBLISHER_NAME
+        P.PUBLISHER_NAME,
+        B.CATEGORY_NO,
+        C.CATEGORY_NAME
         FROM
-        BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P
+        BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P,CATEGORY C
         WHERE
         B.BOOK_NO = BA.BOOK_NO
         AND
@@ -25,30 +26,38 @@
         BA.AUTHOR_NO = A.AUTHOR_NO
         AND
         B.PUBLISHER_NO = P.PUBLISHER_NO
-
-            <!--navbar 검색-->
-        <if test="keyword != null">
+        AND
+        B.CATEGORY_NO = C.CATEGORY_NO
+        <if test="cate != 0">
             <choose>
-                <when test="opt == '국내'">
-                    AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 1)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
-
-                </when>
-                <when test="opt == '국외'">
-                    AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 2)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
-
+                <when test="cateKeyword != 0">
+                  and  C.CATEGORY_NO = #{cateKeyword}
                 </when>
                 <otherwise>
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
-
+                    AND C.CATEGORY_NO IN (SELECT C.CATEGORY_NO
+                                      FROM CATEGORY
+                                      WHERE C.PARENT_CATEGORY_NO = #{cate})
                 </otherwise>
             </choose>
-            <!--결과내 검색 -->
-            <if test="extraKeyword != null">
-                AND (BOOK_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{extraKeyword}, '%') )
-            </if>
         </if>
+
+        <choose>
+            <when test="pubDate == 1">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 14 DAY)
+            </when>
+            <when test="pubDate == 2">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 56 DAY)
+            </when>
+            <when test="pubDate == 3">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 84 DAY)
+            </when>
+            <when test="pubDate == 4">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
+            </when>
+            <otherwise>
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+            </otherwise>
+        </choose>
         <choose>
             <when test="sort == 0">
                 ORDER BY BOOK_SALES_VOLUME DESC
@@ -63,7 +72,7 @@
                 ORDER BY BOOK_TOTAL_REPLY_CNT DESC
             </when>
             <otherwise>
-                ORDER BY BOOK_SALES_VOLUME DESC
+                ORDER BY BOOK_PUBLISHED_DATE DESC
             </otherwise>
         </choose>
         LIMIT #{offset}, #{recordSize};
@@ -79,6 +88,7 @@
         <result column="BOOK_LIST_PRICE" property="price"/>
         <result column="BOOK_IMAGE_COVER" property="cover"/>
         <result column="PUBLISHER_NAME" property="publisherName"/>
+        <result column="CATEGORY_NAME" property="categoryName"/>
         <collection property="authors" ofType="com.example.bookhub.main.dto.BookAuthorDto">
             <id column="AUTHOR_NO" property="no"></id>
             <result column="AUTHOR_NAME" property="name"></result>
@@ -92,13 +102,18 @@
         SELECT
         COUNT(*)
         FROM
-        BOOK B, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P
+        BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P,CATEGORY C
         WHERE
         B.BOOK_NO = BA.BOOK_NO
+        AND
+        B.BOOK_NO = BI.BOOK_NO
         AND
         BA.AUTHOR_NO = A.AUTHOR_NO
         AND
         B.PUBLISHER_NO = P.PUBLISHER_NO
+        AND
+        B.CATEGORY_NO = C.CATEGORY_NO
+       and B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY);
 
         <!-- 검색 조건 -->
         <if test="keyword != null">
@@ -124,6 +139,4 @@
             </if>
         </if>
     </select>
-
-
 </mapper>
