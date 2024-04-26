@@ -80,26 +80,30 @@
     </update>
 
 
-    <select id="selectWishListById" resultMap="BookDtoMap" parameterType="string">
+    <select id="selectWishListById" resultMap="BookDtoMap">
         select
             w.WISH_LIST_NO                    ,
             w.WISH_LIST_CREATED_DATE         ,
             b.BOOK_NAME                     ,
             i.BOOK_IMAGE_COVER              ,
             a.AUTHOR_NO                     ,
-            a.AUTHOR_NAME
+            a.AUTHOR_NAME                   ,
+            b.BOOK_NO
         from BOOK b , USER u , USER_WISHLIST w , BOOK_IMAGES i , AUTHOR a , BOOK_AUTHOR ba
         where u.USER_NO = w.USER_NO
         and   b.BOOK_NO = w.BOOK_NO
         and   i.BOOK_NO = b.BOOK_NO
         and   a.AUTHOR_NO = ba.AUTHOR_NO
         and   ba.BOOK_NO = b.BOOK_NO
-        and   u.USER_ID = #{id}
+        and   u.USER_ID = #{userId}
+        order by WISH_LIST_CREATED_DATE DESC
+        LIMIT #{offset}, 10
     </select>
 
     <resultMap id="BookDtoMap" type="com.example.bookhub.user.dto.WishListDTO">
         <id column="WISH_LIST_NO" property="wishNo" />
         <result column="book_name" property="name" />
+        <result column="book_no" property="bookNo" />
         <result column="book_list_price" property="price" />
         <result column="book_image_cover" property="bookImages"/>
         <collection property="authorList" ofType="com.example.bookhub.product.vo.Author">
@@ -109,6 +113,27 @@
     </resultMap>
 
 
+    <select id="getTotalWishListCount" parameterType="string" resultType="int">
+        SELECT COUNT(DISTINCT b.BOOK_NO)
+        FROM BOOK b, USER u, USER_WISHLIST w, BOOK_IMAGES i, AUTHOR a, BOOK_AUTHOR ba
+        WHERE
+            u.USER_NO = w.USER_NO AND
+            b.BOOK_NO = w.BOOK_NO AND
+            i.BOOK_NO = b.BOOK_NO AND
+            a.AUTHOR_NO = ba.AUTHOR_NO AND
+            ba.BOOK_NO = b.BOOK_NO AND
+            u.USER_ID = #{id}
+    </select>
+
+
+    <delete id="deleteWishListById">
+        delete
+        from USER_WISH_LIST
+        where WISH_LIST_NO = #{wishNo}
+          and user_no = (select USER_NO
+                         FROM USER
+                         where USER_ID = #{id})
+    </delete>
 
 
 </mapper>

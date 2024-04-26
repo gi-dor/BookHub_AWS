@@ -3,10 +3,12 @@ package com.example.bookhub.user.service;
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.user.dto.ChangePasswordForm;
+import com.example.bookhub.user.dto.PageWishListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.mapper.MyPageMapper;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
+import com.example.bookhub.user.vo.UserPagination;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,14 +76,24 @@ public class MyPageService {
     }
 
 
-    public List<WishListDTO> getWishListById(String id) {
+    public PageWishListDTO getWishListById(String id , int page) {
         User user = userMapper.selectUserById(id);
-        return  myPageMapper.selectWishListById(user.getId());
+
+        // 사용자의 전체 찜 목록 개수를 조회
+        int totalRows = myPageMapper.getTotalWishListCount(user.getId());
+
+        // 사용자의 페이징 정보를 생성합니다.
+        UserPagination userPagination = new UserPagination(page,totalRows);
+
+        // offset에 getBegin사용
+        int offset = userPagination.getBegin();
+
+        // 사용자의 페이징 정보를 기반으로 찜 목록을 가져온다
+        List<WishListDTO> wishListDTO =   myPageMapper.selectWishListById(user.getId() , offset);
+
+        return  new PageWishListDTO(wishListDTO,userPagination );
     }
 
 
-//    public void deleteWishListByNo(String id, int no) {
-//        User user = userMapper.selectUserById(id);
-//     return null;
-//    }
+
 }

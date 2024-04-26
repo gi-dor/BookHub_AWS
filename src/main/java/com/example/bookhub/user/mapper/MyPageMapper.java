@@ -6,6 +6,7 @@ import com.example.bookhub.user.dto.WishListDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 @Mapper
 public interface MyPageMapper {
@@ -20,5 +21,9 @@ public interface MyPageMapper {
 
     void updatePassword(@Param("id") String id, @Param("password") String password);
 
-    List<WishListDTO> selectWishListById(String id);
+    List<WishListDTO> selectWishListById(@Param("userId") String id ,@Param("offset")int offset );
+
+    int getTotalWishListCount(String id);
+
+
 }
