@@ -19,6 +19,8 @@
                      select="com.example.bookhub.product.mapper.ReviewMapper.getReviewTagByNo"/>
         <collection property="reviewImageList" column="review_no" javaType="List" ofType="com.example.bookhub.product.vo.ReviewImage"
                     select="com.example.bookhub.product.mapper.ReviewMapper.getReviewImageListByReviewNo"/>
+        <collection property="reviewReplyList" column="review_no" javaType="List" ofType="com.example.bookhub.product.vo.ReviewReply"
+                    select="com.example.bookhub.product.mapper.ReviewMapper.getReviewReplyListByReviewNo"/>
     </resultMap>
 
     <resultMap id="UserResultMap" type="com.example.bookhub.user.vo.User">
@@ -34,6 +36,15 @@
     <resultMap id="ReviewImageListResultMap" type="com.example.bookhub.product.vo.ReviewImage">
         <id column="review_image_no" property="reviewImageNo"/>
         <result column="image_path" property="imagePath"/>
+    </resultMap>
+
+    <resultMap id="ReviewReplyListResultMap" type="com.example.bookhub.product.vo.ReviewReply">
+        <id column="review_reply_no" property="reviewReplyNo"/>
+        <result column="comment" property="comment"/>
+        <result column="comment" property="comment"/>
+        <result column="updated_date" property="updatedDate"/>
+        <association column="user_no" property="user"
+                     select="com.example.bookhub.product.mapper.ReviewMapper.getUserByNo"/>
     </resultMap>
 
     <insert id="createReview" parameterType="com.example.bookhub.product.vo.Review">
@@ -77,6 +88,19 @@
             image_path
         from
             REVIEW_IMAGE
+        where
+            review_no = #{value}
+    </select>
+
+    <!--collection-->
+    <select id="getReviewReplyListByReviewNo" parameterType="long" resultMap="ReviewReplyListResultMap">
+        select
+            review_reply_no,
+            comment,
+            updated_date,
+            user_no
+        from
+            REVIEW_REPLY
         where
             review_no = #{value}
     </select>

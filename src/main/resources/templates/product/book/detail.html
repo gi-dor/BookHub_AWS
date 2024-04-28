@@ -1,357 +1,444 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
-       layout:decorate="~{layout/base}" >
+      layout:decorate="~{layout/base}" >
 <th:block layout:fragment="style">
     <link rel="stylesheet" th:href="@{/css/product/bookDetail.css}" />
 </th:block>
 
-    <div layout:fragment="content" class="container my-3">
-        <div class="row mb-3">
-            <div class="col-3">
-                <h3 id="book-no" th:text="${book.bookNo}" style="display:none">책 번호</h3>
-                <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
-                <h5 class="d-flex justify-content-center">책 설명</h5>
+<div layout:fragment="content" class="container my-3">
+    <div class="row mb-3">
+        <div class="col-3">
+            <h3 id="book-no" th:text="${book.bookNo}" style="display:none">책 번호</h3>
+            <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
+            <h5 class="d-flex justify-content-center">책 설명</h5>
 
-                <div id="carouselExample" class="carousel slide" style="width: 300px; height: 500px; margin: 0 auto;" >
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img th:src="${book.imageCover}" class="d-block w-100" alt="...">
+            <div id="carouselExample" class="carousel slide" style="width: 300px; height: 500px; margin: 0 auto;" >
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img th:src="${book.imageCover}" class="d-block w-100" alt="...">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-9">
+            <span class="badge rounded-pill text-bg-primary">베스트셀러</span>
+            <span class="badge rounded-pill text-bg-secondary">10%</span>
+            <div>
+                <span><strong>10%</strong></span>
+                <span th:text="${book.price}"><strong>13,500</strong>원</span>
+            </div>
+            <div>
+                <span><strong>적립/혜택</strong></span>
+                <span th:text="${book.price} * ${book.discountRate}"><strong>750</strong>P</span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">이벤트</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">상품정보</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">리뷰()</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">교환/반품/품절</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <button class="btn btn-outline-secondary me-3" type="button" onclick="createReview()">리뷰 작성</button>
+    <ul class="nav nav-underline">
+        <li class="nav-item">
+            <div class="nav-link" aria-current="page" href="">Active</div>
+        </li>
+        <li class="nav-item">
+            <div class="nav-link" href="">Link</div>
+        </li>
+        <li class="nav-item">
+            <div class="nav-link" href="">Link</div>
+        </li>
+    </ul>
+
+    <div class="col-12">
+        <div id="div-reviews">
+            <div th:each="review: ${reviewDtoList}">
+                <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
+                    <div class="col p-4  position-static">
+                        <div class="d-flex justify-content-between">
+                                    <span>
+                                        <span class="review-no" style="display:none;" th:text="${review.reviewNo}"></span>
+                                        <span class="badge rounded-pill text-bg-light">종이책</span>
+                                        <span th:if="${review.buyer eq 'Y'}">
+                                                 <span class="badge rounded-pill text-bg-dark">구매자</span>
+                                        </span>
+                                        <span class="badge bg-light text-dark" th:text="${review.user.id}"></span>
+                                        <span class="badge bg-light text-dark" th:text="${review.createdDate}"></span>
+                                        <span class="ms-3">신고/차단</span>
+                                    </span>
+                            <span>
+                                        <span th:text="${review.reviewTag.name}"></span>
+                                        <span th:text="${review.rate}"></span>
+                                    </span>
+                        </div>
+                        <p class="card-text mb-auto mt-3 collapsed " th:id="'cardContent-' + ${review.reviewNo}" th:text="${review.comment}">
+                        </p>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="#" class="" th:id="'toggleLink-' + ${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
+                                <i class="bi bi-chevron-double-down"></i>
+                            </a>
+                            <div>
+                                    <span class="recommend">
+                                        <span>
+                                             <i th:class="${review.recommended == 'Y'} ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up'" th:id="'recommend-' + ${review.reviewNo}"></i>
+                                        </span>
+                                        <span class="me-3 " th:id="'recommend-count-' + ${review.reviewNo}" th:text="${review.recommendCount}"></span>
+                                    </span>
+                                <span class="reply">
+                                        <i class="bi bi-chat-dots"></i>
+                                        <span class="me-3" th:text="${review.replyCount}"></span>
+                                    </span>
+                            </div>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="col-9">
-                <span class="badge rounded-pill text-bg-primary">베스트셀러</span>
-                <span class="badge rounded-pill text-bg-secondary">10%</span>
-                <div>
-                    <span><strong>10%</strong></span>
-                    <span th:text="${book.price}"><strong>13,500</strong>원</span>
-                </div>
-                <div>
-                    <span><strong>적립/혜택</strong></span>
-                    <span th:text="${book.price} * ${book.discountRate}"><strong>750</strong>P</span>
-                </div>
-            </div>
-        </div>
-
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">이벤트</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">상품정보</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">리뷰()</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">교환/반품/품절</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <button class="btn btn-outline-secondary me-3" type="button" onclick="createReview()">리뷰 작성</button>
-        <ul class="nav nav-underline">
-            <li class="nav-item">
-                <div class="nav-link" aria-current="page" href="">Active</div>
-            </li>
-            <li class="nav-item">
-                <div class="nav-link" href="">Link</div>
-            </li>
-            <li class="nav-item">
-                <div class="nav-link" href="">Link</div>
-            </li>
-        </ul>
-
-        <div class="col-12">
-            <div id="div-reviews"></div>
-        </div>
-
-        <!-- 바텀 네비게이션 바 -->
-        <nav class="navbar fixed-bottom navbar-light bg-light">
-            <div class="container-fluid justify-content-end">
-                <button class="btn btn-outline-secondary me-3" type="button" onclick="toggleAct(this)"><i id="wish-list" class="bi bi-heart"></i></button>
-                <button class="btn btn-outline-secondary me-3" type="button" onclick="createOrIncreaseCart()">장바구니</button>
-                <button class="btn btn-outline-success me-3" type="button">선물하기</button>
-                <form method="post" action="/product/buy/order">
-                    <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
-                    <input type="hidden" name="buyBookCountList" value=1 />
-                    <button type="submit" class="btn btn-outline-success me-3">바로 주문</button>
-                </form>
-            </div>
-        </nav>
-
-        <!-- 모달 창 -->
-        <div id="modal-move-to-cart" class="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">상품이 장바구니에 담겼습니다.</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>장바구니로 이동하시겠습니까?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <a type="button" class="btn btn-primary" href="/product/cart">장바구니로 이동</a>
+                    <div class="col-auto d-none d-lg-block">
+                            <span th:if="${review.reviewImageList != null and not #lists.isEmpty(review.reviewImageList)}">
+                                <img th:src="@{|/image/product/${review.reviewImageList.get(0).imagePath}|}" alt="리뷰 이미지" style="width: 200px; height: 200px"/>
+                            </span>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- 모달 창 -->
-        <div id="modal-increase-cart" class="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">이미 장바구니에 존재하는 상품이라 수량이 추가되었습니다.</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>장바구니로 이동하시겠습니까?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <a type="button" class="btn btn-primary" href="/product/cart">장바구니로 이동</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 리뷰 모달 창 -->
-        <div id="modal-create-review" class="modal" tabindex="-1">
-            <form method="post" action="/product/review/create" enctype="multipart/form-data">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">리뷰 작성</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card mb-3" style="max-width: 540px;">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                        <img src="" class="img-fluid rounded-start" alt="...">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
-                                            <h5 class="card-title" th:text="${book.name}"></h5>
-                                            <div class="rate_wrap">
-                                                <div class="rate_box">
-                                                    <label for="rate_1" class="label_star" title="0.5"><span class="blind">0.5점</span></label>
-                                                    <label for="rate_2" class="label_star" title="1"><span class="blind">1점</span></label>
-                                                    <label for="rate_3" class="label_star" title="1.5"><span class="blind">1.5점</span></label>
-                                                    <label for="rate_4" class="label_star" title="2"><span class="blind">2점</span></label>
-                                                    <label for="rate_5" class="label_star" title="2.5"><span class="blind">2.5점</span></label>
-                                                    <label for="rate_6" class="label_star" title="3"><span class="blind">3점</span></label>
-                                                    <label for="rate_7" class="label_star" title="3.5"><span class="blind">3.5점</span></label>
-                                                    <label for="rate_8" class="label_star" title="4"><span class="blind">4점</span></label>
-                                                    <label for="rate_9" class="label_star" title="4.5"><span class="blind">4.5점</span></label>
-                                                    <label for="rate_10" class="label_star" title="5"><span class="blind">5점</span></label>
-                                                    <input type="radio" name="rate" id="rate_1" class="star_radio" value="0.5">
-                                                    <input type="radio" name="rate" id="rate_2" class="star_radio" value="1">
-                                                    <input type="radio" name="rate" id="rate_3" class="star_radio" value="1.5">
-                                                    <input type="radio" name="rate" id="rate_4" class="star_radio" value="2">
-                                                    <input type="radio" name="rate" id="rate_5" class="star_radio" value="2.5">
-                                                    <input type="radio" name="rate" id="rate_6" class="star_radio" value="3">
-                                                    <input type="radio" name="rate" id="rate_7" class="star_radio" value="3.5">
-                                                    <input type="radio" name="rate" id="rate_8" class="star_radio" value="4">
-                                                    <input type="radio" name="rate" id="rate_9" class="star_radio" value="4.5">
-                                                    <input type="radio" name="rate" id="rate_10" class="star_radio" value="5">
-                                                    <span class="rate_bg"></span>
-                                                </div>
+                <!-- 댓글 목록 및 작성폼 -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <!-- 댓글 목록 -->
+                        <div th:if="${review.reviewReplyList != null and not #lists.isEmpty(review.reviewReplyList)}">
+                            <div th:each="reviewReply: ${review.reviewReplyList}">
+                                <div class="card my-3">
+                                    <div class="card-body py-1 px-2">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <span class="badge bg-light text-dark" th:text="${reviewReply.user.id}"></span>
+                                                <span class="badge bg-light text-dark" th:text="${reviewReply.updatedDate}">2024-03-21</span>
                                             </div>
-                                            <p class="card-text"><small class="text-body-secondary">/10</small></p>
+                                            <div>
+                                                <a class="btn btn-sm btn-outline-success">추천</a>
+                                                <a class="btn btn-sm btn-outline-secondary">수정</a>
+                                                <a class="btn btn-sm btn-outline-secondary">삭제</a>
+                                            </div>
                                         </div>
+                                        <p class="card=text ps-2 small" style="white-space: pre-line;"
+                                        th:text="${reviewReply.comment}"></p>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="mt-3"><bold>감성태그</bold></div>
-                            <p>가장 와 닿는 하나의 키워드를 선택해주세요.</p>
-                            <div class="form-group">
-                                <input type="radio" class="btn-check" name="reviewTagNo" id="option1" value=1 autocomplete="off" checked>
-                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option1">집중돼요</label>
-
-                                <input type="radio" class="btn-check" name="reviewTagNo" id="option2" value=2 autocomplete="off">
-                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option2">도움돼요</label>
-
-                                <input type="radio" class="btn-check" name="reviewTagNo" id="option3" value=3 autocomplete="off">
-                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option3">쉬웠어요</label>
-
-                                <input type="radio" class="btn-check" name="reviewTagNo" id="option4" value=4 autocomplete="off">
-                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option4">재밌어요</label>
-
-                                <input type="radio" class="btn-check" name="reviewTagNo" id="option5" value=5 autocomplete="off">
-                                <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option5">유익해요</label>
-                            </div>
-
-                            <div class="form-group mt-3">
-                                <label for="formControlTextarea" class="form-label"><bold>리뷰 작성</bold></label>
-                                <textarea class="form-control custom-textarea" id="formControlTextarea" name="comment" rows="3"></textarea>
-                            </div>
-
-                            <div class="form-group mt-3">
-                                <label for="formFileMultiple" class="form-label"><bold>사진 첨부(선택)</bold></label>
-                                <input type="file" class="form-control" id="formFileMultiple" name="imageList" multiple th:required accept="image/*">
-                            </div>
-
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                            <button type="submit" class="btn btn-primary">등록</button>
-                        </div>
+
+                        <!-- 댓글 작성폼 -->
+                        <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
+                            <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
+                            <input type="hidden" name="reviewNo" th:value="${review.reviewNo}"/>
+                            <div class="row g-3">
+                                <div class="col-12 position-relative">
+                                    <textarea rows="3" class="form-control" name="comment"></textarea>
+                                    <button type="submit" class="btn btn-outline-dark btn-sm position-absolute" style="bottom: 15px; right: 25px;">댓글 등록</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-    <script layout:fragment="script" type="text/javascript">
 
-        const url = "http://localhost:8080/product/cart"
-        let bookNo = parseInt($("#book-no").text());
-        const modalMoveToCart = new bootstrap.Modal("#modal-move-to-cart");
-        const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
-        const modalCreateReview = new bootstrap.Modal("#modal-create-review");
+    <!-- 바텀 네비게이션 바 -->
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+        <div class="container-fluid justify-content-end">
+            <button class="btn btn-outline-secondary me-3" type="button" onclick="toggleAct(this)"><i id="wish-list" class="bi bi-heart"></i></button>
+            <button class="btn btn-outline-secondary me-3" type="button" onclick="createOrIncreaseCart()">장바구니</button>
+            <button class="btn btn-outline-success me-3" type="button">선물하기</button>
+            <form method="post" action="/product/buy/order">
+                <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
+                <input type="hidden" name="buyBookCountList" value=1 />
+                <button type="submit" class="btn btn-outline-success me-3">바로 주문</button>
+            </form>
+        </div>
+    </nav>
 
-        const $reviewDiv = $("#div-reviews");
+    <!-- 모달 창 -->
+    <div id="modal-move-to-cart" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">상품이 장바구니에 담겼습니다.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>장바구니로 이동하시겠습니까?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <a type="button" class="btn btn-primary" href="/product/cart">장바구니로 이동</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        $("#div-reviews").on("click", ".recommend", function(event){
-            let reviewNo = $(this).closest(".review").find(".review-no").text();
+    <!-- 모달 창 -->
+    <div id="modal-increase-cart" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">이미 장바구니에 존재하는 상품이라 수량이 추가되었습니다.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>장바구니로 이동하시겠습니까?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <a type="button" class="btn btn-primary" href="/product/cart">장바구니로 이동</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            $.get("/product/review/recommend/" + reviewNo, function(data){
-                console.log('요청 성공:', data);
+    <!-- 리뷰 모달 창 -->
+    <div id="modal-create-review" class="modal" tabindex="-1">
+        <form method="post" action="/product/review/create" enctype="multipart/form-data">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">리뷰 작성</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
+                                        <h5 class="card-title" th:text="${book.name}"></h5>
+                                        <div class="rate_wrap">
+                                            <div class="rate_box">
+                                                <label for="rate_1" class="label_star" title="0.5"><span class="blind">0.5점</span></label>
+                                                <label for="rate_2" class="label_star" title="1"><span class="blind">1점</span></label>
+                                                <label for="rate_3" class="label_star" title="1.5"><span class="blind">1.5점</span></label>
+                                                <label for="rate_4" class="label_star" title="2"><span class="blind">2점</span></label>
+                                                <label for="rate_5" class="label_star" title="2.5"><span class="blind">2.5점</span></label>
+                                                <label for="rate_6" class="label_star" title="3"><span class="blind">3점</span></label>
+                                                <label for="rate_7" class="label_star" title="3.5"><span class="blind">3.5점</span></label>
+                                                <label for="rate_8" class="label_star" title="4"><span class="blind">4점</span></label>
+                                                <label for="rate_9" class="label_star" title="4.5"><span class="blind">4.5점</span></label>
+                                                <label for="rate_10" class="label_star" title="5"><span class="blind">5점</span></label>
+                                                <input type="radio" name="rate" id="rate_1" class="star_radio" value="0.5">
+                                                <input type="radio" name="rate" id="rate_2" class="star_radio" value="1">
+                                                <input type="radio" name="rate" id="rate_3" class="star_radio" value="1.5">
+                                                <input type="radio" name="rate" id="rate_4" class="star_radio" value="2">
+                                                <input type="radio" name="rate" id="rate_5" class="star_radio" value="2.5">
+                                                <input type="radio" name="rate" id="rate_6" class="star_radio" value="3">
+                                                <input type="radio" name="rate" id="rate_7" class="star_radio" value="3.5">
+                                                <input type="radio" name="rate" id="rate_8" class="star_radio" value="4">
+                                                <input type="radio" name="rate" id="rate_9" class="star_radio" value="4.5">
+                                                <input type="radio" name="rate" id="rate_10" class="star_radio" value="5">
+                                                <span class="rate_bg"></span>
+                                            </div>
+                                        </div>
+                                        <p class="card-text"><small class="text-body-secondary">/10</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                let $recommendToggle = $(`#recommend-${reviewNo}`);
-                let $recommendCount = $(`#recommend-count-${reviewNo}`);
-                let recommendCountNum = parseInt($recommendCount.text());
+                        <div class="mt-3"><bold>감성태그</bold></div>
+                        <p>가장 와 닿는 하나의 키워드를 선택해주세요.</p>
+                        <div class="form-group">
+                            <input type="radio" class="btn-check" name="reviewTagNo" id="option1" value=1 autocomplete="off" checked>
+                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option1">집중돼요</label>
 
-                if(data == "recommend"){
-                    $recommendToggle.removeClass('bi-hand-thumbs-up');
-                    $recommendToggle.addClass('bi-hand-thumbs-up-fill');
-                    $recommendCount.text(recommendCountNum + 1);
-                }
-                else if(data == "cancel"){
-                    $recommendToggle.removeClass('bi-hand-thumbs-up-fill');
-                    $recommendToggle.addClass('bi-hand-thumbs-up');
-                    $recommendCount.text(recommendCountNum - 1);
-                }
-            }).fail(function(xhr, status, error) {
+                            <input type="radio" class="btn-check" name="reviewTagNo" id="option2" value=2 autocomplete="off">
+                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option2">도움돼요</label>
 
-                console.error('요청 실패:', status, error);
-            });
-        })
+                            <input type="radio" class="btn-check" name="reviewTagNo" id="option3" value=3 autocomplete="off">
+                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option3">쉬웠어요</label>
 
-        $("#div-reviews").on("click", ".chat", function(event){
+                            <input type="radio" class="btn-check" name="reviewTagNo" id="option4" value=4 autocomplete="off">
+                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option4">재밌어요</label>
 
-        })
+                            <input type="radio" class="btn-check" name="reviewTagNo" id="option5" value=5 autocomplete="off">
+                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option5">유익해요</label>
+                        </div>
 
-        // 장바구니 추가 시 모달
-        function showAlertModal(existOrNot){
-            console.log(existOrNot);
-            if(existOrNot === "exist"){
-                modalIncreaseCart.show();
+                        <div class="form-group mt-3">
+                            <label for="formControlTextarea" class="form-label"><bold>리뷰 작성</bold></label>
+                            <textarea class="form-control custom-textarea" id="formControlTextarea" name="comment" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="formFileMultiple" class="form-label"><bold>사진 첨부(선택)</bold></label>
+                            <input type="file" class="form-control" id="formFileMultiple" name="imageList" multiple th:required accept="image/*">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="btn btn-primary">등록</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script layout:fragment="script" type="text/javascript">
+
+    const url = "http://localhost:8080/product/cart"
+    let bookNo = parseInt($("#book-no").text());
+    const modalMoveToCart = new bootstrap.Modal("#modal-move-to-cart");
+    const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
+    const modalCreateReview = new bootstrap.Modal("#modal-create-review");
+
+    const $reviewDiv = $("#div-reviews");
+
+    $("#div-reviews").on("click", ".recommend", function(event){
+        let reviewNo = $(this).closest(".review").find(".review-no").text();
+
+        $.get("/product/review/recommend/" + reviewNo, function(data){
+            console.log('요청 성공:', data);
+
+            let $recommendToggle = $(`#recommend-${reviewNo}`);
+            let $recommendCount = $(`#recommend-count-${reviewNo}`);
+            let recommendCountNum = parseInt($recommendCount.text());
+
+            if(data == "recommend"){
+                $recommendToggle.removeClass('bi-hand-thumbs-up');
+                $recommendToggle.addClass('bi-hand-thumbs-up-fill');
+                $recommendCount.text(recommendCountNum + 1);
             }
-            else{
-                modalMoveToCart.show();
+            else if(data == "cancel"){
+                $recommendToggle.removeClass('bi-hand-thumbs-up-fill');
+                $recommendToggle.addClass('bi-hand-thumbs-up');
+                $recommendCount.text(recommendCountNum - 1);
             }
+        }).fail(function(xhr, status, error) {
+
+            console.error('요청 실패:', status, error);
+        });
+    })
+
+    $("#div-reviews").on("click", ".chat", function(event){
+
+    })
+
+    // 장바구니 추가 시 모달
+    function showAlertModal(existOrNot){
+        console.log(existOrNot);
+        if(existOrNot === "exist"){
+            modalIncreaseCart.show();
+        }
+        else{
+            modalMoveToCart.show();
+        }
+    }
+
+    // 장바구니 추가 비동기
+    async function createOrIncreaseCart(){
+        let response = await fetch("/product/cart/create/" + bookNo);
+        if(!response.ok){
+            console.log("장바구니 추가 실패");
         }
 
-        // 장바구니 추가 비동기
-        async function createOrIncreaseCart(){
-            let response = await fetch("/product/cart/create/" + bookNo);
+        let jsonData = await response.json();
+
+        await showAlertModal(jsonData.existOrNot);
+    }
+
+    // 찜하기 토글 및 비동기
+    async function toggleAct(button) {
+        let heartIcon = button.querySelector('#wish-list');
+
+        if (heartIcon.classList.contains('bi-heart-fill')) {
+            heartIcon.classList.remove('bi-heart-fill');
+            heartIcon.classList.add('bi-heart');
+
+            let response = await fetch("/product/wishlist/delete/" + bookNo);
             if(!response.ok){
-                console.log("장바구니 추가 실패");
+                console.log("위시리스트 추가 실패");
             }
+        } else if(heartIcon.classList.contains('bi-heart')) {
+            heartIcon.classList.add('bi-heart-fill');
+            heartIcon.classList.remove('bi-heart');
 
-            let jsonData = await response.json();
-
-            await showAlertModal(jsonData.existOrNot);
-        }
-
-        // 찜하기 토글 및 비동기
-        async function toggleAct(button) {
-            let heartIcon = button.querySelector('#wish-list');
-
-            if (heartIcon.classList.contains('bi-heart-fill')) {
-                heartIcon.classList.remove('bi-heart-fill');
-                heartIcon.classList.add('bi-heart');
-
-                let response = await fetch("/product/wishlist/delete/" + bookNo);
-                if(!response.ok){
-                    console.log("위시리스트 추가 실패");
-                }
-            } else if(heartIcon.classList.contains('bi-heart')) {
-                heartIcon.classList.add('bi-heart-fill');
-                heartIcon.classList.remove('bi-heart');
-
-                let response = await fetch("/product/wishlist/create/" + bookNo);
-                if(!response.ok){
-                    console.log("위시리스트 추가 실패");
-                }
-            }
-        }
-
-        // 리뷰 생성 모달 창
-        async function createReview(){
-            modalCreateReview.show();
-        }
-
-        // 리뷰 펼치기/접기 토글
-        function toggleCardContent(event, id) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            let cardContent = document.getElementById('cardContent-' + id);
-            let toggleLink = document.getElementById('toggleLink-' + id);
-
-            if (cardContent.classList.contains('collapsed')) {
-                cardContent.classList.remove('collapsed');
-                toggleLink.innerHTML = '<i class="bi bi-chevron-double-up"></i>';
-            } else {
-                cardContent.classList.add('collapsed');
-                toggleLink.innerHTML = '<i class="bi bi-chevron-double-down"></i>';
-            }
-        }
-
-        // 리뷰들 조회
-        async function getReviews(bookNo){
-            let response = await fetch("/product/review/" + bookNo);
-
+            let response = await fetch("/product/wishlist/create/" + bookNo);
             if(!response.ok){
-                alert("리뷰 조회에 실패하였습니다");
-                return;
+                console.log("위시리스트 추가 실패");
+            }
+        }
+    }
+
+    // 리뷰 생성 모달 창
+    async function createReview(){
+        modalCreateReview.show();
+    }
+
+    // 리뷰 펼치기/접기 토글
+    function toggleCardContent(event, id) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        let cardContent = document.getElementById('cardContent-' + id);
+        let toggleLink = document.getElementById('toggleLink-' + id);
+
+        if (cardContent.classList.contains('collapsed')) {
+            cardContent.classList.remove('collapsed');
+            toggleLink.innerHTML = '<i class="bi bi-chevron-double-up"></i>';
+        } else {
+            cardContent.classList.add('collapsed');
+            toggleLink.innerHTML = '<i class="bi bi-chevron-double-down"></i>';
+        }
+    }
+
+    // 리뷰들 조회
+    async function getReviews(bookNo){
+        let response = await fetch("/product/review/" + bookNo);
+
+        if(!response.ok){
+            alert("리뷰 조회에 실패하였습니다");
+            return;
+        }
+
+        let reviewDtoList = await response.json();
+        console.log(reviewDtoList)
+        let rows = "";
+        for(let index =  0; index < reviewDtoList.length; index++){
+            let review = reviewDtoList[index];
+
+            let buyerBadge = '';
+            if (review.buyer === 'Y') {
+                buyerBadge = '<span class="badge rounded-pill text-bg-dark">구매자</span>';
             }
 
-            let reviewDtoList = await response.json();
-            console.log(reviewDtoList)
-            let rows = "";
-            for(let index =  0; index < reviewDtoList.length; index++){
-                let review = reviewDtoList[index];
+            let recommendIcon = review.recommended === 'Y' ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
 
-                let buyerBadge = '';
-                if (review.buyer === 'Y') {
-                    buyerBadge = '<span class="badge rounded-pill text-bg-dark">구매자</span>';
-                }
-
-                let recommendIcon = review.recommended === 'Y' ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
-
-                rows += `
+            rows += `
                         <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
                             <div class="col p-4  position-static">
                                 <div class="d-flex justify-content-between">
@@ -428,11 +515,11 @@
                         </div>
                         <br>
                 `;
-            }
-            $reviewDiv.html(rows);
         }
+        $reviewDiv.html(rows);
+    }
 
-        getReviews(bookNo);
-    </script>
+    //getReviews(bookNo);
+</script>
 </html>
 
