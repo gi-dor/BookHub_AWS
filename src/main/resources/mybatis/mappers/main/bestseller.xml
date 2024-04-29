@@ -35,7 +35,56 @@
         AND
         BB.BUY_NO = BUY_NO
 
+        <where>
+            <choose>
+                <!-- 카테고리 번호가 1이 아닌 경우 해당 카테고리만 조회 -->
+                <when test="cateKeyword != 1">
+                    AND C.CATEGORY_NO = #{cateKeyword}
+                </when>
+                <!-- 카테고리 번호가 1인 경우 모든 하위 카테고리를 조회 -->
+                <otherwise>
+                    AND C.CATEGORY_NO IN (SELECT CATEGORY_NO
+                    FROM CATEGORY
+                    WHERE PARENT_CATEGORY_NO = #{cate})
+                </otherwise>
+            </choose>
 
+            <choose>
+                <when test="period == 2 ">
+                    AND BUY.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+                </when>
+                <when test="period == 3 ">
+                    AND BUY.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)
+                </when>
+                <when test="period == 4 ">
+                    AND BUY.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
+                </when>
+                <when test="period == 5">
+                    AND BUY.BUY_DATE = CURRENT_DATE()
+                </when>
+                <otherwise>
+                    AND BUY.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+                </otherwise>
+            </choose>
+
+            <choose>
+                <when test="sort == 1">
+                    ORDER BY BOOK_SALES_VOLUME DESC
+                </when>
+                <when test="sort == 2">
+                    ORDER BY BOOK_PUBLISHED_DATE DESC
+                </when>
+                <when test="sort == 3 ">
+                    ORDER BY BOOK_AVERAGE_RATING DESC
+                </when>
+                <when test="sort == 4">
+                    ORDER BY BOOK_TOTAL_REPLY_CNT DESC
+                </when>
+                <otherwise>
+                    ORDER BY BOOK_SALES_VOLUME DESC
+                </otherwise>
+            </choose>
+        </where>
 
 
         LIMIT #{offset}, #{recordSize};
