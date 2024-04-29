@@ -86,21 +86,25 @@
                                         <span class="review-no" style="display:none;" th:text="${review.reviewNo}"></span>
                                         <span class="badge rounded-pill text-bg-light">종이책</span>
                                         <span th:if="${review.buyer eq 'Y'}">
-                                                 <span class="badge rounded-pill text-bg-dark">구매자</span>
+                                            <span class="badge rounded-pill text-bg-dark">구매자</span>
                                         </span>
                                         <span class="badge bg-light text-dark" th:text="${review.user.id}"></span>
                                         <span class="badge bg-light text-dark" th:text="${review.createdDate}"></span>
                                         <span class="ms-3">신고/차단</span>
                                     </span>
-                            <span>
+                                     <span>
                                         <span th:text="${review.reviewTag.name}"></span>
                                         <span th:text="${review.rate}"></span>
+                                         <span>
+                                                <a class="btn btn-sm btn-outline-secondary" th:onclick="'createReview(event, ' + ${review.reviewNo} + ')'">수정</a>
+                                                <a class="btn btn-sm btn-outline-secondary">삭제</a>
+                                         </span>
                                     </span>
                         </div>
                         <p class="card-text mb-auto mt-3 collapsed " th:id="'cardContent-' + ${review.reviewNo}" th:text="${review.comment}">
                         </p>
                         <div class="d-flex justify-content-between mt-3">
-                            <a href="#" class="" th:id="'toggleLink-' + ${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
+                            <a href="#" class="" th:id="'toggleLink-' + ${review.reviewNo}" th:onclick="'toggleCardContent(event, ' + ${review.reviewNo} + ')'">
                                 <i class="bi bi-chevron-double-down"></i>
                             </a>
                             <div>
@@ -232,7 +236,7 @@
                         <div class="card mb-3" style="max-width: 540px;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img src="" class="img-fluid rounded-start" alt="...">
+                                    <img th:src="${book.imageCover}" class="img-fluid rounded-start" alt="...">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -289,8 +293,8 @@
                         </div>
 
                         <div class="form-group mt-3">
-                            <label for="formControlTextarea" class="form-label"><bold>리뷰 작성</bold></label>
-                            <textarea class="form-control custom-textarea" id="formControlTextarea" name="comment" rows="3"></textarea>
+                            <label for="review-comment" class="form-label"><bold>리뷰 작성</bold></label>
+                            <textarea class="form-control custom-textarea" id="review-comment" name="comment" rows="3"></textarea>
                         </div>
 
                         <div class="form-group mt-3">
@@ -395,7 +399,17 @@
     }
 
     // 리뷰 생성 모달 창
-    async function createReview(){
+    async function createReview(event, reviewNo){
+        if (reviewNo) {
+            // 수정 폼
+            //toggleForm('update');
+            resetModifyForm(reviewNo);
+        } else {
+            // 생성 폼
+            //toggleForm('create');
+            resetCreateForm();
+        }
+
         modalCreateReview.show();
     }
 
@@ -416,108 +430,143 @@
         }
     }
 
-    // 리뷰들 조회
-    async function getReviews(bookNo){
-        let response = await fetch("/product/review/" + bookNo);
+    function resetCreateForm(){
+        document.getElementById('option1').checked = true;
+        document.getElementById('option2').checked = false;
+        document.getElementById('option3').checked = false;
+        document.getElementById('option4').checked = false;
+        document.getElementById('option5').checked = false;
 
-        if(!response.ok){
-            alert("리뷰 조회에 실패하였습니다");
-            return;
-        }
+        $("#review-comment").val('');
 
-        let reviewDtoList = await response.json();
-        console.log(reviewDtoList)
-        let rows = "";
-        for(let index =  0; index < reviewDtoList.length; index++){
-            let review = reviewDtoList[index];
-
-            let buyerBadge = '';
-            if (review.buyer === 'Y') {
-                buyerBadge = '<span class="badge rounded-pill text-bg-dark">구매자</span>';
-            }
-
-            let recommendIcon = review.recommended === 'Y' ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
-
-            rows += `
-                        <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
-                            <div class="col p-4  position-static">
-                                <div class="d-flex justify-content-between">
-                                    <span>
-                                        <span class="review-no" style="display:none;">${review.reviewNo}</span>
-                                        <span class="badge rounded-pill text-bg-light">종이책</span>
-                                        ${buyerBadge}
-                                        <span class="ms-3" >${review.user.id}</span>
-                                        <span class="ms-3" >${review.createdDate}</span>
-                                        <span class="ms-3">신고/차단</span>
-                                    </span>
-                                    <span>
-                                        <span>${review.reviewTag.name}</span>
-                                        <span>${review.rate}</span>
-                                    </span>
-                                </div>
-                                <p class="card-text mb-auto mt-3 collapsed " id="cardContent-${review.reviewNo}" >
-                                   ${review.comment}
-                                </p>
-                                <div class="d-flex justify-content-between mt-3">
-                                    <a href="#" class="" id="toggleLink-${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
-                                        <i class="bi bi-chevron-double-down"></i>
-                                    </a>
-                                    <div>
-                                        <span class="recommend">
-                                             <i class="${recommendIcon}" id="recommend-${review.reviewNo}"></i>
-                                             <span class="me-3 " id="recommend-count-${review.reviewNo}">${review.recommendCount}</span>
-                                        </span>
-                                        <span class="reply">
-                                            <i class="bi bi-chat-dots"></i>
-                                            <span class="me-3">${review.replyCount}</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-auto d-none d-lg-block">
-                                <img src="/image/product/${review.reviewImageList[0]?.imagePath}" alt="리뷰 이미지" style="width: 200px; height: 200px"/>
-                            </div>
-                        </div>
-
-                        <!-- 댓글 목록 및 작성폼 -->
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <!-- 댓글 목록 -->
-                                <div class="card my-3">
-                                    <div class="card-body py-1 px-2">
-                                         <div class="d-flex justify-content-between">
-                                                <div>
-                                                        <span class="badge bg-light text-dark">홍길동</span>
-                                                        <span class="badge bg-light text-dark">2024-03-21</span>
-                                                </div>
-                                                <div>
-                                                        <a class="btn btn-sm btn-outline-success">추천</a>
-                                                        <a class="btn btn-sm btn-outline-secondary">수정</a>
-                                                        <a class="btn btn-sm btn-outline-secondary">삭제</a>
-                                                </div>
-                                        </div>
-                                        <p class="card=text ps-2 small" style="white-space: pre-line;">댓글내용입니다 내용입니다 내용입니다.</p>
-                                    </div>
-                                </div>
-
-                                <!-- 댓글 작성폼 -->
-                                <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
-                                    <input type="hidden" name="bookNo" value="${bookNo}"/>
-                                    <input type="hidden" name="reviewNo" value="${review.reviewNo}"/>
-                                   <div class="row g-3">
-                                        <div class="col-12 position-relative">
-                                                <textarea rows="3" class="form-control" name="comment"></textarea>
-                                                <button type="submit" class="btn btn-outline-dark btn-sm position-absolute" style="bottom: 15px; right: 25px;">댓글 등록</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <br>
-                `;
-        }
-        $reviewDiv.html(rows);
+        document.querySelectorAll('input[type="radio"][name="rate"]').forEach(function(radio) {
+            radio.checked = false;
+        });
     }
+
+    async function resetModifyForm(reviewNo){
+        let response = await fetch("/product/review/modify/" + reviewNo);
+        if(!response.ok){
+            console.log("수정 데이터 불러오기 실패");
+        }
+
+        let jsonData = await response.json();
+        let reviewDto = jsonData;
+
+        document.getElementById('option1').checked = reviewDto.reviewTag.reviewTagNo === 1;
+        document.getElementById('option2').checked = reviewDto.reviewTag.reviewTagNo === 2;
+        document.getElementById('option3').checked = reviewDto.reviewTag.reviewTagNo === 3;
+        document.getElementById('option4').checked = reviewDto.reviewTag.reviewTagNo === 4;
+        document.getElementById('option5').checked = reviewDto.reviewTag.reviewTagNo === 5;
+
+        $("#review-comment").val(reviewDto.comment);
+
+        document.querySelector('input[name="rate"][value="' + reviewDto.rate + '"]').checked = true;
+
+    }
+
+    // 리뷰들 조회
+    // async function getReviews(bookNo){
+    //     let response = await fetch("/product/review/" + bookNo);
+    //
+    //     if(!response.ok){
+    //         alert("리뷰 조회에 실패하였습니다");
+    //         return;
+    //     }
+    //
+    //     let reviewDtoList = await response.json();
+    //     console.log(reviewDtoList)
+    //     let rows = "";
+    //     for(let index =  0; index < reviewDtoList.length; index++){
+    //         let review = reviewDtoList[index];
+    //
+    //         let buyerBadge = '';
+    //         if (review.buyer === 'Y') {
+    //             buyerBadge = '<span class="badge rounded-pill text-bg-dark">구매자</span>';
+    //         }
+    //
+    //         let recommendIcon = review.recommended === 'Y' ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
+    //
+    //         rows += `
+    //                     <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
+    //                         <div class="col p-4  position-static">
+    //                             <div class="d-flex justify-content-between">
+    //                                 <span>
+    //                                     <span class="review-no" style="display:none;">${review.reviewNo}</span>
+    //                                     <span class="badge rounded-pill text-bg-light">종이책</span>
+    //                                     ${buyerBadge}
+    //                                     <span class="ms-3" >${review.user.id}</span>
+    //                                     <span class="ms-3" >${review.createdDate}</span>
+    //                                     <span class="ms-3">신고/차단</span>
+    //                                 </span>
+    //                                 <span>
+    //                                     <span>${review.reviewTag.name}</span>
+    //                                     <span>${review.rate}</span>
+    //                                 </span>
+    //                             </div>
+    //                             <p class="card-text mb-auto mt-3 collapsed " id="cardContent-${review.reviewNo}" >
+    //                                ${review.comment}
+    //                             </p>
+    //                             <div class="d-flex justify-content-between mt-3">
+    //                                 <a href="#" class="" id="toggleLink-${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
+    //                                     <i class="bi bi-chevron-double-down"></i>
+    //                                 </a>
+    //                                 <div>
+    //                                     <span class="recommend">
+    //                                          <i class="${recommendIcon}" id="recommend-${review.reviewNo}"></i>
+    //                                          <span class="me-3 " id="recommend-count-${review.reviewNo}">${review.recommendCount}</span>
+    //                                     </span>
+    //                                     <span class="reply">
+    //                                         <i class="bi bi-chat-dots"></i>
+    //                                         <span class="me-3">${review.replyCount}</span>
+    //                                     </span>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                         <div class="col-auto d-none d-lg-block">
+    //                             <img src="/image/product/${review.reviewImageList[0]?.imagePath}" alt="리뷰 이미지" style="width: 200px; height: 200px"/>
+    //                         </div>
+    //                     </div>
+    //
+    //                     <!-- 댓글 목록 및 작성폼 -->
+    //                     <div class="row mb-3">
+    //                         <div class="col-12">
+    //                             <!-- 댓글 목록 -->
+    //                             <div class="card my-3">
+    //                                 <div class="card-body py-1 px-2">
+    //                                      <div class="d-flex justify-content-between">
+    //                                             <div>
+    //                                                     <span class="badge bg-light text-dark">홍길동</span>
+    //                                                     <span class="badge bg-light text-dark">2024-03-21</span>
+    //                                             </div>
+    //                                             <div>
+    //                                                     <a class="btn btn-sm btn-outline-success">추천</a>
+    //                                                     <a class="btn btn-sm btn-outline-secondary">수정</a>
+    //                                                     <a class="btn btn-sm btn-outline-secondary">삭제</a>
+    //                                             </div>
+    //                                     </div>
+    //                                     <p class="card=text ps-2 small" style="white-space: pre-line;">댓글내용입니다 내용입니다 내용입니다.</p>
+    //                                 </div>
+    //                             </div>
+    //
+    //                             <!-- 댓글 작성폼 -->
+    //                             <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
+    //                                 <input type="hidden" name="bookNo" value="${bookNo}"/>
+    //                                 <input type="hidden" name="reviewNo" value="${review.reviewNo}"/>
+    //                                <div class="row g-3">
+    //                                     <div class="col-12 position-relative">
+    //                                             <textarea rows="3" class="form-control" name="comment"></textarea>
+    //                                             <button type="submit" class="btn btn-outline-dark btn-sm position-absolute" style="bottom: 15px; right: 25px;">댓글 등록</button>
+    //                                     </div>
+    //                                 </div>
+    //                             </form>
+    //                         </div>
+    //                     </div>
+    //                     <br>
+    //             `;
+    //     }
+    //     $reviewDiv.html(rows);
+    // }
 
     //getReviews(bookNo);
 </script>

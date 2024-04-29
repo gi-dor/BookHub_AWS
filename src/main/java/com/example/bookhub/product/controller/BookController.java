@@ -26,7 +26,6 @@ public class BookController {
     public String home(@RequestParam("bookNo") long bookNo, Model model, Principal principal){
         BookDto book = bookService.getBookDetailByNo(bookNo);
         List<ReviewDto> reviewDtoList = reviewService.getReviewsByBookNo(bookNo, principal.getName());
-        System.out.println(reviewDtoList);
         model.addAttribute("book", book);
         model.addAttribute("reviewDtoList", reviewDtoList);
 

@@ -131,4 +131,8 @@ public class ReviewService {
 
         reviewMapper.createReviewReply(reviewReply);
     }
+
+    public ReviewDto getReviewByReviewNo(long reviewNo) {
+        return reviewMapper.getReviewByReviewNo(reviewNo);
+    }
 }

@@ -50,4 +50,11 @@ public class ReviewController {
 
         return "redirect:/product/book/detail?bookNo=" + reviewReplyForm.getBookNo();
     }
+
+    @GetMapping("/modify/{reviewNo}")
+    @ResponseBody
+    public ResponseEntity<ReviewDto> modify(@PathVariable("reviewNo") long reviewNo){
+        ReviewDto reviewDto = reviewService.getReviewByReviewNo(reviewNo);
+        return ResponseEntity.ok().body(reviewDto);
+    }
 }

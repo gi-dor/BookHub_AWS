@@ -192,4 +192,23 @@
         values
         (#{comment}, #{review.reviewNo}, #{user.no})
     </insert>
+
+    <select id="getReviewByReviewNo" parameterType="long" resultMap="ReviewListResultMap">
+        select
+            review_no,
+            comment,
+            rate,
+            recommend_count,
+            accuse_count,
+            created_date,
+            updated_date,
+            user_no,
+            review_tag_no,
+            reply_count,
+            buyer
+        from
+            REVIEW
+        where
+            review_no = #{reviewNo}
+    </select>
 </mapper>
