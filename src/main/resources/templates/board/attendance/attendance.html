@@ -7,27 +7,11 @@
         <div class="col text-end">
             <h1 class="text-center">출석체크</h1>
             <p style="margin-bottom: 10px;">이름: <span th:text="${user.name}"></span></p>
-            <!-- 출석체크 상태 표시 -->
-            <div th:if="${attendance != null}" style="margin-bottom: 10px;">
-                <p style="margin-bottom: 5px;" id="lastAttendanceDate">마지막 출석일: <span th:text="${#temporals.format(attendance.checkDate, 'yyyy.MM.dd')}"></span></p>
-                <p th:if="${isUserAlreadyAttendance}">이벤트 대상자</p>
-            </div>
-        </div>
-    </div>
-    <!-- 출석체크 이벤트 참여하기 버튼 -->
-    <div class="row">
-        <div class="col text-end">
-            <form method="post" th:action="@{/board/attendance/register}">
-                <input type="hidden" name="userNo" th:value="${user.no}">
-                <button class="btn btn-primary" th:if="${attendance == null}" th:disabled="${isUserAlreadyAttendance}">
-                    출석체크 이벤트 참여하기
-                </button>
-            </form>
         </div>
     </div>
 
     <div class="table-responsive"> <!-- 반응형 디자인을 적용하여 작은 화면에서도 스크롤 가능하도록 함 -->
-        <table class="table table-bordered table-striped" style="background-color: white; color: black;"> <!-- 테이블의 높이를 1.5배로 늘림 -->
+        <table class="table table-bordered table-striped" style="background-color: white; color: black;" id="table-attendance"> <!-- 테이블의 높이를 1.5배로 늘림 -->
             <thead style="background-color: white; color: black;">
             <tr class="table-primary">
                 <th style="text-align: center; width: 14.28%; height: 50px;">일</th>
@@ -39,44 +23,33 @@
                 <th style="text-align: center; width: 14.28%; height: 50px;">토</th>
             </tr>
             </thead>
-            <tbody id="calendar-body" style="background-color: white; color: black;">
-            <!-- 여기에 날짜를 동적으로 채워 넣을 것입니다. -->
-            </tbody>
+            <tbody id="calendar-body" style="background-color: white; color: black;"></tbody>
         </table>
     </div>
 
     <div class="text-center">
-        <form method="post" th:action="@{/board/attendance/update}">
-            <input type="hidden" name="userNo" th:value="${user.no}">
-            <button type="submit" class="btn btn-outline-primary" id="attendanceButton" onclick="handleAttendance()">출석체크하기</button>
+        <form id="attendance-form" method="post" th:action="@{/board/attendance/attendanceCheck}">
+            <input type="hidden" name="userNo" id="userNo" th:value="${user.no}">
+            <button type="submit" id="attendance-button" class="btn btn-outline-secondary">출석체크하기</button>
         </form>
     </div>
 
     <script>
-        // 페이지 로드 시 실행되는 함수
         document.addEventListener("DOMContentLoaded", function() {
-            // 현재 달력의 날짜를 생성
             generateCalendar(getCurrentDate());
-
         });
-
-
-
         // 현재 날짜를 가져오는 함수
         function getCurrentDate() {
             return new Date();
         }
-
         // 월의 첫 날을 가져오는 함수
         function getFirstDayOfMonth(date) {
             return new Date(date.getFullYear(), date.getMonth(), 1);
         }
-
         // 월의 마지막 날을 가져오는 함수
         function getLastDayOfMonth(date) {
             return new Date(date.getFullYear(), date.getMonth() + 1, 0);
         }
-
         // 특정 월의 달력을 생성하는 함수
         function generateCalendar(date) {
             var tableBody = document.getElementById("calendar-body");
@@ -86,83 +59,65 @@
 
             var row = "";
             var currentDay = 1;
-
             // 달의 첫째날이 무슨 요일인지 확인
             var firstDayOfWeek = firstDay.getDay();
-
             // 행 추가
             for (var i = 0; i < 6; i++) {
                 row += "<tr>";
-
                 // 열 추가
                 for (var j = 0; j < 7; j++) {
                     if ((i === 0 && j < firstDayOfWeek) || currentDay > lastDay.getDate()) {
                         row += "<td style='height: 100px;'></td>"; // 비어 있는 셀
                     } else {
                         var isToday = firstDay.toDateString() === currentDate.toDateString();
-                        row += "<td style='text-align: center; height: 100px; padding: 15px; vertical-align: middle;" + (isToday ? " background-color: #e9ecef;" : "") + "'>" + currentDay + "</td>";
+                        var cellContent = isToday ? "<span id='today'>" + currentDay + "</span>" : currentDay;
+                        row += "<td id='cell-" + currentDay + "' style='text-align: center; height: 100px; padding: 15px; vertical-align: middle;'>" + cellContent + "</td>";
                         currentDay++;
                     }
                 }
-
                 row += "</tr>";
             }
-
             tableBody.innerHTML = row;
         }
 
-        // 출석 버튼 클릭 시 실행되는 함수
-        function handleAttendance() {
-            // 여기서는 간단히 경고창을 띄워 보여주는 예시
-            alert("출석 처리되었습니다.");
-            // 여기에 실제 출석 처리 로직을 구현할 수 있습니다.
+        $.getJSON("/board/attendance/attendanceCheck.do", function (response){
+            $.each(response, function(index, attendance) {
+                // 중복된 값이 이미 존재하는지 확인
+                if ($(`#table-attendance td[id=cell-${attendance.day}] .bi-check-lg`).length === 0) {
+                    // 중복된 값이 없는 경우에만 추가
+                    $(`#table-attendance td[id=cell-${attendance.day}]`).append("<i class=\"bi bi-check-lg\" style='color:green;'></i>");
 
-            // 버튼 비활성화 함수 호출
-            disableButton();
-
-            // 출석 처리된 날짜의 텍스트를 "출석 완료"로 변경
-            var currentDate = new Date();
-            var currentDay = currentDate.getDate();
-
-            // 현재 날짜에 해당하는 숫자의 글씨색을 파란색으로 변경
-            var dayElements = document.querySelectorAll("#calendar-body td");
-            for (var i = 0; i < dayElements.length; i++) {
-                var dayElement = dayElements[i];
-                if (parseInt(dayElement.innerText) === currentDay) {
-                    dayElement.innerText = "출석 완료";
-                    dayElement.style.fontWeight = "bold";
-                    dayElement.style.color = "green";
                 }
-            }
-        }
+            });
+        });
 
-        // 버튼 비활성화 함수
-        function disableButton() {
-            // 출석 버튼 엘리먼트 가져오기
-            var attendanceButton = document.getElementById("attendanceButton");
+        document.getElementById("attendance-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // 기본 이벤트(폼 서브밋) 방지
 
-            // 다음날인 경우 버튼 활성화
-            var currentDate = new Date();
-            var lastAttendanceDateString = document.getElementById("lastAttendanceDate").innerText;
-            var lastAttendanceDate = new Date(lastAttendanceDateString); // 마지막 출석 날짜를 Date 객체로 변환
+            var currentDate = getCurrentDate();
+            var todayCell = document.getElementById("cell-" + currentDate.getDate());
 
-            // 현재 날짜와 마지막 출석 날짜가 다음 날인지 확인
-            var isNextDay = currentDate.getDate() !== lastAttendanceDate.getDate() ||
-                currentDate.getMonth() !== lastAttendanceDate.getMonth() ||
-                currentDate.getFullYear() !== lastAttendanceDate.getFullYear();
-            // 다음 날인 경우 버튼 활성화
-            if (isNextDay) {
-                attendanceButton.disabled = false;
+            // 오늘 날짜의 cell에 이미 체크 표시가 되어 있는지 확인
+            if (todayCell.querySelector(".bi-check-lg")) {
+                // 이미 출석을 완료했다는 얼럿 창 띄우기
+                alert("오늘은 이미 출석을 완료했습니다.");
             } else {
-                attendanceButton.disabled = true;
-            }
-        }
+                // 출석 처리하기
+                // 여기에 출석체크 처리하는 코드를 추가하세요
+                // 예: 출석체크를 위한 AJAX 요청 등
 
-        // 페이지 로드 시 실행
-        window.onload = function() {
-            // 페이지 로드 시 버튼 비활성화 함수 호출
-            disableButton();
-        };
+                // 오늘 날짜의 cell에 체크 표시 추가
+                var checkIcon = document.createElement("i");
+                checkIcon.classList.add("bi", "bi-check-lg");
+                checkIcon.style.color = "green";
+                todayCell.appendChild(checkIcon);
+
+                // 출석체크 폼 서브밋
+                event.target.submit();
+            }
+        });
+
+
 
 
     </script>

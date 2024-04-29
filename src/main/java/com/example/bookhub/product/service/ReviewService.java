@@ -54,20 +54,26 @@ public class ReviewService {
 
         if(!reviewForm.getImageList().isEmpty())
             for(MultipartFile image : reviewForm.getImageList()){
-                System.out.println(image);
-                String imagePath = uploadImage(image);
+                if (!image.isEmpty()) {
+                    String imagePath = uploadImage(image);
 
-                ReviewImage reviewImage = new ReviewImage();
-                reviewImage.setImagePath(imagePath);
-                reviewImage.setReview(review);
-                reviewMapper.createReviewImage(reviewImage);
+                    ReviewImage reviewImage = new ReviewImage();
+                    reviewImage.setImagePath(imagePath);
+                    reviewImage.setReview(review);
+                    reviewMapper.createReviewImage(reviewImage);
+                }
             }
     }
 
     public List<ReviewDto> getReviewsByBookNo(long bookNo, String userId) {
 
-        User user = userMapper.selectUserById(userId);
-        return reviewMapper.getReviewsByBookNo(bookNo, user.getNo());
+        if(userId == "guest") {
+            return reviewMapper.getReviewsByBookNo(bookNo, 0);
+        }
+        else{
+            User user = userMapper.selectUserById(userId);
+            return reviewMapper.getReviewsByBookNo(bookNo, user.getNo());
+        }
     }
 
     public String uploadImage(MultipartFile image) {
@@ -130,5 +136,41 @@ public class ReviewService {
                 .build();
 
         reviewMapper.createReviewReply(reviewReply);
+    }
+
+    public Review getReviewByReviewNo(long reviewNo) {
+        return reviewMapper.getReviewByReviewNo(reviewNo);
+    }
+
+    public void modifyReview(ReviewForm reviewForm) {
+        Review review = reviewMapper.getReviewByReviewNo(reviewForm.getReviewNo());
+
+        review.setRate(reviewForm.getRate());
+
+        ReviewTag reviewTag = new ReviewTag();
+        reviewTag.setReviewTagNo(reviewForm.getReviewTagNo());
+        review.setReviewTag(reviewTag);
+
+        review.setComment(reviewForm.getComment());
+
+        reviewMapper.updateReview(review);
+
+        if(!reviewForm.getImageList().isEmpty())
+            reviewMapper.deleteReviewImageByReviewNo(reviewForm.getReviewNo());
+            for(MultipartFile image : reviewForm.getImageList()){
+                if (!image.isEmpty()) {
+
+                    String imagePath = uploadImage(image);
+
+                    ReviewImage reviewImage = new ReviewImage();
+                    reviewImage.setImagePath(imagePath);
+                    reviewImage.setReview(review);
+                    reviewMapper.createReviewImage(reviewImage);
+                }
+            }
+    }
+
+    public void deleteReview(long reviewNo) {
+        reviewMapper.deleteReview(reviewNo);
     }
 }
