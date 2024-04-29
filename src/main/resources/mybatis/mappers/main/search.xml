@@ -49,24 +49,23 @@
                 AND (BOOK_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{extraKeyword}, '%') )
             </if>
         </if>
-            <choose>
-                <when test="sort =='sales'">
-                    ORDER BY BOOK_SALES_VOLUME DESC
-                </when>
-                <when test="sort =='pubDate'">
-                    ORDER BY BOOK_PUBLISHED_DATE DESC
-                </when>
-                <when test="sort =='avgRating'">
-                    ORDER BY BOOK_AVERAGE_RATING DESC
-                </when>
-                <when test="sort =='replyCnt'">
-                    ORDER BY BOOK_TOTAL_REPLY_CNT DESC
-                </when>
-                <otherwise>
-                    ORDER BY BOOK_SALES_VOLUME DESC
-                </otherwise>
-            </choose>
-
+        <choose>
+            <when test="sort == 0">
+                ORDER BY BOOK_SALES_VOLUME DESC
+            </when>
+            <when test="sort == 1">
+                ORDER BY BOOK_PUBLISHED_DATE DESC
+            </when>
+            <when test="sort == 2 ">
+                ORDER BY BOOK_AVERAGE_RATING DESC
+            </when>
+            <when test="sort == 3">
+                ORDER BY BOOK_TOTAL_REPLY_CNT DESC
+            </when>
+            <otherwise>
+                ORDER BY BOOK_SALES_VOLUME DESC
+            </otherwise>
+        </choose>
         LIMIT #{offset}, #{recordSize};
 
     </select>

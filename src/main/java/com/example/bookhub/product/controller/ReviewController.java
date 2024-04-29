@@ -2,6 +2,7 @@ package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.ReviewForm;
 import com.example.bookhub.product.dto.ReviewDto;
+import com.example.bookhub.product.dto.ReviewReplyForm;
 import com.example.bookhub.product.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,4 +44,10 @@ public class ReviewController {
         return ResponseEntity.ok().body(recommendOrNot);
     }
 
+    @PostMapping("/reply/create")
+    public String createReview(ReviewReplyForm reviewReplyForm, Principal principal){
+        reviewService.createReviewReply(reviewReplyForm, principal.getName());
+
+        return "redirect:/product/book/detail?bookNo=" + reviewReplyForm.getBookNo();
+    }
 }

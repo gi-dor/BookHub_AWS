@@ -162,4 +162,10 @@
         where review_no = #{reviewNo}
     </update>
 
+    <insert id="createReviewReply" parameterType="com.example.bookhub.product.vo.ReviewReply">
+        insert into REVIEW_REPLY
+        (comment, review_no, user_no)
+        values
+        (#{comment}, #{review.reviewNo}, #{user.no})
+    </insert>
 </mapper>

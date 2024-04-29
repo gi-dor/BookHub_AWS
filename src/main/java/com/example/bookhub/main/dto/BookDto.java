@@ -15,5 +15,6 @@ public class BookDto {
     private int price;
     private String cover;
     private String publisherName;
+    private String categoryName;
     private List<BookAuthorDto> authors;
 }

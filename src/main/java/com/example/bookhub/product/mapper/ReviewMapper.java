@@ -4,6 +4,7 @@ import com.example.bookhub.product.dto.ReviewDto;
 import com.example.bookhub.product.vo.Review;
 import com.example.bookhub.product.vo.ReviewImage;
 import com.example.bookhub.product.vo.ReviewRecommendUser;
+import com.example.bookhub.product.vo.ReviewReply;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +20,5 @@ public interface ReviewMapper {
     void createReviewRecommendUser(ReviewRecommendUser reviewRecommendUser);
     void deleteReviewRecommendUser(ReviewRecommendUser reviewRecommendUser);
     void updateReviewRecommendCount(@Param("reviewNo") long reviewNo, @Param("recommendStatus") String recommendStatus);
+    void createReviewReply(ReviewReply reviewReply);
 }

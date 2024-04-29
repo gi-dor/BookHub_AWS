@@ -27,6 +27,10 @@ public class DashBoardService {
         return dashBoardMapper.getTotalDate();
     }
 
+    public DayTotalDto getYesterDay(String value){
+        return dashBoardMapper.getYesterDay(value);
+    }
+
     public int noAnswerCnt(){
         return dashBoardMapper.noAnswerCnt();
     }
