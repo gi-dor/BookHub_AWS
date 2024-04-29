@@ -7,15 +7,14 @@ import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,25 +30,29 @@ public class AttendanceController {
         String id = principal.getName();
         User user = userService.selectUserById(id);
 
-        Attendance attendance = attendanceService.userAttendanceCheck(user.getNo());
+        // 춣석체크 테이블의 모든 정보 조회
+        List<Attendance> attendances = attendanceService.userAttendanceCheck(user.getNo());
 
+
+        model.addAttribute("attendances", attendances);
         model.addAttribute("user", user);
 
-        if (attendance != null) {
-            model.addAttribute("attendance", attendance);
-            boolean isUserAlreadyAttendance = user != attendance.getUser();
-            model.addAttribute("isUserAlreadyAttendance", isUserAlreadyAttendance);
-
-            LocalDate currentDate = LocalDate.now();
-            LocalDate lastAttendanceDate = attendance.getCheckDate().toLocalDate();
-            boolean isNextDay = !currentDate.isEqual(lastAttendanceDate);
-            model.addAttribute("isNextDay", isNextDay);
-        }
 
         return "board/attendance/attendance";
     }
 
-    @PostMapping("/register")
+    @GetMapping("/attendanceCheck.do")
+    @ResponseBody
+    public  List<Attendance> attendanceCheck(Principal principal) {
+
+        String id = principal.getName();
+        User user = userService.selectUserById(id);
+
+        return attendanceService.userAttendanceCheck(user.getNo());
+
+    }
+
+    @PostMapping("/attendanceCheck")
     public String insertAttendance(@RequestParam("userNo") int userNo) {
 
         attendanceService.insertAttendance(userNo);
@@ -57,11 +60,4 @@ public class AttendanceController {
         return "redirect:/board/attendance/";
     }
 
-    @PostMapping("/update")
-    public String updateAttendance(@RequestParam("userNo") int userNo) {
-
-        attendanceService.updateAttendance(userNo);
-
-        return "redirect:/board/attendance/";
-    }
 }

@@ -6,6 +6,7 @@ import com.example.bookhub.board.mapper.FaqMapper;
 import com.example.bookhub.board.vo.Faq;
 import com.example.bookhub.board.vo.FaqCategory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
