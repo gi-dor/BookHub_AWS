@@ -3,6 +3,7 @@ package com.example.bookhub.user.controller;
 
 import com.example.bookhub.user.dto.UserSignupForm;
 import com.example.bookhub.user.service.UserService;
+import com.example.bookhub.user.util.MailService;
 import com.example.bookhub.user.vo.User;
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -29,6 +30,7 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final MailService mailService;
 
 
      // 로그아웃
@@ -75,11 +77,17 @@ public class UserController {
         try {
             //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
             User user = userService.registerUser(form);
+
+            // 사용자 등록이 완료되면 이메일 보내기
+            String to = form.getEmail1() + "@" + form.getEmail2();
+            String subject = "회원 가입이 완료되었습니다.";
+            String html = mailService.loadHtmlTemplate(form); // loadHtmlTemplate 메서드를 호출할 때는 괄호를 포함하여 호출해야 합니다.
+            mailService.registerEmail(to, subject, html);
             //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
 
             return "redirect:/user/completed?id=" + user.getId();
 
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
             // 예외를 로깅하기
             logger.error("에러 발생: ", ex); // 에러 레벨
@@ -88,14 +96,6 @@ public class UserController {
             if("id".equals(message)) {
                 errors.rejectValue("id", null, "사용 할 수 없는 아이디");
             }
-        /*
-            if("id".equals(message)) {
-                errors.rejectValue("id", null,"사용 할 수 없는 아이디");
-            } else if( "email".equals(message)) {
-                errors.rejectValue("email", null, "사용 할 수 없는 이메일");
-            }
-       */
-
             return "user/registerForm";
         }
 
