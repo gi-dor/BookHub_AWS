@@ -39,9 +39,11 @@ public class UserMyPageListController {
 
         // 찜목록 조회
         PageWishListDTO wishList = myPageService.getWishListById(user.getId() , page);
+        int totalCnt = myPageService.getTotalWishListCount(user.getId());
 
         model.addAttribute("wishList",wishList.getWishListDTO());
         model.addAttribute("page" , wishList.getUserPagination());
+        model.addAttribute("totalCnt" ,totalCnt);
 
         return "/user/list/wishList";
     }
