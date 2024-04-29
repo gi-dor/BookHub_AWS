@@ -5,9 +5,12 @@ import com.example.bookhub.board.vo.Attendance;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +20,8 @@ public class AttendanceService {
     private final UserMapper userMapper;
 
     /**
-     * 출석체크 이벤트 참여
-     * @param userNO
+     * 출석하기
+     * @param userNo
      */
     public void insertAttendance(long userNo) {
 
@@ -30,26 +33,14 @@ public class AttendanceService {
      * @param userNo
      * @return
      */
-    public Attendance userAttendanceCheck(long userNo) {
+    public List<Attendance> userAttendanceCheck(long userNo) {
 
         return attendanceMapper.userAttendanceCheckByNo(userNo);
     }
 
-    /**
-     * 출석하기
-     * @param userNo
-     */
-    public void updateAttendance(long userNo) {
-
-        attendanceMapper.updateAttendance(userNo);
-    }
-
-    /**
-     * 출석일 수 초기화
-     * @param userNo
-     */
-    public void resetAttendanceCount(long userNo) {
-
+    @Scheduled(fixedDelay = 180000)
+    public void deleteAttendance() {
+        attendanceMapper.deleteAttendance();
     }
 
 }

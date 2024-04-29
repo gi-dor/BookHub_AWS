@@ -4,31 +4,26 @@ import com.example.bookhub.board.vo.Attendance;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Mapper
 public interface AttendanceMapper {
 
     /**
      * 출석체크 정보 조회
+     *
      * @param userNo
      * @return
      */
-    Attendance userAttendanceCheckByNo(@Param("no") long userNo);
+    List<Attendance> userAttendanceCheckByNo(@Param("no") long userNo);
 
     /**
-     * 출석체크 이벤트 등록
+     * 출석체크하기
+     *
      * @param userNo
      */
     void insertAttendance(@Param("no") long userNo);
 
-    /**
-     * 출석체크 일수 1증가
-     * @param userNo
-     */
-    void updateAttendance(@Param("no") long userNo);
-
-    /**
-     * 출석일 리셋
-     * @param userNo
-     */
-    void resetAttendanceCount(@Param("No") long userNo);
+    void deleteAttendance();
 }
