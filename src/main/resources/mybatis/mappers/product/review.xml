@@ -23,6 +23,15 @@
                     select="com.example.bookhub.product.mapper.ReviewMapper.getReviewReplyListByReviewNo"/>
     </resultMap>
 
+    <resultMap id="ReviewModifyResultMap" type="com.example.bookhub.product.vo.Review">
+        <id column="review_no" property="reviewNo"/>
+        <result column="comment" property="comment"/>
+        <result column="rate" property="rate"/>
+        <result column="buyer" property="buyer"/>
+        <association column="review_tag_no" property="reviewTag"
+                     select="com.example.bookhub.product.mapper.ReviewMapper.getReviewTagByNo"/>
+    </resultMap>
+
     <resultMap id="UserResultMap" type="com.example.bookhub.user.vo.User">
         <id column="user_no" property="no"/>
         <result column="user_id" property="id"/>
@@ -193,22 +202,31 @@
         (#{comment}, #{review.reviewNo}, #{user.no})
     </insert>
 
-    <select id="getReviewByReviewNo" parameterType="long" resultMap="ReviewListResultMap">
+    <select id="getReviewByReviewNo" parameterType="long" resultMap="ReviewModifyResultMap">
         select
             review_no,
             comment,
             rate,
-            recommend_count,
-            accuse_count,
-            created_date,
-            updated_date,
-            user_no,
             review_tag_no,
-            reply_count,
             buyer
         from
             REVIEW
         where
             review_no = #{reviewNo}
     </select>
+
+    <delete id="deleteReviewImageByReviewNo" parameterType="long">
+        delete from REVIEW_IMAGE
+        where review_no = #{value}
+    </delete>
+
+    <update id="updateReview" parameterType="com.example.bookhub.product.vo.Review">
+        update
+            REVIEW
+        set
+            rate = #{rate},
+            review_tag_no = #{reviewTag.reviewTagNo},
+            comment = #{comment}
+        where review_no = #{reviewNo}
+    </update>
 </mapper>

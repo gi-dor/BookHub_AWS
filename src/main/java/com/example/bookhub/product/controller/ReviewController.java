@@ -4,6 +4,7 @@ import com.example.bookhub.product.dto.ReviewForm;
 import com.example.bookhub.product.dto.ReviewDto;
 import com.example.bookhub.product.dto.ReviewReplyForm;
 import com.example.bookhub.product.service.ReviewService;
+import com.example.bookhub.product.vo.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +22,15 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/create")
-    public String create(ReviewForm reviewForm, Principal principal){
+    @PostMapping("/createOrUpdate")
+    public String createOrUpdate(ReviewForm reviewForm, Principal principal){
         long bookNo = reviewForm.getBookNo();
+        String createYn = reviewForm.getCreateYn();
 
-        reviewService.createReview(reviewForm, principal.getName());
+        if("create".equals(createYn))
+            reviewService.createReview(reviewForm, principal.getName());
+        else if("modify".equals(createYn))
+            reviewService.modifyReview(reviewForm);
 
         return "redirect:/product/book/detail?bookNo=" + bookNo;
     }
@@ -53,8 +58,8 @@ public class ReviewController {
 
     @GetMapping("/modify/{reviewNo}")
     @ResponseBody
-    public ResponseEntity<ReviewDto> modify(@PathVariable("reviewNo") long reviewNo){
-        ReviewDto reviewDto = reviewService.getReviewByReviewNo(reviewNo);
-        return ResponseEntity.ok().body(reviewDto);
+    public ResponseEntity<Review> modify(@PathVariable("reviewNo") long reviewNo){
+        Review review = reviewService.getReviewByReviewNo(reviewNo);
+        return ResponseEntity.ok().body(review);
     }
 }

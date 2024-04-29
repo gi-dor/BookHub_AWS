@@ -225,7 +225,9 @@
 
     <!-- 리뷰 모달 창 -->
     <div id="modal-create-review" class="modal" tabindex="-1">
-        <form method="post" action="/product/review/create" enctype="multipart/form-data">
+        <form method="post" action="/product/review/createOrUpdate" enctype="multipart/form-data">
+            <input type="hidden" name="createYn" value="create" />
+            <input type="hidden" name="reviewNo" value="0"/>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -299,7 +301,7 @@
 
                         <div class="form-group mt-3">
                             <label for="formFileMultiple" class="form-label"><bold>사진 첨부(선택)</bold></label>
-                            <input type="file" class="form-control" id="formFileMultiple" name="imageList" multiple th:required accept="image/*">
+                            <input type="file" class="form-control" id="formFileMultiple" name="imageList" multiple accept="image/*">
                         </div>
 
                     </div>
@@ -431,6 +433,8 @@
     }
 
     function resetCreateForm(){
+        $("input[name=createYn]").val("create");
+
         document.getElementById('option1').checked = true;
         document.getElementById('option2').checked = false;
         document.getElementById('option3').checked = false;
@@ -442,26 +446,31 @@
         document.querySelectorAll('input[type="radio"][name="rate"]').forEach(function(radio) {
             radio.checked = false;
         });
+
+        document.querySelector('input[name="rate"][value="' + 5 + '"]').checked = true;
     }
 
     async function resetModifyForm(reviewNo){
+        $("input[name=createYn]").val("modify");
+        $("input[name=reviewNo]").val(reviewNo);
+
         let response = await fetch("/product/review/modify/" + reviewNo);
         if(!response.ok){
             console.log("수정 데이터 불러오기 실패");
         }
 
         let jsonData = await response.json();
-        let reviewDto = jsonData;
+        let review = jsonData;
 
-        document.getElementById('option1').checked = reviewDto.reviewTag.reviewTagNo === 1;
-        document.getElementById('option2').checked = reviewDto.reviewTag.reviewTagNo === 2;
-        document.getElementById('option3').checked = reviewDto.reviewTag.reviewTagNo === 3;
-        document.getElementById('option4').checked = reviewDto.reviewTag.reviewTagNo === 4;
-        document.getElementById('option5').checked = reviewDto.reviewTag.reviewTagNo === 5;
+        document.getElementById('option1').checked = review.reviewTag.reviewTagNo === 1;
+        document.getElementById('option2').checked = review.reviewTag.reviewTagNo === 2;
+        document.getElementById('option3').checked = review.reviewTag.reviewTagNo === 3;
+        document.getElementById('option4').checked = review.reviewTag.reviewTagNo === 4;
+        document.getElementById('option5').checked = review.reviewTag.reviewTagNo === 5;
 
-        $("#review-comment").val(reviewDto.comment);
+        $("#review-comment").val(review.comment);
 
-        document.querySelector('input[name="rate"][value="' + reviewDto.rate + '"]').checked = true;
+        document.querySelector('input[name="rate"][value="' + review.rate + '"]').checked = true;
 
     }
 

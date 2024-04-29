@@ -21,11 +21,18 @@ public class BookController {
 
     private final BookService bookService;
     private final ReviewService reviewService;
+    private List<ReviewDto> reviewDtoList;
 
     @GetMapping("/detail")
     public String home(@RequestParam("bookNo") long bookNo, Model model, Principal principal){
         BookDto book = bookService.getBookDetailByNo(bookNo);
-        List<ReviewDto> reviewDtoList = reviewService.getReviewsByBookNo(bookNo, principal.getName());
+        if(principal != null) {
+            reviewDtoList = reviewService.getReviewsByBookNo(bookNo, principal.getName());
+        } else {
+            // 임의의 사용자 이름으로 리뷰를 가져옴
+            reviewDtoList = reviewService.getReviewsByBookNo(bookNo, "guest");
+        }
+        System.out.println(reviewDtoList);
         model.addAttribute("book", book);
         model.addAttribute("reviewDtoList", reviewDtoList);
 
