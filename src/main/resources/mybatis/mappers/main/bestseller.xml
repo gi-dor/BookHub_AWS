@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.bookhub.main.mapper.NewBookMapper">
-    <select id="newBookList" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
+<mapper namespace="com.example.bookhub.main.mapper.BestSellerMapper">
+    <select id="bestSeller" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
         SELECT
         B.BOOK_NO,
         B.BOOK_NAME,
@@ -15,9 +15,11 @@
         BI.BOOK_IMAGE_COVER,
         P.PUBLISHER_NAME,
         B.CATEGORY_NO,
-        C.CATEGORY_NAME
+        C.CATEGORY_NAME,
+        SUM(BB.COUNT) AS SALES_COUNT
+
         FROM
-        BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P,CATEGORY C
+        BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P,CATEGORY C,BUY_BOOK BB,BUY
         WHERE
         B.BOOK_NO = BA.BOOK_NO
         AND
@@ -28,53 +30,14 @@
         B.PUBLISHER_NO = P.PUBLISHER_NO
         AND
         B.CATEGORY_NO = C.CATEGORY_NO
-
-            <choose>
-                <when test="cateKeyword != 0">
-                  and  C.CATEGORY_NO = #{cateKeyword}
-                </when>
-                <otherwise>
-                    AND C.CATEGORY_NO IN (SELECT C.CATEGORY_NO
-                                      FROM CATEGORY
-                                      WHERE C.PARENT_CATEGORY_NO = #{cate})
-                </otherwise>
-            </choose>
+        AND
+        B.BOOK_NO = BB.BOOK_NO
+        AND
+        BB.BUY_NO = BUY_NO
 
 
-        <choose>
-            <when test="pubDate == 1">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 14 DAY)
-            </when>
-            <when test="pubDate == 2">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 56 DAY)
-            </when>
-            <when test="pubDate == 3">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 84 DAY)
-            </when>
-            <when test="pubDate == 4">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
-            </when>
-            <otherwise>
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
-            </otherwise>
-        </choose>
-        <choose>
-            <when test="sort == 0">
-                ORDER BY BOOK_SALES_VOLUME DESC
-            </when>
-            <when test="sort == 1">
-                ORDER BY BOOK_PUBLISHED_DATE DESC
-            </when>
-            <when test="sort == 2 ">
-                ORDER BY BOOK_AVERAGE_RATING DESC
-            </when>
-            <when test="sort == 3">
-                ORDER BY BOOK_TOTAL_REPLY_CNT DESC
-            </when>
-            <otherwise>
-                ORDER BY BOOK_PUBLISHED_DATE DESC
-            </otherwise>
-        </choose>
+
+
         LIMIT #{offset}, #{recordSize};
 
     </select>
@@ -113,7 +76,10 @@
         B.PUBLISHER_NO = P.PUBLISHER_NO
         AND
         B.CATEGORY_NO = C.CATEGORY_NO
-
+        AND
+        B.BOOK_NO = BB.BOOK_NO
+        AND
+        BB.BUY_NO = BUY_NO
 
         <!-- 검색 조건 -->
         <if test="keyword != null">
