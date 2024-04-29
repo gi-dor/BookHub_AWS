@@ -23,6 +23,7 @@ public class IndividualController {
 
     private final IndividualService individualService;
 
+    // 미완료 CS
     @GetMapping("/admin/individual/noanswer")
     public String noAnswerList(Model model, IndividualDto dto){
         List<IndividualDto> saveDto = individualService.getNoAnswerList();
@@ -30,6 +31,7 @@ public class IndividualController {
         return "admin/individual/noanswerlist";
     }
 
+    // 미완료 디테일
     @GetMapping("/admin/individual/noanswer/detail/{no}")
     public String noAnswerDetail(@PathVariable Long no, Model model){
         Inquiry inquiry = individualService.getNoAnswerNo(no);
@@ -42,6 +44,28 @@ public class IndividualController {
         Admin admin = (Admin) session.getAttribute("admin");
         individualService.insertAnswer(no, content, admin);
         return "redirect:/admin/individual/noanswer/detail/" + no;
+    }
+    // 미완료 CS 끝
+
+
+
+    // 완료 CS
+    @GetMapping("/admin/individual/answer")
+    public String answerList(Model model, IndividualDto dto){
+        List<IndividualDto> saveDto = individualService.getAnswerList();
+        model.addAttribute("answer", saveDto);
+        return "admin/individual/answerlist";
+    }
+
+    // 완료 디테일
+    @GetMapping("/admin/individual/answer/detail/{no}")
+    public String answerDetail(@PathVariable Long no, Model model){
+        Inquiry answerInquiry = individualService.getAnswerNo(no);
+        Inquiry noAnswerInquiry = individualService.getNoAnswerNo(no);
+
+        model.addAttribute("answer", answerInquiry);
+        model.addAttribute("noanswer", noAnswerInquiry);
+        return "admin/individual/answerdetail";
     }
 
 }

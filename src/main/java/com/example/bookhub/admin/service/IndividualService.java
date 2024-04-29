@@ -16,6 +16,7 @@ public class IndividualService {
 
     private final IndividualMapper individualMapper;
 
+    // 미완료 CS 시작
     public List<IndividualDto> getNoAnswerList(){
         return individualMapper.getNoAnswerList();
     }
@@ -34,5 +35,15 @@ public class IndividualService {
 
         individualMapper.insertAnswer(inquiryComment);
         individualMapper.updateNoAnswer(no);
+    }
+    // 미완료 CS 끝
+
+    // 완료 CS
+    public List<IndividualDto> getAnswerList(){
+        return individualMapper.getAnswerList();
+    }
+
+    public Inquiry getAnswerNo(Long no){
+        return individualMapper.getAnswerNo(no);
     }
 }

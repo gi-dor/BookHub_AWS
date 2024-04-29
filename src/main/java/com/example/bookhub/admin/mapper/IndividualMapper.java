@@ -16,4 +16,7 @@ public interface IndividualMapper {
     void insertAnswer(InquiryComment inquiryComment);
     void updateNoAnswer(Long no);
 
+    List<IndividualDto> getAnswerList();
+    Inquiry getAnswerNo(Long no);
+
 }
