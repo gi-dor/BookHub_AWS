@@ -29,49 +29,47 @@
                 </if>
 
                 <!-- 카테고리 -->
-                <if test="filter.topCategoryNo != 0">
-                    <choose>
-                        <when test="filter.thirdCategoryNo != 0">
-                            AND CA.CATEGORY_NO = #{filter.thirdCategoryNo}
-                        </when>
-                        <when test="filter.secondCategoryNo != 0">
-                            AND CA.CATEGORY_NO = #{filter.secondCategoryNo}
-                        </when>
-                        <when test="filter.topCategoryNo != 0">
-                            AND CA.CATEGORY_NO = #{filter.topCategoryNo}
-                        </when>
-                    </choose>
-                </if>
+                <choose>
+                    <when test="filter.secondCategoryNo != 0">
+                        AND B.CATEGORY_NO = #{filter.secondCategoryNo}
+                    </when>
+                    <when test="filter.topCategoryNo != 0">
+                        AND B.CATEGORY_NO IN (SELECT CATEGORY_NO
+                                                   FROM BookHub.CATEGORY
+                                                   WHERE PARENT_CATEGORY_NO = #{filter.topCategoryNo})
+                    </when>
+                </choose>
+
 
                 <!-- 기간 검색 -->
                 <if test="filter.period != null">
                     <choose>
                         <when test="filter.period == 'createdDate'">
                             AND B.BOOK_CREATED_DATE
-                                BETWEEN COALESCE(NULLIF(CONCAT(#{filter.moreDate}, ' 00:00:00'), ''), '0001-01-01 00:00:00')
-                                AND COALESCE(NULLIF(CONCAT(#{filter.lessDate}, ' 23:59:59'), ''), '9999-12-31 23:59:59')
+                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
+                                AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
                         </when>
                         <when test="filter.period == 'updatedDate'">
-                            AND B.BOOK_UPDATED_DATE
-                            BETWEEN COALESCE(NULLIF(CONCAT(#{filter.moreDate}, ' 00:00:00'), ''), '0001-01-01 00:00:00')
-                            AND COALESCE(NULLIF(CONCAT(#{filter.lessDate}, ' 23:59:59'), ''), '9999-12-31 23:59:59')
+                            AND B.BOOK_CREATED_DATE
+                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
+                                AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
                         </when>
                         <when test="filter.period == 'publishedDate'">
-                            AND B.BOOK_PUBLISHED_DATE
-                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01')
-                                AND COALESCE(NULLIF(#{filter.lessDate}, ''), '9999-12-31')
+                            AND B.BOOK_CREATED_DATE
+                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
+                                AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
                         </when>
                     </choose>
                 </if>
 
                 <!-- 판매 상태 -->
-                <if test="filter.available == '정상'">
+                <if test="filter.available != null">
                     AND B.BOOK_STATUS = #{filter.available}
                 </if>
-                <if test="filter.discontinued == '절판'">
+                <if test="filter.discontinued != null">
                     AND B.BOOK_STATUS = #{filter.discontinued}
                 </if>
-                <if test="filter.soldOut == '품절'">
+                <if test="filter.soldOut != null">
                     AND B.BOOK_STATUS = #{filter.soldOut}
                 </if>
 
@@ -129,19 +127,17 @@
                     </if>
 
                     <!-- 카테고리 -->
-                    <if test="filter.topCategoryNo != 0">
-                        <choose>
-                            <when test="filter.thirdCategoryNo != 0">
-                                AND CA.CATEGORY_NO = #{filter.thirdCategoryNo}
-                            </when>
-                            <when test="filter.secondCategoryNo != 0">
-                                AND CA.CATEGORY_NO = #{filter.secondCategoryNo}
-                            </when>
-                            <when test="filter.topCategoryNo != 0">
-                                AND CA.CATEGORY_NO = #{filter.topCategoryNo}
-                            </when>
-                        </choose>
-                    </if>
+                    <choose>
+                        <when test="filter.secondCategoryNo != 0">
+                            AND B.CATEGORY_NO = #{filter.secondCategoryNo}
+                        </when>
+                        <when test="filter.topCategoryNo != 0">
+                            AND B.CATEGORY_NO IN (SELECT CATEGORY_NO
+                                                       FROM BookHub.CATEGORY
+                                                       WHERE PARENT_CATEGORY_NO = #{filter.topCategoryNo})
+                        </when>
+                    </choose>
+
 
                     <!-- 기간 검색 -->
                     <if test="filter.period != null">

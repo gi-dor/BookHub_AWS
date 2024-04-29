@@ -44,7 +44,7 @@ public class ProductController {
         model.addAttribute("publishers", publishers);
         model.addAttribute("paging", pagination);
         model.addAttribute("books", books);
-        model.addAttribute("productFilter", new ProductFilter());
+        model.addAttribute("productFilter", filter);
 
         return "admin/product/list";
     }
