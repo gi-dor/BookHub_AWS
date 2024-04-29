@@ -28,7 +28,7 @@ public interface DashBoardMapper {
 
     // 리뷰 5개 갖고오기, 평균 평점
     List<ReviewDto> getReview();
-    double averageRate();
+    float averageRate();
 
     // 미답변률, 답변률
     int noAnswerRatio();

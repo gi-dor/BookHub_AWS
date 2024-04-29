@@ -12,7 +12,7 @@
 
     <select id="getAdminId" resultMap="AdminResultMap" parameterType="String">
         SELECT
-            ADMIN_ID, ADMIN_PW, ADMIN_EMAIL, ADMIN_TEL
+            ADMIN_NO, ADMIN_ID, ADMIN_PW, ADMIN_EMAIL, ADMIN_TEL
         FROM
             ADMIN
         WHERE

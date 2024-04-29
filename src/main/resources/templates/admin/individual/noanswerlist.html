@@ -3,7 +3,8 @@
 <div  layout:fragment="content">
     <div class="row mb-3">
         <div class="col-12">
-            <h2>답변 미완료된 문의</h2>
+            <h2 class="mt-5">답변 미완료된 문의</h2>
+            <p th:text="${session.admin.no}"></p>
 
             <table class="table">
                 <colgroup>
@@ -27,7 +28,14 @@
                     <tr th:each="list : ${noanswer} ">
                         <td th:text="${list.individualNo}"></td>
                         <td th:text="${list.categoryName.name}"></td>
-                        <td th:text="${list.individualTitle}"></td>
+                        <td>
+                            <a th:text="${list.individualTitle}"
+                               th:href="@{/admin/individual/noanswer/detail/{id}(id=${list.individualNo})}"
+                                style="text-decoration-line: none"
+                            >
+
+                            </a>
+                        </td>
                         <td th:text="${list.userName.name}"></td>
                         <td th:text="${#temporals.format(list.individualUpdateDate, 'yyyy.MM.dd')}"></td>
                     </tr>
