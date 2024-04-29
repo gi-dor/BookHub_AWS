@@ -21,4 +21,8 @@ public interface ReviewMapper {
     void deleteReviewRecommendUser(ReviewRecommendUser reviewRecommendUser);
     void updateReviewRecommendCount(@Param("reviewNo") long reviewNo, @Param("recommendStatus") String recommendStatus);
     void createReviewReply(ReviewReply reviewReply);
+    Review getReviewByReviewNo(long reviewNo);
+    void deleteReviewImageByReviewNo(long reviewNo);
+    void updateReview(Review review);
+    void deleteReview(long reviewNo);
 }

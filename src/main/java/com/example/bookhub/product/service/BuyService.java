@@ -16,8 +16,10 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class BuyService {
+
     private final UserMapper userMapper;
     private final BuyMapper buyMapper;
+    private BuyForm buyForm;
 
     public List<CouponProduced> getCouponsByUserNo(String userId) {
         User user = userMapper.selectUserById(userId);
@@ -31,7 +33,23 @@ public class BuyService {
 
     @Transactional
     public void createBuy(BuyForm buyForm, String tid, String userId) {
+        this.buyForm = buyForm;
+        User user = userMapper.selectUserById(userId);
+
         // BUY 테이블
+        long generatedNo = insertBuy(tid, user);
+
+        // BUYBOOK 테이블
+        insertBuyBook(generatedNo);
+
+        // COUPON_USED 테이블, COUPON_PRODUCED 테이블
+        insertAndUpdateCoupon(generatedNo);
+
+        // 포인트 차감
+        updatePoint(user);
+    }
+
+    public long insertBuy(String tid, User user){
         Buy buy = Buy.builder()
                 .totalPrice(buyForm.getTotalPrice())
                 .totalBookDiscountPrice(buyForm.getTotalBookDiscountPrice())
@@ -42,13 +60,13 @@ public class BuyService {
 
         buy.setOrderId(tid);
 
-        User user = userMapper.selectUserById(userId);
         buy.setUser(user);
 
         buyMapper.createBuy(buy);
-        Long generatedNo = buy.getBuyNo();
+        return buy.getBuyNo();
+    }
 
-        // BUYBOOK 테이블
+    public void insertBuyBook(long generatedNo){
         for(int i = 0; i < buyForm.getBuyBookNoList().size(); i++){
             long bookNo = buyForm.getBuyBookNoList().get(i);
             int count = buyForm.getBuyBookCountList().get(i);
@@ -62,8 +80,9 @@ public class BuyService {
 
             buyMapper.createBuyBook(buyBook);
         }
+    }
 
-        // COUPON_USED 테이블, COUPON_PRODUCED 테이블
+    public void insertAndUpdateCoupon(long generatedNo){
         if(buyForm.getCouponProducedNoList() != null) {
             for (int i = 0; i < buyForm.getCouponProducedNoList().size(); i++) {
                 long couponProducedNo = buyForm.getCouponProducedNoList().get(i);
@@ -78,8 +97,9 @@ public class BuyService {
                 buyMapper.updateCouponProducedUsed(couponProducedNo);
             }
         }
+    }
 
-        // 포인트 차감
+    public void updatePoint(User user){
         int totalPointUseAmount = buyForm.getTotalPointUseAmount();
         Map<String, Object> map = new HashMap<>();
         map.put("userNo", user.getNo());

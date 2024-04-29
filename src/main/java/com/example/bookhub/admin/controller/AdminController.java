@@ -41,7 +41,7 @@ public class AdminController {
         int noAnswerCnt = dashBoardService.noAnswerCnt();
         int answerCnt = dashBoardService.answerCnt();
         List<ReviewDto> dto = dashBoardService.getReviews();
-        double avgRate = dashBoardService.averageRate();
+        float avgRate = dashBoardService.averageRate();
         int noAnswerRatio = dashBoardService.noAnswerRatio();
         int answerRatio = dashBoardService.answerRatio();
         List<ratioDto> ratio = dashBoardService.getRatios();
@@ -65,7 +65,6 @@ public class AdminController {
     public String login(String id, String password, HttpSession session){
 
         Admin admin = adminService.login(id, password);
-
         if(admin != null){
             session.setAttribute("admin", admin);
         }  else {

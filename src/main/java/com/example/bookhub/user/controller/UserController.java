@@ -2,7 +2,10 @@ package com.example.bookhub.user.controller;
 
 
 import com.example.bookhub.user.dto.UserSignupForm;
+import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
+import com.example.bookhub.user.util.MailService;
+import com.example.bookhub.user.util.RandomPassword;
 import com.example.bookhub.user.vo.User;
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -29,6 +32,8 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final MailService mailService;
+    private final MyPageService myPageService;
 
 
      // 로그아웃
@@ -75,11 +80,17 @@ public class UserController {
         try {
             //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
             User user = userService.registerUser(form);
+
+            // 사용자 등록이 완료되면 이메일 보내기
+            String to = form.getEmail1() + "@" + form.getEmail2();
+            String subject = "회원 가입이 완료되었습니다.";
+            String html = mailService.registerHtmlTemplate(form); // loadHtmlTemplate 메서드를 호출할 때는 괄호를 포함하여 호출해야 합니다.
+            mailService.sendEmail(to, subject, html);
             //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
 
             return "redirect:/user/completed?id=" + user.getId();
 
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
             // 예외를 로깅하기
             logger.error("에러 발생: ", ex); // 에러 레벨
@@ -88,14 +99,6 @@ public class UserController {
             if("id".equals(message)) {
                 errors.rejectValue("id", null, "사용 할 수 없는 아이디");
             }
-        /*
-            if("id".equals(message)) {
-                errors.rejectValue("id", null,"사용 할 수 없는 아이디");
-            } else if( "email".equals(message)) {
-                errors.rejectValue("email", null, "사용 할 수 없는 이메일");
-            }
-       */
-
             return "user/registerForm";
         }
 
@@ -125,6 +128,49 @@ public class UserController {
     public int emailCheck(@RequestParam("email") String email) {
         int cnt = userService.emailCheck(email);
         return  cnt;
+    }
+
+    // 비밀번호 재설정 페이지로 이동하는 핸들러
+    @GetMapping("/login/passwordReset")
+    public String showPasswordResetPage() {
+        return "user/passwordResetForm"; // 비밀번호 재설정 폼으로 이동
+    }
+
+
+    // 비밀번호 재설정 요청 처리 핸들러
+    @PostMapping("/login/passwordReset")
+    public String resetPassword(@RequestParam("id") String id,
+                                @RequestParam("email1") String email1 ,
+                                @RequestParam("email2") String email2 ,
+                                Model model) {
+
+        try{
+            // 입력한 id,email 로 사용자 조회하기
+            String email = email1 + "@" + email2;
+            User user = userService.selectUserByIdAndEmail(id,email);
+
+            // 임시비밀번호 만들기 +  DB에 update
+            String resetPassword = userService.resetPassword(id,email);
+            // 임시 비밀번호값 resetPassword
+            model.addAttribute("resetPassword",resetPassword);
+
+            // 사용자 조회한 값으로 eamil 보내기
+            String to = user.getEmail();
+            String subject = "BookHub 임시비밀번호 발급.";
+            String html = mailService.resetPasswordTemplate(resetPassword); // loadHtmlTemplate 메서드를 호출할 때는 괄호를 포함하여 호출해야 합니다.
+            mailService.sendEmail(to, subject, html);
+
+
+            return "/user/loginForm";
+        } catch (IllegalArgumentException aex) {
+            // 사용자 정보가 일치하지 않거나 누락된 경우 에러 메시지를 모델에 추가
+            model.addAttribute("error",aex.getMessage());
+            return "/user/passwordResetForm";
+        }
+        catch (Exception ex) {
+            return "/main";
+        }
+
     }
 
 }
