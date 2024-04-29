@@ -1,0 +1,52 @@
+<html lang="ko"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<div  layout:fragment="content">
+
+    <div class="row mb-3">
+            <h2 class="mt-5">답변 미완료된 문의</h2>
+
+        <div class="col-10 mt-3">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>유저 이름</th>
+                    <td th:text="${inquiry.user.name}"></td>
+                    <th>문의 번호</th>
+                    <td th:text="${inquiry.no}"></td>
+                </tr>
+                <tr>
+                    <th>카테고리명</th>
+                    <td th:text="${inquiry.faqCategory.name}"></td>
+                    <th>문의날짜</th>
+                    <td th:text="${#temporals.format(inquiry.createdDate, 'yyyy.MM.dd')}"></td>
+                </tr>
+
+                <tr>
+                    <th>문의 제목</th>
+                    <td th:text="${inquiry.title}" colspan="3"></td>
+                </tr>
+
+
+                <tr>
+                    <th>문의 내용</th>
+                    <td th:text="${inquiry.content}" colspan="3"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-10">
+            <form th:action="@{/admin/individual/noanswer/add}" method="POST">
+                <input type="hidden" name="no" th:value="${inquiry.no}">
+                <textarea class="form-control mb-3" rows="3" placeholder="답변 내용을 입력하세요" name="content"></textarea>
+                <button type="submit" class="btn btn-outline-primary">등록</button> <!-- 등록 버튼 -->
+                <a href="/admin/individual/noanswer" class="btn btn-outline-secondary">목록으로 돌아가기</a>
+            </form>
+        </div>
+    </div>
+
+</div>
+</html>

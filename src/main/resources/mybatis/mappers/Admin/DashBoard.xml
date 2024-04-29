@@ -73,10 +73,8 @@
     <select id="answerCnt" resultType="int">
         SELECT count(*)
         FROM INDIVIDUAL_INQUIRIES i
-                 JOIN BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
-                 join BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
         WHERE i.INDIVIDUAL_INQUIRY_ANSWER_YN = 1
-          AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 1
+          AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
     </select>
 
     <!-- 관리자 홈에서 리뷰 데이터(최근 5개) 갖고오는 쿼리 -->
@@ -93,7 +91,7 @@
     </select>
 
     <!-- 리뷰/평점 평균(최근 5개) 구해주는 쿼리 -->
-    <select id="averageRate" resultType="double">
+    <select id="averageRate" resultType="float">
         SELECT AVG(rate)
         FROM (
             SELECT rate
@@ -118,13 +116,14 @@
     <!-- 답변 완료된 비율을 구하는 쿼리 -->
     <select id="answerRatio" resultType="int">
         SELECT
-            (COUNT(CASE WHEN i.INDIVIDUAL_INQUIRY_ANSWER_YN = 1 THEN 1 END)) * 100.0 / COUNT(*) AS completion_rate
+            (COUNT(CASE WHEN i.INDIVIDUAL_INQUIRY_ANSWER_YN = 1 THEN 1 END) / COUNT(*)) * 100.0 AS completion_rate
         FROM
             BookHub.INDIVIDUAL_INQUIRIES i
                 JOIN BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
                 JOIN BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
         WHERE
             i.INDIVIDUAL_INQUIRY_DELETE_YN = 0;
+
     </select>
 
     <select id="getRatio" resultType="com.example.bookhub.admin.dto.ratioDto">
