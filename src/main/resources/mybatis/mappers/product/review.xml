@@ -229,4 +229,9 @@
             comment = #{comment}
         where review_no = #{reviewNo}
     </update>
+
+    <delete id="deleteReview" parameterType="long">
+        delete from REVIEW
+        where review_no = #{value}
+    </delete>
 </mapper>

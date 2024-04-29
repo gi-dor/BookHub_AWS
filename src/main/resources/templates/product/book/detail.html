@@ -97,7 +97,7 @@
                                         <span th:text="${review.rate}"></span>
                                          <span>
                                                 <a class="btn btn-sm btn-outline-secondary" th:onclick="'createReview(event, ' + ${review.reviewNo} + ')'">수정</a>
-                                                <a class="btn btn-sm btn-outline-secondary">삭제</a>
+                                                <a class="btn btn-sm btn-outline-secondary"  th:href="@{|/product/review/delete/${book.bookNo}/${review.reviewNo}|}">삭제</a>
                                          </span>
                                     </span>
                         </div>
@@ -227,7 +227,7 @@
     <div id="modal-create-review" class="modal" tabindex="-1">
         <form method="post" action="/product/review/createOrUpdate" enctype="multipart/form-data">
             <input type="hidden" name="createYn" value="create" />
-            <input type="hidden" name="reviewNo" value="0"/>
+            <input type="hidden" name="reviewNo" value=0 />
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

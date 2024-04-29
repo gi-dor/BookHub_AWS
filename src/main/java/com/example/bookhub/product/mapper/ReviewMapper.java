@@ -24,4 +24,5 @@ public interface ReviewMapper {
     Review getReviewByReviewNo(long reviewNo);
     void deleteReviewImageByReviewNo(long reviewNo);
     void updateReview(Review review);
+    void deleteReview(long reviewNo);
 }

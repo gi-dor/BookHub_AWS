@@ -169,4 +169,8 @@ public class ReviewService {
                 }
             }
     }
+
+    public void deleteReview(long reviewNo) {
+        reviewMapper.deleteReview(reviewNo);
+    }
 }

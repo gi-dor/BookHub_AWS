@@ -62,4 +62,10 @@ public class ReviewController {
         Review review = reviewService.getReviewByReviewNo(reviewNo);
         return ResponseEntity.ok().body(review);
     }
+
+    @GetMapping("/delete/{bookNo}/{reviewNo}")
+    public String deleteReview(@PathVariable("bookNo") long bookNo, @PathVariable("reviewNo") long reviewNo){
+        reviewService.deleteReview(reviewNo);
+        return "redirect:/product/book/detail?bookNo=" + bookNo;
+    }
 }
