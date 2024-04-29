@@ -22,14 +22,14 @@ public class UserSignupForm {
 // 회원 가입 양식을 처리한다 , 사용자 등록할 때 쓰인다
 
 
-    @Pattern(regexp = "^[a-z0-9]{5,20}$" , message ="알맞은 형식이 아닙니다")    // message = "아이디는 영어 소문자와 숫자만 사용하여 5~20자리여야 합니다."
+    @Pattern(regexp = "^[A-Za-z0-9]{5,20}$" , message ="알맞은 형식이 아닙니다")    // message = "아이디는 영어 소문자와 숫자만 사용하여 5~20자리여야 합니다."
     private String id;
 
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$"  , message ="알맞은 형식이 아닙니다")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$"  , message ="비밀번호의 알맞은 형식이 아닙니다")
     private String password;
 
     // @Pattern(regexp = "$expression") 정규식검증
-    @Pattern(regexp="^[가-힣]{2,}$" ,  message ="알맞은 형식이 아닙니다")
+    @Pattern(regexp="^[가-힣]{2,}$" ,  message ="알맞은 이름의형식이 아닙니다")
     private String name;
 
     @NotBlank(message = "이메일은 필수입력값입니다.")
@@ -41,10 +41,10 @@ public class UserSignupForm {
 
     private  String tel1;
 
-    @Pattern(regexp="^[0-9]{4}$" , message = "유효한 전화번호 형식이 아닙니다")
+    @Pattern(regexp="^[0-9]{4}$" , message = "숫자만 입력 가능합니다")
     private  String tel2;
 
-    @Pattern(regexp="^[0-9]{4}$" , message = "유효한 전화번호 형식이 아닙니다")
+    @Pattern(regexp="^[0-9]{4}$" , message = "숫자만 입력 가능합니다")
     private  String tel3;
 
     private String zipCode;
