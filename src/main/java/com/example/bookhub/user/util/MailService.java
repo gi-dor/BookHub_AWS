@@ -2,6 +2,7 @@ package com.example.bookhub.user.util;
 
 import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.user.dto.UserSignupForm;
+import com.example.bookhub.user.vo.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class MailService {
     }
 
     // 회원가입 완료시에 실행되는 회원가입완료 이메일 보내기
-    public void registerEmail(String to, String subject, String html) throws MessagingException {
+    public void sendEmail(String to, String subject, String html) throws MessagingException {
 //        SimpleMailMessage message = new SimpleMailMessage();
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,true);
@@ -46,7 +47,7 @@ public class MailService {
     }
 
    // 긁어와서 사용한 코드라 자세히 모름;
-    public String loadHtmlTemplate(UserSignupForm form) throws Exception {
+    public String registerHtmlTemplate(UserSignupForm form) throws Exception {
 
         ClassPathResource resource = new ClassPathResource("templates/user/mail/registerEmail.html");
         String htmlTemplate = null;
@@ -62,8 +63,18 @@ public class MailService {
     }
 
 
-    public void passwordEmail() {
+    public String resetPasswordTemplate(String password) throws Exception{
 
+        ClassPathResource resource = new ClassPathResource("templates/user/mail/resetPassword.html");
+        String htmlTemplate = null;
+        try{
+            htmlTemplate = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+
+        } catch (IOException ex) {
+            System.err.println("이메일 템플릿을 로드하는 도중 오류가 발생했습니다.");
+            ex.printStackTrace();
+        }
+        return htmlTemplate.replace("PASSWORD", password);
     }
 
 
