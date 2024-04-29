@@ -84,17 +84,14 @@
     <select id="getAnswerNo" parameterType="Long" resultType="com.example.bookhub.board.vo.InquiryComment">
         SELECT
             c.INQUIRY_RESPONSE_COMMENT_NO as no,
-            c.INQUIRY_NO as "inquiryNo.no",
-            c.INQUIRY_RESPONSE_COMMENT_ADMIN_NO as "adminNo.no",
+            c.INQUIRY_NO as "inquiry.no",
+            c.INQUIRY_RESPONSE_COMMENT_ADMIN_NO as "admin.no",
             c.INQUIRY_RESPONSE_COMMENT_CONTENT as comment,
             c.INQUIRY_RESPONSE_COMMENT_CREATE_DATE as createDate,
             c.INQUIRY_RESPONSE_COMMENT_UPDATE_DATE as updateDate
-        FROM  BookHub.INQUIRY_RESPONSE_COMMENTS c
-            JOIN
-            BookHub.INDIVIDUAL_INQUIRIES i ON c.INQUIRY_NO = i.INDIVIDUAL_INQUIRY_NO
-            JOIN
-            BookHub.ADMIN a ON c.INQUIRY_RESPONSE_COMMENT_ADMIN_NO = a.ADMIN_NO
-        WHERE INDIVIDUAL_INQUIRY_NO = #{no}
+        from BookHub.INQUIRY_RESPONSE_COMMENTS c
+            join  BookHub.INDIVIDUAL_INQUIRIES i ON c.INQUIRY_NO = i.INDIVIDUAL_INQUIRY_NO
+        where i.INDIVIDUAL_INQUIRY_NO = #{no}
     </select>
 
 

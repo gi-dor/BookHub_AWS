@@ -41,8 +41,8 @@
         <div class="col-10">
             <div class="comment row">
                 <div class="col-10 form-control">
-<!--                    <p class="mt-2" th:text="${answer.adminNo.name} + '|' + ${#temporals.format(answer.createDate,'yyyy.MM.dd')}">콩콩이 | 2024.04.21</p>-->
-<!--                    <p class="comment-content" th:text="${answer.content}">123</p>-->
+                    <p class="mt-2" th:text="${admin.id} + ' | ' + ${#temporals.format(answer.createDate,'yyyy.MM.dd')}">콩콩이 | 2024.04.21</p>
+                    <p class="comment-content" th:text="${answer.comment}">123</p>
                     <form action="/board/community/comment/modify" method="post">
                         <div class="comment-edit-container" style="display: none;"> <!-- 수정 가능한 텍스트 창과 등록 버튼을 감싸는 div -->
                             <textarea class="form-control comment-edit" name="content" value="123"></textarea> <!-- 수정 가능한 텍스트 창 -->

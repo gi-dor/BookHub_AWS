@@ -29,8 +29,8 @@ public class IndividualService {
         Inquiry inquiry = individualMapper.getNoAnswerNo(no);
 
         InquiryComment inquiryComment = new InquiryComment();
-        inquiryComment.setAdminNo(admin);
-        inquiryComment.setInquiryNo(inquiry);
+        inquiryComment.setAdmin(admin);
+        inquiryComment.setInquiry(inquiry);
         inquiryComment.setComment(content);
 
         individualMapper.insertAnswer(inquiryComment);
@@ -43,7 +43,7 @@ public class IndividualService {
         return individualMapper.getAnswerList();
     }
 
-    public Inquiry getAnswerNo(Long no){
+    public InquiryComment getAnswerNo(Long no){
         return individualMapper.getAnswerNo(no);
     }
 }

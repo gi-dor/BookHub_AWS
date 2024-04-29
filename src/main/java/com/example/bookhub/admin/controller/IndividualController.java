@@ -1,6 +1,8 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.IndividualDto;
+import com.example.bookhub.admin.mapper.AdminMapper;
+import com.example.bookhub.admin.service.AdminService;
 import com.example.bookhub.admin.service.IndividualService;
 import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.board.vo.Inquiry;
@@ -22,6 +24,8 @@ import java.util.List;
 public class IndividualController {
 
     private final IndividualService individualService;
+    private final AdminService adminService;
+    private final AdminMapper adminMapper;
 
     // 미완료 CS
     @GetMapping("/admin/individual/noanswer")
@@ -60,9 +64,14 @@ public class IndividualController {
     // 완료 디테일
     @GetMapping("/admin/individual/answer/detail/{no}")
     public String answerDetail(@PathVariable Long no, Model model){
-        Inquiry answerInquiry = individualService.getAnswerNo(no);
+        InquiryComment answerInquiry = individualService.getAnswerNo(no);
         Inquiry noAnswerInquiry = individualService.getNoAnswerNo(no);
+        Admin admin = new Admin();
+        admin.setNo(answerInquiry.getAdmin().getNo());
+        Admin saveId = adminMapper.getAdminnNo(admin.getNo());
 
+
+        model.addAttribute("admin", saveId);
         model.addAttribute("answer", answerInquiry);
         model.addAttribute("noanswer", noAnswerInquiry);
         return "admin/individual/answerdetail";

@@ -34,4 +34,13 @@
         (#{id}, #{password}, #{email}, #{tel})
     </insert>
 
+    <select id="getAdminnNo" parameterType="Long" resultMap="AdminResultMap">
+        SELECT
+            ADMIN_NO, ADMIN_ID, ADMIN_PW, ADMIN_EMAIL, ADMIN_TEL
+        FROM
+            ADMIN
+        WHERE
+            ADMIN_NO = #{value}
+    </select>
+
 </mapper>
