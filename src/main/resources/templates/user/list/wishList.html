@@ -44,11 +44,6 @@
 
         <div class="col-8">
             <h3 id="listTitle">찜 목록</h3>
-            <div style="text-align: right">
-                <span th:text="'총' + ${totalCnt} + '개'">총 x개</span>
-            </div>
-
-
             <br>
             <div class="row">
                 <div class="col-6" th:each="book : ${wishList}">

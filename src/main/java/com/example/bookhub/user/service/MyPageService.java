@@ -94,10 +94,6 @@ public class MyPageService {
         return  new PageWishListDTO(wishListDTO,userPagination );
     }
 
-    public int getTotalWishListCount(String id) {
-        return myPageMapper.getTotalWishListCount(id);
-    }
-
 
 
 }
