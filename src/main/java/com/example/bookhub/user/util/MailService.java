@@ -22,7 +22,6 @@ import org.thymeleaf.context.Context;
 public class MailService {
 
     private final JavaMailSender javaMailSender;
-    private final RandomCode randomCode;
 
     // 테스트용 진짜 심플이메일
     public void sendSimpleEmail() {
