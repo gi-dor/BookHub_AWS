@@ -49,7 +49,7 @@ public class AdminController {
         model.addAttribute("noAnswer", noAnswerCnt);
         model.addAttribute("answer", answerCnt);
         model.addAttribute("reviews", dto);
-//        model.addAttribute("avgRate", avgRate);
+        model.addAttribute("avgRate", avgRate);
         model.addAttribute("noAnswerRatio", noAnswerRatio);
         model.addAttribute("answerRatio", answerRatio);
         model.addAttribute("ratio", ratio);
