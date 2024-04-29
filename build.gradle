@@ -41,6 +41,8 @@ dependencies {
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3.1'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-cache:2.7.4'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
 
 
 }
