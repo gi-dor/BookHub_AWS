@@ -1,4 +1,4 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/base}" >
 <th:block layout:fragment="style">
     <link rel="stylesheet" th:href="@{/css/product/bookDetail.css}" />
@@ -96,8 +96,12 @@
                                         <span th:text="${review.reviewTag.name}"></span>
                                         <span th:text="${review.rate}"></span>
                                          <span>
-                                                <a class="btn btn-sm btn-outline-secondary" th:onclick="'createReview(event, ' + ${review.reviewNo} + ')'">수정</a>
-                                                <a class="btn btn-sm btn-outline-secondary"  th:href="@{|/product/review/delete/${book.bookNo}/${review.reviewNo}|}">삭제</a>
+                                                <a class="btn btn-sm btn-outline-secondary" th:onclick="'createReview(event, ' + ${review.reviewNo} + ')'"
+                                                   sec:authorize="isAuthenticated()"
+                                                   th:if="${#authentication.principal.username == review.user.id}">수정</a>
+                                                <a class="btn btn-sm btn-outline-secondary"  th:href="@{|/product/review/delete/${book.bookNo}/${review.reviewNo}|}"
+                                                   sec:authorize="isAuthenticated()"
+                                                   th:if="${#authentication.principal.username == review.user.id}">삭제</a>
                                          </span>
                                     </span>
                         </div>
