@@ -14,11 +14,11 @@
                             <tr>
                                 <td class="bg-light">검색어</td>
                                 <td>
-                                    <select name="opt" class="form-control-sm">
-                                        <option value="all" th:selected="${opt} == 'all'">전체</option>
-                                        <option value="name" th:selected="${opt} == 'name'">상품명</option>
-                                        <option value="author" th:selected="${opt} == 'author'">저자</option>
-                                        <option value="publisher" th:selected="${opt} == 'publisher'">출판사</option>
+                                    <select th:field="*{opt}" class="form-select-sm">
+                                        <option value="null" selected>전체</option>
+                                        <option value="productName">상품명</option>
+                                        <option value="authorName">저자</option>
+                                        <option value="publisherName">출판사</option>
                                     </select>
                                     <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
                                            class="form-control-sm">
@@ -27,20 +27,19 @@
                             <tr>
                                 <td class="bg-light">카테고리</td>
                                 <td>
-                                    <select name="topCategoryNo" class="form-control-sm">
-                                        <option disabled selected>대분류 선택</option>
+                                    <select th:field="*{topCategoryNo}" class="form-select-sm">
+                                        <option selected value="0">대분류 선택</option>
                                         <option th:each="topLevelCategory : ${topLevelCategories}"
                                                 th:value="${topLevelCategory.no}"
-                                                th:text="${topLevelCategory.name}"
-                                                th:if="${topCategoryNo eq topLevelCategory ? 'selected' : ''}">
+                                                th:text="${topLevelCategory.name}">
                                         </option>
                                     </select>
-                                    <select name="secondCategoryNo" class="form-control-sm">
-                                        <option disabled selected>중분류 선택</option>
+                                    <select th:field="*{secondCategoryNo}" class="form-select-sm">
+                                        <option selected value="0">중분류 선택</option>
                                         <!-- 중분류 영역 -->
                                     </select>
-                                    <select name="thirdCategoryNo" class="form-control-sm">
-                                        <option disabled selected>소분류 선택</option>
+                                    <select th:field="*{thirdCategoryNo}" class="form-select-sm">
+                                        <option selected value="0">소분류 선택</option>
                                         <!-- 소분류 영역 -->
                                     </select>
                                     <input type="checkbox" class="form-check-input">
@@ -51,12 +50,12 @@
                                 <td class="bg-light">기간 검색</td>
                                 <td>
                                     <div class="d-flex">
-                                        <select name="period" class="form-control-sm me-2">
-                                            <option value="createdDate" th:selected="${period} == 'createdDate'">등록일
+                                        <select th:field="*{period}" class="form-select-sm me-2">
+                                            <option value="createdDate">등록일
                                             </option>
-                                            <option value="updatedDate" th:selected="${period} == 'updatedDate'">수정일
+                                            <option value="updatedDate">수정일
                                             </option>
-                                            <option value="updatedDate" th:selected="${period} == 'publishedDate'">출판일
+                                            <option value="publishedDate">출판일
                                             </option>
                                         </select>
                                         <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
@@ -81,20 +80,18 @@
                             <tr>
                                 <td class="bg-light">판매 상태</td>
                                 <td>
-                                    <input type="checkbox" class="form-check-input" checked> 전체
-                                    <input type="checkbox" class="form-check-input" name="available"
-                                           th:value="*{available}"> 정상
-                                    <input type="checkbox" class="form-check-input" name="discontinued"
-                                           th:value="*{discontinued}"> 절판
-                                    <input type="checkbox" class="form-check-input" name="soldOut"
-                                           th:value="*{soldOut}"> 품절
+                                    <input type="checkbox" class="form-check-input"> 전체
+                                       <input type="checkbox" class="form-check-input" th:field="*{available}" th:value="정상"> 정상
+                                       <input type="checkbox" class="form-check-input" th:field="*{discontinued}" th:value="절판"> 절판
+                                       <input type="checkbox" class="form-check-input" th:field="*{soldOut}" th:value="품절"> 품절
+                                   </td>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="bg-light">재고</td>
                                 <td>
-                                    <select class="form-control-sm">
-                                        <option disabled selected>전체</option>
+                                    <select class="form-select-sm">
+                                        <option selected>전체</option>
                                         <option value="10">10개 이하</option>
                                         <option value="30">30개 이하</option>
                                         <option value="50">50개 이하</option>
@@ -107,12 +104,11 @@
                             <tr>
                                 <td class="bg-light">출판사</td>
                                 <td>
-                                    <select name="publisherNo" class="form-control-sm">
-                                        <option disabled selected>전체</option>
-                                        <option th:each="pub : ${publishers}"
-                                                th:value="${pub.no}"
-                                                th:text="${pub.name}"
-                                                th:if="${publisherNo eq  pub.no ? 'selected' : ''}">
+                                    <select th:field="*{publisherNo}" class="form-select-sm">
+                                        <option selected value="0">전체</option>
+                                        <option th:each="publisher : ${publishers}"
+                                                th:value="${publisher.no}"
+                                                th:text="${publisher.name}">
                                         </option>
                                     </select>
                                 </td>
@@ -172,7 +168,7 @@
                         </div>
 
                         <!-- 조회 리스트 -->
-                        <table class="table text-center">
+                        <table class="table text-center" th:if="${paging.totalRows != 0}">
                             <colgroup>
                                 <col width="3%">
                                 <col width="4%">
@@ -213,23 +209,23 @@
                                     ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
                                     ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
                             -->
-                            <tr th:each="books, loop : ${books}">
+                            <tr th:each="book, loop : ${books}">
                                 <td><input type="checkbox"></td>
                                 <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
                                     1
                                 </td>
-                                <td><img th:src="${books.image}"/></td>
+                                <td><img th:src="${book.image}"/></td>
                                 <td>
-                                    <a th:href="@{/books/detail(id=${books.no})}" th:text="${books.bookName}">
+                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${book.bookName}">
                                         나는 읽고 쓰고 버린다
                                     </a>
                                 </td>
-                                <td th:text="${books.authorName}">손웅정</td>
-                                <td th:text="${books.listPrice}">17,000</td>
-                                <td th:text="${books.sellingPrice}">15,300</td>
-                                <td th:text="${books.stock}">1,000</td>
-                                <td th:text="${books.status}">정상</td>
-                                <td th:text="${#dates.format(books.createdDate, 'yyyy-MM-dd')}">2019-02-15</td>
+                                <td th:text="${book.authorName}">손웅정</td>
+                                <td th:text="${book.listPrice}">17,000</td>
+                                <td th:text="${book.sellingPrice}">15,300</td>
+                                <td th:text="${book.stock}">1,000</td>
+                                <td th:text="${book.status}">정상</td>
+                                <td th:text="${#dates.format(book.createdDate, 'yyyy-MM-dd')}">2019-02-15</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
@@ -237,6 +233,9 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
+                            <p>조회된 결과가 없습니다.</p>
+                        </div>
 
                         <!-- 페이징 처리-->
                         <!--

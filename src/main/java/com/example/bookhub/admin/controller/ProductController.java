@@ -35,7 +35,7 @@ public class ProductController {
         List<Publisher> publishers = productService.getPublishers();
 
         int totalRows = productService.getTotalRows(filter);
-        Pagination pagination = new Pagination(page, rows, totalRows);
+        Pagination pagination = new Pagination(page, totalRows, rows);
 
         int begin = pagination.getBegin();
         List<BookList> books = productService.getBooks(filter, begin, rows, sort);

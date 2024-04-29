@@ -10,173 +10,226 @@
                 INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
                 INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
                 INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
+                INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
+                INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
         <where>
-            <if test="filter.opt != null">
-                <choose>
-                    <when test="filter.opt == 'productName'">
-                        B.BOOK_NAME like '%' || #{filter.keyword} || '%'
-                    </when>
-                    <when test="filter.opt == 'author'">
-                        A.AUTHOR_NAME = #{filter.keyword}
-                    </when>
-                    <when test="filter.opt == 'publisher'">
-                        P.PUBLISHER_NAME = #{filter.keyword}
-                    </when>
-                </choose>
-            </if>
+                <!-- 검색어 -->
+                <if test="filter.opt != null">
+                    <choose>
+                        <when test="filter.opt == 'productName'">
+                            B.BOOK_NAME LIKE CONCAT('%', #{filter.keyword}, '%')
+                        </when>
+                        <when test="filter.opt == 'authorName'">
+                            AND A.AUTHOR_NAME = #{filter.keyword}
+                        </when>
+                        <when test="filter.opt == 'publisherName'">
+                            AND P.PUBLISHER_NAME = #{filter.keyword}
+                        </when>
+                    </choose>
+                </if>
+
+                <!-- 카테고리 -->
+                <if test="filter.topCategoryNo != 0">
+                    <choose>
+                        <when test="filter.thirdCategoryNo != 0">
+                            AND CA.CATEGORY_NO = #{filter.thirdCategoryNo}
+                        </when>
+                        <when test="filter.secondCategoryNo != 0">
+                            AND CA.CATEGORY_NO = #{filter.secondCategoryNo}
+                        </when>
+                        <when test="filter.topCategoryNo != 0">
+                            AND CA.CATEGORY_NO = #{filter.topCategoryNo}
+                        </when>
+                    </choose>
+                </if>
+
+                <!-- 기간 검색 -->
+                <if test="filter.period != null">
+                    <choose>
+                        <when test="filter.period == 'createdDate'">
+                            AND B.BOOK_CREATED_DATE
+                                BETWEEN COALESCE(NULLIF(CONCAT(#{filter.moreDate}, ' 00:00:00'), ''), '0001-01-01 00:00:00')
+                                AND COALESCE(NULLIF(CONCAT(#{filter.lessDate}, ' 23:59:59'), ''), '9999-12-31 23:59:59')
+                        </when>
+                        <when test="filter.period == 'updatedDate'">
+                            AND B.BOOK_UPDATED_DATE
+                            BETWEEN COALESCE(NULLIF(CONCAT(#{filter.moreDate}, ' 00:00:00'), ''), '0001-01-01 00:00:00')
+                            AND COALESCE(NULLIF(CONCAT(#{filter.lessDate}, ' 23:59:59'), ''), '9999-12-31 23:59:59')
+                        </when>
+                        <when test="filter.period == 'publishedDate'">
+                            AND B.BOOK_PUBLISHED_DATE
+                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01')
+                                AND COALESCE(NULLIF(#{filter.lessDate}, ''), '9999-12-31')
+                        </when>
+                    </choose>
+                </if>
+
+                <!-- 판매 상태 -->
+                <if test="filter.available == '정상'">
+                    AND B.BOOK_STATUS = #{filter.available}
+                </if>
+                <if test="filter.discontinued == '절판'">
+                    AND B.BOOK_STATUS = #{filter.discontinued}
+                </if>
+                <if test="filter.soldOut == '품절'">
+                    AND B.BOOK_STATUS = #{filter.soldOut}
+                </if>
+
+                <!-- 재고 -->
+                <if test="filter.moreStock != 0">
+                    AND B.BOOK_STOCK >= #{filter.moreStock}
+                </if>
+                <if test="filter.lessStock != 0">
+                    AND B.BOOK_STOCK &lt;= #{filter.lessStock}
+                </if>
+
+                <!-- 출판사 -->
+                <if test="filter.publisherNo != 0">
+                    AND P.PUBLISHER_NO = #{filter.publisherNo}
+                </if>
         </where>
     </select>
 
     <select id="getBooks" resultType="com.example.bookhub.admin.dto.BookList">
     		SELECT
-                    BOOK_NO                         AS no,
-    		        BOOK_IMAGE_COVER			    AS image,
-    				BOOK_NAME           			AS bookName,
-    				AUTHOR_NAME			            AS authorName,
-                    BOOK_LIST_PRICE			        AS listPrice,
-                    BOOK_SELLING_PRICE			    AS sellingPrice,
-                    BOOK_STOCK                      AS stock,
-                    BOOK_STATUS                     AS status,
-                    BOOK_CREATED_DATE               AS createdDate,
-                    BOOK_UPDATED_DATE               AS updatedDate,
-                    BOOK_PUBLISHED_DATE             AS publishedDate
+                    B.BOOK_NO                                                   AS no,
+    		        BI.BOOK_IMAGE_COVER			                                AS image,
+    				B.BOOK_NAME           			                            AS bookName,
+    				A.AUTHOR_NAME			                                    AS authorName,
+                    B.BOOK_LIST_PRICE			                                AS listPrice,
+                    ROUND(B.BOOK_LIST_PRICE * (1 - B.BOOK_DISCOUNT_RATE))		AS sellingPrice,
+                    B.BOOK_STOCK                                                AS stock,
+                    B.BOOK_STATUS                                               AS status,
+                    B.BOOK_CREATED_DATE                                         AS createdDate,
+                    B.BOOK_UPDATED_DATE                                         AS updatedDate,
+                    B.BOOK_PUBLISHED_DATE                                       AS publishedDate
 
-    		FROM	(SELECT
-                            B.BOOK_NO,
-                            BI.BOOK_IMAGE_COVER,
-           			        B.BOOK_NAME,
-           				    A.AUTHOR_NAME,
-                            B.BOOK_LIST_PRICE,
-                            ROUND(B.BOOK_LIST_PRICE * (1 - B.BOOK_DISCOUNT_RATE)) AS BOOK_SELLING_PRICE,
-                            B.BOOK_STOCK,
-    		                B.BOOK_STATUS,
-    		                B.BOOK_CREATED_DATE,
-    		                B.BOOK_UPDATED_DATE,
-    		                B.BOOK_PUBLISHED_DATE,
-    						<choose>
-    							<when test="sort == 'productName'">
-    								row_number() OVER(ORDER BY BOOK_NAME ASC) AS row_num
-    							</when>
-    							<when test="sort == 'highPrice'">
-    								row_number() OVER(ORDER BY BOOK_LIST_PRICE DESC) AS row_num
-    							</when>
-    							<when test="sort == 'lowPrice'">
-    								row_number() OVER(ORDER BY BOOK_LIST_PRICE ASC) AS row_num
-    							</when>
-    		                    <when test="sort == 'highSellingPrice'">
-    								row_number() OVER(ORDER BY BOOK_SELLING_PRICE DESC) AS row_num
-    							</when>
-								<when test="sort == 'lowSellingPrice'">
-    								row_number() OVER(ORDER BY BOOK_SELLING_PRICE ASC) AS row_num
-    							</when>
-								<when test="sort == 'highStock'">
-    								row_number() OVER(ORDER BY BOOK_STOCK DESC) AS row_num
-    							</when>
-								<when test="sort == 'lowStock'">
-    								row_number() OVER(ORDER BY BOOK_STOCK ASC) AS row_num
-    							</when>
-								<when test="sort == 'recentlyCreated'">
-    								row_number() OVER(ORDER BY BOOK_CREATED_DATE DESC) AS row_num
-    							</when>
-                                <when test="sort == 'recentlyUpdated'">
-    								row_number() OVER(ORDER BY BOOK_UPDATED_DATE DESC) AS row_num
-    							</when>
-                                <when test="sort == 'recentlyPublished'">
-    								row_number() OVER(ORDER BY BOOK_PUBLISHED_DATE DESC) AS row_num
-    							</when>
-    						</choose>
+    		FROM
+                    BookHub.BOOK B
+                    INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
+                    INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
+                    INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
+                    INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
+                    INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
 
-    				FROM
-							BookHub.BOOK B
-                            INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
-                            INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
-                            INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
-                            INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
-                            INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
+            <where>
+                    <!-- 검색어 -->
+                    <if test="filter.opt != null">
+                        <choose>
+                            <when test="filter.opt == 'productName'">
+                                B.BOOK_NAME LIKE CONCAT('%', #{filter.keyword}, '%')
+                            </when>
+                            <when test="filter.opt == 'authorName'">
+                                AND A.AUTHOR_NAME = #{filter.keyword}
+                            </when>
+                            <when test="filter.opt == 'publisherName'">
+                                AND P.PUBLISHER_NAME = #{filter.keyword}
+                            </when>
+                        </choose>
+                    </if>
 
-                    <where>
-    		            <!-- 검색어 -->
-                        <if test="filter.opt != null">
-                            <choose>
-                                <when test="filter.opt == 'productName'">
-                                    AND B.BOOK_NAME like '%' || #{filter.keyword} || '%'
-                                </when>
-                                <when test="filter.opt == 'author'">
-                                    AND A.AUTHOR_NAME = #{filter.keyword}
-                                </when>
-                                <when test="filter.opt == 'publisher'">
-                                    AND P.PUBLISHER_NAME = #{filter.keyword}
-                                </when>
-                            </choose>
-                        </if>
+                    <!-- 카테고리 -->
+                    <if test="filter.topCategoryNo != 0">
+                        <choose>
+                            <when test="filter.thirdCategoryNo != 0">
+                                AND CA.CATEGORY_NO = #{filter.thirdCategoryNo}
+                            </when>
+                            <when test="filter.secondCategoryNo != 0">
+                                AND CA.CATEGORY_NO = #{filter.secondCategoryNo}
+                            </when>
+                            <when test="filter.topCategoryNo != 0">
+                                AND CA.CATEGORY_NO = #{filter.topCategoryNo}
+                            </when>
+                        </choose>
+                    </if>
 
-                        <!-- 카테고리 -->
-                        <if test="filter.topCategoryNo != 0">
-                            <choose>
-                                <when test="filter.thirdCategoryNo != 0">
-                                    AND CA.CATEGORY_NO = #{filter.thirdCategoryNo}
-                                </when>
-                                <when test="filter.secondCategoryNo != 0">
-                                    AND CA.CATEGORY_NO = #{filter.secondCategoryNo}
-                                </when>
-                                <when test="filter.topCategoryNo != 0">
-                                    AND CA.CATEGORY_NO = #{filter.topCategoryNo}
-                                </when>
-                            </choose>
-                        </if>
+                    <!-- 기간 검색 -->
+                    <if test="filter.period != null">
+                        <choose>
+                            <when test="filter.period == 'createdDate'">
+                                AND B.BOOK_CREATED_DATE
+                                    BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
+                                    AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                            </when>
+                            <when test="filter.period == 'updatedDate'">
+                                AND B.BOOK_CREATED_DATE
+                                    BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
+                                    AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                            </when>
+                            <when test="filter.period == 'publishedDate'">
+                                AND B.BOOK_CREATED_DATE
+                                    BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
+                                    AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                            </when>
+                        </choose>
+                    </if>
 
-    		            <!-- 기간 검색 -->
-                        <if test="filter.period != null">
-                            <choose>
-                                <when test="filter.period == 'createdDate'">
-                                    AND B.BOOK_CREATED_DATE BETWEEN COALESCE(#{filter.moreDate}, '0001-01-01 00:00:00')
-    		                                                AND COALESCE(#{filter.lessDate} + INTERVAL 1 DAY, '9999-12-31 23:59:59')
-                                </when>
-                                <when test="filter.period == 'updatedDate'">
-                                    AND B.BOOK_CREATED_DATE BETWEEN COALESCE(#{filter.moreDate}, '0001-01-01 00:00:00')
-                                                            AND COALESCE(#{filter.lessDate} + INTERVAL 1 DAY, '9999-12-31 23:59:59')
-                                </when>
-                                <when test="filter.period == 'publishedDate'">
-                                    AND B.BOOK_CREATED_DATE BETWEEN COALESCE(#{filter.moreDate}, '0001-01-01 00:00:00')
-    		                                                AND COALESCE(#{filter.lessDate} + INTERVAL 1 DAY, '9999-12-31 23:59:59')
-                                </when>
-                            </choose>
-                        </if>
+                    <!-- 판매 상태 -->
+                    <if test="filter.available != null">
+                        AND B.BOOK_STATUS = #{filter.available}
+                    </if>
+                    <if test="filter.discontinued != null">
+                        AND B.BOOK_STATUS = #{filter.discontinued}
+                    </if>
+                    <if test="filter.soldOut != null">
+                        AND B.BOOK_STATUS = #{filter.soldOut}
+                    </if>
 
-    		            <!-- 판매 상태 -->
-                        <if test="filter.available != null">
-    		                AND B.BOOK_STATUS = #{filter.available}
-                        </if>
-                        <if test="filter.discontinued != null">
-                            AND B.BOOK_STATUS = #{filter.discontinued}
-                        </if>
-                        <if test="filter.soldOut != null">
-                            AND B.BOOK_STATUS = #{filter.soldOut}
-                        </if>
+                    <!-- 재고 -->
+                    <if test="filter.moreStock != 0">
+                        AND B.BOOK_STOCK >= #{filter.moreStock}
+                    </if>
+                    <if test="filter.lessStock != 0">
+                        AND B.BOOK_STOCK &lt;= #{filter.lessStock}
+                    </if>
 
-    		            <!-- 재고 -->
-    		            <if test="filter.moreStock != 0">
-                            AND B.BOOK_STOCK > #{filter.moreStock}
-                        </if>
-                        <if test="filter.lessStock != 0">
-                            AND B.BOOK_STOCK &lt; #{filter.lessStock}
-                        </if>
+                    <!-- 출판사 -->
+                    <if test="filter.publisherNo != 0">
+                        AND P.PUBLISHER_NO = #{filter.publisherNo}
+                    </if>
+            </where>
 
-                        <!-- 출판사 -->
-                        <if test="filter.publisherNo != 0">
-                            AND P.PUBLISHER_NO = #{filter.publisherNo}
-                        </if>
-                    </where>
-    				) AS subQuery
+            <choose>
+                    <when test="sort == 'productName'">
+                        ORDER BY BOOK_NAME ASC
+                    </when>
+                    <when test="sort == 'highPrice'">
+                        ORDER BY BOOK_LIST_PRICE DESC
+                    </when>
+                    <when test="sort == 'lowPrice'">
+                        ORDER BY BOOK_LIST_PRICE ASC
+                    </when>
+                    <when test="sort == 'highSellingPrice'">
+                        ORDER BY BOOK_SELLING_PRICE DESC
+                    </when>
+                    <when test="sort == 'lowSellingPrice'">
+                        ORDER BY BOOK_SELLING_PRICE ASC
+                    </when>
+                    <when test="sort == 'highStock'">
+                        ORDER BY BOOK_STOCK DESC
+                    </when>
+                    <when test="sort == 'lowStock'">
+                        ORDER BY BOOK_STOCK ASC
+                    </when>
+                    <when test="sort == 'recentlyCreated'">
+                        ORDER BY BOOK_CREATED_DATE DESC
+                    </when>
+                    <when test="sort == 'recentlyUpdated'">
+                        ORDER BY BOOK_UPDATED_DATE DESC
+                    </when>
+                    <when test="sort == 'recentlyPublished'">
+                        ORDER BY BOOK_PUBLISHED_DATE DESC
+                    </when>
+            </choose>
 
             LIMIT #{limit} OFFSET #{offset}
-    	</select>
+    </select>
 
-        <select id="getPublishers" resultType="com.example.bookhub.product.vo.Publisher">
-                SELECT
-                    PUBLISHER_NO AS no,
-                    PUBLISHER_NAME AS name
-                FROM
-                    BookHub.PUBLISHER
-        </select>
+    <select id="getPublishers" resultType="com.example.bookhub.product.vo.Publisher">
+            SELECT
+                PUBLISHER_NO AS no,
+                PUBLISHER_NAME AS name
+            FROM
+                BookHub.PUBLISHER
+    </select>
 </mapper>
