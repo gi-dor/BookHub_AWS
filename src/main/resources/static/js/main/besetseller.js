@@ -14,11 +14,11 @@ $(document).ready(function () {
 
 function newbook() {
 
-    $("#newbook input[name=cate]").val(1);
+    $("#newbook input[name=cate]").val(0);
     $("#newbook input[name=cateKeyword]").val(0);
-    $("#newbook input[name=pubDate]").val(1);
+    $("#newbook input[name=pubDate]").val(0);
     $("#newbook input[name=page]").val(1);
-    $("#newbook input[name=sort]").val("0");
+    $("#newbook input[name=sort]").val("1");
     $("#newbook").trigger("submit");
 }
 
@@ -32,15 +32,17 @@ $(".cate a ").click(function (event) {
 
 $(".cateKeyword a ").click(function (event) {
     event.preventDefault();
-    $("#newbook input[name=cate]").val(1);
+    $("#newbook input[name=cate]").val(0);
     $("#newbook input[name=cateKeyword]").val($(this).attr("data-cateKeyword"));
     $("#newbook input[name=page]").val(1);
     $("#newbook input[name=sort]").val(1);
     $("#newbook").trigger("submit");
 });
 
-$("#pub-date a ").click(function (event) {
+$(".pubDate a ").click(function (event) {
     event.preventDefault();
+    $("#newbook input[name=cate]").val(0);
+    $("#newbook input[name=cateKeyword]").val(0);
     $("#newbook input[name=pubDate]").val($(this).attr("data-pubDate"));
     $("#newbook input[name=page]").val(1);
     $("#newbook input[name=sort]").val(1);
