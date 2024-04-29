@@ -1,0 +1,62 @@
+<html lang="ko"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<div  layout:fragment="content">
+
+    <div class="row mb-3">
+            <h2 class="mt-5">답변 완료된 문의</h2>
+
+        <div class="col-10 mt-3">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>유저 이름</th>
+                    <td th:text="${noanswer.user.name}"></td>
+                    <th>문의 번호</th>
+                    <td th:text="${noanswer.no}"></td>
+                </tr>
+                <tr>
+                    <th>카테고리명</th>
+                    <td th:text="${noanswer.faqCategory.name}"></td>
+                    <th>문의날짜</th>
+                    <td th:text="${#temporals.format(noanswer.createdDate, 'yyyy.MM.dd')}"></td>
+                </tr>
+
+                <tr>
+                    <th>문의 제목</th>
+                    <td th:text="${noanswer.title}" colspan="3"></td>
+                </tr>
+
+
+                <tr>
+                    <th>문의 내용</th>
+                    <td th:text="${noanswer.content}" colspan="3"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-10">
+            <div class="comment row">
+                <div class="col-10 form-control">
+<!--                    <p class="mt-2" th:text="${answer.adminNo.name} + '|' + ${#temporals.format(answer.createDate,'yyyy.MM.dd')}">콩콩이 | 2024.04.21</p>-->
+<!--                    <p class="comment-content" th:text="${answer.content}">123</p>-->
+                    <form action="/board/community/comment/modify" method="post">
+                        <div class="comment-edit-container" style="display: none;"> <!-- 수정 가능한 텍스트 창과 등록 버튼을 감싸는 div -->
+                            <textarea class="form-control comment-edit" name="content" value="123"></textarea> <!-- 수정 가능한 텍스트 창 -->
+                            <button type="submit" class="btn btn-sm btn-success save-button">등록</button> <!-- 등록 버튼 -->
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <a href="/admin/individual/answer" class="btn btn-outline-secondary mt-3">목록으로 돌아가기</a>
+        </div>
+    </div>
+
+</div>
+</html>

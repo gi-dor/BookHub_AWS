@@ -43,7 +43,7 @@ public class DashBoardService {
         return dashBoardMapper.getReview();
     }
 
-    public double averageRate(){
+    public float averageRate(){
         return dashBoardMapper.averageRate();
     }
 

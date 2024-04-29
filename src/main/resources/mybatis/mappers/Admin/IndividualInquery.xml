@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.admin.mapper.IndividualMapper">
 
+    <!-- 답변 미완료된 문의 리스트 -->
     <select id="getNoAnswerList" resultType="com.example.bookhub.admin.dto.IndividualDto">
         SELECT
             i.INDIVIDUAL_INQUIRY_NO as individualNo,
@@ -19,7 +20,85 @@
             i.INDIVIDUAL_INQUIRY_ANSWER_YN = 0
           AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
         GROUP BY
-            c.CATEGORY_NAME;
-
+            c.CATEGORY_NAME
+        order by
+            INDIVIDUAL_INQUIRY_NO desc
     </select>
+
+    <!-- 답변 미완료 디테일 -->
+    <select id="getNoAnswerNo" parameterType="Long" resultType="com.example.bookhub.board.vo.Inquiry">
+        SELECT
+            individual_inquiry_no as no,
+            c.CATEGORY_NAME as "faqCategory.name",
+            u.user_name as "user.name",
+            i.individual_inquiry_title as title,
+            i.individual_inquiry_content as content,
+            i.individual_inquiry_create_date as createdDate
+        FROM  BookHub.INDIVIDUAL_INQUIRIES i
+            JOIN
+            BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
+            JOIN
+            BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO = c.CATEGORY_NO
+        WHERE INDIVIDUAL_INQUIRY_NO = #{no}
+    </select>
+
+    <!-- 답변 기능 -->
+    <insert id="insertAnswer" parameterType="com.example.bookhub.board.vo.InquiryComment">
+        insert into BookHub.INQUIRY_RESPONSE_COMMENTS
+        (INQUIRY_NO,INQUIRY_RESPONSE_COMMENT_ADMIN_NO,
+         INQUIRY_RESPONSE_COMMENT_CONTENT)
+        values
+        (#{inquiryNo.no}, #{adminNo.no}, #{comment})
+    </insert>
+
+    <!-- 답변시 CS테이블에 답변유무를 변경 -->
+    <update id="updateNoAnswer" parameterType="Long">
+        update BookHub.INDIVIDUAL_INQUIRIES
+        set INDIVIDUAL_INQUIRY_ANSWER_YN = 1
+        where INDIVIDUAL_INQUIRY_NO = #{no}
+    </update>
+
+    <!-- 답변 완료된 문의 리스트 -->
+    <select id="getAnswerList" resultType="com.example.bookhub.admin.dto.IndividualDto">
+        SELECT
+            i.INDIVIDUAL_INQUIRY_NO as individualNo,
+            c.CATEGORY_NAME as "categoryName.name",
+            u.user_name as "userName.name",
+            i.INDIVIDUAL_INQUIRY_TITLE as individualTitle,
+            i.INDIVIDUAL_INQUIRY_UPDATE_DATE as individualUpdateDate
+        FROM
+            BookHub.INDIVIDUAL_INQUIRIES i
+                JOIN
+            BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
+                JOIN
+            BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO = c.CATEGORY_NO
+        WHERE
+            i.INDIVIDUAL_INQUIRY_ANSWER_YN = 1
+          AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
+        GROUP BY
+            c.CATEGORY_NAME
+        order by
+            INDIVIDUAL_INQUIRY_NO desc
+    </select>
+
+    <select id="getAnswerNo" parameterType="Long" resultType="com.example.bookhub.board.vo.InquiryComment">
+        SELECT
+            c.INQUIRY_RESPONSE_COMMENT_NO as no,
+            c.INQUIRY_NO as "inquiryNo.no",
+            c.INQUIRY_RESPONSE_COMMENT_ADMIN_NO as "adminNo.no",
+            c.INQUIRY_RESPONSE_COMMENT_CONTENT as comment,
+            c.INQUIRY_RESPONSE_COMMENT_CREATE_DATE as createDate,
+            c.INQUIRY_RESPONSE_COMMENT_UPDATE_DATE as updateDate
+        FROM  BookHub.INQUIRY_RESPONSE_COMMENTS c
+            JOIN
+            BookHub.INDIVIDUAL_INQUIRIES i ON c.INQUIRY_NO = i.INDIVIDUAL_INQUIRY_NO
+            JOIN
+            BookHub.ADMIN a ON c.INQUIRY_RESPONSE_COMMENT_ADMIN_NO = a.ADMIN_NO
+        WHERE INDIVIDUAL_INQUIRY_NO = #{no}
+    </select>
+
+
+
+
+
 </mapper>

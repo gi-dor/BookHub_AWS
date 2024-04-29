@@ -29,9 +29,11 @@
                             <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
                             <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
                             <div class="ms-3">
-                                <i class="fas fa-solid fa-check"></i>
-                                <h4 class="mb-0">답변 완료된 문의</h4>
-                                <h5 class="text-body-secondary" th:text="${answer} + 개"></h5>
+                                <a href="/admin/individual/answer" style="text-decoration-line: none">
+                                    <i class="fas fa-solid fa-check"></i>
+                                    <h4 class="mb-0">답변 완료된 문의</h4>
+                                    <h5 class="text-body-secondary" th:text="${answer} + 개"></h5>
+                                </a>
                             </div>
                         </div>
                     </div>
