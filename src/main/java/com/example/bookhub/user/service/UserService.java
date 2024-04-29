@@ -3,6 +3,7 @@ package com.example.bookhub.user.service;
 import com.example.bookhub.user.dto.UserDetailsImpl;
 import com.example.bookhub.user.dto.UserSignupForm;
 import com.example.bookhub.user.mapper.UserMapper;
+import com.example.bookhub.user.util.RandomPassword;
 import com.example.bookhub.user.vo.User;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -125,19 +127,6 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    /**
-     * 주어진 이메일에 해당하는 사용자를 데이터베이스에서 찾는다
-     * @param email 사용자 이메일
-     * @return 선택된 사용자
-     * @throws RuntimeException 주어진 이메일에 해당하는 사용자를 찾을 수 없는 경우 발생
-     */
-    public User selectUserByEmail(String email) {
-        User user = userMapper.selectUserByEmail(email);
-        if (user == null) {
-            throw new RuntimeException("해당 이메일에 해당하는 사용자를 찾을 수 없습니다: " + email);
-        }
-        return user;
-    }
 
 
     /**
@@ -173,6 +162,44 @@ public class UserService implements UserDetailsService {
 
         return user;
     }
+
+
+    /**
+     * 주어진 이메일에 해당하는 사용자를 데이터베이스에서 찾는다
+     * @param email 사용자 이메일
+     * @return 선택된 사용자
+     * @throws RuntimeException 주어진 이메일에 해당하는 사용자를 찾을 수 없는 경우 발생
+     */
+    public User selectUserByIdAndEmail(String id, String email) {
+        User user = userMapper.selectUserByIdAndEmail(id,email);
+        if (user == null) {
+            throw new RuntimeException("해당 이메일에 해당하는 사용자를 찾을 수 없습니다: " + email);
+        }
+        return user;
+    }
+
+
+    // 예외 발생하면 롤백되서 이전 상태로 가게하려고 - ACID
+    @Transactional
+    public String resetPassword(String id , String email) {
+
+        User user = userMapper.selectUserByIdAndEmail(id, email);
+
+        if (user == null) {
+            throw new IllegalArgumentException("주어진 정보에 해당하는 사용자 정보가 없습니다.");
+        } else if (id == null || id.isEmpty() || email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("아이디와 이메일을 모두 입력해야 합니다.");
+        }
+
+        // 임시 비밀번호 만들기
+        String resetPassword = RandomPassword.generatePassword(8,16);
+
+        // 비밀번호 변경 - 암호화 안되서 DB에 그냥 비밀번호 저장되버림
+        userMapper.updateResetPassword(id,passwordEncoder.encode(resetPassword));
+
+        return resetPassword;
+    }
+
 
 }
 

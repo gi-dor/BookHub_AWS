@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class ReviewReply {
 
     private long reviewReplyNo;
     private String comment;
+    private Date updatedDate;
     private Review review;
     private User user;
 

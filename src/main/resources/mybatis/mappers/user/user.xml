@@ -123,29 +123,6 @@
 
 
 
-    <select id="selectUserByEmail" parameterType="string" resultType="com.example.bookhub.user.vo.User">
-        SELECT
-               u.user_no              as no,
-               u.user_id              as id,
-               u.user_password        as password,
-               u.user_name            as name,
-               u.user_email           as email ,
-               u.user_tel             as tel ,
-               u.user_zip_code        as zipCode ,
-               u.user_address         as address ,
-               u.user_address_detail  as addressDetail ,
-               u.user_created_date    as createdDate,
-               u.user_updated_date    as updatedDate ,
-               u.user_del_yn          as delYn ,
-               u.user_point           as point,
-               g.grade_no             as "userGrade.no",
-               g.grade_name           as "userGrade.name"
-        FROM USER u , USER_GRADE g
-        WHERE user_id = #{id}
-          and user_del_yn = 'N'
-          and u.grade_no = g.grade_no
-    </select>
-
 
     <!-- 아이디 중복 체크 -->
     <select id="idCheck" parameterType="String" resultType="int">
@@ -173,7 +150,36 @@
         WHERE user_id = #{id}
     </update>
 
+    <select id="selectUserByIdAndEmail" resultType="com.example.bookhub.user.vo.User">
+        SELECT
+            u.user_no              as no,
+               u.user_id              as id,
+               u.user_password        as password,
+               u.user_name            as name,
+               u.user_email           as email ,
+               u.user_tel             as tel ,
+               u.user_zip_code        as zipCode ,
+               u.user_address         as address ,
+               u.user_address_detail  as addressDetail ,
+               u.user_created_date    as createdDate,
+               u.user_updated_date    as updatedDate ,
+               u.user_del_yn          as delYn ,
+               u.user_point           as point,
+               g.grade_no             as "userGrade.no",
+               g.grade_name           as "userGrade.name"
+        FROM USER u , USER_GRADE g
+        WHERE user_id = #{id}
+          and user_email = #{email}
+          and user_del_yn = 'N'
+          and u.grade_no = g.grade_no
+    </select>
 
 
+    <!-- 랜덤한 비밀번호로 받아서 변경하기 -->
+    <update id="updateResetPassword">
+        UPDATE USER
+        SET USER_PASSWORD = #{password}
+        WHERE USER_ID = #{id}
+    </update>
 
 </mapper>

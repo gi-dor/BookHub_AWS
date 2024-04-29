@@ -5,20 +5,19 @@
     <resultMap id="attendanceResultMap" type="com.example.bookhub.board.vo.Attendance">
         <id column="attendance_check_no" property="no"/>
         <result column="attendance_check_date" property="checkDate"/>
-        <result column="attendance_date" property="count"/>
-        <result column="attendance_check_yn" property="checkYn"/>
 
         <association column="attendance_check_user_no" property="user"
                      select="com.example.bookhub.board.mapper.CommunityMapper.getUserByNo"/>
     </resultMap>
 
 
-<!-- 유저의 출석정보를 조회하는 쿼리 -->
+<!-- 유저의 출석정보를 조회 -->
 <select id="userAttendanceCheckByNo" resultMap="attendanceResultMap" >
     SELECT *
     FROM ATTENDANCE_CHECKS
     WHERE ATTENDANCE_CHECK_USER_NO = #{no}
 </select>
+
 
 <!-- 유저의 번호로 출석체크 이벤트 생성 -->
 <insert id="insertAttendance" parameterType="com.example.bookhub.board.vo.Attendance">
@@ -26,19 +25,9 @@
     VALUES (#{no})
 </insert>
 
-<!-- 출석체크 일 수 증가 -->
-<update id="updateAttendance">
-    UPDATE ATTENDANCE_CHECKS
-    SET ATTENDANCE_DATE = ATTENDANCE_DATE + 1,
-        ATTENDANCE_CHECK_DATE = CURRENT_TIMESTAMP
-    WHERE ATTENDANCE_CHECK_USER_NO = #{no}
-</update>
+<delete id="deleteAttendance">
+    DELETE FROM ATTENDANCE_CHECKS
+</delete>
 
-<!-- 출석일 수 초기화 -->
-<update id="resetAttendanceCount">
-    UPDATE ATTENDANCE_CHECKS
-    SET ATTENDANCE_DATE = 0
-    WHERE ATTENDANCE_CHECK_USER_NO = #{no}
-</update>
 
 </mapper>
