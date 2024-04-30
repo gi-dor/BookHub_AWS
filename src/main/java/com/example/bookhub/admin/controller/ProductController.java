@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class ProductController {
 
+    private static final int START_OFFSET = 1;
+
     private final ProductService productService;
     private final CategoryService categoryService;
 
@@ -38,7 +40,7 @@ public class ProductController {
 
         int totalRows = productService.getTotalRows(filter);
         Pagination pagination = new Pagination(page, totalRows, rows);
-        int begin = pagination.getBegin();
+        int begin = pagination.getBegin() - START_OFFSET;
         List<BookList> books = productService.getBooks(filter, begin, rows, sort);
 
         // 모든 topCategory 화면에 전달
