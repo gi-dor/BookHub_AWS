@@ -40,9 +40,14 @@ public class ProductController {
 
         int totalRows = productService.getTotalRows(filter);
         Pagination pagination = new Pagination(page, totalRows, rows);
-        int begin = pagination.getBegin() - START_OFFSET;
-        List<BookList> books = productService.getBooks(filter, begin, rows, sort);
 
+        if (totalRows > 0) {
+            int begin = pagination.getBegin() - START_OFFSET;
+            List<BookList> books = productService.getBooks(filter, begin, rows, sort);
+            model.addAttribute("books", books);
+        } else {
+            model.addAttribute("books", List.of());
+        }
         // 모든 topCategory 화면에 전달
         model.addAttribute("topLevelCategories", topLevelCategories);
 
@@ -58,7 +63,6 @@ public class ProductController {
 
         model.addAttribute("publishers", publishers);
         model.addAttribute("paging", pagination);
-        model.addAttribute("books", books);
         model.addAttribute("productFilter", filter);
 
         return "admin/product/list";
