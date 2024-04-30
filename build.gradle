@@ -43,6 +43,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache:2.7.4'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
+//    BookApplication - edit - ModifyOption - VMoption add ->    -Djasypt.encryptor.password=han   입력
+//    -Djasypt.encryptor.password=han
+
 
 
 }
