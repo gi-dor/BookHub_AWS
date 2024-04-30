@@ -81,6 +81,7 @@
             INDIVIDUAL_INQUIRY_NO desc
     </select>
 
+    <!-- 답변 완료 디테일(질문번호) -->
     <select id="getAnswerNo" parameterType="Long" resultType="com.example.bookhub.board.vo.InquiryComment">
         SELECT
             c.INQUIRY_RESPONSE_COMMENT_NO as no,
@@ -93,6 +94,29 @@
             join  BookHub.INDIVIDUAL_INQUIRIES i ON c.INQUIRY_NO = i.INDIVIDUAL_INQUIRY_NO
         where i.INDIVIDUAL_INQUIRY_NO = #{no}
     </select>
+
+    <!-- 답변 완료 디테일(답변번호) -->
+    <select id="getAnswerResponseNo" parameterType="Long" resultType="com.example.bookhub.board.vo.InquiryComment">
+        SELECT
+            c.INQUIRY_RESPONSE_COMMENT_NO as no,
+            c.INQUIRY_NO as "inquiry.no",
+            c.INQUIRY_RESPONSE_COMMENT_ADMIN_NO as "admin.no",
+            c.INQUIRY_RESPONSE_COMMENT_CONTENT as comment,
+            c.INQUIRY_RESPONSE_COMMENT_CREATE_DATE as createDate,
+            c.INQUIRY_RESPONSE_COMMENT_UPDATE_DATE as updateDate
+        from BookHub.INQUIRY_RESPONSE_COMMENTS c
+            join  BookHub.INDIVIDUAL_INQUIRIES i ON c.INQUIRY_NO = i.INDIVIDUAL_INQUIRY_NO
+        where c.INQUIRY_RESPONSE_COMMENT_NO = #{no}
+    </select>
+
+    <update id="updateAnswer" parameterType="com.example.bookhub.board.vo.InquiryComment">
+        update BookHub.INQUIRY_RESPONSE_COMMENTS
+        set
+            INQUIRY_RESPONSE_COMMENT_CONTENT = #{comment},
+            INQUIRY_RESPONSE_COMMENT_UPDATE_DATE = CURRENT_TIMESTAMP
+        where
+            INQUIRY_RESPONSE_COMMENT_NO = #{no}
+    </update>
 
 
 
