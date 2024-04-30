@@ -2,12 +2,10 @@ package com.example.bookhub.product.vo;
 
 import com.example.bookhub.user.vo.User;
 import java.time.LocalDateTime;
-import java.util.List;
+import com.example.bookhub.user.vo.UserDelivery;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +18,7 @@ public class Buy {
     private int totalPointUseAmount;
     private int finalPrice;
     private int pointAccumulationAmount;
+    private UserDelivery userDelivery;
     private String commonEntranceApproach;
     private String commonEntrancePassword;
     private LocalDateTime buyDate;
@@ -36,7 +35,7 @@ public class Buy {
 
     @Builder
     public Buy(Long buyNo, int totalPrice, int totalBookDiscountPrice, int totalCouponDiscountAmount, int totalPointUseAmount, int finalPrice, int pointAccumulationAmount,
-               String commonEntranceApproach, String commonEntrancePassword, LocalDateTime buyDate, String gift,
+               UserDelivery userDelivery, String commonEntranceApproach, String commonEntrancePassword, LocalDateTime buyDate, String gift,
                BuyPayMethod buyPayMethod, BuyStatus buyStatus, BuyDeliveryRequest buyDeliveryRequest, User user) {
         super();
         this.buyNo = buyNo;
@@ -46,6 +45,7 @@ public class Buy {
         this.totalPointUseAmount = totalPointUseAmount;
         this.finalPrice = finalPrice;
         this.pointAccumulationAmount = pointAccumulationAmount;
+        this.userDelivery = userDelivery;
         this.commonEntranceApproach = commonEntranceApproach;
         this.commonEntrancePassword = commonEntrancePassword;
         this.buyDate = buyDate;

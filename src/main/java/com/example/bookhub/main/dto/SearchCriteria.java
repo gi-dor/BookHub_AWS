@@ -16,6 +16,7 @@ public class SearchCriteria {
     private int cate;
     private int cateKeyword;
     private int pubDate;
+    private int period;
 
     private int page;               // 현재 페이지 번호
     private int recordSize;         // 페이지당 출력할 데이터 개수
