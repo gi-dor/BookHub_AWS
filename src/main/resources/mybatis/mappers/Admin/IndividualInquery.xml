@@ -48,7 +48,7 @@
         (INQUIRY_NO,INQUIRY_RESPONSE_COMMENT_ADMIN_NO,
          INQUIRY_RESPONSE_COMMENT_CONTENT)
         values
-        (#{inquiryNo.no}, #{adminNo.no}, #{comment})
+        (#{inquiry.no}, #{admin.no}, #{comment})
     </insert>
 
     <!-- 답변시 CS테이블에 답변유무를 변경 -->

@@ -1,6 +1,7 @@
 package com.example.bookhub.admin.service;
 
 import com.example.bookhub.admin.dto.IndividualDto;
+import com.example.bookhub.admin.exception.NoAdminLoginException;
 import com.example.bookhub.admin.mapper.IndividualMapper;
 import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.board.vo.Inquiry;
@@ -25,6 +26,7 @@ public class IndividualService {
         return individualMapper.getNoAnswerNo(no);
     }
 
+    // 답변하는 서비스
     public void insertAnswer(Long no, String content, Admin admin){
         Inquiry inquiry = individualMapper.getNoAnswerNo(no);
 
