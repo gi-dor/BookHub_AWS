@@ -117,4 +117,9 @@ public class BuyService {
     public List<BuyDeliveryRequest> getBuyDeliveryRequest() {
         return buyMapper.getBuyDeliveryRequest();
     }
+
+    public void updateDefaultUserDelivery(long selectedUserDeliveryNo) {
+        buyMapper.updateDefaultUserDeliveryN(selectedUserDeliveryNo);
+        buyMapper.updateDefaultUserDeliveryY(selectedUserDeliveryNo);
+    }
 }

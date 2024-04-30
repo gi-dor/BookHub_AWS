@@ -78,4 +78,12 @@ public class BuyController {
         return ResponseEntity.ok(couponList);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delivery/default/{selectedUserDeliveryNo}")
+    @ResponseBody
+    public ResponseEntity<Void> updateDefaultDelivery(@PathVariable("selectedUserDeliveryNo") long selectedUserDeliveryNo){
+        buyService.updateDefaultUserDelivery(selectedUserDeliveryNo);
+        return ResponseEntity.ok().build();
+    }
+
 }

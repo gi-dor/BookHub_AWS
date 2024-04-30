@@ -126,4 +126,16 @@
             BUY_DELIVERY_REQUEST
     </select>
 
+    <update id="updateDefaultUserDeliveryN" parameterType="long">
+        UPDATE USER_DELIVERY
+        SET user_default_address_yn = 'N'
+        WHERE delivery_no != #{selectedUserDeliveryNo}
+    </update>
+
+    <update id="updateDefaultUserDeliveryY" parameterType="long">
+        UPDATE USER_DELIVERY
+        SET user_default_address_yn = 'Y'
+        WHERE delivery_no = #{selectedUserDeliveryNo}
+    </update>
+
 </mapper>

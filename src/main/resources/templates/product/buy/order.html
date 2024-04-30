@@ -23,14 +23,14 @@
                                             <button type="button" class="btn btn-secondary" onclick="showDeliveryModifyModal()">변경</button>
                                         </div>
                                         <div>
-                                            <span th:text="${defaultUserDelivery.name}"></span>
+                                            <span id="default-user-delivery-name" th:text="${defaultUserDelivery.name}"></span>
                                             <span> / </span>
-                                            <span th:text="${defaultUserDelivery.tel}"></span>
+                                            <span id="default-user-delivery-tel" th:text="${defaultUserDelivery.tel}"></span>
                                         </div>
                                         <div>
-                                            <span th:text="${defaultUserDelivery.zipCode}"></span>
-                                            <span th:text="${defaultUserDelivery.address}"></span>
-                                            <span th:text="${defaultUserDelivery.addressDetail}"></span>
+                                            <span id="default-user-delivery-zip-code" th:text="${defaultUserDelivery.zipCode}"></span>
+                                            <span id="default-user-delivery-address" th:text="${defaultUserDelivery.address}"></span>
+                                            <span id="default-user-delivery-address-detail" th:text="${defaultUserDelivery.addressDetail}"></span>
                                         </div>
                                     </td>
                                 </tr>
@@ -195,7 +195,7 @@
         </div>
     </form>
 
-
+    <!-- 배송지 변경 모달 -->
     <div class="modal" tabindex="-1" id="modal-delivery-modify">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -209,7 +209,7 @@
                             <div class="card-body row">
                                 <div class="col-2">
                                     <span class="form-check">
-                                        <input class="form-check-input" type="radio" name="userDelivery" value="${userDelivery.no}"
+                                        <input class="form-check-input radio-user-delivery" type="radio" name="userDelivery" th:value="${userDelivery.no}"
                                                th:checked="${userDelivery.defaultAddressYn eq 'Y'}" />
                                     </span>
                                 </div>
@@ -220,23 +220,24 @@
                                         </span>
                                     </div>
                                     <div>
-                                        <span th:text="${userDelivery.name}"></span>
+                                        <span class="selected-user-delivery-name" th:text="${userDelivery.name}"></span>
                                         <span> / </span>
-                                        <span th:text="${userDelivery.tel}"></span>
+                                        <span class="selected-user-delivery-tel" th:text="${userDelivery.tel}"></span>
                                     </div>
                                     <div>
-                                        <span th:text="${userDelivery.zipCode}"></span>
-                                        <span th:text="${userDelivery.address}"></span>
-                                        <span th:text="${userDelivery.addressDetail}"></span>
+                                        <span class="selected-user-delivery-zip-code" th:text="${userDelivery.zipCode}"></span>
+                                        <span class="selected-user-delivery-address" th:text="${userDelivery.address}"></span>
+                                        <span class="selected-user-delivery-address-detail"th:text="${userDelivery.addressDetail}"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <input type="checkbox" name="setDefaultUserDelivery"/> 기본 배송지로 설정<br/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" onclick="useSelectedCoupon()">사용</button>
+                    <button type="button" class="btn btn-primary" onclick="modifyDelivery()">확인</button>
                 </div>
             </div>
         </div>
@@ -378,6 +379,29 @@
 
     function showDeliveryModifyModal(){
         modalDeliveryModify.show();
+    }
+
+    async function modifyDelivery() {
+        let $selectedCardBody = $(".radio-user-delivery:checked").closest('.card-body')
+
+        let selectedUserDeliveryNo = $("input[name=userDelivery]:checked").val();
+        $("#default-user-delivery-name").text($selectedCardBody.find('.selected-user-delivery-name').text());
+        $("#default-user-delivery-tel").text($selectedCardBody.find('.selected-user-delivery-tel').text());
+        $("#default-user-delivery-zip-code").text($selectedCardBody.find('.selected-user-delivery-zip-code').text());
+        $("#default-user-delivery-address").text($selectedCardBody.find('.selected-user-delivery-address').text());
+        $("#default-user-delivery-address-detail").text($selectedCardBody.find('.selected-user-delivery-address-detail').text());
+
+        if($("input[name=setDefaultUserDelivery]").prop("checked")){
+            console.log(selectedUserDeliveryNo);
+            let response = await fetch("/product/buy/delivery/default/" + selectedUserDeliveryNo);
+
+            if(!response.ok){
+                alert("기본 배송지 변경에 실패하였습니다");
+                return;
+            }
+        }
+
+        modalDeliveryModify.hide();
     }
 
     updatePrices();

@@ -18,4 +18,6 @@ public interface BuyMapper {
     void updatePointUsed(Map<String, Object> map);
     List<UserDelivery> getUserDeliveryByUserNo(Long no);
     List<BuyDeliveryRequest> getBuyDeliveryRequest();
+    void updateDefaultUserDeliveryN(long selectedUserDeliveryNo);
+    void updateDefaultUserDeliveryY(long selectedUserDeliveryNo);
 }
