@@ -1,6 +1,5 @@
 package com.example.bookhub.admin.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,28 +15,9 @@ public class ProductFilter {
     private String period;
     private String moreDate;
     private String lessDate;
-    private String available;
-    private String discontinued;
-    private String soldOut;
+    private List<String> status;
     private int moreStock;
     private int lessStock;
     private long publisherNo;
-    List<String> statusList;
 
-    public List<String> getStatusList() {
-        if (available != null || discontinued != null || soldOut != null) {
-            statusList = new ArrayList<>();
-        }
-        if (available != null) {
-            statusList.add(available);
-        }
-        if (discontinued != null) {
-            statusList.add(discontinued);
-        }
-        if (soldOut != null) {
-            statusList.add(soldOut);
-        }
-
-        return statusList;
-    }
 }

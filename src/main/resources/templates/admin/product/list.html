@@ -87,11 +87,11 @@
                                 <td class="bg-light">판매 상태</td>
                                 <td>
                                     <input type="checkbox" class="form-check-input"> 전체
-                                       <input type="checkbox" class="form-check-input" th:field="*{available}"
+                                       <input type="checkbox" class="form-check-input" th:field="*{status}"
                                               value="정상"> 정상
-                                       <input type="checkbox" class="form-check-input" th:field="*{discontinued}"
+                                       <input type="checkbox" class="form-check-input" th:field="*{status}"
                                               value="절판"> 절판
-                                       <input type="checkbox" class="form-check-input" th:field="*{soldOut}"
+                                       <input type="checkbox" class="form-check-input" th:field="*{status}"
                                               value="품절"> 품절
                                    </td>
                                 </td>
@@ -126,7 +126,7 @@
                         </table>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary btn-sm">검색</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm">초기화</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
                         </div>
                     </div>
 
@@ -318,6 +318,9 @@
                 }
             });
         }
+
+        $("#btn-reset").click(function(){
+        });
 
         $("[id^=btn-modify-product]").click(function() {
             let productNo = $(this).data('no');
