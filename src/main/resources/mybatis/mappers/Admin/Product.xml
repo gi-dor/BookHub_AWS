@@ -2,16 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.admin.mapper.ProductMapper">
 
-    <select id="getTotalRows" resultType="int">
-        SELECT
-                count(*)
-        FROM
-                BookHub.BOOK B
-                INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
-                INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
-                INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
-                INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
-                INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
+    <!-- 재사용 조건절 -->
+    <sql id="where">
         <where>
                 <!-- 검색어 -->
                 <if test="filter.opt != null">
@@ -30,47 +22,71 @@
 
                 <!-- 카테고리 -->
                 <choose>
+                    <when test="filter.topCategoryNo != 0">
+                        AND B.CATEGORY_NO IN (SELECT CATEGORY_NO
+                        FROM BookHub.CATEGORY
+                        WHERE PARENT_CATEGORY_NO = #{filter.topCategoryNo})
+                    </when>
                     <when test="filter.secondCategoryNo != 0">
                         AND B.CATEGORY_NO = #{filter.secondCategoryNo}
                     </when>
-                    <when test="filter.topCategoryNo != 0">
-                        AND B.CATEGORY_NO IN (SELECT CATEGORY_NO
-                                                   FROM BookHub.CATEGORY
-                                                   WHERE PARENT_CATEGORY_NO = #{filter.topCategoryNo})
-                    </when>
                 </choose>
 
-
                 <!-- 기간 검색 -->
-                <if test="filter.period != null">
+                <if test="filter.moreDate != '' and filter.lessDate != ''">
                     <choose>
                         <when test="filter.period == 'createdDate'">
-                            AND B.BOOK_CREATED_DATE
-                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
-                                AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                            AND B.BOOK_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                    AND CONCAT(#{filter.lessDate}, ' 23:59:59')
                         </when>
                         <when test="filter.period == 'updatedDate'">
-                            AND B.BOOK_CREATED_DATE
-                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
-                                AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                            AND B.BOOK_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                    AND CONCAT(#{filter.lessDate}, ' 23:59:59')
                         </when>
                         <when test="filter.period == 'publishedDate'">
-                            AND B.BOOK_CREATED_DATE
-                                BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
-                                AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
+                            AND B.BOOK_PUBLISHED_DATE BETWEEN #{filter.moreDate} AND #{filter.lessDate}
+                        </when>
+                    </choose>
+                </if>
+
+                <if test="filter.moreDate == '' and filter.lessDate != ''">
+                    <choose>
+                        <when test="filter.period == 'createdDate'">
+                            AND B.BOOK_CREATED_DATE BETWEEN '0001-01-01 00:00:00'
+                                                    AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                        </when>
+                        <when test="filter.period == 'updatedDate'">
+                            AND B.BOOK_UPDATED_DATE BETWEEN '0001-01-01 00:00:00'
+                                                    AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                        </when>
+                        <when test="filter.period == 'publishedDate'">
+                            AND B.BOOK_PUBLISHED_DATE BETWEEN '0001-01-01' AND #{filter.lessDate}
+                        </when>
+                    </choose>
+                </if>
+
+                <if test="filter.moreDate != '' and filter.lessDate == ''">
+                    <choose>
+                        <when test="filter.period == 'createdDate'">
+                            AND B.BOOK_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                    AND '9999-12-31 23:59:59'
+                        </when>
+                        <when test="filter.period == 'updatedDate'">
+                            AND B.BOOK_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                    AND '9999-12-31 23:59:59'
+                        </when>
+                        <when test="filter.period == 'publishedDate'">
+                            AND B.BOOK_PUBLISHED_DATE BETWEEN #{filter.moreDate} AND '9999-12-31'
                         </when>
                     </choose>
                 </if>
 
                 <!-- 판매 상태 -->
-                <if test="filter.available != null">
-                    AND B.BOOK_STATUS = #{filter.available}
-                </if>
-                <if test="filter.discontinued != null">
-                    AND B.BOOK_STATUS = #{filter.discontinued}
-                </if>
-                <if test="filter.soldOut != null">
-                    AND B.BOOK_STATUS = #{filter.soldOut}
+                <if test="filter.statusList != null">
+                   AND B.BOOK_STATUS IN
+                        <foreach collection="filter.statusList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
                 </if>
 
                 <!-- 재고 -->
@@ -86,6 +102,19 @@
                     AND P.PUBLISHER_NO = #{filter.publisherNo}
                 </if>
         </where>
+    </sql>
+
+    <select id="getTotalRows" resultType="int">
+        SELECT
+                count(*)
+        FROM
+                BookHub.BOOK B
+                INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
+                INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
+                INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
+                INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
+                INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
+        <include refid="where"></include>
     </select>
 
     <select id="getBooks" resultType="com.example.bookhub.admin.dto.BookList">
@@ -110,80 +139,7 @@
                     INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
                     INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
 
-            <where>
-                    <!-- 검색어 -->
-                    <if test="filter.opt != null">
-                        <choose>
-                            <when test="filter.opt == 'productName'">
-                                B.BOOK_NAME LIKE CONCAT('%', #{filter.keyword}, '%')
-                            </when>
-                            <when test="filter.opt == 'authorName'">
-                                AND A.AUTHOR_NAME = #{filter.keyword}
-                            </when>
-                            <when test="filter.opt == 'publisherName'">
-                                AND P.PUBLISHER_NAME = #{filter.keyword}
-                            </when>
-                        </choose>
-                    </if>
-
-                    <!-- 카테고리 -->
-                    <choose>
-                        <when test="filter.secondCategoryNo != 0">
-                            AND B.CATEGORY_NO = #{filter.secondCategoryNo}
-                        </when>
-                        <when test="filter.topCategoryNo != 0">
-                            AND B.CATEGORY_NO IN (SELECT CATEGORY_NO
-                                                       FROM BookHub.CATEGORY
-                                                       WHERE PARENT_CATEGORY_NO = #{filter.topCategoryNo})
-                        </when>
-                    </choose>
-
-
-                    <!-- 기간 검색 -->
-                    <if test="filter.period != null">
-                        <choose>
-                            <when test="filter.period == 'createdDate'">
-                                AND B.BOOK_CREATED_DATE
-                                    BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
-                                    AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
-                            </when>
-                            <when test="filter.period == 'updatedDate'">
-                                AND B.BOOK_CREATED_DATE
-                                    BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
-                                    AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
-                            </when>
-                            <when test="filter.period == 'publishedDate'">
-                                AND B.BOOK_CREATED_DATE
-                                    BETWEEN COALESCE(NULLIF(#{filter.moreDate}, ''), '0001-01-01 00:00:00')
-                                    AND COALESCE(NULLIF(#{filter.lessDate}, '') + INTERVAL 1 DAY, '9999-12-31 23:59:59')
-                            </when>
-                        </choose>
-                    </if>
-
-                    <!-- 판매 상태 -->
-                    <if test="filter.available != null">
-                        AND B.BOOK_STATUS = #{filter.available}
-                    </if>
-                    <if test="filter.discontinued != null">
-                        AND B.BOOK_STATUS = #{filter.discontinued}
-                    </if>
-                    <if test="filter.soldOut != null">
-                        AND B.BOOK_STATUS = #{filter.soldOut}
-                    </if>
-
-                    <!-- 재고 -->
-                    <if test="filter.moreStock != 0">
-                        AND B.BOOK_STOCK >= #{filter.moreStock}
-                    </if>
-                    <if test="filter.lessStock != 0">
-                        AND B.BOOK_STOCK &lt;= #{filter.lessStock}
-                    </if>
-
-                    <!-- 출판사 -->
-                    <if test="filter.publisherNo != 0">
-                        AND P.PUBLISHER_NO = #{filter.publisherNo}
-                    </if>
-            </where>
+            <include refid="where"></include>
 
             <choose>
                     <when test="sort == 'productName'">

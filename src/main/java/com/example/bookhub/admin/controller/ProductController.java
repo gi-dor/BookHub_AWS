@@ -32,15 +32,28 @@ public class ProductController {
                        Model model) {
 
         List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
+        List<Category> secondLeveCategories = categoryService.getSubCategoriesByCategoryNo(filter.getTopCategoryNo());
+        List<Category> thirdLeveCategories = categoryService.getSubCategoriesByCategoryNo(filter.getSecondCategoryNo());
         List<Publisher> publishers = productService.getPublishers();
 
         int totalRows = productService.getTotalRows(filter);
         Pagination pagination = new Pagination(page, totalRows, rows);
-
         int begin = pagination.getBegin();
         List<BookList> books = productService.getBooks(filter, begin, rows, sort);
 
+        // 모든 topCategory 화면에 전달
         model.addAttribute("topLevelCategories", topLevelCategories);
+
+        // topCategory가 선택된 경우 관련된 secondCategory 화면에 전달
+        if (filter.getTopCategoryNo() != 0) {
+            model.addAttribute("secondLevelCategories", secondLeveCategories);
+        }
+
+        // secondCategory가 선택된 경우 관련된 thirdCategory 화면에 전달
+        if (filter.getSecondCategoryNo() != 0) {
+            model.addAttribute("thirdLevelCategories", thirdLeveCategories);
+        }
+
         model.addAttribute("publishers", publishers);
         model.addAttribute("paging", pagination);
         model.addAttribute("books", books);

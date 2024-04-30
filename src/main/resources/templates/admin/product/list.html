@@ -28,19 +28,25 @@
                                 <td class="bg-light">카테고리</td>
                                 <td>
                                     <select th:field="*{topCategoryNo}" class="form-select-sm">
-                                        <option selected value="0">대분류 선택</option>
+                                        <option value="0" selected>대분류 선택</option>
                                         <option th:each="topLevelCategory : ${topLevelCategories}"
                                                 th:value="${topLevelCategory.no}"
                                                 th:text="${topLevelCategory.name}">
                                         </option>
                                     </select>
                                     <select th:field="*{secondCategoryNo}" class="form-select-sm">
-                                        <option selected value="0">중분류 선택</option>
-                                        <!-- 중분류 영역 -->
+                                        <option value="0" selected>중분류 선택</option>
+                                        <option th:each="secondLevelCategory : ${secondLevelCategories}"
+                                               th:value="${secondLevelCategory.no}"
+                                               th:text="${secondLevelCategory.name}">
+                                        </option>
                                     </select>
                                     <select th:field="*{thirdCategoryNo}" class="form-select-sm">
-                                        <option selected value="0">소분류 선택</option>
-                                        <!-- 소분류 영역 -->
+                                        <option value="0" selected>소분류 선택</option>
+                                        <option th:each="thirdLevelCategory : ${thirdLevelCategories}"
+                                               th:value="${thirdLevelCategory.no}"
+                                               th:text="${thirdLevelCategory.name}">
+                                        </option>
                                     </select>
                                     <input type="checkbox" class="form-check-input">
                                     <label class="form-check-label ml-1">카테고리 미등록</label>
@@ -81,9 +87,12 @@
                                 <td class="bg-light">판매 상태</td>
                                 <td>
                                     <input type="checkbox" class="form-check-input"> 전체
-                                       <input type="checkbox" class="form-check-input" th:field="*{available}" th:value="정상"> 정상
-                                       <input type="checkbox" class="form-check-input" th:field="*{discontinued}" th:value="절판"> 절판
-                                       <input type="checkbox" class="form-check-input" th:field="*{soldOut}" th:value="품절"> 품절
+                                       <input type="checkbox" class="form-check-input" th:field="*{available}"
+                                              value="정상"> 정상
+                                       <input type="checkbox" class="form-check-input" th:field="*{discontinued}"
+                                              value="절판"> 절판
+                                       <input type="checkbox" class="form-check-input" th:field="*{soldOut}"
+                                              value="품절"> 품절
                                    </td>
                                 </td>
                             </tr>
@@ -228,7 +237,9 @@
                                 <td th:text="${#dates.format(book.createdDate, 'yyyy-MM-dd')}">2019-02-15</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
+                                    <button id="btn-modify-product-${book.no}" type="button"
+                                            class="btn btn-outline-secondary btn-sm" th:data-no="${book.no}">수정
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -273,33 +284,33 @@
 
 <script layout:fragment="listScript" type="text/javascript">
     $(function () {
-        $("select[name='topCategoryNo']").click(function () {
-            let $secondCategorySelector = $("select[name='secondCategoryNo'] option");
-            const categoryNo = $(this).val();
-            getSubCategoryOptions(categoryNo, $secondCategorySelector);
+        $("#topCategoryNo").change(function () {
+            const topCategoryNo = $(this).val();
+            let $secondCategorySelector = $("#secondCategoryNo");
+            getSubCategoryOptions(topCategoryNo, $secondCategorySelector, "secondCategoryNo");
         })
 
-        $("select[name='secondCategoryNo']").click(function () {
-            let $thirdCategorySelector = $("select[name='thirdCategoryNo'] option");
-            const categoryNo = $(this).val();
-            getSubCategoryOptions(categoryNo, $thirdCategorySelector);
+        $("#secondCategoryNo").change(function () {
+            const secondCategoryNo = $(this).val();
+            let $thirdCategorySelector = $("#thirdCategoryNo");
+            getSubCategoryOptions(secondCategoryNo, $thirdCategorySelector, "thirdCategoryNo");
         })
 
         function getSubCategoryOptions(superCategoryNo, $selector) {
+
             $.ajax({
                 url: "/admin/getSubCategories",
                 method: "GET",
                 data: {categoryNo: superCategoryNo},
                 success: function (subCategories) {
                     $selector.not(':first').remove();
-                    $selector.first().prop("selected", true);
 
                     subCategories.forEach(secondLevelCategory => {
                         let option = $('<option>')
                             .val(secondLevelCategory.no)
                             .text(secondLevelCategory.name);
 
-                        $selector.parent().append(option);
+                        $selector.append(option);
                     });
                 },
                 error: function (xhr, status, error) {
