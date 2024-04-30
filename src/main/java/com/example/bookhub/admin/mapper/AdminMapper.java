@@ -9,5 +9,5 @@ public interface AdminMapper {
     Admin getAdminId(String id);
     Admin getAdminEmail(String email);
     void join(Admin admin);
-    Admin getAdminnNo(long no);
+    Admin getAdminNo(long no);
 }

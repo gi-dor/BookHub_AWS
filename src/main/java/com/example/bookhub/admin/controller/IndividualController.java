@@ -9,7 +9,6 @@ import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.board.vo.InquiryComment;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +67,7 @@ public class IndividualController {
         Inquiry noAnswerInquiry = individualService.getNoAnswerNo(no);
         Admin admin = new Admin();
         admin.setNo(answerInquiry.getAdmin().getNo());
-        Admin saveId = adminMapper.getAdminnNo(admin.getNo());
+        Admin saveId = adminMapper.getAdminNo(admin.getNo());
 
 
         model.addAttribute("admin", saveId);
