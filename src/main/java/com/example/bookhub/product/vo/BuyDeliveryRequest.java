@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class BuyDeliveryRequest {
-    private int buyDeliveryRequestNo;
+    private long buyDeliveryRequestNo;
     private String name;
 }

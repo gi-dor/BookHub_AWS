@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class BuyPayMethod {
 
-    private int buyPayMethodNo;
+    private long buyPayMethodNo;
     private String name;
 }

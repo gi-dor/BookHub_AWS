@@ -51,12 +51,25 @@ public class BuyService {
     }
 
     public long insertBuy(String tid, User user){
+        UserDelivery userDelivery = new UserDelivery();
+        userDelivery.setNo(buyForm.getUserDeliveryNo());
+
+        BuyDeliveryRequest buyDeliveryRequest = new BuyDeliveryRequest();
+        buyDeliveryRequest.setBuyDeliveryRequestNo(buyForm.getBuyDeliveryRequestNo());
+
+        BuyPayMethod buyPayMethod = new BuyPayMethod();
+        buyPayMethod.setBuyPayMethodNo(buyForm.getBuyPayMethodNo());
+
         Buy buy = Buy.builder()
                 .totalPrice(buyForm.getTotalPrice())
                 .totalBookDiscountPrice(buyForm.getTotalBookDiscountPrice())
                 .totalCouponDiscountAmount(buyForm.getTotalCouponDiscountAmount())
                 .totalPointUseAmount(buyForm.getTotalPointUseAmount())
                 .finalPrice(buyForm.getFinalPrice())
+                .commonEntranceApproach(buyForm.getCommonEntranceApproach())
+                .userDelivery(userDelivery)
+                .buyDeliveryRequest(buyDeliveryRequest)
+                .buyPayMethod(buyPayMethod)
                 .build();
 
         buy.setOrderId(tid);
