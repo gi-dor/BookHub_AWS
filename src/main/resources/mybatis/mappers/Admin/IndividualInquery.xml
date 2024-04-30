@@ -19,11 +19,18 @@
         WHERE
             i.INDIVIDUAL_INQUIRY_ANSWER_YN = 0
           AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
-        GROUP BY
-            c.CATEGORY_NAME
         order by
             INDIVIDUAL_INQUIRY_NO desc
+        LIMIT ${pagination.begin - 1} , #{pagination.rows}
     </select>
+
+    <!-- 페이징 처리를 위한 전체 행 수를 구하는 쿼리 -->
+    <select id="getTotalRows" resultType="int">
+        SELECT COUNT(*)
+        FROM INDIVIDUAL_INQUIRIES
+        WHERE INDIVIDUAL_INQUIRY_ANSWER_YN = 0
+    </select>
+
 
     <!-- 답변 미완료 디테일 -->
     <select id="getNoAnswerNo" parameterType="Long" resultType="com.example.bookhub.board.vo.Inquiry">
@@ -75,10 +82,9 @@
         WHERE
             i.INDIVIDUAL_INQUIRY_ANSWER_YN = 1
           AND i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
-        GROUP BY
-            c.CATEGORY_NAME
         order by
             INDIVIDUAL_INQUIRY_NO desc
+        LIMIT ${pagination.begin - 1} , #{pagination.rows}
     </select>
 
     <!-- 답변 완료 디테일(질문번호) -->

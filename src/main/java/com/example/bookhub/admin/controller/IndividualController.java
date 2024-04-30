@@ -1,9 +1,9 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.IndividualDto;
+import com.example.bookhub.board.Pagination;
 import com.example.bookhub.admin.exception.NoAdminLoginException;
 import com.example.bookhub.admin.mapper.AdminMapper;
-import com.example.bookhub.admin.service.AdminService;
 import com.example.bookhub.admin.service.IndividualService;
 import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.board.vo.Inquiry;
@@ -29,14 +29,23 @@ import java.util.Map;
 public class IndividualController {
 
     private final IndividualService individualService;
-    private final AdminService adminService;
     private final AdminMapper adminMapper;
 
     // 미완료 CS
     @GetMapping("/admin/individual/noanswer")
-    public String noAnswerList(Model model, IndividualDto dto){
-        List<IndividualDto> saveDto = individualService.getNoAnswerList();
-        model.addAttribute("noanswer", saveDto);
+    public String noAnswerList(@RequestParam(defaultValue = "1", value = "page") int page,
+                                @RequestParam(defaultValue = "10", value = "rows") int rows,
+                                Model model){
+        // 전체 행 수를 구하는 메소드
+        int totalRows = individualService.getTotalRows();
+        Pagination pagination = new Pagination(page, totalRows, rows);
+
+        // Pagination을 사용하여 페이지의 데이터 리스트를 가져옴
+        List<IndividualDto> noAnswerList = individualService.getNoAnswerList(pagination);
+        model.addAttribute("noAnswerList", noAnswerList);
+
+        // 모델에 Pagination 추가
+        model.addAttribute("pagination", pagination);
         return "admin/individual/noanswerlist";
     }
 
@@ -74,9 +83,19 @@ public class IndividualController {
 
     // CS 완료 리스트
     @GetMapping("/admin/individual/answer")
-    public String answerList(Model model, IndividualDto dto){
-        List<IndividualDto> saveDto = individualService.getAnswerList();
-        model.addAttribute("answer", saveDto);
+    public String answerList(@RequestParam(defaultValue = "1", value = "page")int page,
+                                @RequestParam(defaultValue = "10", value = "rows")int rows,
+                                Model model){
+        // 전체 행 수를 구하는 메소드
+        int totalRows = individualService.getTotalRows();
+        Pagination pagination = new Pagination(page, totalRows, rows);
+
+        // Pagination을 사용하여 페이지의 데이터 리스트를 가져옴
+        List<IndividualDto> answerList = individualService.getAnswerList(pagination);
+        model.addAttribute("answerList", answerList);
+
+        // 모델에 Pagination 추가
+        model.addAttribute("pagination", pagination);
         return "admin/individual/answerlist";
     }
 

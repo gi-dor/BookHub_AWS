@@ -1,7 +1,7 @@
 package com.example.bookhub.admin.service;
 
 import com.example.bookhub.admin.dto.IndividualDto;
-import com.example.bookhub.admin.exception.NoAdminLoginException;
+import com.example.bookhub.board.Pagination;
 import com.example.bookhub.admin.mapper.IndividualMapper;
 import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.board.vo.Inquiry;
@@ -19,8 +19,8 @@ public class IndividualService {
 
     // 미완료 CS 시작
     // 미완료 CS 리스트
-    public List<IndividualDto> getNoAnswerList(){
-        return individualMapper.getNoAnswerList();
+    public List<IndividualDto> getNoAnswerList(Pagination pagination){
+        return individualMapper.getNoAnswerList(pagination);
     }
     // 미완료 CS 디테일
     public Inquiry getNoAnswerNo(Long no){
@@ -39,13 +39,18 @@ public class IndividualService {
         individualMapper.insertAnswer(inquiryComment);
         individualMapper.updateNoAnswer(no);
     }
+
+    // 전체 행 수를 구하는 메소드
+    public int getTotalRows(){
+        return individualMapper.getTotalRows();
+    }
     // 미완료 CS 끝
 
     // 완료 CS
 
     // 완료 CS 리스트
-    public List<IndividualDto> getAnswerList(){
-        return individualMapper.getAnswerList();
+    public List<IndividualDto> getAnswerList(Pagination pagination){
+        return individualMapper.getAnswerList(pagination);
     }
 
     // 완료 CS 디테일(질문번호로 조회)
