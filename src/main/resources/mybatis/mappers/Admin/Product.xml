@@ -183,5 +183,7 @@
                 PUBLISHER_NAME AS name
             FROM
                 BookHub.PUBLISHER
+            ORDER BY
+                PUBLISHER_NAME ASC
     </select>
 </mapper>
