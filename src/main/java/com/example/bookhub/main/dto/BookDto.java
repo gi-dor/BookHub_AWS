@@ -18,4 +18,5 @@ public class BookDto {
     private String publisherName;
     private String categoryName;
     private List<BookAuthorDto> authors;
+    private int count;
 }

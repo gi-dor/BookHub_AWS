@@ -1,65 +1,50 @@
-<!--찜하트-->
-$(document).ready(function () {
-    $('#zzim').click(function () {
-        var icon = $(this).find('i');
-        // 현재 아이콘의 클래스에 따라 다음 클래스로 변경
-        if (icon.hasClass('far')) {
-            icon.removeClass('far').addClass('fas'); // 빈 하트에서 채워진 하트로 변경
-        } else {
-            icon.removeClass('fas').addClass('far'); // 채워진 하트에서 빈 하트로 변경
-        }
-    });
-});
 
+function bestSeller() {
 
-function newbook() {
-
-    $("#newbook input[name=cate]").val(0);
-    $("#newbook input[name=cateKeyword]").val(0);
-    $("#newbook input[name=pubDate]").val(0);
-    $("#newbook input[name=page]").val(1);
-    $("#newbook input[name=sort]").val("1");
-    $("#newbook").trigger("submit");
+    $("#bestSeller input[name=period]").val(0);
+    $("#bestSeller input[name=cateKeyword]").val(0);
+    $("#bestSeller input[name=pubDate]").val(0);
+    $("#bestSeller input[name=page]").val(1);
+    $("#bestSeller input[name=sort]").val("0");
+    $("#bestSeller").trigger("submit");
 }
 
-$(".cate a ").click(function (event) {
+$("#period a ").click(function (event) {
     event.preventDefault();
-    $("#newbook input[name=cate]").val($(this).attr("data-cate"));
-    $("#newbook input[name=page]").val(1);
-    $("#newbook input[name=sort]").val(1);
-    $("#newbook").trigger("submit");
+    $("#bestSeller input[name=period]").val($(this).attr("data-period"));
+    $("#bestSeller input[name=cateKeyword]").val(0);
+    $("#bestSeller input[name=page]").val(1);
+    $("#bestSeller input[name=sort]").val(0);
+    $("#bestSeller").trigger("submit");
+});
+$("#cateKeyword a ").click(function (event) {
+    event.preventDefault();
+    $("#bestSeller input[name=cateKeyword]").val($(this).attr("data-cateKeyword"));
+    $("#bestSeller input[name=page]").val(1);
+    $("#bestSeller input[name=sort]").val(0);
+    $("#bestSeller").trigger("submit");
 });
 
-$(".cateKeyword a ").click(function (event) {
+$("#pubDate a ").click(function (event) {
     event.preventDefault();
-    $("#newbook input[name=cate]").val(0);
-    $("#newbook input[name=cateKeyword]").val($(this).attr("data-cateKeyword"));
-    $("#newbook input[name=page]").val(1);
-    $("#newbook input[name=sort]").val(1);
-    $("#newbook").trigger("submit");
+    $("#bestSeller input[name=cateKeyword]").val(0);
+    $("#bestSeller input[name=pubDate]").val($(this).attr("data-pubDate"));
+    $("#bestSeller input[name=page]").val(1);
+    $("#bestSeller input[name=sort]").val(0);
+    $("#bestSeller").trigger("submit");
 });
 
-$(".pubDate a ").click(function (event) {
+$("#sort a ").click(function (event) {
     event.preventDefault();
-    $("#newbook input[name=cate]").val(0);
-    $("#newbook input[name=cateKeyword]").val(0);
-    $("#newbook input[name=pubDate]").val($(this).attr("data-pubDate"));
-    $("#newbook input[name=page]").val(1);
-    $("#newbook input[name=sort]").val(1);
-    $("#newbook").trigger("submit");
-});
-
-$(".searchSort a ").click(function (event) {
-    event.preventDefault();
-    $("#newbook input[name=page]").val(1);
-    $("#newbook input[name=sort]").val($(this).attr("data-sort"));
-    $("#newbook").trigger("submit");
+    $("#bestSeller input[name=page]").val(1);
+    $("#bestSeller input[name=sort]").val($(this).attr("data-sort"));
+    $("#bestSeller").trigger("submit");
 });
 
 $(".pagination a").click(function(event) {
     event.preventDefault();
-    $("#newbook input[name=page]").val($(this).attr("data-page"));
-    $("#newbook").trigger("submit");
+    $("#bestSeller input[name=page]").val($(this).attr("data-page"));
+    $("#bestSeller").trigger("submit");
 })
 
 
