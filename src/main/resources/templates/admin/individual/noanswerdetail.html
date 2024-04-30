@@ -47,6 +47,17 @@
             </form>
         </div>
     </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var errorMessage = /*[[${errorMessage}]]*/ null;
+        var successMessage = /*[[${successMessage}]]*/ null;
 
+        if (errorMessage != null && errorMessage !== '') {
+            alert(errorMessage);
+        } else if (successMessage != null && successMessage !== '') {
+            alert(successMessage);
+        }
+        /*]]>*/
+    </script>
 </div>
 </html>
