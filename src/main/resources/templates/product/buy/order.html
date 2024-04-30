@@ -20,7 +20,7 @@
                                     <td>
                                         <div>
                                             <span><span class="badge rounded-pill bg-dark">기본배송지</span></span>
-                                            <button type="button" class="btn btn-secondary">변경</button>
+                                            <button type="button" class="btn btn-secondary" onclick="showDeliveryModifyModal()">변경</button>
                                         </div>
                                         <div>
                                             <span th:text="${defaultUserDelivery.name}"></span>
@@ -194,12 +194,60 @@
             </div>
         </div>
     </form>
+
+
+    <div class="modal" tabindex="-1" id="modal-delivery-modify">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">배송지 변경</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div th:each="userDelivery : ${userDeliveryList}">
+                        <div class="card">
+                            <div class="card-body row">
+                                <div class="col-2">
+                                    <span class="form-check">
+                                        <input class="form-check-input" type="radio" name="userDelivery" value="${userDelivery.no}"
+                                               th:checked="${userDelivery.defaultAddressYn eq 'Y'}" />
+                                    </span>
+                                </div>
+                                <div class="col-10">
+                                    <div>
+                                        <span th:if="${userDelivery.defaultAddressYn eq 'Y'}">
+                                            <span class="badge rounded-pill bg-dark">기본배송지</span>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span th:text="${userDelivery.name}"></span>
+                                        <span> / </span>
+                                        <span th:text="${userDelivery.tel}"></span>
+                                    </div>
+                                    <div>
+                                        <span th:text="${userDelivery.zipCode}"></span>
+                                        <span th:text="${userDelivery.address}"></span>
+                                        <span th:text="${userDelivery.addressDetail}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="useSelectedCoupon()">사용</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 <script layout:fragment="script" type="text/javascript">
     const $tbody = $("#tbody-modal");
     const modalCoupon = new bootstrap.Modal("#modal-coupon");
+    const modalDeliveryModify = new bootstrap.Modal("#modal-delivery-modify");
 
     $("#total-point-use-amount-tmp").on('keyup', function(event){
         let inputValue = $(this).val();
@@ -326,6 +374,10 @@
         $("#total-point-use-amount").val(totalPointAmount)
 
         updateFinalPrice();
+    }
+
+    function showDeliveryModifyModal(){
+        modalDeliveryModify.show();
     }
 
     updatePrices();
