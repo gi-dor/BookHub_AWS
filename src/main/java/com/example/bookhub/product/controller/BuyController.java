@@ -4,7 +4,9 @@ import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
+import com.example.bookhub.product.vo.BuyDeliveryRequest;
 import com.example.bookhub.product.vo.CouponProduced;
+import com.example.bookhub.user.vo.UserDelivery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +34,18 @@ public class BuyController {
             Principal principal,
             Model model)
     {
+        UserDelivery defaultUserDelivery = null;
+        List<UserDelivery> userDeliveryList = buyService.getUserDeliveryByUserNo(principal.getName());
+        for(UserDelivery userDelivery : userDeliveryList){
+            if("Y".equals(userDelivery.getDefaultAddressYn())) {
+                defaultUserDelivery = userDelivery;
+            }
+        }
+        model.addAttribute("userDeliveryList", userDeliveryList);
+        model.addAttribute("defaultUserDelivery", defaultUserDelivery);
+
+        List<BuyDeliveryRequest> buyDeliveryRequestList = buyService.getBuyDeliveryRequest();
+        model.addAttribute("buyDeliveryRequestList", buyDeliveryRequestList);
 
         List<BookDto> buyBookList = new ArrayList<>();
         for(long buyBookNo : buyForm.getBuyBookNoList()){

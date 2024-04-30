@@ -5,6 +5,7 @@ import com.example.bookhub.product.mapper.BuyMapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
+import com.example.bookhub.user.vo.UserDelivery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,4 +108,13 @@ public class BuyService {
         buyMapper.updatePointUsed(map);
     }
 
+    public List<UserDelivery> getUserDeliveryByUserNo(String userId) {
+        User user = userMapper.selectUserById(userId);
+
+        return buyMapper.getUserDeliveryByUserNo(user.getNo());
+    }
+
+    public List<BuyDeliveryRequest> getBuyDeliveryRequest() {
+        return buyMapper.getBuyDeliveryRequest();
+    }
 }

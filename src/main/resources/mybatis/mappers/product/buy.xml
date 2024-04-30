@@ -15,6 +15,21 @@
         <result column="coupon_price" property="price"/>
     </resultMap>
 
+    <resultMap id="UserDeliveryResultMap" type="com.example.bookhub.user.vo.UserDelivery">
+        <id column="delivery_no" property="no"/>
+        <result column="recipient_name" property="name"/>
+        <result column="recipient_tel" property="tel"/>
+        <result column="user_zip_code" property="zipCode"/>
+        <result column="user_address" property="address"/>
+        <result column="user_address_detail" property="addressDetail"/>
+        <result column="user_default_address_yn" property="defaultAddressYn"/>
+    </resultMap>
+
+    <resultMap id="BuyDeliveryRequestResultMap" type="com.example.bookhub.product.vo.BuyDeliveryRequest">
+        <id column="buy_delivery_request_no" property="buyDeliveryRequestNo"/>
+        <result column="buy_delivery_request_name" property="name"/>
+    </resultMap>
+
     <!-- association -->
     <select id="getCouponByNo" parameterType="long" resultMap="CouponResultMap">
         select
@@ -87,5 +102,28 @@
         set user_point = user_point - #{totalPointUseAmount}
         where user_no = #{userNo}
     </update>
+
+    <select id="getUserDeliveryByUserNo" parameterType="long" resultMap="UserDeliveryResultMap">
+        select
+            delivery_no,
+            recipient_name,
+            recipient_tel,
+            user_zip_code,
+            user_address,
+            user_address_detail,
+            user_default_address_yn
+        from
+             USER_DELIVERY
+        where
+            user_no = #{value}
+    </select>
+
+    <select id="getBuyDeliveryRequest" resultMap="BuyDeliveryRequestResultMap">
+        select
+            buy_delivery_request_no,
+            buy_delivery_request_name
+        from
+            BUY_DELIVERY_REQUEST
+    </select>
 
 </mapper>

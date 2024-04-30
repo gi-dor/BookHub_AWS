@@ -1,6 +1,7 @@
 package com.example.bookhub.product.mapper;
 
 import com.example.bookhub.product.vo.*;
+import com.example.bookhub.user.vo.UserDelivery;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface BuyMapper {
     void createCouponUsed(CouponUsed couponUsed);
     void updateCouponProducedUsed(long couponProducedNo);
     void updatePointUsed(Map<String, Object> map);
+    List<UserDelivery> getUserDeliveryByUserNo(Long no);
+    List<BuyDeliveryRequest> getBuyDeliveryRequest();
 }
