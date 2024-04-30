@@ -17,4 +17,9 @@ public class BuyForm {
     private int totalPointUseAmount;
     private int finalPrice;
     private int pointAccumulationAmount;
+
+    private long userDeliveryNo;
+    private long buyDeliveryRequestNo;
+    private String commonEntranceApproach;
+    private long buyPayMethodNo;
 }

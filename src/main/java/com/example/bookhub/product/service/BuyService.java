@@ -5,6 +5,7 @@ import com.example.bookhub.product.mapper.BuyMapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
+import com.example.bookhub.user.vo.UserDelivery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,12 +51,25 @@ public class BuyService {
     }
 
     public long insertBuy(String tid, User user){
+        UserDelivery userDelivery = new UserDelivery();
+        userDelivery.setNo(buyForm.getUserDeliveryNo());
+
+        BuyDeliveryRequest buyDeliveryRequest = new BuyDeliveryRequest();
+        buyDeliveryRequest.setBuyDeliveryRequestNo(buyForm.getBuyDeliveryRequestNo());
+
+        BuyPayMethod buyPayMethod = new BuyPayMethod();
+        buyPayMethod.setBuyPayMethodNo(buyForm.getBuyPayMethodNo());
+
         Buy buy = Buy.builder()
                 .totalPrice(buyForm.getTotalPrice())
                 .totalBookDiscountPrice(buyForm.getTotalBookDiscountPrice())
                 .totalCouponDiscountAmount(buyForm.getTotalCouponDiscountAmount())
                 .totalPointUseAmount(buyForm.getTotalPointUseAmount())
                 .finalPrice(buyForm.getFinalPrice())
+                .commonEntranceApproach(buyForm.getCommonEntranceApproach())
+                .userDelivery(userDelivery)
+                .buyDeliveryRequest(buyDeliveryRequest)
+                .buyPayMethod(buyPayMethod)
                 .build();
 
         buy.setOrderId(tid);
@@ -107,4 +121,18 @@ public class BuyService {
         buyMapper.updatePointUsed(map);
     }
 
+    public List<UserDelivery> getUserDeliveryByUserNo(String userId) {
+        User user = userMapper.selectUserById(userId);
+
+        return buyMapper.getUserDeliveryByUserNo(user.getNo());
+    }
+
+    public List<BuyDeliveryRequest> getBuyDeliveryRequest() {
+        return buyMapper.getBuyDeliveryRequest();
+    }
+
+    public void updateDefaultUserDelivery(long selectedUserDeliveryNo) {
+        buyMapper.updateDefaultUserDeliveryN(selectedUserDeliveryNo);
+        buyMapper.updateDefaultUserDeliveryY(selectedUserDeliveryNo);
+    }
 }

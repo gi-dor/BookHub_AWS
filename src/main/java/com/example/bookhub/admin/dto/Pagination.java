@@ -9,8 +9,8 @@ import lombok.ToString;
 @ToString
 public class Pagination {
 
-    private int rows = 5;
-    private int pages = 5;
+    private int rows;
+    private int pages;
     private int totalRows;
     private int totalPages;
     private int totalBlocks;

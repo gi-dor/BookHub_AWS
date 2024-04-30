@@ -6,16 +6,17 @@
 </th:block>
 
 <div layout:fragment="content" class="container-fluid">
-
-        <form class="mb-4" action="/new" method="get" id="bestSeller">
+    <div class="row">
+        <form class="mb-4" action="/main/bestseller" method="get" id="bestSeller">
             <div class="mb-4">
-                <input type="hidden" name="pubdate" th:value="${#strings.defaultString(param.pubdate, '0')}"/>
+                <input type="hidden" name="period" th:value="${#strings.defaultString(param.period, '1')}"/>  <!--기본이 종합베스트-->
+                <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubdate, '0')}"/> <!--기본이 주간-->
                 <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'0')}"/>
-                <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '1')}"/>
+                <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '0')}"/>
                 <input type="hidden" name="page" th:value="${#strings.defaultString(param.page, '1')}"/>
             </div>
         </form>
-    <div class="row">
+
         <!-- Sidebar -->
         <div class="sidebar col-2">
             <!-- 베스트셀러 -->
@@ -23,10 +24,10 @@
                 <div id="period">
                     <ul class="list">
                         <li><a href="#" data-period="1"><strong>종합 베스트</strong></a></li>
-                        <li><a href="#" data-period="2">주간</a></li>
-                        <li><a href="#" data-period="3">월간</a></li>
-                        <li><a href="#" data-period="4">연간</a></li>
-                        <li><a href="#" data-period="5"><strong>실시간 베스트</strong></a></li>
+                        <li><a href="#" data-period="1">주간</a></li>
+                        <li><a href="#" data-period="2">월간</a></li>
+                        <li><a href="#" data-period="3">연간</a></li>
+                        <li><a href="#" data-period="4"><strong>실시간 베스트</strong></a></li>
                     </ul>
                 </div>
         </div>
@@ -35,6 +36,7 @@
         <!-- /Sidebar -->
 
         <!-- Main content -->
+
         <!--카테고리 선택 - 전체, 소설, 참고서, 사회과학 ,,, 등등등-->
         <div class="col-8 mb-5" id="cateKeyword">
             <h1 class="mb-3">국내도서</h1>
@@ -153,7 +155,7 @@
             </div>
 
             <!--상품 목록-->
-            <div class="card mb-5 col-12" th:each="book : ${books}">
+            <div class="card mb-5 col-12" th:each="book : ${book}">
                 <div class="ms-2">
                     <button type="button" class="btn btn-sm rounded-circle" id="checkButton">
                         <i class="bi bi-check"></i>
@@ -170,7 +172,7 @@
                         <!--베스트셀러 순위-->
                         <h5 class="card-title">1</h5>
                         <!-- 책 제목 -->
-                        <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
+                        <h5 class="card-title fw-bold"  th:text="${book.name}"></h5>
                         <!-- 저자 -->
                         <div th:each="author : ${book.authors}">
                             <p class="card-text" th:text="${author.name + ' (' + author.type + ')'}">저자</p>
