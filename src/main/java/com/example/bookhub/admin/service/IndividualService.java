@@ -41,8 +41,8 @@ public class IndividualService {
     }
 
     // 전체 행 수를 구하는 메소드
-    public int getTotalRows(){
-        return individualMapper.getTotalRows();
+    public int getTotalRows(int no){
+        return individualMapper.getTotalRows(no);
     }
     // 미완료 CS 끝
 

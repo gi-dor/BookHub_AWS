@@ -17,7 +17,7 @@ public interface IndividualMapper {
     Inquiry getNoAnswerNo(Long no);
 
     // 전체 행 수를 구하는 매퍼
-    int getTotalRows();
+    int getTotalRows(int no);
 
     // 답변 및 답변했을 때 답변유뮤를 변경
     void insertAnswer(InquiryComment inquiryComment);

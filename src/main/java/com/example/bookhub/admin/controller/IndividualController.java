@@ -37,7 +37,7 @@ public class IndividualController {
                                 @RequestParam(defaultValue = "10", value = "rows") int rows,
                                 Model model){
         // 전체 행 수를 구하는 메소드
-        int totalRows = individualService.getTotalRows();
+        int totalRows = individualService.getTotalRows(0);
         Pagination pagination = new Pagination(page, totalRows, rows);
 
         // Pagination을 사용하여 페이지의 데이터 리스트를 가져옴
@@ -87,7 +87,7 @@ public class IndividualController {
                                 @RequestParam(defaultValue = "10", value = "rows")int rows,
                                 Model model){
         // 전체 행 수를 구하는 메소드
-        int totalRows = individualService.getTotalRows();
+        int totalRows = individualService.getTotalRows(1);
         Pagination pagination = new Pagination(page, totalRows, rows);
 
         // Pagination을 사용하여 페이지의 데이터 리스트를 가져옴

@@ -25,10 +25,10 @@
     </select>
 
     <!-- 페이징 처리를 위한 전체 행 수를 구하는 쿼리 -->
-    <select id="getTotalRows" resultType="int">
+    <select id="getTotalRows" parameterType="int" resultType="int">
         SELECT COUNT(*)
         FROM INDIVIDUAL_INQUIRIES
-        WHERE INDIVIDUAL_INQUIRY_ANSWER_YN = 0
+        WHERE INDIVIDUAL_INQUIRY_ANSWER_YN = #{value}
     </select>
 
 
