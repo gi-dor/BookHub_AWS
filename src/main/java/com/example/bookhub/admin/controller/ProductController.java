@@ -62,4 +62,9 @@ public class ProductController {
         return "admin/product/list";
     }
 
+    @GetMapping("/modify")
+    public String modify(@RequestParam("no") Long productNo, Model model) {
+        return "admin/product/modify";
+    }
+
 }

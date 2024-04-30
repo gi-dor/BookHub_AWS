@@ -318,6 +318,12 @@
                 }
             });
         }
+
+        $("[id^=btn-modify-product]").click(function() {
+            let productNo = $(this).data('no');
+            window.location.href = "/admin/product/modify?no=" + productNo;
+        });
+
     })
 
 </script>
