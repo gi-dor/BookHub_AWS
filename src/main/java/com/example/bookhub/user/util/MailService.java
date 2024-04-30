@@ -7,11 +7,14 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.thymeleaf.ITemplateEngine;
@@ -19,10 +22,10 @@ import org.thymeleaf.context.Context;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MailService {
 
     private final JavaMailSender javaMailSender;
-    private final RandomCode randomCode;
 
     // 테스트용 진짜 심플이메일
     public void sendSimpleEmail() {
@@ -35,15 +38,44 @@ public class MailService {
         javaMailSender.send(message);
     }
 
-    // 회원가입 완료시에 실행되는 회원가입완료 이메일 보내기
-    public void sendEmail(String to, String subject, String html) throws MessagingException {
-//        SimpleMailMessage message = new SimpleMailMessage();
+    @Async
+    public CompletableFuture<Boolean> sendEmailAsync(UserSignupForm form)  {
+        long startTime = System.currentTimeMillis();
+        try {
+            String to = form.getEmail1() + "@" + form.getEmail2();
+            String subject = "회원 가입이 완료되었습니다.";
+            String html = registerHtmlTemplate(form); // load
+
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(html, true);
+            javaMailSender.send(message);
+
+            long endTime = System.currentTimeMillis();
+
+            long finishTime = endTime - startTime;
+            log.info(":::    이메일 총 작업 소요 시간 " + finishTime + "ms");
+
+            return CompletableFuture.completedFuture(true);
+        } catch (Exception e) {
+            return CompletableFuture.completedFuture(false);
+        }
+    }
+
+    // 이메일 보내기
+    public void sendEmail(String to, String subject, String html) throws Exception {
+        long startTime = System.currentTimeMillis();
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,true);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(html , true );
             javaMailSender.send(message);
+        long endTime = System.currentTimeMillis();
+        long finishTime = endTime - startTime;
+        log.info(":::    이메일 총 작업 소요 시간 " + finishTime + "ms");
     }
 
    // 긁어와서 사용한 코드라 자세히 모름;

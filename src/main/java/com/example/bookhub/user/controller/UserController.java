@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,15 +80,20 @@ public class UserController {
 
         try {
             //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
-            User user = userService.registerUser(form);
+            // 동기
+            // User user = userService.registerUser(form);
+
+            // 비동기
+            User user = userService.registerUserAsync(form);
 
             // 사용자 등록이 완료되면 이메일 보내기
+            /*
             String to = form.getEmail1() + "@" + form.getEmail2();
             String subject = "회원 가입이 완료되었습니다.";
             String html = mailService.registerHtmlTemplate(form); // loadHtmlTemplate 메서드를 호출할 때는 괄호를 포함하여 호출해야 합니다.
             mailService.sendEmail(to, subject, html);
+            */
             //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
-
             return "redirect:/user/completed?id=" + user.getId();
 
         } catch (Exception ex) {
