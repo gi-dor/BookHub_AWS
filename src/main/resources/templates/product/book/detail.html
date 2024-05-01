@@ -173,6 +173,27 @@
                 </div>
             </div>
         </div>
+
+        <div th:if="${page.totalPages > 1}">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center pagination-sm">
+                    <!-- 이전 페이지 링크 -->
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage - 1})}" th:if="${page.currentPage > 1}">이전</a>
+                        <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                    </li>
+                    <!-- 페이지 번호를 표시 -->
+                    <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                    </li>
+                    <!-- 다음 페이지 링크 -->
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage + 1})}" th:if="${page.currentPage < page.totalPages}">다음</a>
+                        <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 
     <!-- 바텀 네비게이션 바 -->

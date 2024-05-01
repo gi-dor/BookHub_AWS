@@ -35,12 +35,12 @@ public class ReviewController {
         return "redirect:/product/book/detail?bookNo=" + bookNo;
     }
 
-    @GetMapping("/{bookNo}")
-    @ResponseBody
-    public ResponseEntity<List<ReviewDto>> getReviews(@PathVariable("bookNo") long bookNo, Principal principal){
-        List<ReviewDto> reviewDtoList = reviewService.getReviewsByBookNo(bookNo, principal.getName());
-        return ResponseEntity.ok().body(reviewDtoList);
-    }
+//    @GetMapping("/{bookNo}")
+//    @ResponseBody
+//    public ResponseEntity<List<ReviewDto>> getReviews(@PathVariable("bookNo") long bookNo, Principal principal){
+//        List<ReviewDto> reviewDtoList = reviewService.getReviewsByBookNo(bookNo, principal.getName());
+//        return ResponseEntity.ok().body(reviewDtoList);
+//    }
 
     @GetMapping("/recommend/{reviewNo}")
     @ResponseBody
