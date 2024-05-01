@@ -22,10 +22,7 @@ public class DashBoardController {
     private final DashBoardService dashBoardService;
 
 
-    @GetMapping("/dailyDash")
-    public String dailyDash(){
-        return "/admin/dash/dailyDash";
-    }
+
 
     @GetMapping("/weekDash")
     public String weekDash(){
