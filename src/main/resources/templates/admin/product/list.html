@@ -108,15 +108,17 @@
                             <tr>
                                 <td class="bg-light">재고</td>
                                 <td>
-                                    <select class="form-select-sm">
-                                        <option selected>전체</option>
-                                        <option value="10">10개 이하</option>
-                                        <option value="30">30개 이하</option>
-                                        <option value="50">50개 이하</option>
-                                        <option value="100">100개 이하</option>
+                                    <select id="stockRange" class="form-select-sm">
+                                        <option id="opt1" value="0" selected>전체</option>
+                                        <option id="opt2" value="10">10개 이하</option>
+                                        <option id="opt3" value="30">30개 이하</option>
+                                        <option id="opt4" value="50">50개 이하</option>
+                                        <option id="opt5" value="100">100개 이하</option>
                                     </select>
-                                    <input th:field="*{moreStock}" type="number" class="form-control-sm"> 개 이상 -
-                                    <input th:field="*{lessStock}" type="number" class="form-control-sm"> 개 이하
+                                    <input th:field="*{moreStock}" type="number" class="form-control-sm"
+                                           step="10"> 개 이상 -
+                                    <input th:field="*{lessStock}" type="number" class="form-control-sm"
+                                           step="10"> 개 이하
                                 </td>
                             </tr>
                             <tr>
@@ -337,7 +339,6 @@
             window.location.href = "/admin/product/modify?no=" + productNo;
         });
 
-    })
         // '전체' 체크박스를 선택하면 '정상', '절판', '품절' 체크박스도 선택된다.
         $("#chk-select-all-status").click(function(){
             let isChecked = $(this).prop("checked");
@@ -363,6 +364,31 @@
                 $("#chk-select-all-status").prop("checked", false);
             }
         }
+
+        $("#stockRange").change(function() {
+           let selectedValue = $(this).val();
+           const stockOfOptOne = $("#opt1").val();
+           const stockOfOptTwo = $("#opt2").val();
+           const stockOfOptThree = $("#opt3").val();
+           const stockOfOptFour = $("#opt4").val();
+           const stockOfOptFive = $("#opt5").val();
+
+           if (selectedValue === stockOfOptOne) {
+               $("#lessStock").val(stockOfOptOne);
+           }
+           if (selectedValue === stockOfOptTwo) {
+               $("#lessStock").val(stockOfOptTwo);
+           }
+           if (selectedValue === stockOfOptThree) {
+               $("#lessStock").val(stockOfOptThree);
+           }
+           if (selectedValue === stockOfOptFour) {
+               $("#lessStock").val(stockOfOptFour);
+           }
+           if (selectedValue === stockOfOptFive) {
+               $("#lessStock").val(stockOfOptFive);
+           }
+        });
 
         // 기간 검색 버튼 클릭 시 해당 날짜 입력
         $("button[name='btn-date']").click(function() {
