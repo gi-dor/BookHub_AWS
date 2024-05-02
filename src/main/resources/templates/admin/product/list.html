@@ -332,6 +332,32 @@
         }
 
         $("#btn-reset").click(function(){
+            // 검색어 초기화
+            $("select[name='opt']").val("null");
+            $("input[name='keyword']").val("");
+
+            // 카테고리 초기화
+            $("select[name='topCategoryNo']").val("0");
+            $("select[name='secondCategoryNo']").val("0");
+            $("select[name='thirdCategoryNo']").val("0");
+
+            // 기간 검색 초기화
+            $("select[name='period']").val("createdDate");
+            $("input[name='moreDate']").val("");
+            $("input[name='lessDate']").val("");
+            $("button[name='btn-date']").removeClass("active");
+
+            // 판매 상태 초기화
+            $("#chk-select-all-status").prop("checked", false);
+            $("input[name='status']").prop("checked", false);
+
+            // 재고 초기화
+            $("#stockRange").val("0");
+            $("input[name='moreStock']").val("0");
+            $("input[name='lessStock']").val("0");
+
+            // 출판사 초기화
+            $("select[name='publisherNo']").val("0");
         });
 
         $("[id^=btn-modify-product]").click(function() {
