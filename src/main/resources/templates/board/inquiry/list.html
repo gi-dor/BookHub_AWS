@@ -1,0 +1,78 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<div layout:fragment="content" class="container">
+    <div class="row mb-3">
+        <!-- 사이드바 -->
+        <div class="col-lg-3">
+            <aside class="sidebar">
+                <h3 style="margin-bottom: 15px;"><strong>고객센터</strong></h3>
+                <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">메인</a></strong></li><br>
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">자주 묻는 질문</a></strong>
+                        <ul th:each="category : ${categories}" style="list-style: none; padding: 0; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;"><a th:text="${category.name}" th:href="@{/board/faq/list(cat=${category.no})}" style="color: black; text-decoration: none;">BEST 10</a></li>
+                        </ul>
+                    </li><br>
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/inquiry/list}" style="color: black; text-decoration: none;">1:1 문의</a></strong>
+                        <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;"><a th:href="@{/board/inquiry/register}" style="color: black; text-decoration: none;">1:1 문의 접수</a></li>
+                            <li style="margin-bottom: 10px;"><a th:href="@{/board/inquiry/list}" style="color: black; text-decoration: none;">1:1 문의 내역</a></li>
+                        </ul>
+                    </li><br>
+                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">공지사항</a></strong></li>
+                </ul>
+            </aside>
+        </div>
+
+        <!-- 1:1 문의 내역 -->
+        <div class="col-lg-9">
+            <h2>1:1 문의 내역</h2>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">분류</th>
+                    <th scope="col">답변유무</th>
+                    <th scope="col">날짜</th>
+                </tr>
+                </thead>
+                <!-- 기존의 게시글 목록 표시 -->
+                <tbody>
+                <tr th:each="inquiry : ${inquiries}">
+                    <td th:text="${inquiry.no}"></td>
+                    <td><a th:href="@{/board/inquiry/detail/{id}(id=${inquiry.no})}" th:text="${inquiry.title}" style="color: black; text-decoration: none;"></a></td>
+                    <td th:text="${inquiry.faqCategory.name}"></td>
+                    <td>
+                        <span th:if="${inquiry.answerYn == false}">미답변</span>
+                        <span th:if="${inquiry.answerYn == true}">답변완료</span>
+                    </td>
+                    <td th:text="${#temporals.format(inquiry.createdDate,'yyyy.MM.dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center pagination-sm">
+                        <!-- 이전 페이지 링크 -->
+                        <li class="page-item">
+                            <a class="page-link" th:attr="data-page=${page.currentPage - 1}" onclick="page(event)" th:href="@{/board/inquiry/list(page=${page.currentPage - 1})}" th:if="${page.currentPage > 1}">이전</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                        </li>
+                        <!-- 페이지 번호를 표시 -->
+                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
+                            <a class="page-link" th:attr="data-page=${pageNumber}" onclick="page(event)" th:href="@{/board/inquiry/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                        </li>
+                        <!-- 다음 페이지 링크 -->
+                        <li class="page-item">
+                            <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)" th:href="@{/board/inquiry/list(page=${page.currentPage + 1})}" th:if="${page.currentPage < page.totalPages}">다음</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

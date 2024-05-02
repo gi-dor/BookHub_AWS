@@ -38,9 +38,8 @@ public class AttendanceService {
         return attendanceMapper.userAttendanceCheckByNo(userNo);
     }
 
-    @Scheduled(fixedDelay = 180000)
-    public void deleteAttendance() {
-        attendanceMapper.deleteAttendance();
-    }
+//    public void deleteAttendance() {
+//        attendanceMapper.deleteAttendance();
+//    }
 
 }
