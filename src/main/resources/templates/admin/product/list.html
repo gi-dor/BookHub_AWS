@@ -70,17 +70,23 @@
                                         <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
                                         <input th:field="*{lessDate}" type="date" class="form-control-sm ms-2 me-2">
                                         <div class="input-group">
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">오늘
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="0">오늘
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">3일간
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="3">3일간
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">일주일
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="7">일주일
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">1개월
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="30">1개월
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">3개월
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset=90>3개월
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">전체
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="all">전체
                                             </button>
                                         </div>
                                     </div>
@@ -332,6 +338,30 @@
         });
 
     })
+
+        // 기간 검색 버튼 클릭 시 해당 날짜 입력
+        $("button[name='btn-date']").click(function() {
+            let offset = $(this).data('offset');
+            let today = new Date();
+
+            if (offset === 'all') {
+                $("#moreDate").val('');
+                $("#lessDate").val('');
+            }
+            if (offset !== 'all'){
+                let endDate = new Date(today);
+                endDate.setDate(today.getDate() - parseInt(offset));
+                $("#moreDate").val(endDate.toISOString().split('T')[0]);
+                $("#lessDate").val(today.toISOString().split('T')[0]);
+            }
+
+            $("button[name='btn-date']").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        $("input[name$='Date']").click(function() {
+            $("button[name='btn-date']").removeClass("active");
+        });
 
 </script>
 
