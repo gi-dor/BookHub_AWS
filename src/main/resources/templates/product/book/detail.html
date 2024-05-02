@@ -77,6 +77,7 @@
     </ul>
 
     <div class="col-12">
+        <canvas id="myChart" width="300" height="100"></canvas>
         <div id="div-reviews">
             <div th:each="review: ${reviewDtoList}">
                 <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
@@ -172,6 +173,27 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div th:if="${page.totalPages > 1}">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center pagination-sm">
+                    <!-- 이전 페이지 링크 -->
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage - 1})}" th:if="${page.currentPage > 1}">이전</a>
+                        <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                    </li>
+                    <!-- 페이지 번호를 표시 -->
+                    <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                    </li>
+                    <!-- 다음 페이지 링크 -->
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage + 1})}" th:if="${page.currentPage < page.totalPages}">다음</a>
+                        <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 
@@ -326,6 +348,31 @@
     const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
     const modalCreateReview = new bootstrap.Modal("#modal-create-review");
 
+    let myCt = document.getElementById('myChart');
+
+    let myChart = new Chart(myCt, {
+        type: 'bar',
+        data: {
+            labels: ['0~1', '1~2', '2~3', '3~4', '4~5'],
+            datasets: [
+                {
+                    label: 'Dataset',
+                    data: [10,20,30,40,50],
+                }
+            ]
+        },
+    });
+
+    $.get("/product/review/rate/" + bookNo, function(data){
+        console.log('요청 성공:', data);
+        myChart.data.datasets[0].data = data;
+        myChart.update();
+
+    }).fail(function(xhr, status, error) {
+
+        console.error('요청 실패:', status, error);
+    });
+
     const $reviewDiv = $("#div-reviews");
 
     $("#div-reviews").on("click", ".recommend", function(event){
@@ -477,6 +524,7 @@
         document.querySelector('input[name="rate"][value="' + review.rate + '"]').checked = true;
 
     }
+
 
     // 리뷰들 조회
     // async function getReviews(bookNo){
