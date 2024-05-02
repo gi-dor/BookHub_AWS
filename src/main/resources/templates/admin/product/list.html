@@ -148,7 +148,7 @@
                             <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
                             <div class="d-flex">
                                 <!-- 조회 개수 설정 -->
-                                <select class="form-control-sm me-2" onchange="changeRows()" name="rows">
+                                <select class="form-control-sm me-2" name="rows">
                                     <option value="10">10개씩</option>
                                     <option value="50">50개씩</option>
                                     <option value="100">100개씩</option>
@@ -156,7 +156,7 @@
                                 </select>
 
                                 <!-- 조회 정렬 설정-->
-                                <select class="form-control-sm" name="sort" onchange="changeRows()">
+                                <select class="form-control-sm" name="sort">
                                     <option value="productName">상품명 순</option>
                                     <option value="highPrice">정가 높은 순</option>
                                     <option value="lowPrice">정가 낮은 순</option>
@@ -296,6 +296,7 @@
 
 <script layout:fragment="listScript" type="text/javascript">
     $(function () {
+
         $("#topCategoryNo").change(function () {
             const topCategoryNo = $(this).val();
             let $secondCategorySelector = $("#secondCategoryNo");
@@ -438,6 +439,14 @@
 
         $("input[name$='Date']").click(function() {
             $("button[name='btn-date']").removeClass("active");
+        });
+
+        $("select[name='rows']").change(function() {
+           $(this).closest('form').submit();
+        });
+
+        $("select[name='sort']").change(function() {
+           $(this).closest('form').submit();
         });
 
 </script>
