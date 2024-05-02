@@ -80,6 +80,7 @@ public class UserController {
 
         try {
             //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
+
             // 동기
             // User user = userService.registerUser(form);
 
