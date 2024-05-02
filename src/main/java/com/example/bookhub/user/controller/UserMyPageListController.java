@@ -1,20 +1,18 @@
 package com.example.bookhub.user.controller;
 
-import com.example.bookhub.user.dto.PageWishListDTO;
+import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
-import com.example.bookhub.user.vo.UserPagination;
 import java.security.Principal;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -38,9 +36,9 @@ public class UserMyPageListController {
         User user = userService.selectUserById(userId);
 
         // 찜목록 조회
-        PageWishListDTO wishList = myPageService.getWishListById(user.getId() , page);
+        PageListDTO<WishListDTO> wishList = myPageService.getWishListById(user.getId() , page);
 
-        model.addAttribute("wishList",wishList.getWishListDTO());
+        model.addAttribute("wishList",wishList.getItems());
         model.addAttribute("page" , wishList.getUserPagination());
 
         return "/user/list/wishList";
@@ -64,12 +62,32 @@ public class UserMyPageListController {
     }
     */
 
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/orderList")
     public String orderListPage(Model model , Principal principal) {
 
 
 
         return "/user/list/orderList";
+    }
+
+    // inquiryList?page=1
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/inquiryList")
+    public String inquiryListPage(@RequestParam(name="page" , required = false ,defaultValue="1") int page,
+                                  Model model,
+                                  Principal principal) {
+
+        // 로그인 ID 사용자 정보 조회
+        String userId = principal.getName();
+        User user = userService.selectUserById(userId);
+
+        PageListDTO<InquiryListDTO> inquiryList = myPageService.getInquiryListByIdPage(user.getId() , page);
+
+        model.addAttribute("inquiryList",inquiryList.getItems());
+        model.addAttribute("page",inquiryList.getUserPagination());
+
+
+        return "/user/list/inquiryList";
     }
 }
