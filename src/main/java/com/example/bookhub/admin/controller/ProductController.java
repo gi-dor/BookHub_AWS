@@ -30,7 +30,7 @@ public class ProductController {
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
                        @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
                        @RequestParam(name = "sort", required = false, defaultValue = "productName") String sort,
-                       @ModelAttribute("productFilter") ProductFilter filter,
+                       @ModelAttribute("filter") ProductFilter filter,
                        Model model) {
 
         List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
@@ -63,7 +63,7 @@ public class ProductController {
 
         model.addAttribute("publishers", publishers);
         model.addAttribute("paging", pagination);
-        model.addAttribute("productFilter", filter);
+        model.addAttribute("filter", filter);
 
         return "admin/product/list";
     }
