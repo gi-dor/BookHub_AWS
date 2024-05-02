@@ -77,6 +77,7 @@
     </ul>
 
     <div class="col-12">
+        <canvas id="myChart" width="300" height="100"></canvas>
         <div id="div-reviews">
             <div th:each="review: ${reviewDtoList}">
                 <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
@@ -347,6 +348,31 @@
     const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
     const modalCreateReview = new bootstrap.Modal("#modal-create-review");
 
+    let myCt = document.getElementById('myChart');
+
+    let myChart = new Chart(myCt, {
+        type: 'bar',
+        data: {
+            labels: ['0~1', '1~2', '2~3', '3~4', '4~5'],
+            datasets: [
+                {
+                    label: 'Dataset',
+                    data: [10,20,30,40,50],
+                }
+            ]
+        },
+    });
+
+    $.get("/product/review/rate/" + bookNo, function(data){
+        console.log('요청 성공:', data);
+        myChart.data.datasets[0].data = data;
+        myChart.update();
+
+    }).fail(function(xhr, status, error) {
+
+        console.error('요청 실패:', status, error);
+    });
+
     const $reviewDiv = $("#div-reviews");
 
     $("#div-reviews").on("click", ".recommend", function(event){
@@ -498,6 +524,7 @@
         document.querySelector('input[name="rate"][value="' + review.rate + '"]').checked = true;
 
     }
+
 
     // 리뷰들 조회
     // async function getReviews(bookNo){

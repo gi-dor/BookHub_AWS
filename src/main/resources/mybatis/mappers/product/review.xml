@@ -114,7 +114,7 @@
             review_no = #{value}
     </select>
 
-    <select id="getReviewTotalRows" resultType="int">
+    <select id="getReviewTotalRows" parameterType="long" resultType="int">
         select
             count(*)
         from
@@ -254,4 +254,17 @@
         delete from REVIEW
         where review_no = #{value}
     </delete>
+
+    <select id="getRateCount" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            <![CDATA[
+            rate > #{start}
+            and rate <= #{end}
+            and book_no = #{bookNo}
+              ]]>
+    </select>
 </mapper>

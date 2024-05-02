@@ -27,4 +27,5 @@ public interface ReviewMapper {
     void updateReview(Review review);
     void deleteReview(long reviewNo);
     int getReviewTotalRows(long bookNo);
+    int getRateCount(@Param("bookNo") long bookNo, @Param("start") int start, @Param("end") int end);
 }

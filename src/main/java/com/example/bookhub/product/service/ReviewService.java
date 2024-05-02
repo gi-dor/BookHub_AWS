@@ -185,4 +185,12 @@ public class ReviewService {
         reviewMapper.deleteReview(reviewNo);
     }
 
+    public List<Integer> getRate(long bookNo) {
+        List<Integer> rateCountList = new ArrayList<>();
+        for(int start = 0; start <= 4; start++){
+            int rateCount = reviewMapper.getRateCount(bookNo, start, start + 1);
+            rateCountList.add(rateCount);
+        }
+        return rateCountList;
+    }
 }
