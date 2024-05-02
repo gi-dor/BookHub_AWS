@@ -12,31 +12,31 @@ public interface CategoryMapper {
 
     List<Category> getAllThirdLevelCategories();
 
-    List<Category> getSubCategoriesByCategoryNo(int categoryNo);
+    List<Category> getSubCategoriesByCategoryNo(long categoryNo);
 
-    Category getParentCategoryByCategoryNo(int categoryNo);
+    Category getParentCategoryByCategoryNo(long categoryNo);
 
     void addTopLevelCategory(String categoryName);
 
-    void addSubCategory(String categoryName, int categoryNo);
+    void addSubCategory(String categoryName, long categoryNo);
 
     Category getTopLevelCategoryByCategoryName(String categoryName);
 
-    Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo);
+    Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, long categoryNo);
 
-    Category findCategoryByCategoryNameAndCategoryNo(String categoryName, int categoryNo);
+    Category findCategoryByCategoryNameAndCategoryNo(String categoryName, long categoryNo);
 
-    void modifyThirdCategory(int targetCategoryNo, int parentCategoryNo, String thirdCategoryName);
+    void modifyThirdCategory(long targetCategoryNo, long parentCategoryNo, String thirdCategoryName);
 
-    void modifySecondCategory(int targetCategoryNo, int parentCategoryNo, String secondCategoryName);
+    void modifySecondCategory(long targetCategoryNo, long parentCategoryNo, String secondCategoryName);
 
-    void modifyTopCategory(int targetCategoryNo, String topCategoryName);
+    void modifyTopCategory(long targetCategoryNo, String topCategoryName);
 
-    void deleteThirdCategory(int targetCategoryNo);
+    void deleteThirdCategory(long targetCategoryNo);
 
-    void deleteSecondCategory(int targetCategoryNo);
+    void deleteSecondCategory(long targetCategoryNo);
 
-    void deleteThirdCategoryBySecondCategoryNo(int targetCategoryNo);
+    void deleteThirdCategoryBySecondCategoryNo(long targetCategoryNo);
 
-    void deleteTopCategory(int targetCategoryNo);
+    void deleteTopCategory(long targetCategoryNo);
 }

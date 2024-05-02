@@ -25,11 +25,11 @@ public class CategoryService {
         return categoryMapper.getAllThirdLevelCategories();
     }
 
-    public List<Category> getSubCategoriesByCategoryNo(int categoryNo) {
+    public List<Category> getSubCategoriesByCategoryNo(long categoryNo) {
         return categoryMapper.getSubCategoriesByCategoryNo(categoryNo);
     }
 
-    public Category getParentCategoryByCategoryNo(int categoryNo) {
+    public Category getParentCategoryByCategoryNo(long categoryNo) {
         return categoryMapper.getParentCategoryByCategoryNo(categoryNo);
     }
 
@@ -38,7 +38,7 @@ public class CategoryService {
         categoryMapper.addTopLevelCategory(categoryName);
     }
 
-    public void addSubCategory(String categoryName, int categoryNo) {
+    public void addSubCategory(String categoryName, long categoryNo) {
         Validator.isCategoryNameUnique(categoryName, categoryNo, categoryMapper);
         categoryMapper.addSubCategory(categoryName, categoryNo);
     }
@@ -47,49 +47,49 @@ public class CategoryService {
         return categoryMapper.getTopLevelCategoryByCategoryName(categoryName);
     }
 
-    public Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, int categoryNo) {
+    public Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, long categoryNo) {
         return categoryMapper.getSubLevelCategoryByCategoryNameAndSuperCategoryNo(categoryName, categoryNo);
     }
 
-    public void modifyThirdCategory(int targetCategoryNo, int parentCategoryNo, String thirdCategoryName) {
+    public void modifyThirdCategory(long targetCategoryNo, long parentCategoryNo, String thirdCategoryName) {
         Validator.isCategoryNameUnique(thirdCategoryName, parentCategoryNo, categoryMapper);
         categoryMapper.modifyThirdCategory(targetCategoryNo, parentCategoryNo, thirdCategoryName);
     }
 
-    public void modifySecondCategory(int targetCategoryNo, int parentCategoryNo, String secondCategoryName) {
+    public void modifySecondCategory(long targetCategoryNo, long parentCategoryNo, String secondCategoryName) {
         Validator.isCategoryNameUnique(secondCategoryName, parentCategoryNo, categoryMapper);
         categoryMapper.modifySecondCategory(targetCategoryNo, parentCategoryNo, secondCategoryName);
     }
 
-    public void modifyTopCategory(int targetCategoryNo, String topCategoryName) {
+    public void modifyTopCategory(long targetCategoryNo, String topCategoryName) {
         Validator.isCategoryNameUnique(topCategoryName, null, categoryMapper);
         categoryMapper.modifyTopCategory(targetCategoryNo, topCategoryName);
     }
 
-    public void deleteThirdCategory(int targetCategoryNo) {
+    public void deleteThirdCategory(long targetCategoryNo) {
         categoryMapper.deleteThirdCategory(targetCategoryNo);
     }
 
-    public void deleteSecondCategory(int targetCategoryNo) {
+    public void deleteSecondCategory(long targetCategoryNo) {
         categoryMapper.deleteThirdCategoryBySecondCategoryNo(targetCategoryNo);
         categoryMapper.deleteSecondCategory(targetCategoryNo);
     }
 
-    public void deleteTopCategory(int targetCategoryNo) {
+    public void deleteTopCategory(long targetCategoryNo) {
         List<Category> secondCategories = categoryMapper.getSubCategoriesByCategoryNo(targetCategoryNo);
 
         for (Category secondCategory : secondCategories) {
-            deleteSecondCategory((int) secondCategory.getNo());
+            deleteSecondCategory(secondCategory.getNo());
         }
 
         categoryMapper.deleteTopCategory(targetCategoryNo);
     }
 
-    public List<Category> getTotalSubCategories(int categoryNo) {
+    public List<Category> getTotalSubCategories(long categoryNo) {
         List<Category> categories = categoryMapper.getSubCategoriesByCategoryNo(categoryNo);
         List<Category> totalSubCategories = new ArrayList<>(categories);
         for (Category category : categories) {
-            totalSubCategories.addAll(categoryMapper.getSubCategoriesByCategoryNo((int) category.getNo()));
+            totalSubCategories.addAll(categoryMapper.getSubCategoriesByCategoryNo(category.getNo()));
         }
         return totalSubCategories;
     }

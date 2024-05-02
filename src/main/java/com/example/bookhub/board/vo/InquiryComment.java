@@ -1,8 +1,8 @@
 package com.example.bookhub.board.vo;
 
 import com.example.bookhub.admin.vo.Admin;
-import com.example.bookhub.user.vo.User;
 import lombok.*;
+
 
 import java.time.LocalDateTime;
 
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 public class InquiryComment {
 
     private Long no;
-    private Inquiry inquiryNo;
-    private Admin adminNo;
+    private Inquiry inquiry;
+    private Admin admin;
     private String comment;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;

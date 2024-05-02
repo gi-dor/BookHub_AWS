@@ -43,4 +43,52 @@
         WHERE AUTHOR_NAME = #{value}
     </select>
 
+    <select id="getBestSeller10"  parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
+        SELECT
+        A.BOOK_NO,
+        B.BOOK_NAME,
+        (SELECT GROUP_CONCAT(Y.AUTHOR_NAME SEPARATOR ', ')
+        FROM BOOK_AUTHOR X, AUTHOR Y
+        WHERE X.AUTHOR_NO = Y.AUTHOR_NO
+        AND X.BOOK_NO = B.BOOK_NO) AUTHORS,
+        C.PUBLISHER_NAME,
+        D.BOOK_IMAGE_COVER,
+        A.AMOUNT
+        FROM (SELECT B.BOOK_NO, SUM(B.COUNT) AMOUNT
+        FROM BUY A, BUY_BOOK B, BOOK C
+
+
+            <if test="cateKeyword != 0">
+                AND C.CATEGORY_NO = #{cateKeyword}
+            </if>
+            <if test="cateKeyword == 0">
+                AND C.CATEGORY_NO IN (SELECT CATEGORY_NO
+                FROM CATEGORY
+                WHERE PARENT_CATEGORY_NO = 1)
+            </if>
+
+        AND A.BUY_NO = B.BUY_NO
+        AND B.BOOK_NO = C.BOOK_NO
+        GROUP BY B.BOOK_NO
+        ORDER BY AMOUNT DESC
+        LIMIT 1, 10) A, BOOK B, PUBLISHER C, BOOK_IMAGES D
+        WHERE A.BOOK_NO = B.BOOK_NO
+        AND B.PUBLISHER_NO = C.PUBLISHER_NO
+        AND B.BOOK_NO = D.BOOK_NO
+
+    </select>
+
+    <!--조회 결과 집합을 객체로 매핑-->
+    <resultMap id="bookResultMap" type="com.example.bookhub.main.dto.BookDto">
+        <id column="BOOK_NO" property="no" />
+        <result column="BOOK_NAME" property="name"/>
+        <result column="BOOK_IMAGE_COVER" property="cover"/>
+        <collection property="authors" ofType="com.example.bookhub.main.dto.BookAuthorDto">
+            <id column="AUTHOR_NO" property="no"></id>
+            <result column="AUTHOR_NAME" property="name"></result>
+            <result column="AUTHOR_TYPE" property="type"></result>
+        </collection>
+    </resultMap>
+
+
 </mapper>

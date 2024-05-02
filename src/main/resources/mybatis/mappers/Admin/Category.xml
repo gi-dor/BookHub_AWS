@@ -32,7 +32,7 @@
         														WHERE PARENT_CATEGORY_NO IS NULL))
     </select>
 
-    <select id="getSubCategoriesByCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+    <select id="getSubCategoriesByCategoryNo" parameterType="long" resultType="com.example.bookhub.admin.vo.Category">
             SELECT CATEGORY_NO AS no,
             		CATEGORY_NAME AS name,
                     PARENT_CATEGORY_NO AS parentNo
@@ -40,7 +40,7 @@
             WHERE PARENT_CATEGORY_NO = #{value}
     </select>
 
-    <select id="getParentCategoryByCategoryNo" parameterType="int" resultType="com.example.bookhub.admin.vo.Category">
+    <select id="getParentCategoryByCategoryNo" parameterType="long" resultType="com.example.bookhub.admin.vo.Category">
             SELECT CATEGORY_NO AS no,
             		CATEGORY_NAME AS name,
                     PARENT_CATEGORY_NO AS parentNo
@@ -112,22 +112,22 @@
         AND PARENT_CATEGORY_NO IS NULL
     </update>
 
-    <delete id="deleteThirdCategory" parameterType="int">
+    <delete id="deleteThirdCategory" parameterType="long">
         DELETE FROM BookHub.CATEGORY
         WHERE CATEGORY_NO = #{categoryNo};
     </delete>
 
-    <delete id="deleteThirdCategoryBySecondCategoryNo" parameterType="int">
+    <delete id="deleteThirdCategoryBySecondCategoryNo" parameterType="long">
             DELETE FROM BookHub.CATEGORY
             WHERE PARENT_CATEGORY_NO = #{categoryNo};
     </delete>
 
-    <delete id="deleteSecondCategory" parameterType="int">
+    <delete id="deleteSecondCategory" parameterType="long">
         DELETE FROM BookHub.CATEGORY
         WHERE CATEGORY_NO = #{categoryNo};
     </delete>
 
-    <delete id="deleteTopCategory" parameterType="int">
+    <delete id="deleteTopCategory" parameterType="long">
         DELETE FROM BookHub.CATEGORY
         WHERE CATEGORY_NO = #{categoryNo};
     </delete>

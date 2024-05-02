@@ -33,7 +33,7 @@ public class NewBookController {
         searchCriteria.setPage(page)
         ;
         BookListDto dto = newBookService.newBooks(searchCriteria); // NewBookService의 인스턴스를 통해 newBooks 메서드 호출
-        model.addAttribute("books", dto.getBooks()); // 모델에 책 정보를 담아서 HTML로 전달
+        model.addAttribute("book", dto.getBooks()); // 모델에 책 정보를 담아서 HTML로 전달
         model.addAttribute("criteria", dto.getCriteria());
         return "main/newList.html";
     }
