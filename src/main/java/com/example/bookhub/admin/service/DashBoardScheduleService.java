@@ -22,7 +22,7 @@ public class DashBoardScheduleService {
     public void saveTotalLastWeek() {dashBoardScheduleMapper.saveTotalLastWeek();}
 
     // 매월 1일 오전 12시마다 지난달 값을 계산하여 저장하기
-    @Scheduled(cron = "0 0 10 2 * ?")
+    @Scheduled(cron = "0 0 10 1 * ?")
     public void saveTotalLastMonth(){
         dashBoardScheduleMapper.saveTotalLastMonth();
     }
