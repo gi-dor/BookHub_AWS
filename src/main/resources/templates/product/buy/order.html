@@ -501,23 +501,32 @@
 
         function createDelivery(){
             let responseData;
-            $.ajax({
-                url: '/product/buy/delivery/create',
-                type: 'POST',
-                data: {
-                    name: $("#created-name").val(),
-                    tel: $("#created-tel1").val() + $("#created-tel2").val() + $("#created-tel3").val(),
-                    zipCode: $("#sample6_postcode").val(),
-                    address: $("#sample6_address").val(),
-                    addressDetail: $("#sample6_detailAddress").val()
-                },
-                success: function(response) {
-                    console.log(response);
-                    responseData = response;
-                    console.log(responseData.no)
 
-                    $divCards = $("#modal-delivery-modify .modal-body #cards")
-                    newCard = `
+            let nameText = $("#created-name").val();
+            let telText = $("#created-tel1").val() + $("#created-tel2").val() + $("#created-tel3").val();
+            let zipCode = $("#sample6_postcode").val();
+            let address = $("#sample6_address").val();
+            let addressDetail = $("#sample6_detailAddress").val()
+
+            if(nameText === "" || telText === "" || zipCode === "" || address === "" || addressDetail === ""){
+                alert("배송지 입력을 완료해주세요");
+            }
+            else{
+                $.ajax({
+                    url: '/product/buy/delivery/create',
+                    type: 'POST',
+                    data: {
+                        name: nameText,
+                        tel: telText,
+                        zipCode: zipCode,
+                        address: address,
+                        addressDetail: addressDetail
+                    },
+                    success: function(response) {
+                        responseData = response;
+
+                        $divCards = $("#modal-delivery-modify .modal-body #cards")
+                        newCard = `
                         <div class="card">
                             <div class="card-body row">
                                 <div class="col-2">
@@ -540,14 +549,15 @@
                             </div>
                         </div>
                       `
-                    $divCards.append(newCard);
-                },
-                error: function(xhr, status, error) {
-                    console.error('요청이 실패했습니다.');
-                }
-            });
+                        $divCards.append(newCard);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('요청이 실패했습니다.');
+                    }
+                });
 
-            modalDeliveryCreate.hide();
+                modalDeliveryCreate.hide();
+            }
         }
 
         function checkUserDelivery(){
