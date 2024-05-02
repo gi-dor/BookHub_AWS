@@ -93,6 +93,7 @@ public class BuyService {
             buyBook.setBuyNo(generatedNo);
 
             buyMapper.createBuyBook(buyBook);
+            buyMapper.updateBookStock(bookNo, count);
         }
     }
 
@@ -144,4 +145,10 @@ public class BuyService {
         buyMapper.createUserDelivery(userDelivery);
         return userDelivery;
     }
+
+//    public void updateBookStock(){
+//            buyMapper.updateBookStock(bookNo, count);
+//        }
+//    }
+
 }

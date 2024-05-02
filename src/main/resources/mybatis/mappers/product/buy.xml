@@ -149,4 +149,13 @@
         </selectKey>
     </insert>
 
+    <update id="updateBookStock">
+        update
+            BOOK
+        set
+            book_stock = book_stock - #{count}
+        where
+            book_no = #{bookNo}
+    </update>
+
 </mapper>
