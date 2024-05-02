@@ -45,6 +45,9 @@ dependencies {
 //    BookApplication - edit - ModifyOption - VMoption add ->    -Djasypt.encryptor.password=han   입력
 //    -Djasypt.encryptor.password=han
 
+//    BookApplication - edit - ModifyOption - VMoption add ->    -Djasypt.encryptor.password=han   입력
+//    -Djasypt.encryptor.password=han
+
 
 
 }

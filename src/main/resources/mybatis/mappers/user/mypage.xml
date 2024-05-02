@@ -39,11 +39,19 @@
         and b.REFUND_YN = 'N'
       ORDER BY
           b.BUY_NO DESC
-          LIMIT 3;
+          LIMIT 3
   </select>
 
 
-    
+    <!--  1:1 문의사항 글 갯수 파악하기 -->
+    <select id="countInquiry" parameterType="string" resultType="int">
+        select count(*)
+        from INDIVIDUAL_INQUIRIES i , USER u
+        where i.INQUIRY_USER_NO = u.USER_NO
+          and u.USER_ID = #{id}
+    </select>
+
+
     <select id="selectInquiryList" parameterType="string" resultType="com.example.bookhub.board.vo.Inquiry">
         select
             i.INDIVIDUAL_INQUIRY_NO             as no,
@@ -62,6 +70,31 @@
         where i.INQUIRY_USER_NO = u.USER_NO
         and i.INQUIRY_CATEGORY_NO = f.FAQ_CATEGORY_NO
         and u.USER_ID = #{id}
+        order by  i.INDIVIDUAL_INQUIRY_CREATE_DATE DESC
+        Limit 3
+    </select>
+
+    <!--페이징 되어있는 1:1문의 내역 조회하기 -->
+    <select id="selectInquiryListPaging" resultType="com.example.bookhub.user.dto.InquiryListDTO">
+        select
+            i.INDIVIDUAL_INQUIRY_NO             as no,
+            i.INQUIRY_CATEGORY_NO               as "faqCategory.no",
+            f.FAQ_CATEGORY_NAME                 as "faqCategory.name",
+            i.INQUIRY_USER_NO                   as "user.no",
+            u.USER_ID                           as "user.id",
+            i.INDIVIDUAL_INQUIRY_TITLE          as title,
+            i.INDIVIDUAL_INQUIRY_CONTENT        as content,
+            i.INDIVIDUAL_INQUIRY_ANSWER_YN      as answerYn,
+            i.INDIVIDUAL_INQUIRY_DELETE_YN      as deleteYn,
+            i.INDIVIDUAL_INQUIRY_CREATE_DATE    as createdDate ,
+            i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate,
+            u.USER_NAME                         as "user.name"
+        from INDIVIDUAL_INQUIRIES i , USER u , FAQ_CATEGORIES f
+        where i.INQUIRY_USER_NO = u.USER_NO
+          and i.INQUIRY_CATEGORY_NO = f.FAQ_CATEGORY_NO
+          and u.USER_ID = #{id}
+        order by  i.INDIVIDUAL_INQUIRY_CREATE_DATE DESC
+            LIMIT #{offset} ,10
     </select>
 
 

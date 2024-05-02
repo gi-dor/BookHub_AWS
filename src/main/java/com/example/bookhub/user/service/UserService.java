@@ -3,11 +3,14 @@ package com.example.bookhub.user.service;
 import com.example.bookhub.user.dto.UserDetailsImpl;
 import com.example.bookhub.user.dto.UserSignupForm;
 import com.example.bookhub.user.mapper.UserMapper;
+import com.example.bookhub.user.util.MailService;
 import com.example.bookhub.user.util.RandomPassword;
 import com.example.bookhub.user.vo.User;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,12 +19,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
 
     /*
@@ -79,23 +84,59 @@ public class UserService implements UserDetailsService {
      * @return 등록된 사용자
      * @throws RuntimeException 이미 존재하는 아이디나 이메일일 경우 발생
      */
-    public User registerUser(UserSignupForm form) {
+    public User registerUser(UserSignupForm form) throws Exception {
+        long beforeTime = System.currentTimeMillis();
+
+        String to = form.getEmail1() + "@" + form.getEmail2();
+        String subject = "회원 가입이 완료되었습니다.";
+        String html = mailService.registerHtmlTemplate(form); // load
+        mailService.sendEmail(to, subject, html);
 
         if (userMapper.selectUserById(form.getId()) != null) {
             throw new RuntimeException("이미 존재하는 아이디입니다: " + form.getId());
         }
 
-        // 1 주민번호 1 이메일 다계정 일수도 있음
+        User user = form.toEntity(passwordEncoder);
+        userMapper.insertUser(user);
 
-//        if (userMapper.selectUserByEmail(form.getEmail()) != null) {
-//            throw new RuntimeException("이미 존재하는 이메일 입니다: " + form.getEmail());
-//        }
+        long afterTime = System.currentTimeMillis();
+        long diffTime = afterTime - beforeTime;
+        log.info("동기 회원가입 작업 총 실행 시간: " + diffTime + "ms");
+
+        return user;
+    }
+
+    // 회원가입 - 이메일 보내기 ( 비동기 사용하기 )
+    public User registerUserAsync(UserSignupForm form) throws Exception {
+        long beforeTime = System.currentTimeMillis();
+
+        CompletableFuture<Boolean> future = mailService.sendEmailAsync(form);
+        future.thenAccept(result -> {
+           if (result) {
+               System.out.println("회원가입 완료 메일이 성공적으로 발송되었습니다.");
+           }  else {
+               System.out.println("회원가입 완료 메일이 발송실패하였습니다.");
+           }
+        });
+
+        if (userMapper.selectUserById(form.getId()) != null) {
+            throw new RuntimeException("이미 존재하는 아이디입니다: " + form.getId());
+        }
 
         User user = form.toEntity(passwordEncoder);
         userMapper.insertUser(user);
 
+        long afterTime = System.currentTimeMillis();
+        long diffTime = afterTime - beforeTime;
+
+        log.info("::::   비동기 작업 총 실행 시간: " + diffTime + "ms");
+
         return user;
     }
+
+
+
+
 
     /**
      * 주어진 번호에 해당하는 사용자를 데이터베이스에서 선택

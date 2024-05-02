@@ -11,9 +11,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageWishListDTO {
+public class PageListDTO<T> {
 
-    private List<WishListDTO> wishListDTO;
+
+    private List<T> items;
     private UserPagination userPagination;
 
 }

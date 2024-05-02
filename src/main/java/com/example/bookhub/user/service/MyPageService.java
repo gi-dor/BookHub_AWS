@@ -3,7 +3,8 @@ package com.example.bookhub.user.service;
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.user.dto.ChangePasswordForm;
-import com.example.bookhub.user.dto.PageWishListDTO;
+import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.mapper.MyPageMapper;
 import com.example.bookhub.user.mapper.UserMapper;
@@ -30,6 +31,7 @@ public class MyPageService {
         System.out.println("보유한 쿠폰 갯수 : " + cnt );
        return cnt;
     }
+
 
     public List<Buy> getOrderListById(String id) {
         User user = userMapper.selectUserById(id);
@@ -76,7 +78,16 @@ public class MyPageService {
     }
 
 
-    public PageWishListDTO getWishListById(String id , int page) {
+
+    public int countInquiry(String id ) {
+        int cnt = myPageMapper.countInquiry(id);
+        System.out.println("해당 아이디의 1:1 문의 갯수 : "+ cnt);
+        return cnt;
+    }
+
+
+    public PageListDTO<WishListDTO> getWishListById(String id , int page) {
+        // 해당 사용자의 정보 조회
         User user = userMapper.selectUserById(id);
 
         // 사용자의 전체 찜 목록 개수를 조회
@@ -91,8 +102,36 @@ public class MyPageService {
         // 사용자의 페이징 정보를 기반으로 찜 목록을 가져온다
         List<WishListDTO> wishListDTO =   myPageMapper.selectWishListById(user.getId() , offset);
 
-        return  new PageWishListDTO(wishListDTO,userPagination );
+        return  new PageListDTO(wishListDTO,userPagination );
     }
+
+    public PageListDTO<InquiryListDTO> getInquiryListByIdPage(String id , int page) {
+        // 사용자 정보조회
+        User user = userMapper.selectUserById(id);
+
+        // 사용자의 아이디로 전체 작성된 1:1문의 갯수 조회
+        int totalRows = myPageMapper.countInquiry(user.getId());
+
+        // 페이징 정보
+        UserPagination userPagination =  new UserPagination(page , totalRows);
+
+        int offset = userPagination.getBegin() -1;
+
+        // 페이징된 결과 조회
+        List<InquiryListDTO> inquiryListDTO = myPageMapper.selectInquiryListPaging(user.getId(), offset);
+
+        PageListDTO<InquiryListDTO> pageListDTO = new PageListDTO<>();
+        pageListDTO.setItems(inquiryListDTO);
+        pageListDTO.setUserPagination(userPagination);
+
+        // PageListDTO<InquiryListDTO> pageListDTO = new PageListDTO<>(inquiryListDTO,userPagination);
+
+        return pageListDTO;
+
+    }
+
+
+
 
 
 
