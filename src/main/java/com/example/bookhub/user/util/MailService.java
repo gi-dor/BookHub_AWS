@@ -64,19 +64,7 @@ public class MailService {
     // 이메일 보내기
     public void sendEmail(String to, String subject, String html) throws Exception {
         long startTime = System.currentTimeMillis();
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message,true);
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(html , true );
-            javaMailSender.send(message);
-        long endTime = System.currentTimeMillis();
-        long finishTime = endTime - startTime;
-        log.info(":::    이메일 총 작업 소요 시간 " + finishTime + "ms");
 
-    // 회원가입 완료시에 실행되는 회원가입완료 이메일 보내기
-    public void sendEmail(String to, String subject, String html) throws MessagingException {
-//        SimpleMailMessage message = new SimpleMailMessage();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(to);
@@ -84,7 +72,12 @@ public class MailService {
         helper.setText(html, true);
         javaMailSender.send(message);
 
+        long endTime = System.currentTimeMillis();
+        long finishTime = endTime - startTime;
+
+        log.info(":::    이메일 총 작업 소요 시간 " + finishTime + "ms");
     }
+
 
     // 긁어와서 사용한 코드라 자세히 모름;
     public String registerHtmlTemplate(UserSignupForm form) throws Exception {
