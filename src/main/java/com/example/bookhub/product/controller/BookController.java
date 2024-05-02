@@ -4,6 +4,7 @@ import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.ReviewListDto;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.ReviewService;
+import com.example.bookhub.product.service.WishListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ public class BookController {
 
     private final BookService bookService;
     private final ReviewService reviewService;
+    private final WishListService wishListService;
     private String userId;
 
     @GetMapping("/detail")
@@ -32,8 +34,11 @@ public class BookController {
             // 임의의 사용자 이름으로 리뷰를 가져옴
             userId = "guest";
         }
+        String wishListYn = wishListService.getWishListYn(bookNo, userId);
         ReviewListDto reviewListDto = reviewService.getReviewsByBookNo(bookNo, userId, page, sort);
+
         model.addAttribute("book", book);
+        model.addAttribute("wishListYn", wishListYn);
         model.addAttribute("reviewDtoList", reviewListDto.getReviewDtoList());
         model.addAttribute("page", reviewListDto.getPagination());
 

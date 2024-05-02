@@ -215,7 +215,7 @@
     <!-- 바텀 네비게이션 바 -->
     <nav class="navbar fixed-bottom navbar-light bg-light">
         <div class="container-fluid justify-content-end">
-            <button class="btn btn-outline-secondary me-3" type="button" onclick="toggleAct(this)"><i id="wish-list" class="bi bi-heart"></i></button>
+            <button class="btn btn-outline-secondary me-3" type="button" onclick="toggleAct(this)"><i id="wish-list" th:classappend="${wishListYn == 'Y' ? 'bi bi-heart-fill' : 'bi bi-heart'}"></i></button>
             <button class="btn btn-outline-secondary me-3" type="button" onclick="createOrIncreaseCart()">장바구니</button>
             <button class="btn btn-outline-success me-3" type="button">선물하기</button>
             <form method="post" action="/product/buy/order">

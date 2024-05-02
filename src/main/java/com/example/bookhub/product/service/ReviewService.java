@@ -63,7 +63,7 @@ public class ReviewService {
 
     public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort) {
         long userNo = 0;
-        if(userId != "guest") {
+        if(!"guest".equals(userId)) {
             User user = userMapper.selectUserById(userId);
             userNo = user.getNo();
         }
