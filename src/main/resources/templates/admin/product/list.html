@@ -221,22 +221,21 @@
                             <tr th:each="book, loop : ${books}">
                                 <td><input type="checkbox"></td>
                                 <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
-                                    1
+                                    순번
                                 </td>
                                 <td><img th:src="${book.image}"/></td>
                                 <td>
-                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${book.bookName}">
-                                        나는 읽고 쓰고 버린다
-                                    </a>
+                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${book.bookName}">도서명</a>
                                 </td>
-                                <td th:text="${book.authorName}">손웅정</td>
-                                <td th:text="${book.listPrice}">17,000</td>
-                                <td th:text="${book.sellingPrice}">15,300</td>
-                                <td th:text="${book.stock}">1,000</td>
-                                <td th:text="${book.status}">정상</td>
-                                <td th:text="${#dates.format(book.createdDate, 'yyyy-MM-dd')}">2019-02-15</td>
+                                <td th:text="${book.authorName}">저자</td>
                                 <td th:text="${#numbers.formatInteger(book.listPrice, 1, 'COMMA')}">정가</td>
                                 <td th:text="${#numbers.formatInteger(book.sellingPrice, 1, 'COMMA')}">판매가</td>
+                                <td th:text="${book.stock}">재고</td>
+                                <td th:text="${book.status}">판매상태</td>
+                                <td>
+                                     <p th:text="${#dates.format(book.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                     <p th:text="${#dates.format(book.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                     <button id="btn-modify-product-${book.no}" type="button"
