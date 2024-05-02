@@ -25,5 +25,5 @@ public interface AttendanceMapper {
      */
     void insertAttendance(@Param("no") long userNo);
 
-    void deleteAttendance();
+//    void deleteAttendance();
 }
