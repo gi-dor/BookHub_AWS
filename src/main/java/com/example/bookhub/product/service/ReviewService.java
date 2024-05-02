@@ -1,8 +1,6 @@
 package com.example.bookhub.product.service;
 
-import com.example.bookhub.product.dto.ReviewForm;
-import com.example.bookhub.product.dto.ReviewDto;
-import com.example.bookhub.product.dto.ReviewReplyForm;
+import com.example.bookhub.product.dto.*;
 import com.example.bookhub.product.mapper.ReviewMapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
@@ -15,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -65,15 +61,30 @@ public class ReviewService {
             }
     }
 
-    public List<ReviewDto> getReviewsByBookNo(long bookNo, String userId) {
-
-        if(userId == "guest") {
-            return reviewMapper.getReviewsByBookNo(bookNo, 0);
-        }
-        else{
+    public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort) {
+        long userNo = 0;
+        if(userId != "guest") {
             User user = userMapper.selectUserById(userId);
-            return reviewMapper.getReviewsByBookNo(bookNo, user.getNo());
+            userNo = user.getNo();
         }
+
+        int totalRows = reviewMapper.getReviewTotalRows(bookNo);
+        Pagination pagination = new Pagination(page, totalRows);
+
+        int offset = 0;
+        if(totalRows > 0) {
+            offset = pagination.getBegin();
+        }
+
+        Map map = new HashMap<String, Object>();
+        map.put("bookNo", bookNo);
+        map.put("userNo", userNo);
+        map.put("sort", sort);
+        map.put("offset", offset);
+        List<ReviewDto> reviewDtoList = reviewMapper.getReviewsByBookNo(map);
+
+        ReviewListDto reviewListDto = new ReviewListDto(reviewDtoList, pagination);
+        return reviewListDto;
     }
 
     public String uploadImage(MultipartFile image) {
@@ -172,5 +183,14 @@ public class ReviewService {
 
     public void deleteReview(long reviewNo) {
         reviewMapper.deleteReview(reviewNo);
+    }
+
+    public List<Integer> getRate(long bookNo) {
+        List<Integer> rateCountList = new ArrayList<>();
+        for(int start = 0; start <= 4; start++){
+            int rateCount = reviewMapper.getRateCount(bookNo, start, start + 1);
+            rateCountList.add(rateCount);
+        }
+        return rateCountList;
     }
 }
