@@ -1,0 +1,99 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/user/myPage.css}" />
+    <style>
+        .page-link {
+            color: #000;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .page-item.active .page-link {
+            z-index: 1;
+            color: #555;
+            font-weight:bold;
+            background-color: #f1f1f1;
+            border-color: #ccc;
+
+        }
+
+        .page-link:focus, .page-link:hover {
+            color: #000;
+            background-color: #fafafa;
+            border-color: #ccc;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content" class="container my-3">
+    <div class="row mb-3">
+
+        <!-- #### 마이페이지 사이드바 ### -->
+        <div th:replace="~{layout/myPageSidebar :: myPageSidebar} "></div>
+        <div class="col-9">
+            <div style="margin:0 0 30px 0;">
+                    <img src="/image/userInfo/1vs1.jpg" alt="나의 1:1 문의" style="margin:0 0 10px 0; width: auto; height: 35px;">
+                <table class="table" style="text-align: center">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="50%">
+                        <col width="20%">
+                        <col width="10%">
+                    </colgroup>
+                    <thead>
+                        <tr align="center">
+                            <th> 문의 종류</th>
+                            <th> 글 제목</th>
+                            <th> 작성 날짜 </th>
+                            <th> 답변 완료</th>
+                        </tr>
+                        <tbody>
+                            <tr>
+                                <tr th:if="${#lists.isEmpty(inquiryList)}">
+                            </tr>
+                            <tr th:each="inquiry : ${inquiryList}" align="center">
+                                <td th:text="${inquiry.faqCategory.name}">교환/환불</td>
+                                <td th:text="${inquiry.title}">문의사항 테스트 제복 1번</td>
+                                <td th:text="${#temporals.format(inquiry.createdDate, 'yyyy-MM-dd')}"></td>
+                                <td align="center" th:text="${inquiry.answerYn}"> N </td>
+                            </tr>
+                        </tbody>
+                    </thead>
+                </table>
+            </div>
+            <div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center pagination-sm">
+                        <!-- 이전 페이지 링크 -->
+                        <li class="page-item">
+                            <a class="page-link" th:attr="data-page=${page.currentPage - 1}"  onclick="page(event)"
+                               th:href="@{/mypage/list/inquiryList(page=${page.currentPage - 1})}"
+                               th:if="${page.currentPage > 1}">이전</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                        </li>
+                        <!-- 페이지 번호를 표시하기 위한 리스트 아이템 -->
+                        <li class="page-item" th:each="pageNo : ${#numbers.sequence(page.beginPage, page.endPage)}"
+                            th:class="${pageNo == page.currentPage} ? 'active' : ''">        <!-- 현재 페이지와 페이지 번호를 비교하여 활성화 클래스를 동적으로 설정 -->
+                            <a class="page-link" th:attr="data-page=${pageNo}" onclick="page(event)"
+                               th:href="@{/mypage/list/inquiryList(page=${pageNo})}" th:text="${pageNo}"></a>
+                        </li>
+                        <!-- 다음 페이지 링크 -->
+                        <li class="page-item">
+                            <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)"
+                               th:href="@{/mypage/list/inquiryList(page=${page.currentPage + 1})}"
+                               th:if="${page.currentPage < page.totalPages}">다음</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+</html>
