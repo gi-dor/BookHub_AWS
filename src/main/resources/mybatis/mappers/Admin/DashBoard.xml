@@ -15,15 +15,6 @@
     </select>
 
 
-    <!-- BUY 테이블에서 어제날자의 판매합계값을 통계테이블(DAY)로 저장 -->
-    <insert id="saveTotalYesterday">
-        INSERT INTO DAY_TOTAL (DAY_TOTAL_DATE, DAY_TOTAL_PRICE)
-        SELECT DATE_FORMAT(BUY_DATE, '%Y-%m-%d') AS DAY_TOTAL_DATE, SUM(TOTAL_PRICE)
-        FROM BUY
-        WHERE DATE_FORMAT(BUY_DATE, '%Y-%m-%d') = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
-        GROUP BY DATE_FORMAT(BUY_DATE, '%Y-%m-%d')
-    </insert>
-
     <!-- 최근 7일치의 데이터를 출력  -->
     <select id="getTotalDate" resultType="com.example.bookhub.admin.dto.DayTotalDto">
         SELECT * FROM (
@@ -42,24 +33,7 @@
         WHERE DAY_TOTAL_DATE = #{value}
     </select>
 
-    <!--
-        DAY_TOTAL 테이블에서 월요일날 실행된다는 가정하에
-        지난주 일요일~토요일 합계를 계산하여 통계테이블(WEEK) 저장
-        WEEK_TOTAL_DATE의 값은 해당 월의 몇번째 주인지 저장(EX. 4월의 3번째 주인 경우 = 2024-04-3)
-    -->
-    <insert id="saveTotalLastWeek">
-        INSERT INTO WEEK_TOTAL (WEEK_TOTAL_DATE, WEEK_TOTAL_PRICE)
-        SELECT
-        CONCAT(
-        DATE_FORMAT(DAY_TOTAL_DATE, '%Y-%m-'),
-        FLOOR((DAYOFMONTH(DAY_TOTAL_DATE) + DAYOFWEEK(DATE_FORMAT(DAY_TOTAL_DATE, '%Y-%m-01')) - 2) / 7) + 1
-        ) AS START_DATE,
-        SUM(DAY_TOTAL_PRICE) AS TOTAL_PRICE
-        FROM DAY_TOTAL
-        WHERE DAY_TOTAL_DATE >= DATE_SUB(CURDATE(), INTERVAL DAYOFWEEK(CURDATE())+6 DAY)
-        AND DAY_TOTAL_DATE &lt; DATE_SUB(CURDATE(), INTERVAL DAYOFWEEK(CURDATE()) DAY)
-        GROUP BY START_DATE
-    </insert>
+
 
     <!-- 답변 미완료된 문의 수 -->
     <select id="noAnswerCnt" resultType="int">
@@ -110,7 +84,7 @@
                 JOIN BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
                 JOIN BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
         WHERE
-            i.INDIVIDUAL_INQUIRY_DELETE_YN = 0;
+            i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
     </select>
 
     <!-- 답변 완료된 비율을 구하는 쿼리 -->
@@ -122,7 +96,7 @@
                 JOIN BookHub.USER u ON i.INQUIRY_USER_NO = u.user_no
                 JOIN BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
         WHERE
-            i.INDIVIDUAL_INQUIRY_DELETE_YN = 0;
+            i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
 
     </select>
 
