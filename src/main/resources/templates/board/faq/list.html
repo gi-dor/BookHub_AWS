@@ -15,14 +15,14 @@
                 <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
                     <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">메인</a></strong></li><br>
                     <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">자주 묻는 질문</a></strong>
-                        <ul th:each=" category : ${categories}" style="list-style: none; padding: 0; margin-top: 10px;">
+                        <ul th:each="category : ${categories}" style="list-style: none; padding: 0; margin-top: 10px;">
                             <li style="margin-bottom: 10px;"><a th:text="${category.name}" th:href="@{/board/faq/list(cat=${category.no})}" style="color: black; text-decoration: none;">BEST 10</a></li>
                         </ul>
                     </li><br>
-                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">1:1 문의</a></strong>
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/inquiry/list}" style="color: black; text-decoration: none;">1:1 문의</a></strong>
                         <ul style="list-style: none; padding: 0; margin-top: 10px;">
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">1:1 문의 접수</a></li>
-                            <li style="margin-bottom: 10px;"><a href="#" style="color: black; text-decoration: none;">1:1 문의 내역</a></li>
+                            <li style="margin-bottom: 10px;"><a th:href="@{/board/inquiry/register}" style="color: black; text-decoration: none;">1:1 문의 접수</a></li>
+                            <li style="margin-bottom: 10px;"><a th:href="@{/board/inquiry/list}" style="color: black; text-decoration: none;">1:1 문의 내역</a></li>
                         </ul>
                     </li><br>
                     <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">공지사항</a></strong></li>

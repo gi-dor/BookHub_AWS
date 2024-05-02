@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.board.mapper.InquiryMapper">
+
+    <resultMap type="com.example.bookhub.board.vo.Inquiry" id="inquiryResultMap">
+        <id column="individual_inquiry_no" property="no"/>
+        <result column="individual_inquiry_title" property="title"/>
+        <result column="individual_inquiry_content" property="content"/>
+        <result column="individual_inquiry_answer_yn" property="answerYn"/>
+        <result column="individual_inquiry_delete_yn" property="deleteYn"/>
+        <result column="individual_inquiry_create_date" property="createdDate"/>
+        <result column="individual_inquiry_update_date" property="updatedDate"/>
+
+        <association column="inquiry_category_no" property="faqCategory"
+                     select="com.example.bookhub.board.mapper.FaqMapper.getFaqCategoryByNo"/>
+        <association column="inquiry_user_no" property="user"
+                     select="com.example.bookhub.board.mapper.CommunityMapper.getUserByNo"/>
+    </resultMap>
+    
+    <resultMap id="inquiryCommentResultMap" type="com.example.bookhub.board.vo.InquiryComment">
+        <id column="inquiry_response_comment_no" property="no"/>
+        <result column="inquiry_response_comment_content" property="comment"/>
+        <result column="inquiry_response_comment_create_date" property="createDate"/>
+        <result column="inquiry_response_comment_update_date" property="updateDate"/>
+
+        <association column="inquiry_response_comment_admin_no" property="adminNo"
+                     select="com.example.bookhub.admin.mapper.AdminMapper.getAdminId"/>
+        <association column="inquiry_no" property="inquiryNo"
+                     select="com.example.bookhub.board.mapper.InquiryMapper.getInquiryByNo"/>
+    </resultMap>
+
+
+    <select id="findAllInquiry" resultMap="inquiryResultMap">
+        SELECT *
+        FROM INDIVIDUAL_INQUIRIES
+        WHERE INQUIRY_USER_NO = #{no}
+        AND INDIVIDUAL_INQUIRY_DELETE_YN = 0
+        ORDER BY INDIVIDUAL_INQUIRY_NO DESC
+        LIMIT #{offset}, 10
+
+    </select>
+
+    <select id="getTotalInquiry" resultType="int">
+        SELECT COUNT(*)
+        FROM INDIVIDUAL_INQUIRIES
+        WHERE INQUIRY_USER_NO = #{no}
+        AND INDIVIDUAL_INQUIRY_DELETE_YN = 0
+    </select>
+
+    <select id="getInquiryByNo" resultMap="inquiryResultMap">
+        SELECT *
+        FROM INDIVIDUAL_INQUIRIES
+        WHERE INDIVIDUAL_INQUIRY_NO = #{no}
+    </select>
+
+    <select id="getInquiryComment" resultMap="inquiryCommentResultMap">
+        SELECT *
+        FROM INQUIRY_RESPONSE_COMMENTS
+        WHERE INQUIRY_NO = #{no}
+    </select>
+
+    <!-- 문의 게시글 등록 -->
+    <insert id="insertInquiry" parameterType="com.example.bookhub.board.vo.Inquiry">
+        INSERT INTO INDIVIDUAL_INQUIRIES (INQUIRY_CATEGORY_NO, INQUIRY_USER_NO, INDIVIDUAL_INQUIRY_TITLE, INDIVIDUAL_INQUIRY_CONTENT)
+        VALUES (#{faqCategory.no}, #{user.no}, #{title}, #{content})
+    </insert>
+
+    <!--문의글 수정-->
+    <update id="modifyInquiry">
+        UPDATE INDIVIDUAL_INQUIRIES
+        SET INQUIRY_CATEGORY_NO = #{faqCategory.no},
+            INDIVIDUAL_INQUIRY_TITLE = #{title},
+            INDIVIDUAL_INQUIRY_CONTENT = #{content},
+            INDIVIDUAL_INQUIRY_UPDATE_DATE = current_timestamp
+        WHERE INDIVIDUAL_INQUIRY_NO = #{no}
+    </update>
+
+    <!--문의글 삭제-->
+    <update id="deleteInquiry">
+        UPDATE INDIVIDUAL_INQUIRIES
+        SET INDIVIDUAL_INQUIRY_DELETE_YN = 1
+        WHERE INDIVIDUAL_INQUIRY_NO = #{no}
+    </update>
+
+
+
+
+
+
+
+
+
+</mapper>

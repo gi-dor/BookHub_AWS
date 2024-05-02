@@ -1,0 +1,86 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<div  layout:fragment="content" class="container">
+
+    <div class="row mb-3" >
+
+        <!-- 사이드바 -->
+        <div class="col-lg-3">
+            <aside class="sidebar">
+                <h3 style="margin-bottom: 15px;"><strong>고객센터</strong></h3>
+                <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">메인</a></strong></li><br>
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/faq/list}" style="color: black; text-decoration: none;">자주 묻는 질문</a></strong>
+                        <ul th:each=" category : ${categories}" style="list-style: none; padding: 0; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;"><a th:text="${category.name}" th:href="@{/board/faq/list(cat=${category.no})}" style="color: black; text-decoration: none;">BEST 10</a></li>
+                        </ul>
+                    </li><br>
+                    <li style="margin-bottom: 10px;"><strong><a th:href="@{/board/inquiry/list}" style="color: black; text-decoration: none;">1:1 문의</a></strong>
+                        <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;"><a th:href="@{/board/inquiry/register}" style="color: black; text-decoration: none;">1:1 문의 접수</a></li>
+                            <li style="margin-bottom: 10px;"><a th:href="@{/board/inquiry/list}" style="color: black; text-decoration: none;">1:1 문의 내역</a></li>
+                        </ul>
+                    </li><br>
+                    <li style="margin-bottom: 10px;"><strong><a href="#" style="color: black; text-decoration: none;">공지사항</a></strong></li>
+                </ul>
+            </aside>
+        </div>
+
+        <div class="col-lg-9">
+            <h2 class="mt-5">나의 문의 내용</h2>
+            <div class="col-10 mt-3">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>유저 이름</th>
+                        <td th:text="${inquiry.user.name}"></td>
+                        <th>문의 번호</th>
+                        <td th:text="${inquiry.no}"></td>
+                    </tr>
+                    <tr>
+                        <th>카테고리명</th>
+                        <td th:text="${inquiry.faqCategory.name}"></td>
+                        <th>문의날짜</th>
+                        <td th:text="${#temporals.format(inquiry.createdDate, 'yyyy.MM.dd')}"></td>
+                    </tr>
+                    <tr>
+                        <th>문의 제목</th>
+                        <td th:text="${inquiry.title}" colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <th>문의 내용</th>
+                        <td th:text="${inquiry.content}" colspan="3"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="comment-section">
+                    <div th:if="${#lists.isEmpty(comments)}">
+                        <p>답변이 준비되지 않았습니다</p>
+                    </div>
+                    <div th:unless="${#lists.isEmpty(comments)}">
+                        <div th:each="comment : ${comments}" class="comment row border-bottom mb-3">
+                            <div class="col-12">
+                                <p class="comment-content" th:text="${comment.comment}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3" th:unless="${#lists.isEmpty(comments)}">
+                    <div style="text-align: right; margin-bottom: 20px;">
+                        <p>답변이 완료된 문의는 수정이 불가능합니다.</p>
+                    </div>
+                </div>
+                <div class="row mt-3" th:if="${#lists.isEmpty(comments)}">
+                    <div style="text-align: right; margin-bottom: 20px;">
+                        <a th:href="@{|/board/inquiry/modify/${inquiry.no}|(no=${inquiry.no})}" class="btn btn-primary">수정</a>
+                        <form th:action="@{/board/inquiry/delete}" method="post" style="display: inline-block;">
+                            <input type="hidden" name="no" th:value="${inquiry.no}">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
