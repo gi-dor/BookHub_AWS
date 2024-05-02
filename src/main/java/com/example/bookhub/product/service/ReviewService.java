@@ -69,9 +69,12 @@ public class ReviewService {
         }
 
         int totalRows = reviewMapper.getReviewTotalRows(bookNo);
-
         Pagination pagination = new Pagination(page, totalRows);
-        int offset = pagination.getBegin();
+
+        int offset = 0;
+        if(totalRows > 0) {
+            offset = pagination.getBegin();
+        }
 
         Map map = new HashMap<String, Object>();
         map.put("bookNo", bookNo);
@@ -181,4 +184,5 @@ public class ReviewService {
     public void deleteReview(long reviewNo) {
         reviewMapper.deleteReview(reviewNo);
     }
+
 }
