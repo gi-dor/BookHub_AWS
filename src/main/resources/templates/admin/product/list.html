@@ -235,6 +235,8 @@
                                 <td th:text="${book.stock}">1,000</td>
                                 <td th:text="${book.status}">정상</td>
                                 <td th:text="${#dates.format(book.createdDate, 'yyyy-MM-dd')}">2019-02-15</td>
+                                <td th:text="${#numbers.formatInteger(book.listPrice, 1, 'COMMA')}">정가</td>
+                                <td th:text="${#numbers.formatInteger(book.sellingPrice, 1, 'COMMA')}">판매가</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                     <button id="btn-modify-product-${book.no}" type="button"
