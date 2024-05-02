@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.DetailDashBoardMapper">
+
+    <select id="getDetailDaily" resultType="com.example.bookhub.admin.dto.DailyDto" parameterType="String">
+        SELECT
+            book.BOOK_NAME AS "bookName.name",
+                SUM(bb.COUNT) AS soldCount,
+                SUM(book.BOOK_LIST_PRICE * bb.COUNT) AS soldSum
+        FROM BookHub.BUY b
+                 JOIN BookHub.BUY_BOOK bb ON b.BUY_NO = bb.BUY_NO
+                 JOIN BookHub.BOOK book ON bb.BOOK_NO = book.BOOK_NO
+        WHERE DATE_FORMAT(b.BUY_DATE, '%Y-%m-%d') = #{value}
+        GROUP BY book.BOOK_NAME
+    </select>
+
+</mapper>

@@ -27,7 +27,7 @@
     </select>
 
     <!-- 해당하는 날짜의 값을 받아서 그 해당하는 날짜의 결과 출력 -->
-    <select id="getYesterDay" resultType="com.example.bookhub.admin.dto.DayTotalDto" parameterType="String">
+    <select id="getDayTotal" resultType="com.example.bookhub.admin.dto.DayTotalDto" parameterType="String">
         SELECT DAY_TOTAL_DATE AS dayTotalDate, DAY_TOTAL_PRICE AS dayTotalPrice
         FROM DAY_TOTAL
         WHERE DAY_TOTAL_DATE = #{value}
@@ -97,10 +97,10 @@
                 JOIN BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
         WHERE
             i.INDIVIDUAL_INQUIRY_DELETE_YN = 0
-
     </select>
 
-    <select id="getRatio" resultType="com.example.bookhub.admin.dto.ratioDto">
+    <!-- 답변 완료 백분율을 구하는 쿼리 -->
+    <select id="getRatio" resultType="com.example.bookhub.admin.dto.RatioDto">
         SELECT
             (SELECT (COUNT(CASE WHEN i.INDIVIDUAL_INQUIRY_ANSWER_YN = 1 THEN 1 END)) * 100 / COUNT(*)
              FROM BookHub.INDIVIDUAL_INQUIRIES i
@@ -114,6 +114,7 @@
                       JOIN BookHub.CATEGORY c ON i.INQUIRY_CATEGORY_NO
              WHERE i.INDIVIDUAL_INQUIRY_DELETE_YN = 0) AS incomplete
     </select>
+
 
 
 

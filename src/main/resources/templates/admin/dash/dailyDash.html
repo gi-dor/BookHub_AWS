@@ -14,9 +14,9 @@
                 <!-- 중간선 그리고 그래프와의 여백   -->
                 <hr class="bg-body-secondary mb-6 mt-4">
                 <!-- 그래프위에 div -->
-                <form action="/dash/getYesterDay.do">
+                <form action="/dash/getYesterDay.do" class="form-control">
                     <span>
-                        해당 하는 날짜를 선택하세요 :
+                        <strong>해당 하는 날짜를 선택하세요</strong> :
                     </span>
                     <!-- Datepicker  -->
                     <input class="datepicker" name="day" >
@@ -35,7 +35,7 @@
             </div><!-- 위쪽 그래프 파트 -->
 
 
-
+            <!-- 세부 항목 들어가는 곳 -->
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
@@ -46,7 +46,19 @@
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
                         <h2>Add borders</h2>
-                        <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
+                        <table class="table mt-4" id="xxx">
+                            <colgroup>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <th>책 제목</th>
+                                <th>팔린 개수</th>
+                                <th>팔린 금액</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -99,12 +111,24 @@
                 document.getElementById('myChart').innerHTML = "";
 
                 $.ajax({
-                    url: '/dash/getYesterDay.do',
+                    url: '/dash/getDayTotal.do',
                     method: 'POST',
                     data: {value: text},
                     success: function(response) {
                         chart.data.datasets[0].data[0] = response; // Would update the first dataset's value of 'March' to be 50
                         chart.update(); // Calling update no
+
+                        let $tbody = $("#xxx tbody").empty();
+                        response.items.forEach(function(item) {
+                            let tr = `
+                                <tr>
+                                    <td>${item.bookName.name}</td>
+                                    <td>${item.soldCount}</td>
+                                    <td>${item.soldSum}</td>
+                                </tr>
+                            `
+                            $tbody.append(tr);
+                        })
 
                     },
                     error: function(xhr, status, error) {
@@ -118,6 +142,7 @@
     $('.datepicker').datepicker({
         maxDate: yesterday
     });
+
 
 </script>
 </div>

@@ -130,9 +130,10 @@
                                     <!-- Top Coupons 그래프가 들어가야할 위치 -->
                                     <table class="table">
                                         <colgroup>
-                                            <col>
-                                            <col>
-                                            <col>
+                                            <col style="width: 100px;">
+                                            <col style="width: 120px;">
+                                            <col style="width: 80px;">
+                                            <col style="width: 80px;">
                                         </colgroup>
                                         <thead>
                                             <th>책 이름</th>
@@ -141,7 +142,7 @@
                                             <th>작성일</th>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="list : ${reviews}">
+                                            <tr th:each="list : ${reviews}" style="text-overflow: ellipsis; overflow: hidden;">
                                                 <td th:text="${list.bookName.name}"></td>
                                                 <td th:text="${list.reviewComment}"></td>
                                                 <td th:text="${list.userName.name}"></td>

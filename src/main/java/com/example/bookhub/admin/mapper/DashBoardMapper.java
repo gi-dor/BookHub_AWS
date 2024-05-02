@@ -2,7 +2,7 @@ package com.example.bookhub.admin.mapper;
 
 import com.example.bookhub.admin.dto.DayTotalDto;
 import com.example.bookhub.admin.dto.ReviewDto;
-import com.example.bookhub.admin.dto.ratioDto;
+import com.example.bookhub.admin.dto.RatioDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface DashBoardMapper {
 
     // 통게 테이블 값 가져오기
     List<DayTotalDto> getTotalDate();
-    DayTotalDto getYesterDay(String value);
+    DayTotalDto getDayTotal(String value);
 
     // 답변이 완료되지 않은 문의 건수
     int noAnswerCnt();
@@ -30,7 +30,7 @@ public interface DashBoardMapper {
     int answerRatio();
 
     // 답변미답변 그래프
-    List<ratioDto> getRatio();
+    List<RatioDto> getRatio();
 
 
 
