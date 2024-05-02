@@ -193,4 +193,14 @@ public class ReviewService {
         }
         return rateCountList;
     }
+
+    public List<Integer> getReviewTagCount(long bookNo){
+        List<Integer> reviewTagCountList = new ArrayList<>();
+        for(int i = 1; i <= 5; i++){
+            int reviewTagNo = i;
+            int reviewTagCount = reviewMapper.getReviewTagCount(bookNo, reviewTagNo);
+            reviewTagCountList.add(reviewTagCount);
+        }
+        return reviewTagCountList;
+    }
 }

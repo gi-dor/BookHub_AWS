@@ -267,4 +267,14 @@
             and book_no = #{bookNo}
               ]]>
     </select>
+
+    <select id="getReviewTagCount" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            review_tag_no = #{reviewTagNo}
+            and book_no = #{bookNo}
+    </select>
 </mapper>

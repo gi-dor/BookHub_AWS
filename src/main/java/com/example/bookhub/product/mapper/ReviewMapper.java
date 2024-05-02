@@ -28,4 +28,5 @@ public interface ReviewMapper {
     void deleteReview(long reviewNo);
     int getReviewTotalRows(long bookNo);
     int getRateCount(@Param("bookNo") long bookNo, @Param("start") int start, @Param("end") int end);
+    int getReviewTagCount(@Param("bookNo") long bookNo, @Param("reviewTagNo") int reviewTagNo);
 }

@@ -76,8 +76,19 @@
         </li>
     </ul>
 
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-3">
+            <canvas id="chart-rate-count"></canvas>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-5">
+            <canvas id="chart-review-tag-count"></canvas>
+        </div>
+        <div class="col-1"></div>
+    </div>
+
     <div class="col-12">
-        <canvas id="myChart" width="300" height="100"></canvas>
         <div id="div-reviews">
             <div th:each="review: ${reviewDtoList}">
                 <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
@@ -348,12 +359,34 @@
     const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
     const modalCreateReview = new bootstrap.Modal("#modal-create-review");
 
-    let myCt = document.getElementById('myChart');
+    let chartRateCountCanvas = document.getElementById('chart-rate-count');
+    let chartReviewTagCountCanvas = document.getElementById('chart-review-tag-count');
 
-    let myChart = new Chart(myCt, {
-        type: 'bar',
+
+    let chartRateCount = new Chart(chartRateCountCanvas, {
+        type: 'doughnut',
         data: {
             labels: ['0~1', '1~2', '2~3', '3~4', '4~5'],
+            datasets: [
+                {
+                    label: 'Dataset',
+                    data: [10,20,30,40,50],
+                    backgroundColor: [
+                        'rgb(54, 162, 235)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 99, 132)',
+                    ],
+                }
+            ]
+        },
+    });
+
+    let chartReviewTagCount = new Chart(chartReviewTagCountCanvas, {
+        type: 'bar',
+        data: {
+            labels: ['집중돼요', '도움돼요', '쉬웠어요', '재밌어요', '유익해요'],
             datasets: [
                 {
                     label: 'Dataset',
@@ -365,15 +398,25 @@
 
     $.get("/product/review/rate/" + bookNo, function(data){
         console.log('요청 성공:', data);
-        myChart.data.datasets[0].data = data;
-        myChart.update();
+        chartRateCount.data.datasets[0].data = data;
+        chartRateCount.update();
 
     }).fail(function(xhr, status, error) {
 
         console.error('요청 실패:', status, error);
     });
 
-    const $reviewDiv = $("#div-reviews");
+    $.get("/product/review/reviewTag/" + bookNo, function(data){
+        console.log('요청 성공:', data);
+        chartReviewTagCount.data.datasets[0].data = data;
+        chartReviewTagCount.update();
+
+    }).fail(function(xhr, status, error) {
+
+        console.error('요청 실패:', status, error);
+    });
+
+
 
     $("#div-reviews").on("click", ".recommend", function(event){
         let reviewNo = $(this).closest(".review").find(".review-no").text();
