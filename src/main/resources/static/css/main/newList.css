@@ -123,3 +123,25 @@
 .dropdown-divider{
     list-style-type: none;
 }
+
+#pubDateBtn {
+    border-color: lightgray;
+    background: white;
+    color: #1D3559
+}
+
+/* 드롭다운 메뉴 */
+#pubDatedropdown{
+    border-color: lightgray;
+    top: 100%;
+    margin-top: 0;
+
+}
+
+/* 드롭다운 메뉴 항목 */
+#pubDatedropdown {
+    background-color: white;
+    width: 100%;
+    color: #1D3559
+}
+

@@ -24,7 +24,7 @@ public class MainController {
 
     @GetMapping("/list")
     public String BestSellerList() {
-        return "main/list";
+        return "catelist";
     }
 
     @GetMapping("/searchlist")
