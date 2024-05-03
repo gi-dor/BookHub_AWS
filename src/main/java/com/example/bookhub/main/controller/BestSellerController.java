@@ -18,23 +18,32 @@ public class BestSellerController {
     private final BestSellerService bestSellerService;
 
     @GetMapping("/main/bestseller")
+    public String bestSeller(SearchCriteria searchCriteria, Model model) {
+        BookListDto dto = bestSellerService.bestSeller(searchCriteria);
+        model.addAttribute("book", dto.getBooks());
+        model.addAttribute("criteria", dto.getCriteria());
+        return "/main/bestseller.html";
+    }
+    }
+
+
+    /*
+     @GetMapping("/main/bestseller")
     public String BestSeller(
             @RequestParam(name="period", required=false, defaultValue = "0") int period,
             @RequestParam(name="cateKeyword", required=false, defaultValue= "0") int cateKeyword,
-            @RequestParam(name="pubDate", required=false, defaultValue= "0") int pubDate,
             @RequestParam(name="sort", required=false, defaultValue= "1") int sort,
             @RequestParam(name="page", required=false, defaultValue= "1") int page,
             Model model) { // Model 객체를 메서드 파라미터로 추가
         SearchCriteria searchCriteria = new SearchCriteria(); // 검색 조건 생성
         searchCriteria.setCateKeyword(cateKeyword);
-        searchCriteria.setPubDate(pubDate);
         searchCriteria.setSort(sort);
         searchCriteria.setPage(page);
         searchCriteria.setPeriod(period);
-        ;
+
         BookListDto dto = bestSellerService.bestSeller(searchCriteria);
         model.addAttribute("book", dto.getBooks()); // 모델에 책 정보를 담아서 HTML로 전달
         model.addAttribute("criteria", dto.getCriteria());
         return "/main/bestseller.html";
     }
-    }
+    * */
