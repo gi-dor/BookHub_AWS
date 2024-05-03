@@ -4,26 +4,7 @@
 <th:block layout:fragment="style">
     <link rel="stylesheet" th:href="@{/css/user/myPage.css}" />
     <style>
-        .page-link {
-            color: #000;
-            background-color: #fff;
-            border: 1px solid #ccc;
-        }
 
-        .page-item.active .page-link {
-            z-index: 1;
-            color: #555;
-            font-weight:bold;
-            background-color: #f1f1f1;
-            border-color: #ccc;
-
-        }
-
-        .page-link:focus, .page-link:hover {
-            color: #000;
-            background-color: #fafafa;
-            border-color: #ccc;
-        }
     </style>
 </th:block>
 
@@ -35,6 +16,9 @@
         <div class="col-9">
             <div style="margin:0 0 30px 0;">
                     <img src="/image/userInfo/1vs1.jpg" alt="나의 1:1 문의" style="margin:0 0 10px 0; width: auto; height: 35px;">
+                <p style="text-align: right">
+                    총 <span th:text="${totalRows}"></span> 개
+                </p>
                 <table class="table" style="text-align: center">
                     <colgroup>
                         <col width="20%">
@@ -66,12 +50,18 @@
             <div>
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center pagination-sm">
+                        <!-- 첫 페이지로 이동하는 링크 -->
+                        <li class="page-item">
+                            <a class="page-link" th:if="${page.currentPage > 1}"
+                               th:href="@{/mypage/list/inquiryList(page=1)}" >&laquo;</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage > 1}">&laquo;</span>
+                        </li>
                         <!-- 이전 페이지 링크 -->
                         <li class="page-item">
                             <a class="page-link" th:attr="data-page=${page.currentPage - 1}"  onclick="page(event)"
                                th:href="@{/mypage/list/inquiryList(page=${page.currentPage - 1})}"
-                               th:if="${page.currentPage > 1}">이전</a>
-                            <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                               th:if="${page.currentPage > 1}">&lt;</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage > 1}">&lt;</span>
                         </li>
                         <!-- 페이지 번호를 표시하기 위한 리스트 아이템 -->
                         <li class="page-item" th:each="pageNo : ${#numbers.sequence(page.beginPage, page.endPage)}"
@@ -83,8 +73,14 @@
                         <li class="page-item">
                             <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)"
                                th:href="@{/mypage/list/inquiryList(page=${page.currentPage + 1})}"
-                               th:if="${page.currentPage < page.totalPages}">다음</a>
-                            <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                               th:if="${page.currentPage < page.totalPages}">&gt;</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">&gt;</span>
+                        </li>
+                        <!-- 마지막 페이지로 이동하는 링크 -->
+                        <li class="page-item">
+                            <a class="page-link" th:if="${page.currentPage < page.totalPages}"
+                               th:href="@{/mypage/list/inquiryList(page=${page.totalPages})}">&raquo;</a>
+                            <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">&raquo;</span>
                         </li>
                     </ul>
                 </nav>
