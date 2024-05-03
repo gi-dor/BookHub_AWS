@@ -58,12 +58,15 @@ public class CommunityController {
     }
 
     @GetMapping("/detail/{no}")
-    public String getCommunityDetail(@PathVariable Long no, Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    public String getCommunityDetail(@PathVariable Long no, Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(value = "parentNo", required = false) Long parentNo) {
+
         Community community = communityService.getCommunityByNo(no);
         communityService.viewCount(no);
 
         Long communityNo = community.getNo();
+
         List<CommunityComment> comments = commentService.findByCommunityNoComment(page, size, communityNo);
+
 
         int commentsCount = commentService.getCommentCount(communityNo);
         int totalPages = (int) Math.ceil((double) commentsCount / size);
@@ -72,7 +75,6 @@ public class CommunityController {
         model.addAttribute("comments", comments);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-
 
         return "board/community/detail";
     }

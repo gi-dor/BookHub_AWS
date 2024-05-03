@@ -15,22 +15,32 @@
         </form>
     </div>
     <hr>
+
     <div class="comment-section">
         <div th:if="${#lists.isEmpty(comments)}">
             <p>댓글이 존재하지 않습니다</p>
         </div>
         <div th:unless="${#lists.isEmpty(comments)}">
-            <div th:each="comment : ${comments}" class="comment row">
+            <div th:each="comment : ${comments}" class="comment row mb-3">
                 <div class="col-10">
-                    <p th:text="${comment.user.getName()} + ' | ' + ${#temporals.format(comment.createDate,'yyyy.MM.dd')}"></p>
-                    <p class="comment-content" th:text="${comment.content}"></p>
-                    <form th:action="@{/board/community/comment/modify}" method="post">
+                    <div th:class="${comment.parentNo != comment.no ? 'ms-5' : ''}">
+                        <div th:text="${comment.user.getName()} + ' | ' + ${#temporals.format(comment.createDate,'yyyy.MM.dd')}"></div>
+                        <p class="comment-content " th:text="${comment.content}"></p>
+                        <form th:action="@{/board/community/comment/modify}" method="post">
+                            <input type="hidden" name="communityNo" th:value="${community.no}">
+                            <input type="hidden" name="no" th:value="${comment.no}">
+                            <div class="comment-edit-container" style="display: none;"> <!-- 수정 가능한 텍스트 창과 등록 버튼을 감싸는 div -->
+                                <textarea class="form-control comment-edit" name="content" th:value="${comment.content}"></textarea> <!-- 수정 가능한 텍스트 창 -->
+                                <button type="submit" class="btn btn-sm btn-success save-button">등록</button> <!-- 등록 버튼 -->
+                            </div>
+                        </form>
+                    </div>
+                    <!-- 대댓글 작성 폼 -->
+                    <form th:action="@{/board/community/comment/addChild}" method="post" class="reply-form" style="display: none;">
+                        <input type="hidden" name="parentNo" th:value="${comment.no}">
                         <input type="hidden" name="communityNo" th:value="${community.no}">
-                        <input type="hidden" name="no" th:value="${comment.no}">
-                        <div class="comment-edit-container" style="display: none;"> <!-- 수정 가능한 텍스트 창과 등록 버튼을 감싸는 div -->
-                            <textarea class="form-control comment-edit" name="content" th:value="${comment.content}"></textarea> <!-- 수정 가능한 텍스트 창 -->
-                            <button type="submit" class="btn btn-sm btn-success save-button">등록</button> <!-- 등록 버튼 -->
-                        </div>
+                        <textarea class="form-control" name="content" placeholder="대댓글을 작성해주세요"></textarea>
+                        <button type="submit" class="btn btn-sm btn-primary">작성</button>
                     </form>
                 </div>
                 <div class="col-2 text-right">
@@ -42,10 +52,13 @@
                         <input type="hidden" name="no" th:value="${comment.no}">
                         <button type="submit" class="btn btn-sm btn-danger delete-button">삭제</button>
                     </form>
+                    <!-- 대댓글 작성 버튼 -->
+                    <button type="button" class="btn btn-sm btn-info reply-button">댓글</button>
                 </div>
             </div>
         </div>
     </div>
+
     <hr>
     <div th:if="${totalPages > 1}">
         <nav aria-label="Page navigation example">
@@ -81,7 +94,6 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            /*<![CDATA[*/
             $(document).ready(function () {
                 $(".edit-button").click(function () {
                     var commentRow = $(this).closest(".comment.row");
@@ -102,8 +114,12 @@
                     editContainer.hide();
                     commentContent.show();
                 });
+
+                $('.reply-button').click(function() {
+                    var replyForm = $(this).parent().siblings('.col-10').find('.reply-form');
+                    replyForm.toggle();
+                });
             });
-            /*]]>*/
         </script>
     </div>
 </div>

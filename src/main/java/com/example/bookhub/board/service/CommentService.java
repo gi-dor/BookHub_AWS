@@ -28,12 +28,6 @@ public class CommentService {
      * @return
      */
     public List<CommunityComment> findByCommunityNoComment(int page, int size, Long communityNo) {
-        Community community = new Community();
-        community.setNo(communityNo);
-
-        CommunityComment communityComment = new CommunityComment();
-        communityComment.setCommunity(community);
-
         int offset = (page - 1) * size;
         return commentMapper.findByCommunityNoComment(offset, size, communityNo);
     }
@@ -65,6 +59,21 @@ public class CommentService {
         communityComment.setContent(content);
 
         commentMapper.addComment(communityComment);
+    }
+
+    public void addChildComment(long communityNo, long parentNo, String userId, String content) {
+        User user = userMapper.selectUserById(userId);
+        Community community = new Community();
+        community.setNo(communityNo);
+
+        CommunityComment communityComment = new CommunityComment();
+
+        communityComment.setCommunity(community);
+        communityComment.setUser(user);
+        communityComment.setParentNo(parentNo);
+        communityComment.setContent(content);
+
+        commentMapper.addChildComment(communityComment);
     }
 
     public void updateComment(CommunityComment comment) {
