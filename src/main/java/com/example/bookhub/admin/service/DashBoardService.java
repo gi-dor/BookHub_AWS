@@ -1,12 +1,15 @@
 package com.example.bookhub.admin.service;
 
+import com.example.bookhub.admin.dto.DailyDto;
 import com.example.bookhub.admin.dto.DayTotalDto;
 import com.example.bookhub.admin.dto.ReviewDto;
-import com.example.bookhub.admin.dto.ratioDto;
+import com.example.bookhub.admin.dto.RatioDto;
 import com.example.bookhub.admin.mapper.DashBoardMapper;
+import com.example.bookhub.admin.mapper.DetailDashBoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.event.ListDataEvent;
 import java.util.List;
 
 @Service
@@ -14,6 +17,7 @@ import java.util.List;
 public class DashBoardService {
 
     private final DashBoardMapper dashBoardMapper;
+    private final DetailDashBoardMapper detailDashBoardMapper;
 
     public int getAllUserCnt() {
         return dashBoardMapper.getAllUserCnt();
@@ -27,8 +31,12 @@ public class DashBoardService {
         return dashBoardMapper.getTotalDate();
     }
 
-    public DayTotalDto getYesterDay(String value){
-        return dashBoardMapper.getYesterDay(value);
+    public DayTotalDto getDayTotal(String value){
+       DayTotalDto dto = dashBoardMapper.getDayTotal(value);
+       List<DailyDto> item = detailDashBoardMapper.getDetailDaily(value);
+       dto.setItems(item);
+
+       return dto;
     }
 
     public int noAnswerCnt(){
@@ -55,7 +63,7 @@ public class DashBoardService {
         return dashBoardMapper.answerRatio();
     }
 
-    public List<ratioDto> getRatios() {
+    public List<RatioDto> getRatios() {
         return dashBoardMapper.getRatio();
     }
 

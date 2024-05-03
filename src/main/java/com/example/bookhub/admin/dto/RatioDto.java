@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ratioDto {
+public class RatioDto {
     private long complete;
     private long incomplete;
 

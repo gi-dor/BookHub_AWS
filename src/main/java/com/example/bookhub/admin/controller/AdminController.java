@@ -2,7 +2,7 @@ package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.AdminRegisterForm;
 import com.example.bookhub.admin.dto.ReviewDto;
-import com.example.bookhub.admin.dto.ratioDto;
+import com.example.bookhub.admin.dto.RatioDto;
 import com.example.bookhub.admin.exception.AlreadyAdminEmailException;
 import com.example.bookhub.admin.exception.AlreadyAdminIdException;
 import com.example.bookhub.admin.service.AdminService;
@@ -44,7 +44,7 @@ public class AdminController {
         float avgRate = dashBoardService.averageRate();
         int noAnswerRatio = dashBoardService.noAnswerRatio();
         int answerRatio = dashBoardService.answerRatio();
-        List<ratioDto> ratio = dashBoardService.getRatios();
+        List<RatioDto> ratio = dashBoardService.getRatios();
 
         model.addAttribute("noAnswer", noAnswerCnt);
         model.addAttribute("answer", answerCnt);

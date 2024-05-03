@@ -14,10 +14,11 @@
                 <!-- 중간선 그리고 그래프와의 여백   -->
                 <hr class="bg-body-secondary mb-6 mt-4">
                 <!-- 그래프위에 div -->
-                <form action="/dash/getYesterDay.do">
+                <form action="/dash/getYesterDay.do" class="form-control">
                     <span>
-                        해당 하는 날짜를 선택하세요 :
+                        <strong>해당 하는 날짜를 선택하세요</strong> :
                     </span>
+                    <!-- Datepicker  -->
                     <input class="datepicker" name="day" >
                 </form>
                 <div class="row flex-between-center mb-4 g-3">
@@ -28,90 +29,36 @@
                     </div>
                 </div>
                 <!-- 그래프 div chart.js 적용해야함 -->
-                <div class="col-10">
+                <div class="col-8">
                     <canvas id="myChart" class="pb-5"></canvas>
                 </div>
             </div><!-- 위쪽 그래프 파트 -->
 
-            <div class="col-5 bg-light p-3 mb-3">
-                <div class="col-6">
-                    <div class="card h-100">
-                        <div class="card-body col-6">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="mb-1">Total Books<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"><span class="badge-label">-6.8%</span></span></h5>
-                                    <h6 class="text-body-tertiary">Last 7 days</h6>
-                                </div>
-                                <h4 id="BookText"></h4>
-                            </div>
-                            <div class="d-flex justify-content-center px-4 py-6">
-                                <!-- Total orders 그래프가 들어가야할 위치 -->
-                                <div>
-                                    <canvas id="TotalOrders"></canvas>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <div class="d-flex align-items-center mb-2">
-                                    <div class="bullet-item bg-primary me-2"></div>
-                                    <h6 class="text-body fw-semibold flex-1 mb-0">Completed</h6>
-                                    <h6 class="text-body fw-semibold mb-0">52%</h6>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="bullet-item bg-primary-subtle me-2"></div>
-                                    <h6 class="text-body fw-semibold flex-1 mb-0">Pending payment</h6>
-                                    <h6 class="text-body fw-semibold mb-0">48%</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-5 bg-light p-3 mb-3">
-                <div class="col-6">
-                    <div class="card h-100">
-                        <div class="card-body col-6">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="mb-1">Total Books<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"><span class="badge-label">-6.8%</span></span></h5>
-                                    <h6 class="text-body-tertiary">Last 7 days</h6>
-                                </div>
-                                <h4 id="BookText"></h4>
-                            </div>
-                            <div class="d-flex justify-content-center px-4 py-6">
-                                <!-- Total orders 그래프가 들어가야할 위치 -->
-                                <div>
-                                    <canvas id="TotalOrders"></canvas>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <div class="d-flex align-items-center mb-2">
-                                    <div class="bullet-item bg-primary me-2"></div>
-                                    <h6 class="text-body fw-semibold flex-1 mb-0">Completed</h6>
-                                    <h6 class="text-body fw-semibold mb-0">52%</h6>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="bullet-item bg-primary-subtle me-2"></div>
-                                    <h6 class="text-body fw-semibold flex-1 mb-0">Pending payment</h6>
-                                    <h6 class="text-body fw-semibold mb-0">48%</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <!-- 세부 항목 들어가는 곳 -->
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                        <h2>Change the background</h2>
-                        <p>Swap the background-color utility and add a `.text-*` color utility to mix up the jumbotron look. Then, mix and match with additional component themes and more.</p>
+                        <h2 class="pb-3">세부정보 비율</h2>
+                        <canvas id="detailChart" class="pb-5" style="height: 300px;"></canvas>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                        <h2>Add borders</h2>
-                        <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
+                        <h2 class="pb-3">세부정보</h2>
+                        <table class="table mt-4" id="xxx">
+                            <colgroup>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <th>책 제목</th>
+                                <th>팔린 권 수</th>
+                                <th>팔린 금액</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -120,6 +67,17 @@
     </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+
+    // maxDate 값을 넣기 위한 어제 날짜구하기
+    // 오늘 날짜 계산
+    let today = new Date();
+    // 어제 날짜 계산
+    let yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+
+
+
     const ctx = document.getElementById('myChart');
     let chart = new Chart(ctx, {
         type: "bar",
@@ -157,23 +115,98 @@
                 document.getElementById('myChart').innerHTML = "";
 
                 $.ajax({
-                    url: '/dash/getYesterDay.do',
+                    url: '/dash/getDayTotal.do',
                     method: 'POST',
                     data: {value: text},
                     success: function(response) {
                         chart.data.datasets[0].data[0] = response; // Would update the first dataset's value of 'March' to be 50
-                        chart.update(); // Calling update no
+                        chart.update();
 
+                        let $tbody = $("#xxx tbody").empty();
+                        response.items.forEach(function(item) {
+                            let tr = `
+                                <tr>
+                                    <td>${item.bookName.name}</td>
+                                    <td>${item.soldCount}</td>
+                                    <td>${item.soldSum}</td>
+                                </tr>
+                            `
+                            $tbody.append(tr);
+
+                        })
+                        detailChart(text);
                     },
                     error: function(xhr, status, error) {
                     // 오류 처리
                 }
+
+
+
             });
         }
     });
 
+    const detail = document.getElementById('detailChart');
+    // 차트 인스턴스를 저장할 전역 변수
+    var detailChartInstance = null;
 
-    $('.datepicker').datepicker();
+    function detailChart(text) {
+        $.ajax({
+            url: "/dash/getDetailPercent.do",
+            type: "Post",
+            dataType: "json",
+            data: {searchData: text},
+            success: function(response) {
+                let labelArray = [];
+                let dataArray = [];
+
+                response.forEach(function(item) {
+                    labelArray.push(item.bookName.name);
+                    dataArray.push(item.percent);
+                });
+
+                const chartData = {
+                    labels: labelArray,
+                    datasets: [{
+                        label: '판매율',
+                        data: dataArray,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(255, 205, 86, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                // 차트가 이미 존재하는 경우, 데이터만 업데이트
+                if (detailChartInstance) {
+                    detailChartInstance.data = chartData;
+                    detailChartInstance.update();
+                } else {
+                    // 차트 인스턴스가 없는 경우, 새로운 차트 생성
+                    detailChartInstance = new Chart(document.getElementById('detailChart'), {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            indexAxis: 'y'
+                        }
+                    });
+                }
+            },
+            error: function() {
+                alert("서버에서 데이터를 가져오는 데 실패했습니다.");
+            }
+        });
+    }
+
+
+
+
+
+    $('.datepicker').datepicker({
+        // midDate 값을 넣기 위한 서비스 시작일자 구하기
+        minDate: new Date('2024-04-14'),
+        maxDate: yesterday
+    });
+
 
 </script>
 </div>

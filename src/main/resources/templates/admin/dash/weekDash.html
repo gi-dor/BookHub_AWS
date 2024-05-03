@@ -4,185 +4,188 @@
     <div class="pb-5">
         <!-- 전체적인 그래프 row -->
         <div class="row g-4 pt-5 pe-5">
-            <!-- 왼쪽 그래프 파트 -->
-            <div class="col-12 col-xxl-6">
-                <div class="mb-8">
-                    <h2 class="mb-2 pb-3">관리자 퀵 대시보드</h2>
+            <!-- 위쪽 그래프 파트 -->
+            <div class="col-12">
+                <div class="mb-3">
+                    <h2 class="mb-2">Range DashBoard</h2>
                     <h5 class="text-body-tertiary fw-semibold"></h5>
                 </div>
-                <div class="row align-items-center g-4">
-                    <div class="col-12 col-md-auto">
-                        <div class="d-flex align-items-center">
-                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
-                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
-                            <div class="ms-3">
-                                <a href="/admin/individual/noanswer" style="text-decoration-line: none">
-                                    <i class="fas fa-solid fa-headset"></i>
-                                    <h4 class="mb-0">답변 미완료된 문의</h4>
-                                    <h5 class="text-body-secondary" th:text="${noAnswer} + '개'"></h5>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-auto">
-                        <div class="d-flex align-items-center">
-                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그 -->
-                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
-                            <div class="ms-3">
-                                <i class="fas fa-solid fa-check"></i>
-                                <h4 class="mb-0">답변 완료된 문의</h4>
-                                <h5 class="text-body-secondary" th:text="${answer} + 개"></h5>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-12 col-md-auto">
-                        <div class="d-flex align-items-center">
-                            <!-- 래퍼런스 사이트에서 아이콘이 들어가는 태그
-                            <span class="fa-stack" style="min-height: 46px; min-width: 46px;"></span>
-                            <div class="ms-3">
-                                <h4 class="mb-0">EX New Order</h4>
-                                <p class="text-body-secondary">처리해야 할 주문개수</p>
-                            </div> -->
-                        </div>
-                    </div>
-
-                </div>
                 <!-- 중간선 그리고 그래프와의 여백   -->
                 <hr class="bg-body-secondary mb-6 mt-4">
                 <!-- 그래프위에 div -->
+                <form action="/dash/getYesterDay.do" class="form-control">
+                    <span>
+                        <strong>조회하고 싶은 날짜의 범위를 선택하세요</strong> :
+                    </span>
+                    <!-- Datepicker  -->
+                    <input class="datepicker" name="startDay" id="startDay">
+                    <input class="datepicker" name="endDay" id="endDay">
+                </form>
                 <div class="row flex-between-center mb-4 g-3">
-                    <div class="col-auto">
-                        <h3>최근 일주일의 매출</h3>
+
+                    <div class="col-10 pt-3">
+                        <h3>해당하는 날짜의 매출</h3>
                         <p class="text-body-tertiary lh-sm mb-0">매일 오전 10시에 업데이트 됩니다</p>
                     </div>
                 </div>
                 <!-- 그래프 div chart.js 적용해야함 -->
-                <div>
+                <div class="col-8">
                     <canvas id="myChart" class="pb-5"></canvas>
                 </div>
-            </div><!-- 왼쪽 그래프 파트 -->
-            <!-- 오른쪽 그래프 파트 -->
-            <div class="col-12 col-xxl-6">
-                <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="mb-1">Total Books<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"><span class="badge-label">-6.8%</span></span></h5>
-                                        <h6 class="text-body-tertiary">Last 7 days</h6>
-                                    </div>
-                                    <h4 id="BookText"></h4>
-                                </div>
-                                <div class="d-flex justify-content-center px-4 py-6">
-                                    <!-- Total orders 그래프가 들어가야할 위치 -->
-                                    <div>
-                                        <canvas id="TotalOrders"></canvas>
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="bullet-item bg-primary me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Completed</h6>
-                                        <h6 class="text-body fw-semibold mb-0">52%</h6>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="bullet-item bg-primary-subtle me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Pending payment</h6>
-                                        <h6 class="text-body fw-semibold mb-0">48%</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="mb-1">All Customers<span class="badge badge-phoenix badge-phoenix-warning rounded-pill fs-9 ms-2"> <span class="badge-label">+26.5%</span></span></h5>
-                                        <h6 class="text-body-tertiary">Last 7 days</h6>
-                                    </div>
-                                    <h4 id="CustomerText"></h4>
-                                </div>
-                                <div class="pb-0 pt-4">
-                                    <!-- All Customers 그래프가 들어가야할 위치 -->
-                                    <div>
-                                        <canvas id="AllCustomer"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="mb-2">Grade</h5>
-                                        <h6 class="text-body-tertiary">Last 7 days</h6>
-                                    </div>
-                                </div>
-                                <div class="pb-4 pt-3">
-                                    <!-- Top Coupons 그래프가 들어가야할 위치 -->
-                                    <div>
-                                        <canvas id="TopCoupons"></canvas>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="bullet-item bg-primary me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Percentage discount</h6>
-                                        <h6 class="text-body fw-semibold mb-0">72%</h6>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="bullet-item bg-primary-lighter me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed card discount</h6>
-                                        <h6 class="text-body fw-semibold mb-0">18%</h6>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="bullet-item bg-info-dark me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Fixed product discount</h6>
-                                        <h6 class="text-body fw-semibold mb-0">10%</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body d-flex flex-column">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="mb-2">Paying vs non paying</h5>
-                                        <h6 class="text-body-tertiary">Last 7 days</h6>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center pt-3 flex-1">
-                                    <!-- Paying vs non paying 그래프가 들어가야할 위치  -->
-                                    <div>
-                                        <canvas id="Paying"></canvas>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="bullet-item bg-primary me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Paying customer</h6>
-                                        <h6 class="text-body fw-semibold mb-0">30%</h6>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="bullet-item bg-primary-subtle me-2"></div>
-                                        <h6 class="text-body fw-semibold flex-1 mb-0">Non-paying customer</h6>
-                                        <h6 class="text-body fw-semibold mb-0">70%</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            </div><!-- 위쪽 그래프 파트 -->
+
+
+            <!-- 세부 항목 들어가는 곳 -->
+            <div class="row align-items-md-stretch">
+                <div class="col-md-6">
+                    <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+                        <h2 class="pb-3">세부정보 비율</h2>
+                        <canvas id="detailChart" class="pb-5" style="height: 300px;"></canvas>
                     </div>
                 </div>
-            </div><!-- 오른쪽 그래프 파트 -->
+                <div class="col-md-6">
+                    <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+                        <h2 class="pb-3">세부정보</h2>
+                        <table class="table mt-4" id="xxx">
+                            <colgroup>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <th>책 제목</th>
+                                <th>팔린 권 수</th>
+                                <th>팔린 금액</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div><!-- 전체적인 그래프 row -->
     </div>
-</div>>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    // maxDate 값을 넣기 위한 어제 날짜구하기
+    // 오늘 날짜 계산
+    let today = new Date();
+    // 어제 날짜 계산
+    let yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    let startday = new Date('2024-04-14');
+
+
+    $.datepicker.setDefaults({
+        dateFormat: 'yy-mm-dd',	//날짜 포맷이다. 보통 yy-mm-dd 를 많이 사용하는것 같다.
+        prevText: '이전 달',	// 마우스 오버시 이전달 텍스트
+        nextText: '다음 달',	// 마우스 오버시 다음달 텍스트
+        closeText: '닫기', // 닫기 버튼 텍스트 변경
+        currentText: '오늘', // 오늘 텍스트 변경
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],	//한글 캘린더중 월 표시를 위한 부분
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],	//한글 캘린더 중 월 표시를 위한 부분
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],	//한글 캘린더 요일 표시 부분
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],	//한글 요일 표시 부분
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],	// 한글 요일 표시 부분
+        showMonthAfterYear: true,	// true : 년 월  false : 월 년 순으로 보여줌
+        yearSuffix: '년',	//
+        // showButtonPanel: true,	// 오늘로 가는 버튼과 달력 닫기 버튼 보기 옵션
+//        buttonImageOnly: true,	// input 옆에 조그만한 아이콘으로 캘린더 선택가능하게 하기
+//        buttonImage: "images/calendar.gif",	// 조그만한 아이콘 이미지
+//        buttonText: "Select date"	// 조그만한 아이콘 툴팁
+    });
+
+    $('#startDay').datepicker({
+        maxDate: yesterday,
+        minDate: startday,
+        onselect: function(text) {
+            getData();
+        }
+    })
+
+    $('#endDay').datepicker({
+        maxDate: yesterday,
+        minDate: startday,
+        onSelect: function(text) {
+           getData();
+        }
+    })
+
+    let chartInstance = null;
+
+    function getData() {
+        let startDay = document.getElementById("startDay").value;
+        let endDay = document.getElementById("endDay").value;
+
+        if (startDay != "" && endDay != "") {
+            $.ajax({
+                url: '/dash/getDetailRange.do',
+                method: 'POST',
+                data: {startDate: startDay, endDate: endDay},
+                success: function (response) {
+                    let labelArray = [];
+                    let dataArray = [];
+
+                    response.forEach(function(item) {
+                        labelArray.push(item.dayTotalDate);
+                        dataArray.push(item.dayTotalPrice);
+                    });
+
+                    // 차트가 이미 존재하는 경우, 데이터만 업데이트
+                    if (chartInstance) {
+                        chartInstance.data.labels = labelArray;
+                        chartInstance.data.datasets[0].data = dataArray;
+                        chartInstance.update();
+
+                        let $tbody = $("#xxx tbody").empty();
+                        response.items.forEach(function(item) {
+                            let tr = `
+                                <tr>
+                                    <td>${item.bookName.name}</td>
+                                    <td>${item.soldCount}</td>
+                                    <td>${item.soldSum}</td>
+                                </tr>
+                            `
+                            $tbody.append(tr);
+                        })
+
+                    } else {
+                        // 차트 인스턴스가 없는 경우, 새로운 차트 생성
+                        const main = document.getElementById('myChart');
+                        chartInstance = new Chart(main, {
+                            type: "line",
+                            data: {
+                                labels: labelArray,
+                                datasets: [{
+                                    label: '매출액',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    backgroundColor: 'rgba(0, 255, 255, 1)',
+                                    borderWidth: 1,
+                                    data: dataArray
+                                }]
+                            },
+                            options: {
+                                parsing: {
+                                    xAxisKey: 'dayTotalDate',
+                                    yAxisKey: 'dayTotalPrice'
+                                }
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // 오류 처리
+                }
+            });
+        }
+    }
+
+
+
+
+</script>
+</div>
 </html>
