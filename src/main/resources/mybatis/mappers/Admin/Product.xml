@@ -12,7 +12,10 @@
                         B.BOOK_NAME LIKE CONCAT('%', #{filter.keyword}, '%')
                     </when>
                     <when test="filter.opt == 'authorName'">
-                        AND A.AUTHOR_NAME = #{filter.keyword}
+                        AND B.BOOK_NO IN (SELECT BA.BOOK_NO
+                                          FROM BOOK_AUTHOR BA
+                                          INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
+                                          WHERE A.AUTHOR_NAME =  #{filter.keyword})
                     </when>
                     <when test="filter.opt == 'publisherName'">
                         AND P.PUBLISHER_NAME = #{filter.keyword}
@@ -106,11 +109,9 @@
 
     <select id="getTotalRows" resultType="int">
         SELECT
-                count(*)
+            count(DISTINCT B.BOOK_NO)
         FROM
                 BookHub.BOOK B
-                INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
-                INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
                 INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
                 INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
                 INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
@@ -122,19 +123,20 @@
                     B.BOOK_NO                                                   AS no,
     		        BI.BOOK_IMAGE_COVER			                                AS image,
     				B.BOOK_NAME           			                            AS bookName,
-    				A.AUTHOR_NAME			                                    AS authorName,
                     B.BOOK_LIST_PRICE			                                AS listPrice,
                     ROUND(B.BOOK_LIST_PRICE * (1 - B.BOOK_DISCOUNT_RATE))		AS sellingPrice,
                     B.BOOK_STOCK                                                AS stock,
                     B.BOOK_STATUS                                               AS status,
                     B.BOOK_CREATED_DATE                                         AS createdDate,
                     B.BOOK_UPDATED_DATE                                         AS updatedDate,
-                    B.BOOK_PUBLISHED_DATE                                       AS publishedDate
+                    B.BOOK_PUBLISHED_DATE                                       AS publishedDate,
+                    (SELECT GROUP_CONCAT(A.AUTHOR_NAME SEPARATOR ', ')
+                     FROM BOOK_AUTHOR BA, AUTHOR A
+                     WHERE BA.AUTHOR_NO = A.AUTHOR_NO
+                     AND BA.BOOK_NO = B.BOOK_NO)                                 AS authorName
 
     		FROM
                     BookHub.BOOK B
-                    INNER JOIN BOOK_AUTHOR BA ON B.BOOK_NO = BA.BOOK_NO
-                    INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
                     INNER JOIN PUBLISHER P ON B.PUBLISHER_NO = P.PUBLISHER_NO
                     INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
                     INNER JOIN CATEGORY CA ON B.CATEGORY_NO = CA.CATEGORY_NO
