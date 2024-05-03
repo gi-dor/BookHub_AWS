@@ -25,6 +25,11 @@ public class ProductFilter {
     private String sort;
 
     public List<String> getStatus() {
+        // status.isEmpty()가 null.isEmpty()인 경우 발생하는 예외를 방지하기 위함
+        if (status == null) {
+            return status;
+        }
+
         if (status.isEmpty()) {
             return null;
         }
