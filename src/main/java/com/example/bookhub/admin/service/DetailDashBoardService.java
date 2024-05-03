@@ -1,7 +1,7 @@
 package com.example.bookhub.admin.service;
 
 import com.example.bookhub.admin.dto.DailyDto;
-import com.example.bookhub.admin.mapper.DashBoardMapper;
+import com.example.bookhub.admin.dto.DetailPercentDto;
 import com.example.bookhub.admin.mapper.DetailDashBoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,5 +17,9 @@ public class DetailDashBoardService {
 
     public List<DailyDto> getDetailDaily(String value){
         return detailDashBoardMapper.getDetailDaily(value);
+    }
+
+    public List<DetailPercentDto> getDetailPercent(String searchData){
+        return detailDashBoardMapper.getDetailPercent(searchData);
     }
 }

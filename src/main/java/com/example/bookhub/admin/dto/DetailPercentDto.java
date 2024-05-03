@@ -6,10 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DailyDto {
+public class DetailPercentDto {
 
     private Book bookName;
     private int soldCount;
-    private int soldSum;
-
+    private float percent;
 }

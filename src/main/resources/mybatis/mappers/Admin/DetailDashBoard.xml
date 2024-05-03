@@ -14,4 +14,30 @@
         GROUP BY book.BOOK_NAME
     </select>
 
+    <select id="getDetailPercent" resultType="com.example.bookhub.admin.dto.DetailPercentDto" parameterType="String">
+        SELECT
+            book.BOOK_NAME AS "bookName.name",
+            SUM(bb.COUNT) AS soldCount,
+            ROUND((SUM(bb.COUNT) / total.totalCount) * 100, 2) AS percent
+        FROM
+            BookHub.BUY b
+                JOIN BookHub.BUY_BOOK bb ON b.BUY_NO = bb.BUY_NO
+                JOIN BookHub.BOOK book ON bb.BOOK_NO = book.BOOK_NO,
+            (SELECT SUM(bb.COUNT) AS totalCount
+             FROM BookHub.BUY b
+                      JOIN BookHub.BUY_BOOK bb ON b.BUY_NO = bb.BUY_NO
+             WHERE DATE_FORMAT(b.BUY_DATE, '%Y-%m-%d') = #{value}) AS total
+        WHERE
+            DATE_FORMAT(b.BUY_DATE, '%Y-%m-%d') = #{value}
+        GROUP BY
+            book.BOOK_NAME;
+
+
+
+
+
+
+
+    </select>
+
 </mapper>

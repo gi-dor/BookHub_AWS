@@ -39,13 +39,13 @@
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                        <h2>Change the background</h2>
-                        <p>Swap the background-color utility and add a `.text-*` color utility to mix up the jumbotron look. Then, mix and match with additional component themes and more.</p>
+                        <h2 class="pb-3">세부정보 비율</h2>
+                        <canvas id="detailChart" class="pb-5" style="height: 300px;"></canvas>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                        <h2>Add borders</h2>
+                        <h2 class="pb-3">세부정보</h2>
                         <table class="table mt-4" id="xxx">
                             <colgroup>
                                 <col>
@@ -54,7 +54,7 @@
                             </colgroup>
                             <thead>
                                 <th>책 제목</th>
-                                <th>팔린 개수</th>
+                                <th>팔린 권 수</th>
                                 <th>팔린 금액</th>
                             </thead>
                             <tbody></tbody>
@@ -116,7 +116,7 @@
                     data: {value: text},
                     success: function(response) {
                         chart.data.datasets[0].data[0] = response; // Would update the first dataset's value of 'March' to be 50
-                        chart.update(); // Calling update no
+                        chart.update();
 
                         let $tbody = $("#xxx tbody").empty();
                         response.items.forEach(function(item) {
@@ -128,15 +128,73 @@
                                 </tr>
                             `
                             $tbody.append(tr);
-                        })
 
+                        })
+                        detailChart(text);
                     },
                     error: function(xhr, status, error) {
                     // 오류 처리
                 }
+
+
+
             });
         }
     });
+
+    const detail = document.getElementById('detailChart');
+    // 차트 인스턴스를 저장할 전역 변수
+    var detailChartInstance = null;
+
+    function detailChart(text) {
+        $.ajax({
+            url: "/dash/getDetailPercent.do",
+            type: "Post",
+            dataType: "json",
+            data: {searchData: text},
+            success: function(response) {
+                let labelArray = [];
+                let dataArray = [];
+
+                response.forEach(function(item) {
+                    labelArray.push(item.bookName.name);
+                    dataArray.push(item.percent);
+                });
+
+                const chartData = {
+                    labels: labelArray,
+                    datasets: [{
+                        label: '판매율',
+                        data: dataArray,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(255, 205, 86, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                // 차트가 이미 존재하는 경우, 데이터만 업데이트
+                if (detailChartInstance) {
+                    detailChartInstance.data = chartData;
+                    detailChartInstance.update();
+                } else {
+                    // 차트 인스턴스가 없는 경우, 새로운 차트 생성
+                    detailChartInstance = new Chart(document.getElementById('detailChart'), {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            indexAxis: 'y'
+                        }
+                    });
+                }
+            },
+            error: function() {
+                alert("서버에서 데이터를 가져오는 데 실패했습니다.");
+            }
+        });
+    }
+
+
+
 
 
     $('.datepicker').datepicker({
