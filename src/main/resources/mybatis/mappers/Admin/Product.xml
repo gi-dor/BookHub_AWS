@@ -191,7 +191,8 @@
 
     <update id="deleteProductByNo" parameterType="long">
         UPDATE BookHub.BOOK
-        SET BOOK_DELETED_YN = 'Y'
+        SET BOOK_DELETED_YN = 'Y',
+            BOOK_STATUS = '삭제'
         WHERE BOOK_NO = #{deletedProductNo}
     </update>
 </mapper>
