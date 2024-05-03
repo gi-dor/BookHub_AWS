@@ -90,4 +90,14 @@
             and B.BOOK_NO = BI.BOOK_NO
     </select>
 
+    <select id="getBookByBookNo" parameterType="long" resultMap="BookDetailResultMap">
+        select
+            *
+        from
+            BOOK
+        where
+            book_no = #{bookNo}
+        for update
+    </select>
+
 </mapper>
