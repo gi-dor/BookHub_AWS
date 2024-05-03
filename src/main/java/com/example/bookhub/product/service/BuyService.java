@@ -146,9 +146,15 @@ public class BuyService {
         return userDelivery;
     }
 
-//    public void updateBookStock(){
-//            buyMapper.updateBookStock(bookNo, count);
-//        }
-//    }
+    public String getBuyerYn(long bookNo, String userId) {
+        long userNo = 0;
+        if(!"guest".equals(userId)) {
+            User user = userMapper.selectUserById(userId);
+            userNo = user.getNo();
+        }
+        String buyerYn = buyMapper.getBuyerYn(bookNo, userNo);
+
+        return buyerYn;
+    }
 
 }

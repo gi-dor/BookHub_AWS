@@ -41,6 +41,7 @@ public class ReviewService {
                 .user(user)
                 .reviewTag(reviewTag)
                 .book(book)
+                .buyerYn(reviewForm.getBuyerYn())
                 .build();
 
         reviewMapper.createReview(review);
@@ -203,4 +204,5 @@ public class ReviewService {
         }
         return reviewTagCountList;
     }
+
 }

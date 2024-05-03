@@ -3,6 +3,7 @@ package com.example.bookhub.product.controller;
 import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.ReviewListDto;
 import com.example.bookhub.product.service.BookService;
+import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.ReviewService;
 import com.example.bookhub.product.service.WishListService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class BookController {
     private final BookService bookService;
     private final ReviewService reviewService;
     private final WishListService wishListService;
+    private final BuyService buyService;
     private String userId;
 
     @GetMapping("/detail")
@@ -36,11 +38,13 @@ public class BookController {
         }
         String wishListYn = wishListService.getWishListYn(bookNo, userId);
         ReviewListDto reviewListDto = reviewService.getReviewsByBookNo(bookNo, userId, page, sort);
+        String buyerYn = buyService.getBuyerYn(bookNo, userId);
 
         model.addAttribute("book", book);
         model.addAttribute("wishListYn", wishListYn);
         model.addAttribute("reviewDtoList", reviewListDto.getReviewDtoList());
         model.addAttribute("page", reviewListDto.getPagination());
+        model.addAttribute("buyerYn", buyerYn);
 
         return "product/book/detail";
     }

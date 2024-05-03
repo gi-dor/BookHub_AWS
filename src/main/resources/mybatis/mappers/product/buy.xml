@@ -158,4 +158,20 @@
             book_no = #{bookNo}
     </update>
 
+    <select id="getBuyerYn" resultType="String">
+        SELECT
+            CASE
+                WHEN EXISTS (
+                        SELECT 1
+                        FROM BUY B, BUY_BOOK BB
+                        WHERE B.refund_yn != 'N'
+                AND B.gift != 'Y'
+                AND B.user_no = #{userNo}
+                AND B.buy_no = BB.buy_no
+                AND BB.book_no = #{bookNo}
+            ) THEN 'Y'
+                ELSE 'N'
+            END AS result
+    </select>
+
 </mapper>

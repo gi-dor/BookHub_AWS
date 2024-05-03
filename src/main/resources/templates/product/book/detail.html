@@ -162,7 +162,7 @@
                                     <span>
                                         <span class="review-no" style="display:none;" th:text="${review.reviewNo}"></span>
                                         <span class="badge rounded-pill text-bg-light">종이책</span>
-                                        <span th:if="${review.buyer eq 'Y'}">
+                                        <span th:if="${review.buyerYn eq 'Y'}">
                                             <span class="badge rounded-pill text-bg-dark">구매자</span>
                                         </span>
                                         <span class="badge bg-light text-dark" th:text="${review.user.id}"></span>
@@ -337,6 +337,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="mb-3">
+                            <span class="badge text-bg-dark" th:classappend="${buyerYn == 'Y'} ? 'visible' : 'hidden'">구매자 리뷰</span>
+                            <input type="hidden" name="buyerYn" th:value="${buyerYn}" />
+                        </div>
                         <div class="card mb-3" style="max-width: 540px;">
                             <div class="row g-0">
                                 <div class="col-md-4">

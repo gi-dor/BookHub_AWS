@@ -77,3 +77,11 @@ textarea.custom-textarea:focus {
 .order-md-last .badge {
     font-size: 1.1em;
 }
+
+.visible {
+    display: inline;
+}
+
+.hidden {
+    display: none;
+}
