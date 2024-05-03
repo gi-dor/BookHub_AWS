@@ -13,8 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin/product")
@@ -66,6 +69,12 @@ public class ProductController {
         model.addAttribute("filter", filter);
 
         return "admin/product/list";
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public void delete(@RequestBody List<Long> deletedProductNos) {
+        productService.deleteProductByNo(deletedProductNos);
     }
 
     @GetMapping("/modify")

@@ -183,15 +183,16 @@
                         <!-- 선택 삭제 버튼 / 엑셀 버튼 -->
                         <div class="d-flex justify-content-between mb-3">
                             <div class="text-left">
-                                <button type="button" class="btn btn-outline-secondary btn-sm">선택 삭제</button>
+                                <button id="btn-delete" type="button" class="btn btn-outline-secondary btn-sm">선택 삭제
+                                </button>
                             </div>
                             <div class="text-end">
-                                <button type="button" class="btn btn-outline-secondary btn-sm">엑셀</button>
+                                <button id="btn-exel" type="button" class="btn btn-outline-secondary btn-sm">엑셀</button>
                             </div>
                         </div>
 
                         <!-- 조회 리스트 -->
-                        <table class="table text-center" th:if="${paging.totalRows != 0}">
+                        <table class="table text-center" id="table-products" th:if="${paging.totalRows != 0}">
                             <colgroup>
                                 <col width="3%">
                                 <col width="4%">
@@ -233,7 +234,7 @@
                                     ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
                             -->
                             <tr th:each="book, loop : ${books}">
-                                <td><input name="selectProduct" type="checkbox"></td>
+                                <td><input name="selectProduct" type="checkbox" th:data-delete-no="${book.no}"></td>
                                 <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
                                     순번
                                 </td>
@@ -364,11 +365,6 @@
             $("select[name='publisherNo']").val("0");
         });
 
-        $("[id^=btn-modify-product]").click(function () {
-            let productNo = $(this).data('no');
-            window.location.href = "/admin/product/modify?no=" + productNo;
-        });
-
         // '전체' 체크박스를 선택하면 '정상', '절판', '품절' 체크박스도 선택된다.
         $("#chk-select-all-status").click(function () {
             checkAll();
@@ -492,6 +488,44 @@
             }
         }
 
+        // 상품 선택 삭제 함수
+        $("#btn-delete").click(function () {
+            let checkedNos = [];
+            $("#table-products tbody :checkbox:checked").each(function () {
+                checkedNos.push($(this).data("deleteNo"));
+            });
+            console.log(checkedNos);
+            if (checkedNos.length === 0) {
+                alert("선택된 상품이 없습니다.");
+                return;
+            }
+
+            if (!confirm("선택한 상품을 삭제하시겠습니까?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/product/delete",
+                type: "POST",
+                data: JSON.stringify(checkedNos), // [100, 100, 100]
+                contentType: 'application/json',
+                success: function () {
+                    $("#table-products tbody :checkbox:checked").closest("tr").remove();
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                },
+                complete: function () {
+                    alert("삭제가 완료되었습니다.");
+                }
+            });
+        });
+
+        // 상품 수정 함수
+        $("[id^=btn-modify-product]").click(function () {
+            let productNo = $(this).data("no");
+            window.location.href = "/admin/product/modify?no=" + productNo;
+        });
 
     });
 

@@ -131,9 +131,9 @@
                     B.BOOK_UPDATED_DATE                                         AS updatedDate,
                     B.BOOK_PUBLISHED_DATE                                       AS publishedDate,
                     (SELECT GROUP_CONCAT(A.AUTHOR_NAME SEPARATOR ', ')
-                     FROM BOOK_AUTHOR BA, AUTHOR A
-                     WHERE BA.AUTHOR_NO = A.AUTHOR_NO
-                     AND BA.BOOK_NO = B.BOOK_NO)                                 AS authorName
+                    FROM BOOK_AUTHOR BA
+                    INNER JOIN AUTHOR A ON BA.AUTHOR_NO = A.AUTHOR_NO
+                    WHERE BA.BOOK_NO = B.BOOK_NO)                               AS authorName
 
     		FROM
                     BookHub.BOOK B
@@ -188,4 +188,10 @@
             ORDER BY
                 PUBLISHER_NAME ASC
     </select>
+
+    <update id="deleteProductByNo" parameterType="long">
+        UPDATE BookHub.BOOK
+        SET BOOK_DELETED_YN = 'Y'
+        WHERE BOOK_NO = #{deletedProductNo}
+    </update>
 </mapper>
