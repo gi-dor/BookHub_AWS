@@ -28,5 +28,6 @@ public class BookDto {
     private float discountRate;
     private int salesVolume;
     private int stock;
+    private String status;
     private BookAuthor bookAuthor;
 }

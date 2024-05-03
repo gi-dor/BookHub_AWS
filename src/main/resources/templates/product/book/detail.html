@@ -6,10 +6,10 @@
 
 <div layout:fragment="content" class="container my-3">
     <div class="row mb-3">
+        <div class="col-4"></div>
         <div class="col-3">
             <h3 id="book-no" th:text="${book.bookNo}" style="display:none">책 번호</h3>
             <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
-            <h5 class="d-flex justify-content-center">책 설명</h5>
 
             <div id="carouselExample" class="carousel slide" style="width: 300px; height: 500px; margin: 0 auto;" >
                 <div class="carousel-inner">
@@ -28,23 +28,58 @@
             </div>
         </div>
 
-        <div class="col-9">
-            <span class="badge rounded-pill text-bg-primary">베스트셀러</span>
-            <span class="badge rounded-pill text-bg-secondary">10%</span>
-            <div>
-                <span><strong>10%</strong></span>
-                <span th:text="${book.price}"><strong>13,500</strong>원</span>
-            </div>
-            <div>
-                <span><strong>적립/혜택</strong></span>
-                <span th:text="${book.price} * ${book.discountRate}"><strong>750</strong>P</span>
-            </div>
-            <div>
-                <span><strong>재고</strong></span>
-                <span th:text="${book.stock}"></span>
-            </div>
+        <div class="col-5">
+                <div class="order-md-last">
+                    <div class="d-flex justify-content-start align-items-center mb-3">
+                        <span class="badge rounded-pill text-bg-dark me-3">베스트셀러</span>
+                        <span class="badge rounded-pill text-bg-success">
+                            <span th:text="${#numbers.formatDecimal(book.discountRate * 100, 0, 0)}"></span>% 할인
+                        </span>
+                    </div>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0"><strong>가격</strong></h6>
+                            </div>
+                            <span>
+                                <span th:text="${#numbers.formatDecimal(book.discountRate * 100, 0, 0)}"></span>%
+                                <span><span th:text="${#numbers.formatDecimal(book.price * (1 - book.discountRate), 0, 0)}"></span>원</span>
+                                <span><span th:text="${book.price}"></span>원</span>
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0"><strong>적립/혜택</strong></h6>
+                            </div>
+                            <span><span th:text="${#numbers.formatDecimal(book.price * 0.05, 0, 0)}"></span>P</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0"><strong>판매 상태</strong></h6>
+                            </div>
+                            <div>
+                                <div class="badge text-bg-success" th:text="${book.status}"></div><br>
+                                <span th:text="${book.stock}"></span>개 남음
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-success">
+                                <h6 class="my-0"><strong>배송 안내</strong></h6>
+                            </div>
+                            <span class="badge text-bg-light">당일 배송</span>
+                        </li>
+                    </ul>
+
+                    <form class="card p-2">
+                        <div class="input-group">
+                            <span class="form-control">품절 상품의 경우 알림신청 시 입고 정보를 받으실 수 있습니다</span>
+                            <button type="button" class="btn btn-secondary">알림신청</button>
+                        </div>
+                    </form>
+                </div>
         </div>
     </div>
+
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -67,6 +102,32 @@
         </div>
     </nav>
 
+    <!-- 도서 기본정보 -->
+    <h3>기본정보</h3>
+    <table class="table">
+        <tr th:if="${book.isbn != null}">
+            <th>ISBN</th>
+            <td th:text="${book.isbn}"></td>
+        </tr>
+        <tr th:if="${book.publishedDate != null}">
+            <th>발행(출시)일자</th>
+            <td th:text="${book.publishedDate}"></td>
+        </tr>
+        <tr th:if="${book.pages != null}">
+            <th>쪽수</th>
+            <td th:text="${book.pages}"></td>
+        </tr>
+        <tr th:if="${book.size != null}">
+            <th>크기</th>
+            <td th:text="${book.size}"></td>
+        </tr>
+        <tr th:if="${book.totalNumber != null}">
+            <th>총권수</th>
+            <td th:text="${book.totalNumber}"></td>
+        </tr>
+    </table>
+
+    <!-- 리뷰 -->
     <button class="btn btn-outline-secondary me-3" type="button" onclick="createReview()">리뷰 작성</button>
     <ul class="nav nav-underline">
         <li class="nav-item">
