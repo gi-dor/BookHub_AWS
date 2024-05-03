@@ -86,4 +86,12 @@ public class BuyController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/delivery/create")
+    @ResponseBody
+    public ResponseEntity<UserDelivery> createUserDelivery(Principal principal, UserDelivery userDelivery){
+        System.out.println(userDelivery);
+        buyService.createUserDelivery(principal.getName(), userDelivery);
+        return ResponseEntity.ok().body(userDelivery);
+    }
 }

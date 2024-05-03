@@ -16,8 +16,9 @@ public class NewBookService {
 
     public BookListDto newBooks(SearchCriteria criteria) {
         List<BookDto> newBook = newBookMapper.newBookList(criteria);
+        System.out.println("000000000000000000000000000000: " + criteria.getCateKeyword());
         for (BookDto book : newBook) {
-            // bookDescription이 100글자를 초과하는 경우 처음 100글자만을 남기고 "..."을 추가합니다.
+            // bookDescription이 100글자를 초과하는 경우 처음 100글자만을 남기고 "..."을 추가
             if (book.getDescription() != null && book.getDescription().length() > 100) {
                 book.setDescription(book.getDescription().substring(0, 100) + "...");
             }

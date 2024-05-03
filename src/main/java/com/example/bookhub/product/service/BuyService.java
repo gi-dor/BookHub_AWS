@@ -1,6 +1,9 @@
 package com.example.bookhub.product.service;
 
+import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
+import com.example.bookhub.product.exception.BookHubException;
+import com.example.bookhub.product.mapper.BookMapper;
 import com.example.bookhub.product.mapper.BuyMapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
@@ -20,6 +23,7 @@ public class BuyService {
 
     private final UserMapper userMapper;
     private final BuyMapper buyMapper;
+    private final BookMapper bookMapper;
     private BuyForm buyForm;
 
     public List<CouponProduced> getCouponsByUserNo(String userId) {
@@ -36,6 +40,9 @@ public class BuyService {
     public void createBuy(BuyForm buyForm, String tid, String userId) {
         this.buyForm = buyForm;
         User user = userMapper.selectUserById(userId);
+
+        // 재고 감소
+        updateBookStock(buyForm);
 
         // BUY 테이블
         long generatedNo = insertBuy(tid, user);
@@ -93,6 +100,7 @@ public class BuyService {
             buyBook.setBuyNo(generatedNo);
 
             buyMapper.createBuyBook(buyBook);
+            //buyMapper.updateBookStock(bookNo, count);
         }
     }
 
@@ -135,4 +143,40 @@ public class BuyService {
         buyMapper.updateDefaultUserDeliveryN(selectedUserDeliveryNo);
         buyMapper.updateDefaultUserDeliveryY(selectedUserDeliveryNo);
     }
+
+    public UserDelivery createUserDelivery(String userId, UserDelivery userDelivery) {
+        User user = userMapper.selectUserById(userId);
+
+        userDelivery.setUser(user);
+
+        buyMapper.createUserDelivery(userDelivery);
+        return userDelivery;
+    }
+
+    public String getBuyerYn(long bookNo, String userId) {
+        long userNo = 0;
+        if(!"guest".equals(userId)) {
+            User user = userMapper.selectUserById(userId);
+            userNo = user.getNo();
+        }
+        String buyerYn = buyMapper.getBuyerYn(bookNo, userNo);
+
+        return buyerYn;
+    }
+
+    public void updateBookStock(BuyForm buyForm){
+        for(int i = 0; i < buyForm.getBuyBookNoList().size(); i++) {
+            long bookNo = buyForm.getBuyBookNoList().get(i);
+            int count = buyForm.getBuyBookCountList().get(i);
+
+            BookDto book = bookMapper.getBookByBookNo(bookNo);
+            if(book.getStock() > count){
+                buyMapper.updateBookStock(bookNo, count);
+            }
+            else {
+                throw new BookHubException("재고가 부족하여 주문이 취소되었습니다");
+            }
+        }
+    }
+
 }

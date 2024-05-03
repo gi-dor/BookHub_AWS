@@ -3,6 +3,7 @@ package com.example.bookhub.product.mapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.vo.UserDelivery;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,7 @@ public interface BuyMapper {
     List<BuyDeliveryRequest> getBuyDeliveryRequest();
     void updateDefaultUserDeliveryN(long selectedUserDeliveryNo);
     void updateDefaultUserDeliveryY(long selectedUserDeliveryNo);
+    void createUserDelivery(UserDelivery userDelivery);
+    void updateBookStock(@Param("bookNo") long bookNo, @Param("count") int count);
+    String getBuyerYn(@Param("bookNo") long bookNo, @Param("userNo") long userNo);
 }

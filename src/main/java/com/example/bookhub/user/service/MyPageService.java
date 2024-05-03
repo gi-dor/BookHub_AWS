@@ -10,6 +10,7 @@ import com.example.bookhub.user.mapper.MyPageMapper;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
 import com.example.bookhub.user.vo.UserPagination;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -131,8 +132,7 @@ public class MyPageService {
     }
 
 
-
-
-
-
+    public List<Inquiry> findInquiryByDate(LocalDateTime startDate, LocalDateTime endDate ) {
+        return myPageMapper.findInquiryByDate(startDate,endDate );
+    }
 }

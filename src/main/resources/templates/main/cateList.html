@@ -1,0 +1,171 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/main/cateList.css}" />
+</th:block>
+
+<div layout:fragment="content" class="container-fluid">
+        <form class="mb-4" action="/main/catelist" method="get" id="cateList">
+            <div class="mb-4">
+                <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubdate, '1')}"/> <!--기본이 주간-->
+                <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'1')}"/>
+                <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '0')}"/>
+                <input type="hidden" name="page" th:value="${#strings.defaultString(param.page, '1')}"/>
+            </div>
+        </form>
+    <div class="row">
+        <!-- Sidebar -->
+        <div id="sidebar" class="col-2" >
+            <div>
+                <h2 th:text="${book[0].categoryName}"></h2>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="#"><strong>도서 모두보기</strong></a>
+                    <a class="nav-link text-black" href="#">베스트셀러</a>
+                    <a class="nav-link text-black" href="#">스테디셀러</a>
+                    <a class="nav-link text-black" href="#">추천도서</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /Sidebar -->
+
+        <!-- Main content -->
+        <div class="col-10 mb-5">
+            <!--옵션선택? 판매량순, 출시일순, 평점순, 리뷰순 -->
+            <div class = "row">
+                <div class="d-flex justify-content-between align-items-center mb-3 col-10" id="sort">
+                    <ul class="nav nav-tabs col-12">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#" data-sort="1">판매량순</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-sort="2">출간일순</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-sort="3">평점순</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-sort="4">리뷰순</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group col-2" id="pubDate" >
+                    <button type="button" class="pubdatebtn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        출간일
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" >
+                        <li><a class="dropdown-item" href="#" data-pubDate="1" >출간일 1주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="2">출간일 2주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="3">출간일 8주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="4">출간일 12주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="5">출간일 24주 이내</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        <!-- 페이지네이션 및 버튼 -->
+        <div class="row">
+            <div class="pagination d-flex justify-content-between align-items-center mb-4">
+                <div th:if="${criteria.totalRows != 0}">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item" >
+                                <a th:href="@{|catelist?page=${criteria.page - 1}|}"
+                                   class="page-link"
+                                   th:classappend="${criteria.first ? 'disabled' : '' }"
+                                   aria-label="Previous"
+                                   th:attr="data-page=${criteria.page - 1}">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <th:block th:each="num : ${#numbers.sequence(criteria.beginPage, criteria.endPage)}">
+                                <li class="page-item" >
+                                    <a th:href="@{|catelist?page=${num}|}"
+                                       class="page-link"
+                                       th:text="${num}"
+                                       th:attr="data-page=${num}">
+
+                                        [[${num}]]
+                                    </a>
+                                </li>
+                            </th:block>
+                            <li class="page-item">
+                                <a th:href="@{|catelist?page=${criteria.page + 1}|}"
+                                   class="page-link"
+                                   th:classappend="${criteria.last ? 'disabled' : '' }"
+                                   aria-label="Next"
+                                   th:attr="data-page=${criteria.page + 1}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-5">
+                    <button type="button" class="btn me-2">전체선택</button>
+                    <button type="button" class="btn">장바구니 담기</button>
+                    <button type="button" class="btn">마이리스트 담기</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-10 ms-2">
+            <div class="mb-5 bg-white" style="border-bottom: 1.5px solid #1D3559;"></div>
+        </div>
+        <!--상품 목록-->
+        <div class="card mb-5 col-12" th:each="book : ${book}">
+            <div class="ms-2">
+                <button type="button" class="btn btn-sm rounded-circle" id="checkButton">
+                    <i class="bi bi-check"></i>
+                </button>
+            </div>
+            <div >
+                <!-- 책 이미지 -->
+                <a href="#">
+                    <img th:src="${book.cover}" class="card-img-top" alt="책 사진">
+                </a>
+            </div>
+            <div class="card-body col-12">
+                <div class="text-section col-9">
+                    <!-- 책 제목 -->
+                    <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
+                    <!-- 저자 -->
+                    <div th:each="author : ${book.authors}">
+                        <p class="card-text" th:text="${author.name + ' (' + author.type + ')'}">저자</p>
+                    </div>
+                    <!--출판사-->
+                    <p class="card-text">
+                        <span th:text="${book.publisherName}"></span>
+                    </p>
+                    <!-- 가격 -->
+                    <p class="card-text">
+                        <span th:text="${book.price} + '원'"></span>
+                    </p>
+                    <!-- 출판일 -->
+                    <p class="card-text">
+                        <span th:text="${book.publishedDate}"></span>
+                    </p>
+                    <!-- 책 설명 -->
+                    <p class="card-text" th:text="${book.description}"></p>
+                    <p class="card-text">
+                        <i class="fas fa-star"></i>
+                        9.8
+                    </p>
+                </div>
+                <div class="cta-section col-3">
+                    <i id="zzim" class="far fa-heart mb-3"></i>
+                    <a href="#" class="btn mb-3" id="cart">장바구니</a>
+                    <a href="#" class="btn" id="buyButton">바로구매</a>
+                </div>
+                <div class="mt-3" style="border-top: 1.5px solid #FFFFFF; "></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<th:block layout:fragment="script">
+    <script src="/js/main/cateList.js"></script>
+    <script src="/js/main/navbar.js"></script>
+</th:block>
+</html>

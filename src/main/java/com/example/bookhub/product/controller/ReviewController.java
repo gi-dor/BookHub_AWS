@@ -35,12 +35,12 @@ public class ReviewController {
         return "redirect:/product/book/detail?bookNo=" + bookNo;
     }
 
-    @GetMapping("/{bookNo}")
-    @ResponseBody
-    public ResponseEntity<List<ReviewDto>> getReviews(@PathVariable("bookNo") long bookNo, Principal principal){
-        List<ReviewDto> reviewDtoList = reviewService.getReviewsByBookNo(bookNo, principal.getName());
-        return ResponseEntity.ok().body(reviewDtoList);
-    }
+//    @GetMapping("/{bookNo}")
+//    @ResponseBody
+//    public ResponseEntity<List<ReviewDto>> getReviews(@PathVariable("bookNo") long bookNo, Principal principal){
+//        List<ReviewDto> reviewDtoList = reviewService.getReviewsByBookNo(bookNo, principal.getName());
+//        return ResponseEntity.ok().body(reviewDtoList);
+//    }
 
     @GetMapping("/recommend/{reviewNo}")
     @ResponseBody
@@ -67,5 +67,19 @@ public class ReviewController {
     public String deleteReview(@PathVariable("bookNo") long bookNo, @PathVariable("reviewNo") long reviewNo){
         reviewService.deleteReview(reviewNo);
         return "redirect:/product/book/detail?bookNo=" + bookNo;
+    }
+
+    @GetMapping("/rate/{bookNo}")
+    @ResponseBody
+    public ResponseEntity<List<Integer>> getRate(@PathVariable("bookNo") long bookNo){
+        List<Integer> rateCountList = reviewService.getRate(bookNo);
+        return ResponseEntity.ok().body(rateCountList);
+    }
+
+    @GetMapping("/reviewTag/{bookNo}")
+    @ResponseBody
+    public ResponseEntity<List<Integer>> getReviewTagCount(@PathVariable("bookNo") long bookNo){
+        List<Integer> reviewTagCountList = reviewService.getReviewTagCount(bookNo);
+        return ResponseEntity.ok().body(reviewTagCountList);
     }
 }

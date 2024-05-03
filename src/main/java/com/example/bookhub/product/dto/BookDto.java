@@ -27,5 +27,7 @@ public class BookDto {
     private char discontinuingYn;
     private float discountRate;
     private int salesVolume;
+    private int stock;
+    private String status;
     private BookAuthor bookAuthor;
 }

@@ -5,6 +5,7 @@ import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.user.dto.InquiryListDTO;
 import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -37,4 +38,6 @@ public interface MyPageMapper {
     int getTotalWishListCount(String id);
 
 
+    List<Inquiry> findInquiryByDate(@Param("startDate") LocalDateTime startDate,
+                                    @Param("endDate") LocalDateTime endDate);
 }

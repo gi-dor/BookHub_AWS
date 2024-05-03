@@ -23,7 +23,7 @@ public class ReviewDto {
     private String recommended;
     private ReviewTag reviewTag;
     private int replyCount;
-    private String buyer;
+    private String buyerYn;
     private User user;
     private Book book;
     private List<ReviewImage> reviewImageList;

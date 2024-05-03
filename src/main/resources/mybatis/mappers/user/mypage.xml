@@ -170,6 +170,21 @@
     </delete>
 
 
+
+    <select id="findInquiryByDate" resultType="com.example.bookhub.board.vo.Inquiry">
+        select
+            i.INDIVIDUAL_INQUIRY_NO             as no,
+            i.INDIVIDUAL_INQUIRY_TITLE          as title,
+            i.INDIVIDUAL_INQUIRY_CONTENT        as content,
+            i.INDIVIDUAL_INQUIRY_ANSWER_YN      as answerYn,
+            i.INDIVIDUAL_INQUIRY_DELETE_YN      as deleteYn,
+            i.INDIVIDUAL_INQUIRY_CREATE_DATE    as createdDate ,
+            i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate
+        from INDIVIDUAL_INQUIRIES i
+        where INDIVIDUAL_INQUIRY_CREATE_DATE BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+
 </mapper>
 
 

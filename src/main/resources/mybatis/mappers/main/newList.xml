@@ -15,7 +15,11 @@
         BI.BOOK_IMAGE_COVER,
         P.PUBLISHER_NAME,
         B.CATEGORY_NO,
-        C.CATEGORY_NAME
+        C.CATEGORY_NAME,
+        (SELECT GROUP_CONCAT(Y.AUTHOR_NAME SEPARATOR ', ')
+        FROM BOOK_AUTHOR X, AUTHOR Y
+        WHERE X.AUTHOR_NO = Y.AUTHOR_NO
+        AND X.BOOK_NO = B.BOOK_NO) AUTHORS
         FROM
         BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P,CATEGORY C
         WHERE
@@ -30,28 +34,31 @@
         B.CATEGORY_NO = C.CATEGORY_NO
 
             <choose>
-                <when test="cateKeyword != 0">
+                <when test="cateKeyword != 1">
                   and  C.CATEGORY_NO = #{cateKeyword}
                 </when>
                 <otherwise>
                     AND C.CATEGORY_NO IN (SELECT C.CATEGORY_NO
                                       FROM CATEGORY
-                                      WHERE C.PARENT_CATEGORY_NO = #{cate})
+                                      WHERE C.PARENT_CATEGORY_NO = #{cateKeyword})
                 </otherwise>
             </choose>
 
 
         <choose>
             <when test="pubDate == 1">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 14 DAY)
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
             </when>
             <when test="pubDate == 2">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 56 DAY)
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 14 DAY)
             </when>
             <when test="pubDate == 3">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 84 DAY)
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 56 DAY)
             </when>
             <when test="pubDate == 4">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 84 DAY)
+            </when>
+            <when test="pubDate == 5">
                 AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
             </when>
             <otherwise>
@@ -59,21 +66,21 @@
             </otherwise>
         </choose>
         <choose>
-            <when test="sort == 0">
-                ORDER BY BOOK_SALES_VOLUME DESC
-            </when>
-            <when test="sort == 1">
-                ORDER BY BOOK_PUBLISHED_DATE DESC
-            </when>
-            <when test="sort == 2 ">
-                ORDER BY BOOK_AVERAGE_RATING DESC
-            </when>
-            <when test="sort == 3">
-                ORDER BY BOOK_TOTAL_REPLY_CNT DESC
-            </when>
-            <otherwise>
-                ORDER BY BOOK_PUBLISHED_DATE DESC
-            </otherwise>
+        <when test="sort == 1">
+            ORDER BY BOOK_SALES_VOLUME DESC
+        </when>
+        <when test="sort == 2">
+            ORDER BY BOOK_PUBLISHED_DATE DESC
+        </when>
+        <when test="sort == 3 ">
+            ORDER BY BOOK_AVERAGE_RATING DESC
+        </when>
+        <when test="sort == 4">
+            ORDER BY BOOK_TOTAL_REPLY_CNT DESC
+        </when>
+        <otherwise>
+            ORDER BY BOOK_SALES_VOLUME DESC
+        </otherwise>
         </choose>
         LIMIT #{offset}, #{recordSize};
 
@@ -101,6 +108,7 @@
     <select id="count" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultType="int" >
         SELECT
         COUNT(*)
+
         FROM
         BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P,CATEGORY C
         WHERE
@@ -114,26 +122,39 @@
         AND
         B.CATEGORY_NO = C.CATEGORY_NO
 
+        <choose>
+            <when test="cateKeyword != 1">
+                and  C.CATEGORY_NO = #{cateKeyword}
+            </when>
+            <otherwise>
+                AND C.CATEGORY_NO IN (SELECT C.CATEGORY_NO
+                FROM CATEGORY
+                WHERE C.PARENT_CATEGORY_NO = #{cateKeyword})
+            </otherwise>
+        </choose>
 
-        <!-- 검색 조건 -->
-        <if test="keyword != null">
-            <choose>
-                <when test="opt == '국내'">
-                    AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 1)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
 
-                </when>
-                <when test="opt == '국외'">
-                    AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 2)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
+        <choose>
+            <when test="pubDate == 1">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+            </when>
+            <when test="pubDate == 2">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 14 DAY)
+            </when>
+            <when test="pubDate == 3">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 56 DAY)
+            </when>
+            <when test="pubDate == 4">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 84 DAY)
+            </when>
+            <when test="pubDate == 5">
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
+            </when>
+            <otherwise>
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+            </otherwise>
+        </choose>
 
-                </when>
-                <otherwise>
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
-
-                </otherwise>
-            </choose>
-        </if>
 
     </select>
 </mapper>

@@ -50,10 +50,12 @@
                             <span class="page-link disabled" th:unless="${pagination.currentPage > 1}">이전</span>
                         </li>
 
-                        <!-- 페이지 번호를 표시 -->
-                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, pagination.totalPages)}" th:class="${pageNumber == pagination.currentPage} ? 'active' : ''">
+
+                        <!-- 페이지 번호를 표시, beginPage부터 endPage까지의 범위에 해당하는 페이지 번호만 반복하여 나열 -->
+                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(pagination.beginPage, pagination.endPage)}" th:class="${pageNumber == pagination.currentPage} ? 'active' : ''">
                             <a class="page-link" th:attr="data-page=${pageNumber}" th:href="@{/admin/individual/noanswer(page=${pageNumber})}" th:text="${pageNumber}"></a>
                         </li>
+
 
                         <!-- 다음 페이지 링크 -->
                         <li class="page-item" th:class="${pagination.currentPage < pagination.totalPages} ? '' : 'disabled'">

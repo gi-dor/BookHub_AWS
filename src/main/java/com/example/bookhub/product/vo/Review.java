@@ -20,13 +20,13 @@ public class Review {
     private Date updatedDate;
     private ReviewTag reviewTag;
     private int replyCount;
-    private String buyer;
+    private String buyerYn;
     private User user;
     private Book book;
 
     @Builder
     public Review(long reviewNo, String comment, float rate, int recommendCount, int accuseCount, Date createdDate, Date updatedDate,
-                  ReviewTag reviewTag, int replyCount, String buyer, User user, Book book) {
+                  ReviewTag reviewTag, int replyCount, String buyerYn, User user, Book book) {
         super();
         this.reviewNo = reviewNo;
         this.comment = comment;
@@ -37,7 +37,7 @@ public class Review {
         this.updatedDate = updatedDate;
         this.reviewTag = reviewTag;
         this.replyCount = replyCount;
-        this.buyer = buyer;
+        this.buyerYn = buyerYn;
         this.user = user;
         this.book = book;
     }
