@@ -68,11 +68,15 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
+    // maxDate 값을 넣기 위한 어제 날짜구하기
     // 오늘 날짜 계산
     let today = new Date();
     // 어제 날짜 계산
     let yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
+
+
+
 
     const ctx = document.getElementById('myChart');
     let chart = new Chart(ctx, {
@@ -198,6 +202,8 @@
 
 
     $('.datepicker').datepicker({
+        // midDate 값을 넣기 위한 서비스 시작일자 구하기
+        minDate: new Date('2024-04-14'),
         maxDate: yesterday
     });
 

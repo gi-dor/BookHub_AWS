@@ -21,10 +21,7 @@ public class DashBoardController {
 
     private final DashBoardService dashBoardService;
 
-    @GetMapping("/weekDash")
-    public String weekDash(){
-        return "/admin/dash/weekDash";
-    }
+
 
     // 총 회원 수
     @RequestMapping("/allCustomer.do")

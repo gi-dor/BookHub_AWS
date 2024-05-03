@@ -31,11 +31,31 @@
             DATE_FORMAT(b.BUY_DATE, '%Y-%m-%d') = #{value}
         GROUP BY
             book.BOOK_NAME;
+    </select>
 
+    <select id="getDetailRange" parameterType="String" resultType="com.example.bookhub.admin.dto.DayTotalDto">
+        SELECT *
+        FROM (
+                 SELECT DAY_TOTAL_DATE AS dayTotalDate, DAY_TOTAL_PRICE AS dayTotalPrice
+                 FROM BookHub.DAY_TOTAL
+                 WHERE DAY_TOTAL_DATE BETWEEN #{startDate} AND #{endDate}
+             ) AS recent_data
+        ORDER BY dayTotalDate ASC
+    </select>
 
-
-
-
+    <select id="getDetailRangeItem" resultType="com.example.bookhub.admin.dto.DailyDto" parameterType="String">
+        SELECT
+            book.BOOK_NAME AS "bookName.name",
+            SUM(bb.COUNT) AS soldCount,
+            SUM(book.BOOK_LIST_PRICE * bb.COUNT) AS soldSum
+        FROM
+            BookHub.BUY b
+                JOIN BookHub.BUY_BOOK bb ON b.BUY_NO = bb.BUY_NO
+                JOIN BookHub.BOOK book ON bb.BOOK_NO = book.BOOK_NO
+        WHERE
+            b.BUY_DATE BETWEEN #{startDate} AND #{endDate}
+        GROUP BY
+            book.BOOK_NAME
 
 
     </select>

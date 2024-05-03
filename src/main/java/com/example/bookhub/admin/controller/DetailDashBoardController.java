@@ -1,6 +1,7 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.DailyDto;
+import com.example.bookhub.admin.dto.DayTotalDto;
 import com.example.bookhub.admin.dto.DetailPercentDto;
 import com.example.bookhub.admin.service.DetailDashBoardService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,17 @@ public class DetailDashBoardController {
     @RequestMapping("/getDetailPercent.do")
     public @ResponseBody List<DetailPercentDto> getDetailPercent(String searchData){
         return detailDashBoardService.getDetailPercent(searchData);
+    }
+
+
+    @GetMapping("/rangeDash")
+    public String weekDash(){
+        return "/admin/dash/weekDash";
+    }
+
+    @RequestMapping("/getDetailRange.do")
+    public @ResponseBody List<DayTotalDto> getDetailRange(String startDate, String endDate){
+        return detailDashBoardService.getDetailRange(startDate, endDate);
     }
 
     
