@@ -33,6 +33,9 @@ public class SearchCriteria {
         this.page = 1;
         this.recordSize = 10;
         this.pageSize = 10;
+        this.sort= 1;
+        this.cateKeyword =1;
+        this.pubDate = 1;
     }
 
     public int getOffset() {

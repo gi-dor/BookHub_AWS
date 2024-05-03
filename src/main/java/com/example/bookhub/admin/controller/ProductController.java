@@ -13,13 +13,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin/product")
 @RequiredArgsConstructor
 public class ProductController {
+
+    private static final int START_OFFSET = 1;
 
     private final ProductService productService;
     private final CategoryService categoryService;
@@ -28,7 +33,7 @@ public class ProductController {
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
                        @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
                        @RequestParam(name = "sort", required = false, defaultValue = "productName") String sort,
-                       @ModelAttribute("productFilter") ProductFilter filter,
+                       @ModelAttribute("filter") ProductFilter filter,
                        Model model) {
 
         List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
@@ -38,9 +43,14 @@ public class ProductController {
 
         int totalRows = productService.getTotalRows(filter);
         Pagination pagination = new Pagination(page, totalRows, rows);
-        int begin = pagination.getBegin();
-        List<BookList> books = productService.getBooks(filter, begin, rows, sort);
 
+        if (totalRows > 0) {
+            int begin = pagination.getBegin() - START_OFFSET;
+            List<BookList> books = productService.getBooks(filter, begin, rows, sort);
+            model.addAttribute("books", books);
+        } else {
+            model.addAttribute("books", List.of());
+        }
         // 모든 topCategory 화면에 전달
         model.addAttribute("topLevelCategories", topLevelCategories);
 
@@ -56,10 +66,15 @@ public class ProductController {
 
         model.addAttribute("publishers", publishers);
         model.addAttribute("paging", pagination);
-        model.addAttribute("books", books);
-        model.addAttribute("productFilter", filter);
+        model.addAttribute("filter", filter);
 
         return "admin/product/list";
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public void delete(@RequestBody List<Long> deletedProductNos) {
+        productService.deleteProductByNo(deletedProductNos);
     }
 
     @GetMapping("/modify")

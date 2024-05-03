@@ -41,6 +41,7 @@ public class ReviewService {
                 .user(user)
                 .reviewTag(reviewTag)
                 .book(book)
+                .buyerYn(reviewForm.getBuyerYn())
                 .build();
 
         reviewMapper.createReview(review);
@@ -63,7 +64,7 @@ public class ReviewService {
 
     public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort) {
         long userNo = 0;
-        if(userId != "guest") {
+        if(!"guest".equals(userId)) {
             User user = userMapper.selectUserById(userId);
             userNo = user.getNo();
         }
@@ -73,7 +74,7 @@ public class ReviewService {
 
         int offset = 0;
         if(totalRows > 0) {
-            offset = pagination.getBegin();
+            offset = pagination.getBegin() - 1;
         }
 
         Map map = new HashMap<String, Object>();
@@ -193,4 +194,15 @@ public class ReviewService {
         }
         return rateCountList;
     }
+
+    public List<Integer> getReviewTagCount(long bookNo){
+        List<Integer> reviewTagCountList = new ArrayList<>();
+        for(int i = 1; i <= 5; i++){
+            int reviewTagNo = i;
+            int reviewTagCount = reviewMapper.getReviewTagCount(bookNo, reviewTagNo);
+            reviewTagCountList.add(reviewTagCount);
+        }
+        return reviewTagCountList;
+    }
+
 }

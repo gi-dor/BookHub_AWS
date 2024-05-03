@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface BookMapper {
 
     BookDto getBookDetailByNo(long bookNo);
+    BookDto getBookByBookNo(long bookNo);
 }

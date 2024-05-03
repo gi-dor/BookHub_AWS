@@ -23,9 +23,9 @@
         <result column="inquiry_response_comment_create_date" property="createDate"/>
         <result column="inquiry_response_comment_update_date" property="updateDate"/>
 
-        <association column="inquiry_response_comment_admin_no" property="adminNo"
+        <association column="inquiry_response_comment_admin_no" property="admin"
                      select="com.example.bookhub.admin.mapper.AdminMapper.getAdminId"/>
-        <association column="inquiry_no" property="inquiryNo"
+        <association column="inquiry_no" property="inquiry"
                      select="com.example.bookhub.board.mapper.InquiryMapper.getInquiryByNo"/>
     </resultMap>
 

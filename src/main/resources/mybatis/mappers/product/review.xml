@@ -11,7 +11,7 @@
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
         <result column="reply_count" property="replyCount"/>
-        <result column="buyer" property="buyer"/>
+        <result column="buyer_yn" property="buyerYn"/>
         <result column="recommended" property="recommended" />
         <association column="user_no" property="user"
                      select="com.example.bookhub.product.mapper.ReviewMapper.getUserByNo"/>
@@ -27,7 +27,7 @@
         <id column="review_no" property="reviewNo"/>
         <result column="comment" property="comment"/>
         <result column="rate" property="rate"/>
-        <result column="buyer" property="buyer"/>
+        <result column="buyer_yn" property="buyerYn"/>
         <association column="review_tag_no" property="reviewTag"
                      select="com.example.bookhub.product.mapper.ReviewMapper.getReviewTagByNo"/>
     </resultMap>
@@ -58,9 +58,9 @@
 
     <insert id="createReview" parameterType="com.example.bookhub.product.vo.Review">
         insert into REVIEW
-        (comment, rate, user_no, review_tag_no, book_no)
+        (comment, rate, user_no, review_tag_no, book_no, buyer_yn)
         values
-        (#{comment}, #{rate}, #{user.no}, #{reviewTag.reviewTagNo}, #{book.bookNo})
+        (#{comment}, #{rate}, #{user.no}, #{reviewTag.reviewTagNo}, #{book.bookNo}, #{buyerYn})
 
         <selectKey keyProperty="reviewNo" resultType="long" order="AFTER">
             select last_insert_id()
@@ -135,7 +135,7 @@
             user_no,
             review_tag_no,
             reply_count,
-            buyer
+            buyer_yn
             <choose>
                 <when test="userNo != 0">
                     ,
@@ -228,7 +228,7 @@
             comment,
             rate,
             review_tag_no,
-            buyer
+            buyer_yn
         from
             REVIEW
         where
@@ -266,5 +266,15 @@
             and rate <= #{end}
             and book_no = #{bookNo}
               ]]>
+    </select>
+
+    <select id="getReviewTagCount" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            review_tag_no = #{reviewTagNo}
+            and book_no = #{bookNo}
     </select>
 </mapper>

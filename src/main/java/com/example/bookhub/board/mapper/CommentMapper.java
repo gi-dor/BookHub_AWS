@@ -26,12 +26,17 @@ public interface CommentMapper {
      */
     int getCommentCount(long communityNo);
 
-
     /**
      * 댓글 등록
      * @param comment
      */
     void addComment(CommunityComment comment);
+
+    /**
+     * 대댓글 등록
+     * @param comment
+     */
+    void addChildComment(CommunityComment comment);
 
     /**
      * 댓글 수정

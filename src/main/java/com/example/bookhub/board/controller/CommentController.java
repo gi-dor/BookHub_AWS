@@ -23,6 +23,15 @@ public class CommentController {
         return "redirect:/board/community/detail/" + communityNo;
     }
 
+    @PostMapping("/addChild")
+    public String addChildComment(@RequestParam("communityNo") long communityNo, @RequestParam("parentNo") long parentNo, Principal principal, @RequestParam("content") String content) {
+        String userId = principal.getName();
+
+        commentService.addChildComment(communityNo, parentNo, userId, content);
+
+        return "redirect:/board/community/detail/" + communityNo;
+    }
+
     @PostMapping("/modify")
     public String updateComment(@ModelAttribute("comment") CommunityComment comment, @RequestParam Long communityNo) {
         commentService.updateComment(comment);

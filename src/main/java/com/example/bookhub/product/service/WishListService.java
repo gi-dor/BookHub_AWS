@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +33,21 @@ public class WishListService {
         map.put("bookNo", bookNo);
         map.put("userNo", user.getNo());
         return map;
+    }
+
+    public String getWishListYn(long bookNo, String userId) {
+        long userNo = 0;
+        String wishListYn = "N";
+
+        if(!"guest".equals(userId)) {
+            User user = userMapper.selectUserById(userId);
+            userNo = user.getNo();
+        }
+
+        Optional<Long> optional = wishListMapper.getWishListYn(bookNo, userNo);
+        System.out.println(optional);
+        if(!optional.isEmpty())
+            wishListYn = "Y";
+        return wishListYn;
     }
 }

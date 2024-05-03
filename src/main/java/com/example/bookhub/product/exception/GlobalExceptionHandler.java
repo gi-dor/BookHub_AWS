@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @Log4j2
 public class GlobalExceptionHandler {
+    @ExceptionHandler(BookHubException.class)
+    public String bookHubExceptionHandler(BookHubException ex, Model model){
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "product/pay/error";
+    }
 
     @ExceptionHandler(KakaoPayReadyException.class)
     public String kakaoPayReadyExceptionHandler(KakaoPayReadyException ex, Model model){

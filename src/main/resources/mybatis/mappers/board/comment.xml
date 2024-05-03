@@ -5,6 +5,7 @@
     <resultMap id="CommunityCommentResultMap" type="com.example.bookhub.board.vo.CommunityComment">
         <id column="comment_no" property="no"/>
         <result column="comment_content" property="content"/>
+        <result column="parent_comment" property="parentNo"/>
         <result column="comment_create_date" property="createDate"/>
         <result column="comment_create_date" property="updateDate"/>
 
@@ -18,22 +19,36 @@
         </association>
     </resultMap>
 
+
+
     <!-- 댓글을 등록하는 쿼리 -->
     <insert id="addComment" parameterType="com.example.bookhub.board.vo.CommunityComment">
-        <selectKey keyProperty="no" order="AFTER" resultType="Long">
-            SELECT LAST_INSERT_ID() AS no
+        <selectKey keyProperty="no" order="BEFORE" resultType="Long">
+            select max(comment_no) + 1
+            from COMMUNITY_BOARD_COMMENTS
         </selectKey>
-        INSERT INTO COMMUNITY_BOARD_COMMENTS (COMMUNITY_BOARD_NO, COMMENT_USER_NO, COMMENT_CONTENT)
-        VALUES (#{community.no}, #{user.no}, #{content})
+        INSERT INTO COMMUNITY_BOARD_COMMENTS (COMMENT_NO, COMMUNITY_BOARD_NO, COMMENT_USER_NO, COMMENT_CONTENT, PARENT_COMMENT)
+        VALUES (#{no}, #{community.no}, #{user.no}, #{content}, #{no})
     </insert>
+
+    <!-- 대댓글을 등록하는 쿼리 -->
+    <insert id="addChildComment" parameterType="com.example.bookhub.board.vo.CommunityComment">
+        <selectKey keyProperty="no" order="BEFORE" resultType="Long">
+            select max(comment_no) + 1
+            from COMMUNITY_BOARD_COMMENTS
+        </selectKey>
+        INSERT INTO COMMUNITY_BOARD_COMMENTS (COMMUNITY_BOARD_NO, COMMENT_USER_NO, COMMENT_CONTENT, PARENT_COMMENT)
+        VALUES (#{community.no}, #{user.no}, #{content}, #{parentNo})
+    </insert>
+
 
     <!-- 페이징 처리한 댓글 목록을 조회하는 쿼리 -->
     <select id="findByCommunityNoComment" resultMap="CommunityCommentResultMap">
-        SELECT COMMENT_NO, COMMENT_USER_NO, COMMENT_CONTENT, COMMENT_UPDATE_DATE, COMMENT_CREATE_DATE
+        SELECT COMMENT_NO, COMMENT_USER_NO, COMMENT_CONTENT, COMMENT_UPDATE_DATE, COMMENT_CREATE_DATE, PARENT_COMMENT
         FROM COMMUNITY_BOARD_COMMENTS
         WHERE COMMENT_DELETE_YN = 0
         AND COMMUNITY_BOARD_NO = #{communityNo}
-        ORDER BY COMMENT_CREATE_DATE DESC
+        ORDER BY PARENT_COMMENT DESC, COMMENT_NO ASC
         LIMIT #{offset}, #{size}
     </select>
 

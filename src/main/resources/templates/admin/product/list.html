@@ -7,7 +7,7 @@
                 <h1 class="fs-3">상품 조회</h1>
 
                 <!-- 필터 선택 영역-->
-                <form th:action="@{/admin/product/list}" th:object="${productFilter}">
+                <form th:action="@{/admin/product/list}" th:object="${filter}">
                     <div class="col-12 bg-light p-3 mb-3">
                         <table class="table">
                             <tbody>
@@ -37,26 +37,29 @@
                                     <select th:field="*{secondCategoryNo}" class="form-select-sm">
                                         <option value="0" selected>중분류 선택</option>
                                         <option th:each="secondLevelCategory : ${secondLevelCategories}"
-                                               th:value="${secondLevelCategory.no}"
-                                               th:text="${secondLevelCategory.name}">
+                                                th:value="${secondLevelCategory.no}"
+                                                th:text="${secondLevelCategory.name}">
                                         </option>
                                     </select>
                                     <select th:field="*{thirdCategoryNo}" class="form-select-sm">
                                         <option value="0" selected>소분류 선택</option>
                                         <option th:each="thirdLevelCategory : ${thirdLevelCategories}"
-                                               th:value="${thirdLevelCategory.no}"
-                                               th:text="${thirdLevelCategory.name}">
+                                                th:value="${thirdLevelCategory.no}"
+                                                th:text="${thirdLevelCategory.name}">
                                         </option>
                                     </select>
+                                    <!-- category_no 컬럼이 Not Null이기 때문에 카테고리를 미등록할 수 없다.
+                                         이후 기능 변경을 위해 남겨둠.
                                     <input type="checkbox" class="form-check-input">
-                                    <label class="form-check-label ml-1">카테고리 미등록</label>
+                                    <label id="chk-unregistered-ctg" class="form-check-label ml-1">카테고리 미등록</label>
+                                    -->
                                 </td>
                             </tr>
                             <tr>
                                 <td class="bg-light">기간 검색</td>
                                 <td>
                                     <div class="d-flex">
-                                        <select th:field="*{period}" class="form-select-sm me-2">
+                                        <select th:field="*{dateOpt}" class="form-select-sm me-2">
                                             <option value="createdDate">등록일
                                             </option>
                                             <option value="updatedDate">수정일
@@ -67,17 +70,30 @@
                                         <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
                                         <input th:field="*{lessDate}" type="date" class="form-control-sm ms-2 me-2">
                                         <div class="input-group">
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">오늘
+                                            <input type="hidden" th:field="*{period}"/>
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="0"
+                                                    th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">3일간
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="3"
+                                                    th:classappend="${filter.period == '3' ? 'active' : ''}">3일간
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">일주일
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="7"
+                                                    th:classappend="${filter.period == '7' ? 'active' : ''}">일주일
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">1개월
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="30"
+                                                    th:classappend="${filter.period == '30' ? 'active' : ''}">1개월
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">3개월
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="90"
+                                                    th:classappend="${filter.period == '90' ? 'active' : ''}">3개월
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" type="button">전체
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="all"
+                                                    th:classappend="${filter.period == 'all' ? 'active' : ''}">전체
                                             </button>
                                         </div>
                                     </div>
@@ -86,28 +102,32 @@
                             <tr>
                                 <td class="bg-light">판매 상태</td>
                                 <td>
-                                    <input type="checkbox" class="form-check-input"> 전체
-                                       <input type="checkbox" class="form-check-input" th:field="*{available}"
-                                              value="정상"> 정상
-                                       <input type="checkbox" class="form-check-input" th:field="*{discontinued}"
-                                              value="절판"> 절판
-                                       <input type="checkbox" class="form-check-input" th:field="*{soldOut}"
-                                              value="품절"> 품절
-                                   </td>
+                                    <input id="chk-select-all-status" type="checkbox" class="form-check-input" checked>
+                                    전체
+                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{status}"
+                                           value="정상"> 정상
+                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{status}"
+                                           value="절판"> 절판
+                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{status}"
+                                           value="품절"> 품절
+                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{status}"
+                                           value="삭제"> 삭제
                                 </td>
                             </tr>
                             <tr>
                                 <td class="bg-light">재고</td>
                                 <td>
-                                    <select class="form-select-sm">
-                                        <option selected>전체</option>
-                                        <option value="10">10개 이하</option>
-                                        <option value="30">30개 이하</option>
-                                        <option value="50">50개 이하</option>
-                                        <option value="100">100개 이하</option>
+                                    <select class="form-select-sm" th:field="*{stockOpt}">
+                                        <option id="opt1" value="0" selected>전체</option>
+                                        <option id="opt2" value="10">10개 이하</option>
+                                        <option id="opt3" value="30">30개 이하</option>
+                                        <option id="opt4" value="50">50개 이하</option>
+                                        <option id="opt5" value="100">100개 이하</option>
                                     </select>
-                                    <input th:field="*{moreStock}" type="number" class="form-control-sm"> 개 이상 -
-                                    <input th:field="*{lessStock}" type="number" class="form-control-sm"> 개 이하
+                                    <input th:field="*{moreStock}" type="number" class="form-control-sm"
+                                           step="10"> 개 이상 -
+                                    <input th:field="*{lessStock}" type="number" class="form-control-sm"
+                                           step="10"> 개 이하
                                 </td>
                             </tr>
                             <tr>
@@ -126,7 +146,7 @@
                         </table>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary btn-sm">검색</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm">초기화</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
                         </div>
                     </div>
 
@@ -137,7 +157,7 @@
                             <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
                             <div class="d-flex">
                                 <!-- 조회 개수 설정 -->
-                                <select class="form-control-sm me-2" onchange="changeRows()" name="rows">
+                                <select class="form-control-sm me-2" th:field="*{rows}">
                                     <option value="10">10개씩</option>
                                     <option value="50">50개씩</option>
                                     <option value="100">100개씩</option>
@@ -145,7 +165,7 @@
                                 </select>
 
                                 <!-- 조회 정렬 설정-->
-                                <select class="form-control-sm" name="sort" onchange="changeRows()">
+                                <select class="form-control-sm" th:field="*{sort}">
                                     <option value="productName">상품명 순</option>
                                     <option value="highPrice">정가 높은 순</option>
                                     <option value="lowPrice">정가 낮은 순</option>
@@ -165,19 +185,16 @@
                         <!-- 선택 삭제 버튼 / 엑셀 버튼 -->
                         <div class="d-flex justify-content-between mb-3">
                             <div class="text-left">
-                                <button type="button" class="btn btn-outline-secondary btn-sm"
-                                        onclick="removeChecked()">선택 삭제
+                                <button id="btn-delete" type="button" class="btn btn-outline-secondary btn-sm">선택 삭제
                                 </button>
                             </div>
                             <div class="text-end">
-                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="excel()">
-                                    엑셀
-                                </button>
+                                <button id="btn-exel" type="button" class="btn btn-outline-secondary btn-sm">엑셀</button>
                             </div>
                         </div>
 
                         <!-- 조회 리스트 -->
-                        <table class="table text-center" th:if="${paging.totalRows != 0}">
+                        <table class="table text-center" id="table-products" th:if="${paging.totalRows != 0}">
                             <colgroup>
                                 <col width="3%">
                                 <col width="4%">
@@ -193,7 +210,7 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th><input type="checkbox"></th>
+                                <th><input id="chk-select-all-product" type="checkbox"></th>
                                 <th>번호</th>
                                 <th>이미지</th>
                                 <th>상품명</th>
@@ -219,22 +236,23 @@
                                     ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
                             -->
                             <tr th:each="book, loop : ${books}">
-                                <td><input type="checkbox"></td>
+                                <td><input name="selectProduct" type="checkbox" th:data-delete-no="${book.no}"></td>
                                 <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
-                                    1
+                                    순번
                                 </td>
                                 <td><img th:src="${book.image}"/></td>
                                 <td>
-                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${book.bookName}">
-                                        나는 읽고 쓰고 버린다
-                                    </a>
+                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${book.bookName}">도서명</a>
                                 </td>
-                                <td th:text="${book.authorName}">손웅정</td>
-                                <td th:text="${book.listPrice}">17,000</td>
-                                <td th:text="${book.sellingPrice}">15,300</td>
-                                <td th:text="${book.stock}">1,000</td>
-                                <td th:text="${book.status}">정상</td>
-                                <td th:text="${#dates.format(book.createdDate, 'yyyy-MM-dd')}">2019-02-15</td>
+                                <td th:text="${book.authorName}">저자</td>
+                                <td th:text="${#numbers.formatInteger(book.listPrice, 1, 'COMMA')}">정가</td>
+                                <td th:text="${#numbers.formatInteger(book.sellingPrice, 1, 'COMMA')}">판매가</td>
+                                <td th:text="${book.stock}">재고</td>
+                                <td th:text="${book.status}">판매상태</td>
+                                <td>
+                                    <p th:text="${#dates.format(book.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                    <p th:text="${#dates.format(book.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                     <button id="btn-modify-product-${book.no}" type="button"
@@ -284,6 +302,7 @@
 
 <script layout:fragment="listScript" type="text/javascript">
     $(function () {
+
         $("#topCategoryNo").change(function () {
             const topCategoryNo = $(this).val();
             let $secondCategorySelector = $("#secondCategoryNo");
@@ -319,12 +338,198 @@
             });
         }
 
-        $("[id^=btn-modify-product]").click(function() {
-            let productNo = $(this).data('no');
+        $("#btn-reset").click(function () {
+            // 검색어 초기화
+            $("select[name='opt']").val("null");
+            $("input[name='keyword']").val("");
+
+            // 카테고리 초기화
+            $("select[name='topCategoryNo']").val("0");
+            $("select[name='secondCategoryNo']").val("0");
+            $("select[name='thirdCategoryNo']").val("0");
+
+            // 기간 검색 초기화
+            $("select[name='dateOpt']").val("createdDate");
+            $("input[name='moreDate']").val("");
+            $("input[name='lessDate']").val("");
+            $("button[name='btn-date']").removeClass("active");
+
+            // 판매 상태 초기화
+            $("#chk-select-all-status").prop("checked", false);
+            $("input[name='status']").prop("checked", false);
+
+            // 재고 초기화
+            $("#stockOpt").val("0");
+            $("input[name='moreStock']").val("0");
+            $("input[name='lessStock']").val("0");
+
+            // 출판사 초기화
+            $("select[name='publisherNo']").val("0");
+        });
+
+        // '전체' 체크박스를 선택하면 '정상', '절판', '품절' 체크박스도 선택된다.
+        $("#chk-select-all-status").click(function () {
+            checkAll();
+        });
+
+        function checkAll() {
+            let isChecked = $("#chk-select-all-status").prop("checked");
+            $("input.chk-status").prop("checked", isChecked);
+        }
+
+        // 판매 상태 체크박스를 선택하지 않으면 모두 선택되도록 함
+        checkAll2();
+
+        function checkAll2() {
+            let checkedBox = $("input.chk-status:checked").length;
+            const NONE_CHECKED_BOX = 0;
+            if (checkedBox === NONE_CHECKED_BOX) {
+                checkAll();
+            }
+        }
+
+        $("input.chk-status").click(function () {
+            updateSelectAllStatusCheckbox();
+        });
+
+        updateSelectAllStatusCheckbox();
+
+        // '정상', '절판', '품절' 체크박스가 모두 선택된 경우 '전체' 체크박스를 선택하고, 아닌 경우 선택 해제한다.
+        function updateSelectAllStatusCheckbox() {
+            let checkedBox = $("input.chk-status:checked").length;
+            let numberOfStatusCheckboxes = $("input.chk-status").length;
+
+            if (checkedBox === numberOfStatusCheckboxes) {
+                $("#chk-select-all-status").prop("checked", true);
+            }
+            if (checkedBox !== numberOfStatusCheckboxes) {
+                $("#chk-select-all-status").prop("checked", false);
+            }
+        }
+
+        $("#stockOpt").change(function () {
+            let selectedValue = $(this).val();
+            const stockOfOptOne = $("#opt1").val();
+            const stockOfOptTwo = $("#opt2").val();
+            const stockOfOptThree = $("#opt3").val();
+            const stockOfOptFour = $("#opt4").val();
+            const stockOfOptFive = $("#opt5").val();
+
+            if (selectedValue === stockOfOptOne) {
+                $("#lessStock").val(stockOfOptOne);
+            }
+            if (selectedValue === stockOfOptTwo) {
+                $("#lessStock").val(stockOfOptTwo);
+            }
+            if (selectedValue === stockOfOptThree) {
+                $("#lessStock").val(stockOfOptThree);
+            }
+            if (selectedValue === stockOfOptFour) {
+                $("#lessStock").val(stockOfOptFour);
+            }
+            if (selectedValue === stockOfOptFive) {
+                $("#lessStock").val(stockOfOptFive);
+            }
+        });
+
+        // 기간 검색 버튼 클릭 시 해당 날짜 입력
+        $("button[name='btn-date']").click(function () {
+            let offset = $(this).data('offset');
+            let today = new Date();
+
+            if (offset === 'all') {
+                $("#moreDate").val('');
+                $("#lessDate").val('');
+            }
+            if (offset !== 'all') {
+                let endDate = new Date(today);
+                endDate.setDate(today.getDate() - parseInt(offset));
+                $("#moreDate").val(endDate.toISOString().split('T')[0]);
+                $("#lessDate").val(today.toISOString().split('T')[0]);
+            }
+
+            $("button[name='btn-date']").removeClass("active");
+            $(this).addClass("active");
+
+            $("input[name=period]").val(offset);
+        });
+
+        $("input[name$='Date']").click(function () {
+            $("button[name='btn-date']").removeClass("active");
+        });
+
+        $("select[name='rows']").change(function () {
+            $(this).closest('form').submit();
+        });
+
+        $("select[name='sort']").change(function () {
+            $(this).closest('form').submit();
+        });
+
+        // '전체 선택' 체크박스를 선택하면 각 상품 체크박스를 모두 선택한다.
+        $("#chk-select-all-product").click(function () {
+            let isChecked = $(this).prop("checked");
+
+            $("input[name='selectProduct']").prop("checked", isChecked);
+        });
+
+        $("input[name='selectProduct']").click(function () {
+            updateSelectAllProductCheckbox();
+        });
+
+        // 각 상품의 체크박스를 모두 선택하면 '전체 선택' 체크박스가 선택된다. 그렇지 않은 경우 '전체 선택' 체크박스가 선택 해제된다.
+        function updateSelectAllProductCheckbox() {
+            let checkedBox = $("input[name='selectProduct']:checked").length;
+            let numberOfStatusCheckboxes = $("input[name='selectProduct']").length;
+
+            if (checkedBox === numberOfStatusCheckboxes) {
+                $("#chk-select-all-product").prop("checked", true);
+            }
+            if (checkedBox !== numberOfStatusCheckboxes) {
+                $("#chk-select-all-product").prop("checked", false);
+            }
+        }
+
+        // 상품 선택 삭제 함수
+        $("#btn-delete").click(function () {
+            let checkedNos = [];
+            $("#table-products tbody :checkbox:checked").each(function () {
+                checkedNos.push($(this).data("deleteNo"));
+            });
+            console.log(checkedNos);
+            if (checkedNos.length === 0) {
+                alert("선택된 상품이 없습니다.");
+                return;
+            }
+
+            if (!confirm("선택한 상품을 삭제하시겠습니까?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/product/delete",
+                type: "POST",
+                data: JSON.stringify(checkedNos), // [100, 100, 100]
+                contentType: 'application/json',
+                success: function () {
+                    $("#table-products tbody :checkbox:checked").closest("tr").remove();
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                },
+                complete: function () {
+                    alert("삭제가 완료되었습니다.");
+                }
+            });
+        });
+
+        // 상품 수정 함수
+        $("[id^=btn-modify-product]").click(function () {
+            let productNo = $(this).data("no");
             window.location.href = "/admin/product/modify?no=" + productNo;
         });
 
-    })
+    });
 
 </script>
 
