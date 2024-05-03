@@ -25,4 +25,10 @@ public class ProductService {
     public List<Publisher> getPublishers() {
         return productMapper.getPublishers();
     }
+
+    public void deleteProductByNo(List<Long> deletedProductNos) {
+        for (Long deletedProductNo : deletedProductNos) {
+            productMapper.deleteProductByNo(deletedProductNo);
+        }
+    }
 }
