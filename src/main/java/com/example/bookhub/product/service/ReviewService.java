@@ -74,7 +74,7 @@ public class ReviewService {
 
         int offset = 0;
         if(totalRows > 0) {
-            offset = pagination.getBegin();
+            offset = pagination.getBegin() - 1;
         }
 
         Map map = new HashMap<String, Object>();
