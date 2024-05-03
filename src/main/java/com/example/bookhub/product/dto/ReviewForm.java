@@ -14,5 +14,6 @@ public class ReviewForm {
     private float rate;
     private long reviewTagNo;
     private String comment;
+    private String buyerYn;
     private List<MultipartFile> imageList;
 }

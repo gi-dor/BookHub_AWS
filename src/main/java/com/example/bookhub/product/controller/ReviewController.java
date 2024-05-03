@@ -75,4 +75,11 @@ public class ReviewController {
         List<Integer> rateCountList = reviewService.getRate(bookNo);
         return ResponseEntity.ok().body(rateCountList);
     }
+
+    @GetMapping("/reviewTag/{bookNo}")
+    @ResponseBody
+    public ResponseEntity<List<Integer>> getReviewTagCount(@PathVariable("bookNo") long bookNo){
+        List<Integer> reviewTagCountList = reviewService.getReviewTagCount(bookNo);
+        return ResponseEntity.ok().body(reviewTagCountList);
+    }
 }

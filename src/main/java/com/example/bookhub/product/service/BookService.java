@@ -14,4 +14,8 @@ public class BookService {
     public BookDto getBookDetailByNo(long bookNo){
         return bookMapper.getBookDetailByNo(bookNo);
     }
+
+    public BookDto getBookByBookNo(long bookNo){
+        return bookMapper.getBookByBookNo(bookNo);
+    }
 }
