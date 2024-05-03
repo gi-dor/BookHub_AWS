@@ -102,13 +102,13 @@
                             <tr>
                                 <td class="bg-light">판매 상태</td>
                                 <td>
-                                    <input id="chk-select-all-status" type="checkbox" class="form-check-input"> 전체
-                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{available}"
-                                           value="정상" th:checked="true"> 정상
-                                    <input type="checkbox" class="form-check-input chk-status"
-                                           th:field="*{discontinued}"
+                                    <input id="chk-select-all-status" type="checkbox" class="form-check-input" checked>
+                                    전체
+                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{status}"
+                                           value="정상"> 정상
+                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{status}"
                                            value="절판"> 절판
-                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{soldOut}"
+                                    <input type="checkbox" class="form-check-input chk-status" th:field="*{status}"
                                            value="품절"> 품절
                                 </td>
                             </tr>
@@ -183,14 +183,10 @@
                         <!-- 선택 삭제 버튼 / 엑셀 버튼 -->
                         <div class="d-flex justify-content-between mb-3">
                             <div class="text-left">
-                                <button type="button" class="btn btn-outline-secondary btn-sm"
-                                        onclick="removeChecked()">선택 삭제
-                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm">선택 삭제</button>
                             </div>
                             <div class="text-end">
-                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="excel()">
-                                    엑셀
-                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm">엑셀</button>
                             </div>
                         </div>
 
@@ -383,14 +379,16 @@
             $("input.chk-status").prop("checked", isChecked);
         }
 
+        // 판매 상태 체크박스를 선택하지 않으면 모두 선택되도록 함
+        checkAll2();
+
         function checkAll2() {
             let checkedBox = $("input.chk-status:checked").length;
-            if (checkedBox === 0) {
+            const NONE_CHECKED_BOX = 0;
+            if (checkedBox === NONE_CHECKED_BOX) {
                 checkAll();
             }
         }
-
-        checkAll2();
 
         $("input.chk-status").click(function () {
             updateSelectAllStatusCheckbox();
