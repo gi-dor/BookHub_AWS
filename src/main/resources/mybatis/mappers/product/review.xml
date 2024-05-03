@@ -114,8 +114,16 @@
             review_no = #{value}
     </select>
 
+    <select id="getReviewTotalRows" parameterType="long" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            book_no = #{bookNo}
+    </select>
 
-    <select id="getReviewsByBookNo" parameterType="long" resultMap="ReviewListResultMap">
+    <select id="getReviewsByBookNo" parameterType="map" resultMap="ReviewListResultMap">
         select
             review_no,
             comment,
@@ -145,6 +153,18 @@
             REVIEW R
         where
             book_no = #{bookNo}
+        <choose>
+            <when test="sort == 'date'">
+                order by created_date desc
+            </when>
+            <when test="sort == 'recommend'">
+                order by recommend_count desc
+            </when>
+            <when test="sort == 'comment'">
+                order by reply_count desc
+            </when>
+        </choose>
+        limit 10 offset #{offset};
     </select>
 
     <insert id="createReviewImage" parameterType="com.example.bookhub.product.vo.ReviewImage">
@@ -234,4 +254,17 @@
         delete from REVIEW
         where review_no = #{value}
     </delete>
+
+    <select id="getRateCount" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            <![CDATA[
+            rate > #{start}
+            and rate <= #{end}
+            and book_no = #{bookNo}
+              ]]>
+    </select>
 </mapper>

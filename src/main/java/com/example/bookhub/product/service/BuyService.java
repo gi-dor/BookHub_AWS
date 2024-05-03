@@ -135,4 +135,13 @@ public class BuyService {
         buyMapper.updateDefaultUserDeliveryN(selectedUserDeliveryNo);
         buyMapper.updateDefaultUserDeliveryY(selectedUserDeliveryNo);
     }
+
+    public UserDelivery createUserDelivery(String userId, UserDelivery userDelivery) {
+        User user = userMapper.selectUserById(userId);
+
+        userDelivery.setUser(user);
+
+        buyMapper.createUserDelivery(userDelivery);
+        return userDelivery;
+    }
 }

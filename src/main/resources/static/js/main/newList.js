@@ -2,22 +2,16 @@
 function newbook() {
 
     $("#newbook input[name=cate]").val(1);
-    $("#newbook input[name=cateKeyword]").val(0);
+    $("#newbook input[name=cateKeyword]").val(1);
     $("#newbook input[name=pubDate]").val(1);
-    $("#newbook input[name=page]").val(1);
-    $("#newbook input[name=sort]").val("0");
-    $("#newbook").trigger("submit");
-}
-
-$(".cate a ").click(function (event) {
-    event.preventDefault();
-    $("#newbook input[name=cate]").val($(this).attr("data-cate"));
     $("#newbook input[name=page]").val(1);
     $("#newbook input[name=sort]").val(1);
     $("#newbook").trigger("submit");
-});
+}
 
-$(".cateKeyword a ").click(function (event) {
+
+
+$("#cateKeyword a ").click(function (event) {
     event.preventDefault();
     $("#newbook input[name=cate]").val(1);
     $("#newbook input[name=cateKeyword]").val($(this).attr("data-cateKeyword"));
@@ -26,7 +20,7 @@ $(".cateKeyword a ").click(function (event) {
     $("#newbook").trigger("submit");
 });
 
-$("#pub-date a ").click(function (event) {
+$("#pubDate a ").click(function (event) {
     event.preventDefault();
     $("#newbook input[name=pubDate]").val($(this).attr("data-pubDate"));
     $("#newbook input[name=page]").val(1);
@@ -34,7 +28,7 @@ $("#pub-date a ").click(function (event) {
     $("#newbook").trigger("submit");
 });
 
-$(".searchSort a ").click(function (event) {
+$("#sort a ").click(function (event) {
     event.preventDefault();
     $("#newbook input[name=page]").val(1);
     $("#newbook input[name=sort]").val($(this).attr("data-sort"));
@@ -46,5 +40,4 @@ $(".pagination a").click(function(event) {
     $("#newbook input[name=page]").val($(this).attr("data-page"));
     $("#newbook").trigger("submit");
 })
-
 

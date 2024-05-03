@@ -20,4 +20,5 @@ public interface BuyMapper {
     List<BuyDeliveryRequest> getBuyDeliveryRequest();
     void updateDefaultUserDeliveryN(long selectedUserDeliveryNo);
     void updateDefaultUserDeliveryY(long selectedUserDeliveryNo);
+    void createUserDelivery(UserDelivery userDelivery);
 }
