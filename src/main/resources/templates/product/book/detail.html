@@ -246,7 +246,8 @@
                         </div>
 
                         <!-- 댓글 작성폼 -->
-                        <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
+                        <form class="border p-3 mb-3" th:id="'form-reply-' + ${review.reviewNo}" method="post" action="/product/review/reply/create"
+                        style="display: none;">
                             <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
                             <input type="hidden" name="reviewNo" th:value="${review.reviewNo}"/>
                             <div class="row g-3">
@@ -385,7 +386,7 @@
                                                 <span class="rate_bg"></span>
                                             </div>
                                         </div>
-                                        <p class="card-text"><small class="text-body-secondary">/10</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">/5</small></p>
                                     </div>
                                 </div>
                             </div>
@@ -523,8 +524,10 @@
         });
     })
 
-    $("#div-reviews").on("click", ".chat", function(event){
-
+    $("#div-reviews").on("click", ".reply", function(event){
+        let reviewNo = $(this).closest(".review").find(".review-no").text();
+        let formId = "#form-reply-" + reviewNo;
+        $(formId).toggle();
     })
 
     // 장바구니 추가 시 모달
