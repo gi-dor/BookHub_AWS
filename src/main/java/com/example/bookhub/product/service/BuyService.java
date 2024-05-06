@@ -171,8 +171,12 @@ public class BuyService {
             int count = buyForm.getBuyBookCountList().get(i);
 
             BookDto book = bookMapper.getBookByBookNo(bookNo);
-            if(book.getStock() > count){
+            if(book.getStock() >= count){
                 buyMapper.updateBookStock(bookNo, count);
+                int updatedStock = buyMapper.getBookStock(bookNo);
+                if(updatedStock == 0){
+                    bookMapper.updateBookStatus(bookNo);
+                }
             }
             else {
                 throw new BookHubException("재고가 부족하여 주문이 취소되었습니다");

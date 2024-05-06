@@ -100,4 +100,12 @@
         for update
     </select>
 
+    <update id="updateBookStatus" parameterType="long">
+        update
+            BOOK
+        set
+            book_status = '품절'
+        where
+            book_no = #{bookNo}
+    </update>
 </mapper>

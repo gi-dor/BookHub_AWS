@@ -158,6 +158,15 @@
             book_no = #{bookNo}
     </update>
 
+    <select id="getBookStock" parameterType="long" resultType="int">
+        select
+            book_stock
+        from
+            BOOK
+        where
+            book_no = #{bookNo}
+    </select>
+
     <select id="getBuyerYn" resultType="String">
         SELECT
             CASE

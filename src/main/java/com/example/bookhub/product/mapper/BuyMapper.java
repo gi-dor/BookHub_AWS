@@ -24,4 +24,5 @@ public interface BuyMapper {
     void createUserDelivery(UserDelivery userDelivery);
     void updateBookStock(@Param("bookNo") long bookNo, @Param("count") int count);
     String getBuyerYn(@Param("bookNo") long bookNo, @Param("userNo") long userNo);
+    int getBookStock(long bookNo);
 }

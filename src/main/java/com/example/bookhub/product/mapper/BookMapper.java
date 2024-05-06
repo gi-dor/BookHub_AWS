@@ -8,4 +8,5 @@ public interface BookMapper {
 
     BookDto getBookDetailByNo(long bookNo);
     BookDto getBookByBookNo(long bookNo);
+    void updateBookStatus(long bookNo);
 }
