@@ -304,4 +304,11 @@
         where
             review_reply_no = #{reviewReplyNo}
     </update>
+
+    <delete id="deleteReviewReply" parameterType="long">
+        delete from
+            REVIEW_REPLY
+        where
+            review_reply_no = #{reviewReplyNo}
+    </delete>
 </mapper>

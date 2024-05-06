@@ -32,4 +32,5 @@ public interface ReviewMapper {
     void updateReviewCount(long bookNo);
     void updateBookAverageRating(@Param("bookNo") long bookNo, @Param("rate") float rate);
     void modifyReviewReply(@Param("reviewReplyNo") long reviewReplyNo, @Param("comment") String comment);
+    void deleteReviewReply(long reviewReplyNo);
 }

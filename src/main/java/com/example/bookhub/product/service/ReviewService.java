@@ -212,4 +212,8 @@ public class ReviewService {
     public void modifyReviewReply(ReviewReplyForm reviewReplyForm) {
         reviewMapper.modifyReviewReply(reviewReplyForm.getReviewReplyNo(), reviewReplyForm.getComment());
     }
+
+    public void deleteReviewReply(long reviewReplyNo) {
+        reviewMapper.deleteReviewReply(reviewReplyNo);
+    }
 }
