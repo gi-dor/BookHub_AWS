@@ -311,4 +311,21 @@
         where
             review_reply_no = #{reviewReplyNo}
     </delete>
+
+    <update id="updateReviewReplyCount" parameterType="map">
+        update REVIEW
+        <set>
+            reply_count =
+            <choose>
+                <when test="option == 'create'">
+                    reply_count + 1
+                </when>
+                <when test="option == 'delete'">
+                    reply_count - 1
+                </when>
+            </choose>
+        </set>
+        where review_no = #{reviewNo}
+    </update>
+
 </mapper>

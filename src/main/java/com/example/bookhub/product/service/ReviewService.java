@@ -152,6 +152,7 @@ public class ReviewService {
                 .build();
 
         reviewMapper.createReviewReply(reviewReply);
+        reviewMapper.updateReviewReplyCount(reviewReplyForm.getReviewNo(), "create");
     }
 
     public Review getReviewByReviewNo(long reviewNo) {
@@ -213,7 +214,8 @@ public class ReviewService {
         reviewMapper.modifyReviewReply(reviewReplyForm.getReviewReplyNo(), reviewReplyForm.getComment());
     }
 
-    public void deleteReviewReply(long reviewReplyNo) {
+    public void deleteReviewReply(long reviewReplyNo, long reviewNo) {
         reviewMapper.deleteReviewReply(reviewReplyNo);
+        reviewMapper.updateReviewReplyCount(reviewNo, "delete");
     }
 }

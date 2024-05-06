@@ -63,8 +63,10 @@ public class ReviewController {
     }
 
     @GetMapping("/reply/delete")
-    public String deleteReviewReply(@RequestParam("reviewReplyNo") long reviewReplyNo, @RequestParam("bookNo") long bookNo){
-        reviewService.deleteReviewReply(reviewReplyNo);
+    public String deleteReviewReply(@RequestParam("reviewReplyNo") long reviewReplyNo,
+                                    @RequestParam("reviewNo") long reviewNo,
+                                    @RequestParam("bookNo") long bookNo){
+        reviewService.deleteReviewReply(reviewReplyNo, reviewNo);
         return "redirect:/product/book/detail?bookNo=" + bookNo;
     }
 

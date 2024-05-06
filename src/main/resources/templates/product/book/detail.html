@@ -233,9 +233,9 @@
                                                 <span class="badge bg-light text-dark" th:text="${reviewReply.updatedDate}">2024-03-21</span>
                                             </div>
                                             <div>
-                                                <a class="btn btn-sm btn-outline-success">추천</a>
                                                 <a class="btn btn-sm btn-outline-secondary modify-reply" onclick="modifyReply()">수정</a>
-                                                <a class="btn btn-sm btn-outline-secondary" th:href="@{|/product/review/reply/delete?reviewReplyNo=${reviewReply.reviewReplyNo}&bookNo=${book.bookNo}|}">삭제</a>
+                                                <a class="btn btn-sm btn-outline-secondary"
+                                                   th:href="@{|/product/review/reply/delete?reviewReplyNo=${reviewReply.reviewReplyNo}&reviewNo=${review.reviewNo}&bookNo=${book.bookNo}|}">삭제</a>
                                             </div>
                                         </div>
                                         <input type="hidden" class="review-reply-no" th:value="${reviewReply.reviewReplyNo}"/>
