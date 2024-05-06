@@ -74,7 +74,6 @@ public class BuyController {
     @ResponseBody
     public ResponseEntity<List<CouponProduced>> getCoupon(Principal principal){
         List<CouponProduced> couponList = buyService.getCouponsByUserNo(principal.getName());
-        System.out.println(couponList);
         return ResponseEntity.ok(couponList);
     }
 

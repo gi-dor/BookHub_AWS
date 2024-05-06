@@ -117,7 +117,12 @@ public class BuyService {
                 couponUsed.setDiscountAmount(couponDiscountAmount);
 
                 buyMapper.createCouponUsed(couponUsed);
-                buyMapper.updateCouponProducedUsed(couponProducedNo);
+
+                int lastAmount = buyMapper.getCouponProducedLastAmount(couponProducedNo);
+                if(lastAmount > couponDiscountAmount)
+                    buyMapper.updateCouponProducedUsed(couponProducedNo, couponDiscountAmount, "N");
+                else
+                    buyMapper.updateCouponProducedUsed(couponProducedNo, couponDiscountAmount, "Y");
             }
         }
     }

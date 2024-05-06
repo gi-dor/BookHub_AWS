@@ -5,6 +5,7 @@
     <resultMap id="CouponListResultMap" type="com.example.bookhub.product.vo.CouponProduced">
         <id column="coupon_produced_no" property="couponProducedNo"/>
         <result column="due_date" property="dueDate"/>
+        <result column="last_amount" property="lastAmount"/>
         <association column="coupon_no" property="coupon"
                      select="com.example.bookhub.product.mapper.BuyMapper.getCouponByNo"/>
     </resultMap>
@@ -46,6 +47,7 @@
         select
             coupon_produced_no,
             due_date,
+            last_amount,
             coupon_no
         from
              COUPON_PRODUCED
@@ -91,10 +93,30 @@
         (#{discountAmount}, #{couponProducedNo}, #{buyNo})
     </insert>
 
-    <update id="updateCouponProducedUsed" parameterType="long" >
+    <select id="getCouponProducedLastAmount" parameterType="long" resultType="int">
+        select
+            last_amount
+        from
+            COUPON_PRODUCED
+        where
+            coupon_produced_no = #{couponProducedNo}
+    </select>
+
+    <update id="updateCouponProducedUsed">
         update COUPON_PRODUCED
-        set used='Y'
-        where coupon_produced_no = #{value}
+        <set>
+            last_amount = last_amount - #{couponDiscountAmount},
+            used =
+            <choose>
+                <when test='used == "Y"'>
+                    'Y'
+                </when>
+                <when test='used == "N"'>
+                    'N'
+                </when>
+            </choose>
+        </set>
+        where coupon_produced_no = #{couponProducedNo}
     </update>
 
     <update id="updatePointUsed" parameterType="map">

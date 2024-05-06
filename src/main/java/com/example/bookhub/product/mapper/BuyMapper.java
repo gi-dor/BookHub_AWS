@@ -15,7 +15,7 @@ public interface BuyMapper {
     void createBuy(Buy buy);
     void createBuyBook(BuyBook buyBook);
     void createCouponUsed(CouponUsed couponUsed);
-    void updateCouponProducedUsed(long couponProducedNo);
+    void updateCouponProducedUsed(@Param("couponProducedNo") long couponProducedNo, @Param("couponDiscountAmount") int couponDiscountAmount, @Param("used") String used);
     void updatePointUsed(Map<String, Object> map);
     List<UserDelivery> getUserDeliveryByUserNo(Long no);
     List<BuyDeliveryRequest> getBuyDeliveryRequest();
@@ -25,4 +25,5 @@ public interface BuyMapper {
     void updateBookStock(@Param("bookNo") long bookNo, @Param("count") int count);
     String getBuyerYn(@Param("bookNo") long bookNo, @Param("userNo") long userNo);
     int getBookStock(long bookNo);
+    int getCouponProducedLastAmount(long couponProducedNo);
 }

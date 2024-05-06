@@ -356,6 +356,13 @@
             }
         });
 
+        $("#form-order").submit(function(){
+            $("#form-order").find("#tbody-modal tr").not(":has(:checkbox:checked)").each(function(index, tr){
+                $(tr).find("input[name=couponDiscountAmountList]").prop("disabled", true);
+            })
+            return true;
+        })
+
         function updatePrices(){
             let totalPrice = 0;
             let totalBookDiscountPrice = 0;
@@ -408,9 +415,9 @@
                        <tr id="tr-coupon">
                             <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
                             <td>${couponProduced.coupon.name}</td>
-                            <td><span class="couponDiscountAmount">${couponProduced.coupon.price}</span>원</td>
+                            <td><span class="couponDiscountAmount">${couponProduced.lastAmount}</span>원</td>
                             <td><input name="couponDiscountAmountList"
-                            value="${couponProduced.coupon.price}" style="width: 70px;"/>원</td>
+                            value="${couponProduced.lastAmount}" style="width: 70px;"/>원</td>
                        </tr>
                 `;
             }
