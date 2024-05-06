@@ -4,6 +4,7 @@ import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.user.dto.ChangePasswordForm;
 import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.OrderListDTO;
 import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.mapper.MyPageMapper;
@@ -134,5 +135,35 @@ public class MyPageService {
 
     public List<Inquiry> findInquiryByDate(LocalDateTime startDate, LocalDateTime endDate ) {
         return myPageMapper.findInquiryByDate(startDate,endDate );
+    }
+
+    public int countOrder(String id) {
+
+        int cnt = myPageMapper.countOrder(id);
+        System.out.println("해당 아이디 : " + id + "주문내역 갯수 : " + cnt);
+        return cnt;
+
+    }
+
+    public PageListDTO<OrderListDTO> getOrderListByIdPage(String id, int page) {
+        // 사용자 정보조회
+        User user = userMapper.selectUserById(id);
+
+        // 사용자의 아이디로 주문내역 갯수 조회
+        int totalRows = myPageMapper.countOrder(user.getId());
+
+        // 페이징 정보
+        UserPagination userPagination =  new UserPagination(page , totalRows);
+
+        int offset = userPagination.getBegin() -1;
+
+        // 페이징된 결과 조회
+        List<OrderListDTO> orderListDTO = myPageMapper.selectOrderListByIdPaging(user.getId() , offset);
+
+        PageListDTO<OrderListDTO> pageListDTO = new PageListDTO<>();
+        pageListDTO.setItems(orderListDTO);
+        pageListDTO.setUserPagination(userPagination);
+
+        return pageListDTO;
     }
 }

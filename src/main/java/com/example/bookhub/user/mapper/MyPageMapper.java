@@ -3,6 +3,7 @@ package com.example.bookhub.user.mapper;
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.OrderListDTO;
 import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
 import java.time.LocalDateTime;
@@ -40,4 +41,8 @@ public interface MyPageMapper {
 
     List<Inquiry> findInquiryByDate(@Param("startDate") LocalDateTime startDate,
                                     @Param("endDate") LocalDateTime endDate);
+
+    List<OrderListDTO> selectOrderListByIdPaging(@Param("id") String id, @Param("offset") int offset);
+
+    int countOrder(String id);
 }
