@@ -10,7 +10,44 @@
     </select>
 
 
-
+  <select id="countOrder" parameterType="string" resultType="int">
+      select count(*)
+      from BUY b , USER u
+      where u.USER_NO = b.USER_NO
+      and u.USER_ID = #{id}
+  </select>
+    
+  <select id="selectOrderListByIdPaging" resultType="com.example.bookhub.user.dto.OrderListDTO">
+   select
+        b.BUY_NO                            as no,
+        b.FINAL_PRICE                       as finalPrice,
+        b.BUY_DATE                          as buyDate,
+        status.BUY_STATUS_NAME              as "buyStatus.name",
+        u.USER_ID                           as "user.id",
+        (select z.BUY_PAY_METHOD_NAME
+         from BUY_PAY_METHOD z
+         where
+            z.BUY_PAY_METHOD_NO = pay.BUY_PAY_METHOD_NO)
+                                            as "buyPayMethod.name" , -- 결제 방법
+        (select y.BOOK_NAME
+         from  BUY_BOOK bb , BOOK y
+         where bb.BOOK_NO = y.BOOK_NO
+         limit 1)
+                                            as "book.name",
+        (select count(*)
+         from BUY_BOOK x
+         where x.BUY_NO = b.BUY_NO)
+                                            as cnt
+from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
+      where b.USER_NO = u.USER_NO
+        and b.BUY_STATUS_NO = status.BUY_STATUS_NO
+        and b.BUY_PAY_METHOD_NO = pay.BUY_PAY_METHOD_NO
+        and u.USER_ID = #{id}
+      ORDER BY
+          b.BUY_NO DESC
+      LIMIT #{offset} ,10
+  </select>
+    
 
   <select id="selectOrderListById" parameterType="string" resultType="com.example.bookhub.product.vo.Buy">
       select

@@ -1,6 +1,7 @@
 package com.example.bookhub.user.controller;
 
 import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.OrderListDTO;
 import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
 import com.example.bookhub.user.service.MyPageService;
@@ -41,7 +42,7 @@ public class UserMyPageListController {
         model.addAttribute("wishList",wishList.getItems());
         model.addAttribute("page" , wishList.getUserPagination());
 
-        return "/user/list/wishList";
+        return "user/list/wishList";
     }
 
 
@@ -64,11 +65,22 @@ public class UserMyPageListController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/orderList")
-    public String orderListPage(Model model , Principal principal) {
+    public String orderListPage(Model model , Principal principal,
+                                @RequestParam(name="page" , required = false ,defaultValue="1") int page) {
+        String id = principal.getName();
+        User user = userService.selectUserById(id);
 
+        // 사용자 정보로 주문내역 갯수 조회
+        int totalRows = myPageService.countOrder(user.getId());
 
+        // 사용자 주문내역 , 페이징 정보조회
+        PageListDTO<OrderListDTO> orderList = myPageService.getOrderListByIdPage(user.getId() , page);
 
-        return "/user/list/orderList";
+        model.addAttribute("totalRows" , totalRows);
+        model.addAttribute("page" ,orderList.getUserPagination() );
+        model.addAttribute("orderList" , orderList.getItems());
+
+        return "user/list/orderList";
     }
 
     // inquiryList?page=1
@@ -93,6 +105,6 @@ public class UserMyPageListController {
         model.addAttribute("page",inquiryList.getUserPagination());
 
 
-        return "/user/list/inquiryList";
+        return "user/list/inquiryList";
     }
 }
