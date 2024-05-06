@@ -295,4 +295,13 @@
         where
             book_no = #{bookNo}
     </update>
+
+    <update id="modifyReviewReply">
+        update
+            REVIEW_REPLY
+        set
+            comment = #{comment}
+        where
+            review_reply_no = #{reviewReplyNo}
+    </update>
 </mapper>

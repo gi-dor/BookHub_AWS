@@ -56,6 +56,12 @@ public class ReviewController {
         return "redirect:/product/book/detail?bookNo=" + reviewReplyForm.getBookNo();
     }
 
+    @PostMapping("/reply/modify")
+    public String modifyReviewReply(ReviewReplyForm reviewReplyForm){
+        reviewService.modifyReviewReply(reviewReplyForm);
+        return "redirect:/product/book/detail?bookNo=" + reviewReplyForm.getBookNo();
+    }
+
     @GetMapping("/modify/{reviewNo}")
     @ResponseBody
     public ResponseEntity<Review> modify(@PathVariable("reviewNo") long reviewNo){

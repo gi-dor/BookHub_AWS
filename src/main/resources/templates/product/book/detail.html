@@ -225,7 +225,7 @@
                         <!-- 댓글 목록 -->
                         <div th:if="${review.reviewReplyList != null and not #lists.isEmpty(review.reviewReplyList)}">
                             <div th:each="reviewReply: ${review.reviewReplyList}">
-                                <div class="card my-3">
+                                <div class="card my-3" id="div-replies">
                                     <div class="card-body py-1 px-2">
                                         <div class="d-flex justify-content-between">
                                             <div>
@@ -234,11 +234,12 @@
                                             </div>
                                             <div>
                                                 <a class="btn btn-sm btn-outline-success">추천</a>
-                                                <a class="btn btn-sm btn-outline-secondary">수정</a>
+                                                <a class="btn btn-sm btn-outline-secondary modify-reply" onclick="modifyReply()">수정</a>
                                                 <a class="btn btn-sm btn-outline-secondary">삭제</a>
                                             </div>
                                         </div>
-                                        <p class="card=text ps-2 small" style="white-space: pre-line;"
+                                        <input type="hidden" class="review-reply-no" th:value="${reviewReply.reviewReplyNo}"/>
+                                        <p class="card-text ps-2 small reply-comment" style="white-space: pre-line;"
                                         th:text="${reviewReply.comment}"></p>
                                     </div>
                                 </div>
@@ -430,6 +431,33 @@
             </div>
         </form>
     </div>
+
+    <!-- 댓글 수정 모달 창 -->
+    <div id="modal-modify-reply" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">댓글 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/product/review/reply/modify">
+                    <input type="hidden" id="review-reply-no" name="reviewReplyNo"/>
+                    <div class="modal-body">
+                        <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
+                        <div class="row g-3">
+                            <div class="col-12 position-relative">
+                                <textarea id="reply-comment-modify" rows="3" class="form-control" name="comment"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="btn btn-primary" >수정</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <script layout:fragment="script" type="text/javascript">
 
@@ -438,6 +466,7 @@
     const modalMoveToCart = new bootstrap.Modal("#modal-move-to-cart");
     const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
     const modalCreateReview = new bootstrap.Modal("#modal-create-review");
+    const modalModifyReply = new bootstrap.Modal("#modal-modify-reply");
 
     let chartRateCountCanvas = document.getElementById('chart-rate-count');
     let chartReviewTagCountCanvas = document.getElementById('chart-review-tag-count');
@@ -528,6 +557,14 @@
         let reviewNo = $(this).closest(".review").find(".review-no").text();
         let formId = "#form-reply-" + reviewNo;
         $(formId).toggle();
+    })
+
+    $("#div-replies").on("click", ".modify-reply", function(event){
+        let comment = $(this).closest(".card").find(".reply-comment").text();
+        $("#reply-comment-modify").text(comment);
+        let reviewReplyNo = $(this).closest(".card").find(".review-reply-no").val();
+        $("#review-reply-no").val(reviewReplyNo);
+        modalModifyReply.show();
     })
 
     // 장바구니 추가 시 모달
@@ -647,6 +684,10 @@
         $("#review-comment").val(review.comment);
 
         document.querySelector('input[name="rate"][value="' + review.rate + '"]').checked = true;
+
+    }
+
+    function modifyReply(){
 
     }
 

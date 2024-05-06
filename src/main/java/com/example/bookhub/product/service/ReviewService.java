@@ -209,4 +209,7 @@ public class ReviewService {
         return reviewTagCountList;
     }
 
+    public void modifyReviewReply(ReviewReplyForm reviewReplyForm) {
+        reviewMapper.modifyReviewReply(reviewReplyForm.getReviewReplyNo(), reviewReplyForm.getComment());
+    }
 }
