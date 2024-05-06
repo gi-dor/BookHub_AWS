@@ -4,10 +4,12 @@ import com.example.bookhub.product.vo.BookAuthor;
 import com.example.bookhub.product.vo.Category;
 import com.example.bookhub.product.vo.Publisher;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Data
+@ToString
 public class BookDto {
 
     private long bookNo;
@@ -30,4 +32,6 @@ public class BookDto {
     private int stock;
     private String status;
     private BookAuthor bookAuthor;
+    private float averageRating;
+    private int reviewCount;
 }

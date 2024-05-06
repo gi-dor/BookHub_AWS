@@ -20,6 +20,8 @@
         <result column="book_sales_volume" property="salesVolume"/>
         <result column="book_stock" property="stock"/>
         <result column="book_status" property="status"/>
+        <result column="book_average_rating" property="averageRating"/>
+        <result column="book_review_count" property="reviewCount"/>
         <association column="category_no" property="category"
                      select="com.example.bookhub.product.mapper.BookMapper.getCategoryByNo"/>
         <association column="publisher_no" property="publisher"
@@ -82,7 +84,9 @@
             B.BOOK_DISCOUNT_RATE,
             B.BOOK_SALES_VOLUME,
             B.BOOK_STOCK,
-            B.BOOK_STATUS
+            B.BOOK_STATUS,
+            B.BOOK_AVERAGE_RATING,
+            B.BOOK_REVIEW_COUNT
         from
             BOOK B, BOOK_IMAGES BI
         where

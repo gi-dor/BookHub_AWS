@@ -6,7 +6,17 @@
 
 <div layout:fragment="content" class="container my-3">
     <div class="row mb-3">
-        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="card text-center mt-5" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.averageRating}"></h5>
+                    <div>
+                        <span class="card-text" th:text="${book.reviewCount}"></span>
+                        <span>개의 리뷰</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-3">
             <h3 id="book-no" th:text="${book.bookNo}" style="display:none">책 번호</h3>
             <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
