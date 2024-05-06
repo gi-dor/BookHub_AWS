@@ -8,36 +8,40 @@ import com.example.bookhub.product.mapper.BuyMapper;
 import com.example.bookhub.product.vo.*;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
-import com.example.bookhub.user.vo.UserDelivery;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class BuyService {
+public class GiftService {
 
+    private final BookMapper bookMapper;
     private final UserMapper userMapper;
     private final BuyMapper buyMapper;
-    private final BookMapper bookMapper;
+    private final JavaMailSender emailSender;
+
+    private final BuyService buyService;
     private BuyForm buyForm;
 
-    public List<CouponProduced> getCouponsByUserNo(String userId) {
-        User user = userMapper.selectUserById(userId);
-        return buyMapper.getCouponsByUserNo(user.getNo());
-    }
+    @Value("${spring.mail.from}")
+    private String setFrom;
 
-    public int getPointByUserNo(String userId) {
-        User user = userMapper.selectUserById(userId);
-        return buyMapper.getPointByUserNo(user.getNo());
+
+    public void setGiftYn(BuyForm buyForm){
+        buyForm.setGiftYn("Y");
     }
 
     @Transactional
-    public void createBuy(BuyForm buyForm, String tid, String userId) {
+    public void createGift(BuyForm buyForm, String tid, String userId) {
         this.buyForm = buyForm;
         User user = userMapper.selectUserById(userId);
 
@@ -45,24 +49,27 @@ public class BuyService {
         updateBookStock(buyForm);
 
         // BUY 테이블
-        long generatedNo = insertBuy(tid, user);
+        Buy buy = insertBuy(tid, user);
+
+        //insertGift(buy);
 
         // BUYBOOK 테이블
-        insertBuyBook(generatedNo);
+        insertBuyBook(buy.getBuyNo());
 
         // COUPON_USED 테이블, COUPON_PRODUCED 테이블
-        insertAndUpdateCoupon(generatedNo);
+        insertAndUpdateCoupon(buy.getBuyNo());
 
         // 포인트 차감
         updatePoint(user);
+
+        for(int i = 0; i < buyForm.getReceiverName().size(); i++){
+            String receiverName = buyForm.getReceiverName().get(i);
+            String receiverEmail = buyForm.getReceiverEmail().get(i);
+            makeEmail(receiverEmail, receiverName);
+        }
     }
 
-    public long insertBuy(String tid, User user){
-        UserDelivery userDelivery = new UserDelivery();
-        userDelivery.setNo(buyForm.getUserDeliveryNo());
-
-        BuyDeliveryRequest buyDeliveryRequest = new BuyDeliveryRequest();
-        buyDeliveryRequest.setBuyDeliveryRequestNo(buyForm.getBuyDeliveryRequestNo());
+    public Buy insertBuy(String tid, User user){
 
         BuyPayMethod buyPayMethod = new BuyPayMethod();
         buyPayMethod.setBuyPayMethodNo(buyForm.getBuyPayMethodNo());
@@ -74,10 +81,8 @@ public class BuyService {
                 .totalPointUseAmount(buyForm.getTotalPointUseAmount())
                 .finalPrice(buyForm.getFinalPrice())
                 .commonEntranceApproach(buyForm.getCommonEntranceApproach())
-                .giftYn("N")
-                .userDelivery(userDelivery)
-                .buyDeliveryRequest(buyDeliveryRequest)
                 .buyPayMethod(buyPayMethod)
+                .giftYn(buyForm.getGiftYn())
                 .build();
 
         buy.setOrderId(tid);
@@ -85,8 +90,19 @@ public class BuyService {
         buy.setUser(user);
 
         buyMapper.createBuy(buy);
-        return buy.getBuyNo();
+        return buy;
     }
+
+//    public void insertGift(Buy buy){
+//
+//        Gift gift = Gift.builder()
+//                .senderName(buyForm.getSenderName())
+//                .sendMethod(buyForm.getSendMethod())
+//                .buy(buy)
+//                .build();
+//
+//        giftMapper.insertGift();
+//    }
 
     public void insertBuyBook(long generatedNo){
         for(int i = 0; i < buyForm.getBuyBookNoList().size(); i++){
@@ -101,7 +117,6 @@ public class BuyService {
             buyBook.setBuyNo(generatedNo);
 
             buyMapper.createBuyBook(buyBook);
-            //buyMapper.updateBookStock(bookNo, count);
         }
     }
 
@@ -122,49 +137,6 @@ public class BuyService {
         }
     }
 
-    public void updatePoint(User user){
-        int totalPointUseAmount = buyForm.getTotalPointUseAmount();
-        Map<String, Object> map = new HashMap<>();
-        map.put("userNo", user.getNo());
-        map.put("totalPointUseAmount", totalPointUseAmount);
-        buyMapper.updatePointUsed(map);
-    }
-
-    public List<UserDelivery> getUserDeliveryByUserNo(String userId) {
-        User user = userMapper.selectUserById(userId);
-
-        return buyMapper.getUserDeliveryByUserNo(user.getNo());
-    }
-
-    public List<BuyDeliveryRequest> getBuyDeliveryRequest() {
-        return buyMapper.getBuyDeliveryRequest();
-    }
-
-    public void updateDefaultUserDelivery(long selectedUserDeliveryNo) {
-        buyMapper.updateDefaultUserDeliveryN(selectedUserDeliveryNo);
-        buyMapper.updateDefaultUserDeliveryY(selectedUserDeliveryNo);
-    }
-
-    public UserDelivery createUserDelivery(String userId, UserDelivery userDelivery) {
-        User user = userMapper.selectUserById(userId);
-
-        userDelivery.setUser(user);
-
-        buyMapper.createUserDelivery(userDelivery);
-        return userDelivery;
-    }
-
-    public String getBuyerYn(long bookNo, String userId) {
-        long userNo = 0;
-        if(!"guest".equals(userId)) {
-            User user = userMapper.selectUserById(userId);
-            userNo = user.getNo();
-        }
-        String buyerYn = buyMapper.getBuyerYn(bookNo, userNo);
-
-        return buyerYn;
-    }
-
     public void updateBookStock(BuyForm buyForm){
         for(int i = 0; i < buyForm.getBuyBookNoList().size(); i++) {
             long bookNo = buyForm.getBuyBookNoList().get(i);
@@ -180,4 +152,33 @@ public class BuyService {
         }
     }
 
+    public void updatePoint(User user){
+        int totalPointUseAmount = buyForm.getTotalPointUseAmount();
+        Map<String, Object> map = new HashMap<>();
+        map.put("userNo", user.getNo());
+        map.put("totalPointUseAmount", totalPointUseAmount);
+        buyMapper.updatePointUsed(map);
+    }
+
+    public void makeEmail(String receiverMail, String receiverName){
+        String url = "http://localhost:8080/product/gift/receiver";
+        String title = "북허브 도서 선물이 도착했습니다";
+        String content = "<html><body>" + receiverName + "님, 북허브 도서 선물이 도착했습니다. <br/>" +
+                "주소를 입력하여 선물을 받아보세요!<br/><a href='" + url + "'>" + url + "</a></body></html>";
+        sendMail(setFrom, receiverMail, title, content);
+    }
+
+    private void sendMail(String setFrom, String toMail, String title, String content) {
+        try {
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setFrom(setFrom);
+            helper.setTo(toMail);
+            helper.setSubject(title);
+            helper.setText(content, true);
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("이메일 발송 오류", e);
+        }
+    }
 }

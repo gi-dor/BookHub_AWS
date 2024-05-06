@@ -4,7 +4,7 @@ import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
-import com.example.bookhub.product.vo.BuyDeliveryRequest;
+import com.example.bookhub.product.service.GiftService;
 import com.example.bookhub.product.vo.CouponProduced;
 import com.example.bookhub.user.vo.UserDelivery;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/product/buy")
+@RequestMapping("/product/gift")
 @RequiredArgsConstructor
 @SessionAttributes({"buyForm"})
-public class BuyController {
+public class GiftController {
 
+    private final GiftService giftService;
     private final BookService bookService;
     private final BuyService buyService;
+
+    @PostMapping("")
+    public String gift(BuyForm buyForm){
+        giftService.setGiftYn(buyForm);
+        System.out.println(buyForm);
+        return "product/gift/detail";
+    }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/order")
@@ -43,9 +51,6 @@ public class BuyController {
         }
         model.addAttribute("userDeliveryList", userDeliveryList);
         model.addAttribute("defaultUserDelivery", defaultUserDelivery);
-
-        List<BuyDeliveryRequest> buyDeliveryRequestList = buyService.getBuyDeliveryRequest();
-        model.addAttribute("buyDeliveryRequestList", buyDeliveryRequestList);
 
         List<BookDto> buyBookList = new ArrayList<>();
         for(long buyBookNo : buyForm.getBuyBookNoList()){
@@ -66,7 +71,7 @@ public class BuyController {
         // BuyForm 객체 HttpSession에 저장
         model.addAttribute("buyForm", buyForm);
 
-        return "product/buy/order";
+        return "product/gift/order";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -77,22 +82,4 @@ public class BuyController {
         System.out.println(couponList);
         return ResponseEntity.ok(couponList);
     }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delivery/default/{selectedUserDeliveryNo}")
-    @ResponseBody
-    public ResponseEntity<Void> updateDefaultDelivery(@PathVariable("selectedUserDeliveryNo") long selectedUserDeliveryNo){
-        buyService.updateDefaultUserDelivery(selectedUserDeliveryNo);
-        return ResponseEntity.ok().build();
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/delivery/create")
-    @ResponseBody
-    public ResponseEntity<UserDelivery> createUserDelivery(Principal principal, UserDelivery userDelivery){
-        System.out.println(userDelivery);
-        buyService.createUserDelivery(principal.getName(), userDelivery);
-        return ResponseEntity.ok().body(userDelivery);
-    }
-
 }

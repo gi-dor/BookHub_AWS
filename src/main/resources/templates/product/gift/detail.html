@@ -1,0 +1,74 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<div layout:fragment="content" class="container my-3">
+    <style>
+        .table {
+            border-collapse: collapse;
+            border: none;
+        }
+
+        .table th, .table td {
+            border: none;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-9">
+            <form id="form-cart" method="post" action="/product/gift/order">
+                <!-- 테이블1 -->
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>받는 분 수</th>
+                            <td>
+                                <select class="form-select" name="receiverCount">
+                                    <option value="1" selected> 1</option>명
+                                    <option value="2" > 2</option>명
+                                    <option value="3" > 3</option>명
+                                    <option value="4" > 4</option>명
+                                    <option value="5" > 5</option>명
+                                    <option value="6" > 6</option>명
+                                    <option value="7" > 7</option>명
+                                    <option value="8" > 8</option>명
+                                    <option value="9" > 1</option>명
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>보내는 분</th>
+                            <td><input class="form-control" name="senderName" /></td>
+                        </tr>
+                        <tr>
+                            <th>선물 전달 방법</th>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio" class="btn-check" name="sendMethod" id="email" autocomplete="off" checked>
+                                    <label class="btn btn-outline-primary" for="email">이메일</label>
+
+                                    <input type="radio" class="btn-check" name="sendMethod" id="kakaotalk" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="kakaotalk">알림톡</label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- 테이블2 -->
+                <table class="table">
+                    <tr>
+                        <th>받는 분 1</th>
+                        <td>
+                            <input class="form-control" name="receiverName" />
+                            <input class="form-control" name="receiverEmail" />
+                        </td>
+                    </tr>
+                </table>
+                <button type="submit" class="btn btn-secondary">확인</button>
+            </form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+<script layout:fragment="script" type="text/javascript">
+</script>
