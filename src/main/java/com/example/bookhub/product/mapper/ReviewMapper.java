@@ -29,4 +29,6 @@ public interface ReviewMapper {
     int getReviewTotalRows(long bookNo);
     int getRateCount(@Param("bookNo") long bookNo, @Param("start") int start, @Param("end") int end);
     int getReviewTagCount(@Param("bookNo") long bookNo, @Param("reviewTagNo") int reviewTagNo);
+    void updateReviewCount(long bookNo);
+    void updateBookAverageRating(@Param("bookNo") long bookNo, @Param("rate") float rate);
 }

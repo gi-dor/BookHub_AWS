@@ -8,6 +8,7 @@ import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ public class ReviewService {
     private final ReviewMapper reviewMapper;
     private final UserMapper userMapper;
 
+    @Transactional
     public void createReview(ReviewForm reviewForm, String userId) {
 
         User user = userMapper.selectUserById(userId);
@@ -46,7 +48,9 @@ public class ReviewService {
 
         reviewMapper.createReview(review);
         long generatedReviewNo = review.getReviewNo();
-        System.out.println("generatedReviewNo: " + generatedReviewNo);
+
+        reviewMapper.updateReviewCount(reviewForm.getBookNo());
+        reviewMapper.updateBookAverageRating(reviewForm.getBookNo(), reviewForm.getRate());
 
 
         if(!reviewForm.getImageList().isEmpty())

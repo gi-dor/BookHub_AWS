@@ -277,4 +277,22 @@
             review_tag_no = #{reviewTagNo}
             and book_no = #{bookNo}
     </select>
+
+    <update id="updateReviewCount" parameterType="long">
+        update
+            BOOK
+        set
+            book_review_count = book_review_count + 1
+        where
+            book_no = #{value}
+    </update>
+
+    <update id="updateBookAverageRating">
+        update
+            BOOK
+        set
+            book_average_rating = ROUND((book_average_rating * (book_review_count - 1) + #{rate}) / book_review_count, 1)
+        where
+            book_no = #{bookNo}
+    </update>
 </mapper>
