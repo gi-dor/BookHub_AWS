@@ -46,6 +46,20 @@
         <result column="publisher_name" property="name"/>
     </resultMap>
 
+    <resultMap type="com.example.bookhub.product.vo.BookAuthor" id="BookAuthorResultMap">
+        <result column="author_type" property="authorType"/>
+        <association column="author_no" property="author"
+                     select="com.example.bookhub.product.mapper.BookMapper.getAuthorByAuthorNo"/>
+    </resultMap>
+
+    <resultMap type="com.example.bookhub.product.vo.Author" id="AuthorResultMap">
+        <id column="author_no" property="authorNo"/>
+        <result column="author_name" property="name"/>
+        <result column="author_introduction" property="introduction"/>
+        <result column="author_created_date" property="createdDate"/>
+        <result column="author_updated_date" property="updatedDate"/>
+    </resultMap>
+
     <select id="getCategoryByNo" parameterType="long" resultMap="CategoryResultMap">
         select
             CATEGORY_NO, CATEGORY_NAME, PARENT_CATEGORY_NO
@@ -112,4 +126,28 @@
         where
             book_no = #{bookNo}
     </update>
+
+    <select id="getAuthorByBookNo" parameterType="long" resultMap="BookAuthorResultMap">
+        select
+            author_type,
+            author_no
+        from
+            BOOK_AUTHOR
+        where
+            book_no = #{bookNo}
+    </select>
+
+    <!-- association -->
+    <select id="getAuthorByAuthorNo" parameterType="long" resultMap="AuthorResultMap">
+        select
+            author_no,
+            author_name,
+            author_introduction,
+            author_created_date,
+            author_updated_date
+        from
+            AUTHOR
+        where
+            author_no = #{authorNo}
+    </select>
 </mapper>
