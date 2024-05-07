@@ -63,3 +63,25 @@ textarea.custom-textarea:focus {
     cursor: pointer; /* 클릭 가능한 커서 */
     color: blue; /* 링크 색상 */
 }
+
+
+
+.list-group-item,
+.list-group-item > div > h6,
+.list-group-item > span,
+.list-group-item > div > div,
+.card > .input-group > .form-control,
+.card > .input-group > .btn {
+    font-size: 1.1em;
+ }
+.order-md-last .badge {
+    font-size: 1.1em;
+}
+
+.visible {
+    display: inline;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,6 +1,5 @@
 package com.example.bookhub.admin.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,31 +12,27 @@ public class ProductFilter {
     private long topCategoryNo;
     private long secondCategoryNo;
     private long thirdCategoryNo;
-    private String period;
+    private String dateOpt;
     private String moreDate;
     private String lessDate;
-    private String available;
-    private String discontinued;
-    private String soldOut;
+    private List<String> status;
     private int moreStock;
     private int lessStock;
     private long publisherNo;
-    List<String> statusList;
+    private String period;
+    private int stockOpt;
+    private int rows;
+    private String sort;
 
-    public List<String> getStatusList() {
-        if (available != null || discontinued != null || soldOut != null) {
-            statusList = new ArrayList<>();
-        }
-        if (available != null) {
-            statusList.add(available);
-        }
-        if (discontinued != null) {
-            statusList.add(discontinued);
-        }
-        if (soldOut != null) {
-            statusList.add(soldOut);
+    public List<String> getStatus() {
+        // status.isEmpty()가 null.isEmpty()인 경우 발생하는 예외를 방지하기 위함
+        if (status == null) {
+            return status;
         }
 
-        return statusList;
+        if (status.isEmpty()) {
+            return null;
+        }
+        return status;
     }
 }

@@ -38,7 +38,7 @@ public class IndividualController {
                                 Model model){
         // 전체 행 수를 구하는 메소드
         int totalRows = individualService.getTotalRows(0);
-        Pagination pagination = new Pagination(page, totalRows, rows);
+        Pagination pagination = new Pagination(page, totalRows, rows, 10);
 
         // Pagination을 사용하여 페이지의 데이터 리스트를 가져옴
         List<IndividualDto> noAnswerList = individualService.getNoAnswerList(pagination);

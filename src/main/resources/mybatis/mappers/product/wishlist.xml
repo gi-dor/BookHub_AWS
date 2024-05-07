@@ -14,4 +14,14 @@
         where book_no = #{bookNo}
         and user_no = #{userNo}
     </delete>
+
+    <select id="getWishListYn" resultType="long">
+        select
+            wish_list_no
+        from
+            USER_WISHLIST
+        where
+            book_no = #{bookNo}
+            and user_no = #{userNo}
+    </select>
 </mapper>

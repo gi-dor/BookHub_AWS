@@ -7,7 +7,7 @@ import com.example.bookhub.product.vo.ReviewTag;
 import com.example.bookhub.user.vo.User;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,12 +18,12 @@ public class ReviewDto {
     private float rate;
     private int recommendCount;
     private int accuseCount;
-    private Date createdDate;
-    private Date updatedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
     private String recommended;
     private ReviewTag reviewTag;
     private int replyCount;
-    private String buyer;
+    private String buyerYn;
     private User user;
     private Book book;
     private List<ReviewImage> reviewImageList;

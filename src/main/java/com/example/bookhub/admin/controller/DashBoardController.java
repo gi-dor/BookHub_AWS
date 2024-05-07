@@ -1,7 +1,7 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.DayTotalDto;
-import com.example.bookhub.admin.dto.ratioDto;
+import com.example.bookhub.admin.dto.RatioDto;
 import org.springframework.ui.Model;
 import com.example.bookhub.admin.service.DashBoardService;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +21,6 @@ public class DashBoardController {
 
     private final DashBoardService dashBoardService;
 
-
-    @GetMapping("/dailyDash")
-    public String dailyDash(){
-        return "/admin/dash/dailyDash";
-    }
-
-    @GetMapping("/weekDash")
-    public String weekDash(){
-        return "/admin/dash/weekDash";
-    }
 
 
     // 총 회원 수
@@ -61,9 +51,9 @@ public class DashBoardController {
         return dashBoardService.getTotalDate();
     }
 
-    @RequestMapping("/getYesterDay.do")
-    public @ResponseBody DayTotalDto getYesterDay(String value){
-        return dashBoardService.getYesterDay(value);
+    @RequestMapping("/getDayTotal.do")
+    public @ResponseBody DayTotalDto getDayTotal(String value){
+        return dashBoardService.getDayTotal(value);
     }
 
     @RequestMapping("/noAnswerCnt.do")
@@ -76,7 +66,7 @@ public class DashBoardController {
     }
 
     @RequestMapping("/ratio.do")
-    public @ResponseBody List<ratioDto> getRatio(){
+    public @ResponseBody List<RatioDto> getRatio(){
         return dashBoardService.getRatios();
     }
 }

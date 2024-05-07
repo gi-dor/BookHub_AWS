@@ -10,8 +10,8 @@
         <form class="mb-4" action="/main/bestseller" method="get" id="bestSeller">
             <div class="mb-4">
                 <input type="hidden" name="period" th:value="${#strings.defaultString(param.period, '1')}"/>  <!--기본이 종합베스트-->
-                <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubdate, '0')}"/> <!--기본이 주간-->
-                <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'0')}"/>
+                <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubdate, '1')}"/> <!--기본이 주간-->
+                <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'1')}"/>
                 <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '0')}"/>
                 <input type="hidden" name="page" th:value="${#strings.defaultString(param.page, '1')}"/>
             </div>
@@ -38,9 +38,9 @@
         <!-- Main content -->
 
         <!--카테고리 선택 - 전체, 소설, 참고서, 사회과학 ,,, 등등등-->
-        <div class="col-8 mb-5" id="cateKeyword">
+        <div class="col-8 mb-5" >
             <h1 class="mb-3">국내도서</h1>
-            <ul>
+            <ul id="cateKeyword">
                 <a href="" data-cateKeyword="0"><span class="catebadge rounded-pill text-bg-light me-5">전체</span></a>
                 <a href="#" data-cateKeyword="3"><span class="catebadge rounded-pill text-bg-light me-5">소설</span></a>
                 <a href="#" data-cateKeyword="19"><span class="catebadge rounded-pill text-bg-light me-5">인문학</span></a>
@@ -54,7 +54,6 @@
                     <i class="bi bi-arrow-down"></i>
                 </button>
             </ul>
-        </div>
         <div class="collapse" id="collapseExample">
             <div class="card card-body ">
                 <ul>
@@ -73,11 +72,12 @@
             </div>
         </div>
 
-           <!-- Main content -->
+            <!-- Main content -->
             <div class="col-12 mb-5">
                 <!--옵션선택? 판매량순, 출시일순, 평점순, 리뷰순 -->
-                <div class="d-flex justify-content-between align-items-center mb-3" id="sort">
-                    <ul class="nav nav-tabs">
+                <div class = "row">
+                <div class="d-flex justify-content-between align-items-center mb-3 col-10" id="sort">
+                    <ul class="nav nav-tabs col-12">
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="#" data-sort="1">판매량순</a>
                         </li>
@@ -91,19 +91,20 @@
                             <a class="nav-link" href="#" data-sort="4">리뷰순</a>
                         </li>
                     </ul>
-                    <div class="btn-group" id="pubDate">
-                        <button type="button" class="pubdatebtn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            출간일
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#" data-pubDate="1" >출간일 1주 이내</a></li>
-                            <li><a class="dropdown-item" href="#" data-pubDate="2">출간일 2주 이내</a></li>
-                            <li><a class="dropdown-item" href="#" data-pubDate="3">출간일 8주 이내</a></li>
-                            <li><a class="dropdown-item" href="#" data-pubDate="4">출간일 12주 이내</a></li>
-                            <li><a class="dropdown-item" href="#" data-pubDate="5">출간일 24주 이내</a></li>
-                        </ul>
-                    </div>
                 </div>
+                <div class="btn-group col-2" id="pubDate" >
+                    <button type="button" class="pubdatebtn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        출간일
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" >
+                        <li><a class="dropdown-item" href="#" data-pubDate="1" >출간일 1주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="2">출간일 2주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="3">출간일 8주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="4">출간일 12주 이내</a></li>
+                        <li><a class="dropdown-item" href="#" data-pubDate="5">출간일 24주 이내</a></li>
+                    </ul>
+                </div>
+            </div>
             </div>
 
             <!-- 페이지네이션 및 버튼 -->
@@ -112,7 +113,7 @@
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" >
-                                <a th:href="@{|bestseller?page=${criteria.page - 1}|}"
+                                <a th:href="@{|new?page=${criteria.page - 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.first ? 'disabled' : '' }"
                                    aria-label="Previous"
@@ -122,7 +123,7 @@
                             </li>
                             <th:block th:each="num : ${#numbers.sequence(criteria.beginPage, criteria.endPage)}">
                                 <li class="page-item" >
-                                    <a th:href="@{|bestseller?page=${num}|}"
+                                    <a th:href="@{|new?page=${num}|}"
                                        class="page-link"
                                        th:text="${num}"
                                        th:attr="data-page=${num}">
@@ -132,7 +133,7 @@
                                 </li>
                             </th:block>
                             <li class="page-item">
-                                <a th:href="@{|bestseller?page=${criteria.page + 1}|}"
+                                <a th:href="@{|new?page=${criteria.page + 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.last ? 'disabled' : '' }"
                                    aria-label="Next"
@@ -143,12 +144,12 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="col-5">
-                    <button type="button" class="btn me-2">전체선택</button>
-                    <button type="button" class="btn">장바구니 담기</button>
-                    <button type="button" class="btn">마이리스트 담기</button>
-                </div>
+            <div class="col-5">
+                <button type="button" class="btn me-2">전체선택</button>
+                <button type="button" class="btn">장바구니 담기</button>
+                <button type="button" class="btn">마이리스트 담기</button>
             </div>
+        </div>
 
             <div class="col-10 ms-2">
                 <div class="mb-5 bg-white" style="border-bottom: 1.5px solid #1D3559;"></div>

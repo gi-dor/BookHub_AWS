@@ -5,6 +5,7 @@
     <resultMap id="CouponListResultMap" type="com.example.bookhub.product.vo.CouponProduced">
         <id column="coupon_produced_no" property="couponProducedNo"/>
         <result column="due_date" property="dueDate"/>
+        <result column="last_amount" property="lastAmount"/>
         <association column="coupon_no" property="coupon"
                      select="com.example.bookhub.product.mapper.BuyMapper.getCouponByNo"/>
     </resultMap>
@@ -46,6 +47,7 @@
         select
             coupon_produced_no,
             due_date,
+            last_amount,
             coupon_no
         from
              COUPON_PRODUCED
@@ -67,10 +69,10 @@
     <insert id="createBuy" parameterType="com.example.bookhub.product.vo.Buy" >
         insert into BUY
         (total_price, total_book_discount_price, total_coupon_discount_amount, total_point_use_amount, final_price, point_accumulation_amount,
-         common_entrance_approach, common_entrance_password, buy_pay_method_no, buy_status_no, buy_delivery_request_no, user_no, delivery_no, order_id)
+         common_entrance_approach, common_entrance_password, gift, buy_pay_method_no, buy_status_no, buy_delivery_request_no, user_no, delivery_no, order_id)
         values
         (#{totalPrice}, #{totalBookDiscountPrice}, #{totalCouponDiscountAmount}, #{totalPointUseAmount}, #{finalPrice}, 1000,
-         #{commonEntranceApproach}, "1234", #{buyPayMethod.buyPayMethodNo}, 1, #{buyDeliveryRequest.buyDeliveryRequestNo}, #{user.no}, #{userDelivery.no}, #{orderId})
+         #{commonEntranceApproach}, "1234", #{giftYn}, #{buyPayMethod.buyPayMethodNo}, 1, #{buyDeliveryRequest.buyDeliveryRequestNo}, #{user.no}, #{userDelivery.no}, #{orderId})
 
          <selectKey keyProperty="buyNo" resultType="long" order="AFTER">
              select last_insert_id()
@@ -91,10 +93,30 @@
         (#{discountAmount}, #{couponProducedNo}, #{buyNo})
     </insert>
 
-    <update id="updateCouponProducedUsed" parameterType="long" >
+    <select id="getCouponProducedLastAmount" parameterType="long" resultType="int">
+        select
+            last_amount
+        from
+            COUPON_PRODUCED
+        where
+            coupon_produced_no = #{couponProducedNo}
+    </select>
+
+    <update id="updateCouponProducedUsed">
         update COUPON_PRODUCED
-        set used='Y'
-        where coupon_produced_no = #{value}
+        <set>
+            last_amount = last_amount - #{couponDiscountAmount},
+            used =
+            <choose>
+                <when test='used == "Y"'>
+                    'Y'
+                </when>
+                <when test='used == "N"'>
+                    'N'
+                </when>
+            </choose>
+        </set>
+        where coupon_produced_no = #{couponProducedNo}
     </update>
 
     <update id="updatePointUsed" parameterType="map">
@@ -137,5 +159,61 @@
         SET user_default_address_yn = 'Y'
         WHERE delivery_no = #{selectedUserDeliveryNo}
     </update>
+
+    <insert id="createUserDelivery" parameterType="com.example.bookhub.user.vo.UserDelivery">
+        insert into USER_DELIVERY
+        (recipient_name, recipient_tel, user_zip_code, user_address, user_address_detail, user_default_address_yn, user_no)
+        values
+        (#{name}, #{tel}, #{zipCode}, #{address}, #{addressDetail}, 'N', #{user.no})
+
+        <selectKey keyProperty="no" resultType="long" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="updateBookStock">
+        update
+            BOOK
+        set
+            book_stock = book_stock - #{count}
+        where
+            book_no = #{bookNo}
+    </update>
+
+    <select id="getBookStock" parameterType="long" resultType="int">
+        select
+            book_stock
+        from
+            BOOK
+        where
+            book_no = #{bookNo}
+    </select>
+
+    <select id="getBuyerYn" resultType="String">
+        SELECT
+            CASE
+                WHEN EXISTS (
+                        SELECT 1
+                        FROM BUY B, BUY_BOOK BB
+                        WHERE B.refund_yn != 'N'
+                AND B.gift != 'Y'
+                AND B.user_no = #{userNo}
+                AND B.buy_no = BB.buy_no
+                AND BB.book_no = #{bookNo}
+            ) THEN 'Y'
+                ELSE 'N'
+            END AS result
+    </select>
+
+    <select id="getCouponCountByUserNo" parameterType="long" resultType="int">
+        select
+            count(*)
+        from
+            COUPON_PRODUCED
+        where
+            user_no = #{value}
+            and due_date >= sysdate()
+            and used = 'N'
+    </select>
 
 </mapper>

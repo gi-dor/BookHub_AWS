@@ -7,32 +7,25 @@
 <div layout:fragment="content" class="container-fluid">
 
            <form class="mb-4" action="/main/newbook" method="get" id="newbook">
-
-               <div class="mb-4">
-                   <input type="hidden" name="cate" th:value="${#strings.defaultString(param.cate, '1')}"/>
-                   <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubDate, '0')}"/>
-                   <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'0')}"/>
+                   <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubDate, '1')}"/>
+                   <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'1')}"/>
                    <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '1')}"/>
                    <input type="hidden" name="page" th:value="${#strings.defaultString(param.page, '1')}"/>
-               </div>
-
            </form>
 
        <div class="row">
            <!-- Sidebar -->
         <div class="sidebar col-2">
         </div>
-            <!-- 결과내 검색 끝 -->
-
         <!-- /Sidebar -->
 
         <!-- Main content -->
         <!--카테고리 선택 - 전체, 소설, 참고서, 사회과학 ,,, 등등등-->
-        <div class="cateKeyword col-8 mb-5">
+           <div class="col-8 mb-5"  >
             <h1 class="mb-3">국내도서</h1>
             <div>
-                <ul>
-                    <a href="" data-cateKeyword="0"><span class="catebadge rounded-pill text-bg-light me-5">전체</span></a>
+                <ul id="cateKeyword">
+                    <a href="" data-cateKeyword="1"><span class="catebadge rounded-pill text-bg-light me-5">전체</span></a>
                     <a href="#" data-cateKeyword="3"><span class="catebadge rounded-pill text-bg-light me-5">소설</span></a>
                     <a href="#" data-cateKeyword="19"><span class="catebadge rounded-pill text-bg-light me-5">인문학</span></a>
                     <a href="#" data-cateKeyword="8"><span class="catebadge rounded-pill text-bg-light me-5">사회과학</span></a>
@@ -41,19 +34,19 @@
                     <a href="#" data-cateKeyword="11"><span class="catebadge rounded-pill text-bg-light me-5">경제경영</span></a>
                     <a href="#" data-cateKeyword="17"><span class="catebadge rounded-pill text-bg-light me-5">외국어</span></a>
 
-                <button class="catebtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    <i class="bi bi-arrow-down"></i>
-            </button>
+                     <button class="catebtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="bi bi-arrow-down"></i>
+                    </button>
                 </ul>
             </div>
             <div class="collapse" id="collapseExample">
                 <div class="card card-body ">
                     <ul>
-                        <a href="#" data-cateKeyword="18"><span class="catebadge rounded-pill text-bg-light me-5">어린이</span></a>
+                        <a href="#" data-cateKeyword="18"><span class="catebadge rounded-pill text-bg-light me-5">유아/어린이</span></a>
                         <a href="#" data-cateKeyword="14"><span class="catebadge rounded-pill text-bg-light me-5">여행</span></a>
                         <a href="#" data-cateKeyword="13"><span class="catebadge rounded-pill text-bg-light me-5">에세이</span></a>
                         <a href="#" data-cateKeyword="21"><span class="catebadge rounded-pill text-bg-light me-5">만화</span></a>
-                        <a href="#" data-cateKeyword="17"><span class="catebadge rounded-pill text-bg-light me-5">초/중/고참고서</span></a>
+                        <a href="#" data-cateKeyword="9"><span class="catebadge rounded-pill text-bg-light me-5">초/중/고참고서</span></a>
                         <a href="#" data-cateKeyword="16"><span class="catebadge rounded-pill text-bg-light me-5">예술/대중문화</span></a>
                         <li><hr class="dropdown-divider"></li>
                         <a href="#" data-cateKeyword="10"><span class="catebadge rounded-pill text-bg-light me-5">요리/살림</span></a>
@@ -67,26 +60,28 @@
            <!-- Main content -->
             <div class="col-12 mb-5">
                 <!--옵션선택? 판매량순, 출시일순, 평점순, 리뷰순 -->
-                <div class="searchSort mb-3 d-flex justify-content-between align-items-center">
-                    <ul class="nav nav-tabs">
+                <div class = "row">
+                <div class="d-flex justify-content-between align-items-center mb-3 col-10" id="sort">
+                    <ul class="nav nav-tabs col-12">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#" data-sort="0">판매량순</a>
+                            <a class="nav-link" aria-current="page" href="#" data-sort="1">판매량순</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-sort="1">출간일순</a>
+                            <a class="nav-link" href="#" data-sort="2">출간일순</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-sort="2">평점순</a>
+                            <a class="nav-link" href="#" data-sort="3">평점순</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-sort="3">리뷰순</a>
+                            <a class="nav-link" href="#" data-sort="4">리뷰순</a>
                         </li>
                     </ul>
-                    <div class="pubdate btn-group">
+                </div>
+                    <div class="btn-group col-2" id="pubDate" >
                         <button type="button" class="pubdatebtn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             출간일
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end" id="pub-date">
+                        <ul class="dropdown-menu dropdown-menu-end" >
                             <li><a class="dropdown-item" href="#" data-pubDate="1" >출간일 1주 이내</a></li>
                             <li><a class="dropdown-item" href="#" data-pubDate="2">출간일 2주 이내</a></li>
                             <li><a class="dropdown-item" href="#" data-pubDate="3">출간일 8주 이내</a></li>

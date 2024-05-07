@@ -1,10 +1,12 @@
 package com.example.bookhub.product.dto;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
+@ToString
 public class BuyForm {
     private List<Long> buyBookNoList;
     private List<Integer> buyBookCountList;
@@ -22,4 +24,11 @@ public class BuyForm {
     private long buyDeliveryRequestNo;
     private String commonEntranceApproach;
     private long buyPayMethodNo;
+
+    private String giftYn;
+    private int receiverCount;
+    private String senderName;
+    private String sendMethod;
+    private List<String> receiverName;
+    private List<String> receiverEmail;
 }

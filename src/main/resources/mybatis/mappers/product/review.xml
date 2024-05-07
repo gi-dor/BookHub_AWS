@@ -11,7 +11,7 @@
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
         <result column="reply_count" property="replyCount"/>
-        <result column="buyer" property="buyer"/>
+        <result column="buyer_yn" property="buyerYn"/>
         <result column="recommended" property="recommended" />
         <association column="user_no" property="user"
                      select="com.example.bookhub.product.mapper.ReviewMapper.getUserByNo"/>
@@ -27,7 +27,7 @@
         <id column="review_no" property="reviewNo"/>
         <result column="comment" property="comment"/>
         <result column="rate" property="rate"/>
-        <result column="buyer" property="buyer"/>
+        <result column="buyer_yn" property="buyerYn"/>
         <association column="review_tag_no" property="reviewTag"
                      select="com.example.bookhub.product.mapper.ReviewMapper.getReviewTagByNo"/>
     </resultMap>
@@ -58,9 +58,9 @@
 
     <insert id="createReview" parameterType="com.example.bookhub.product.vo.Review">
         insert into REVIEW
-        (comment, rate, user_no, review_tag_no, book_no)
+        (comment, rate, user_no, review_tag_no, book_no, buyer_yn)
         values
-        (#{comment}, #{rate}, #{user.no}, #{reviewTag.reviewTagNo}, #{book.bookNo})
+        (#{comment}, #{rate}, #{user.no}, #{reviewTag.reviewTagNo}, #{book.bookNo}, #{buyerYn})
 
         <selectKey keyProperty="reviewNo" resultType="long" order="AFTER">
             select last_insert_id()
@@ -114,8 +114,16 @@
             review_no = #{value}
     </select>
 
+    <select id="getReviewTotalRows" parameterType="long" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            book_no = #{bookNo}
+    </select>
 
-    <select id="getReviewsByBookNo" parameterType="long" resultMap="ReviewListResultMap">
+    <select id="getReviewsByBookNo" parameterType="map" resultMap="ReviewListResultMap">
         select
             review_no,
             comment,
@@ -127,7 +135,7 @@
             user_no,
             review_tag_no,
             reply_count,
-            buyer
+            buyer_yn
             <choose>
                 <when test="userNo != 0">
                     ,
@@ -145,6 +153,18 @@
             REVIEW R
         where
             book_no = #{bookNo}
+        <choose>
+            <when test="sort == 'date'">
+                order by created_date desc
+            </when>
+            <when test="sort == 'recommend'">
+                order by recommend_count desc
+            </when>
+            <when test="sort == 'comment'">
+                order by reply_count desc
+            </when>
+        </choose>
+        limit 10 offset #{offset};
     </select>
 
     <insert id="createReviewImage" parameterType="com.example.bookhub.product.vo.ReviewImage">
@@ -208,7 +228,7 @@
             comment,
             rate,
             review_tag_no,
-            buyer
+            buyer_yn
         from
             REVIEW
         where
@@ -234,4 +254,78 @@
         delete from REVIEW
         where review_no = #{value}
     </delete>
+
+    <select id="getRateCount" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            <![CDATA[
+            rate > #{start}
+            and rate <= #{end}
+            and book_no = #{bookNo}
+              ]]>
+    </select>
+
+    <select id="getReviewTagCount" resultType="int">
+        select
+            count(*)
+        from
+            REVIEW
+        where
+            review_tag_no = #{reviewTagNo}
+            and book_no = #{bookNo}
+    </select>
+
+    <update id="updateReviewCount" parameterType="long">
+        update
+            BOOK
+        set
+            book_review_count = book_review_count + 1
+        where
+            book_no = #{value}
+    </update>
+
+    <update id="updateBookAverageRating">
+        update
+            BOOK
+        set
+            book_average_rating = ROUND((book_average_rating * (book_review_count - 1) + #{rate}) / book_review_count, 1)
+        where
+            book_no = #{bookNo}
+    </update>
+
+    <update id="modifyReviewReply">
+        update
+            REVIEW_REPLY
+        set
+            comment = #{comment}
+        where
+            review_reply_no = #{reviewReplyNo}
+    </update>
+
+    <delete id="deleteReviewReply" parameterType="long">
+        delete from
+            REVIEW_REPLY
+        where
+            review_reply_no = #{reviewReplyNo}
+    </delete>
+
+    <update id="updateReviewReplyCount" parameterType="map">
+        update REVIEW
+        <set>
+            reply_count =
+            <choose>
+                <when test="option == 'create'">
+                    reply_count + 1
+                </when>
+                <when test="option == 'delete'">
+                    reply_count - 1
+                </when>
+            </choose>
+        </set>
+        where review_no = #{reviewNo}
+    </update>
+
 </mapper>

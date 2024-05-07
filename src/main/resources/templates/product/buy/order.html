@@ -4,7 +4,7 @@
     <link rel="stylesheet" th:href="@{/css/product/buyOrder.css}" />
 </th:block>
 <div layout:fragment="content" class="container my-3">
-    <form method="post" th:action="@{/kakaoPay/ready}">
+    <form method="post" id="form-order" th:action="@{/kakaoPay/ready}">
         <div class="row mb-3">
             <div class="col-9">
                 <!-- 배송지 정보 -->
@@ -19,19 +19,20 @@
                                     <th>배송지 정보</th>
                                     <td>
                                         <div>
-                                            <span><span class="badge rounded-pill bg-dark">기본배송지</span></span>
-                                            <button type="button" class="btn btn-secondary" onclick="showDeliveryModifyModal()">변경</button>
+                                            <button type="button" class="btn btn-secondary" onclick="showModalDeliveryModify()">배송지 선택</button>
                                         </div>
                                         <div>
-                                            <input id="default-user-delivery-no" type="hidden" name="userDeliveryNo" th:value="${defaultUserDelivery.no}" />
-                                            <span id="default-user-delivery-name" th:text="${defaultUserDelivery.name}"></span>
-                                            <span> / </span>
-                                            <span id="default-user-delivery-tel" th:text="${defaultUserDelivery.tel}"></span>
-                                        </div>
-                                        <div>
-                                            <span id="default-user-delivery-zip-code" th:text="${defaultUserDelivery.zipCode}"></span>
-                                            <span id="default-user-delivery-address" th:text="${defaultUserDelivery.address}"></span>
-                                            <span id="default-user-delivery-address-detail" th:text="${defaultUserDelivery.addressDetail}"></span>
+                                            <div>
+                                                <input id="default-user-delivery-no" type="hidden" name="userDeliveryNo" th:value="${defaultUserDelivery != null ? defaultUserDelivery.no : ''}" />
+                                                <span id="default-user-delivery-name" th:text="${defaultUserDelivery != null ? defaultUserDelivery.name : ''}"></span>
+                                                <span> / </span>
+                                                <span id="default-user-delivery-tel" th:text="${defaultUserDelivery != null ? defaultUserDelivery.tel : ''}"></span>
+                                            </div>
+                                            <div>
+                                                <span id="default-user-delivery-zip-code" th:text="${defaultUserDelivery != null ? defaultUserDelivery.zipCode : ''}"></span>
+                                                <span id="default-user-delivery-address" th:text="${defaultUserDelivery != null ? defaultUserDelivery.address : ''}"></span>
+                                                <span id="default-user-delivery-address-detail" th:text="${defaultUserDelivery != null ? defaultUserDelivery.addressDetail : ''}"></span>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -102,14 +103,14 @@
                             <tbody>
                             <tr>
                                 <td>북허브 쿠폰</td>
-                                <td></td>
+                                <td><span th:text="${couponCount}"></span>장 사용가능</td>
                                 <td><input id="total-coupon-discount-amount-tmp" style="width: 80px" readonly />원</td>
                                 <td><button type="button" class="btn btn-primary" onclick="showCouponUseModal()">사용하기</button></td>
                             </tr>
                             <tr>
                                 <td>북허브 포인트</td>
                                 <td><span id="total-point-amount" th:text="${point}"/>원</td>
-                                <td><input id="total-point-use-amount-tmp" style="width: 80px"/>원</td>
+                                <td><input id="total-point-use-amount-tmp" style="width: 80px" />원</td>
                                 <td><button type="button" class="btn btn-primary" onclick="useTotalPoint()">모두 사용</button></td>
                             </tr>
                             </tbody>
@@ -169,7 +170,7 @@
                                     <input id="final-price" name="finalPrice" value=0 />
                                 </li>
                             </ul>
-                                <button type="submit" class="w-100 btn btn-lg btn-primary">결제하기</button>
+                                <button type="button" class="w-100 btn btn-lg btn-primary" onclick="checkUserDelivery()">결제하기</button>
                         </div>
                     </div>
             </div>
@@ -222,30 +223,33 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div th:each="userDelivery : ${userDeliveryList}">
-                        <div class="card">
-                            <div class="card-body row">
-                                <div class="col-2">
-                                    <span class="form-check">
-                                        <input class="form-check-input radio-user-delivery" type="radio" name="userDelivery" th:value="${userDelivery.no}"
-                                               th:checked="${userDelivery.defaultAddressYn eq 'Y'}" />
-                                    </span>
-                                </div>
-                                <div class="col-10">
-                                    <div>
-                                        <span th:if="${userDelivery.defaultAddressYn eq 'Y'}">
-                                            <span class="badge rounded-pill bg-dark">기본배송지</span>
+                    <button type="button" class="btn btn-secondary" onclick="showModalDeliveryCreate()">배송지 추가</button>
+                    <div id="cards">
+                        <div th:each="userDelivery : ${userDeliveryList}">
+                            <div class="card">
+                                <div class="card-body row">
+                                    <div class="col-2">
+                                        <span class="form-check">
+                                            <input class="form-check-input radio-user-delivery" type="radio" name="userDelivery" th:value="${userDelivery.no}"
+                                                   th:checked="${userDelivery.defaultAddressYn eq 'Y'}" />
                                         </span>
                                     </div>
-                                    <div>
-                                        <span class="selected-user-delivery-name" th:text="${userDelivery.name}"></span>
-                                        <span> / </span>
-                                        <span class="selected-user-delivery-tel" th:text="${userDelivery.tel}"></span>
-                                    </div>
-                                    <div>
-                                        <span class="selected-user-delivery-zip-code" th:text="${userDelivery.zipCode}"></span>
-                                        <span class="selected-user-delivery-address" th:text="${userDelivery.address}"></span>
-                                        <span class="selected-user-delivery-address-detail"th:text="${userDelivery.addressDetail}"></span>
+                                    <div class="col-10">
+                                        <div>
+                                            <span th:if="${userDelivery.defaultAddressYn eq 'Y'}">
+                                                <span class="badge rounded-pill bg-dark">기본배송지</span>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="selected-user-delivery-name" th:text="${userDelivery.name}"></span>
+                                            <span> / </span>
+                                            <span class="selected-user-delivery-tel" th:text="${userDelivery.tel}"></span>
+                                        </div>
+                                        <div>
+                                            <span class="selected-user-delivery-zip-code" th:text="${userDelivery.zipCode}"></span>
+                                            <span class="selected-user-delivery-address" th:text="${userDelivery.address}"></span>
+                                            <span class="selected-user-delivery-address-detail"th:text="${userDelivery.addressDetail}"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -260,170 +264,330 @@
             </div>
         </div>
     </div>
+
+    <!-- 배송지 추가 모달 -->
+    <div class="modal" tabindex="-1" id="modal-delivery-create">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">배송지 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+                            <div class="form-group mb-3">
+                                <label class="form-label">이름</label>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <input id="created-name" type="text" class="form-control" />
+                                        <div class="text-danger"></div>
+                                    </div>
+                                    <div class="col-7">
+                                        <p class="form-text" style="font-family: Arial, sans-serif; color: grey;">  이름은 한글 2글자 이상 입니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <div class="row">
+                                    <label class="form-label">전화번호</label>
+                                    <div class="col-2">
+                                        <select id="created-tel1" class="form-select">
+                                            <option value="010">010</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                        <input id="created-tel2" type="text" class="form-control"/>
+                                        <div class="text-danger"></div>
+                                    </div>
+                                    <div class="col-2">
+                                        <input id="created-tel3" type="text" class="form-control"/>
+                                        <div class="text-danger"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="form-label">주소</label>
+                                <div class="row mb-1">
+                                    <div class="col-4">
+                                        <input type="text" id="sample6_postcode" class="form-control" placeholder="우편번호">
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-7">
+                                        <input type="text" id="sample6_address" placeholder="주소" class="form-control mb-1" >
+                                        <input type="text" id="sample6_detailAddress" placeholder="상세주소" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary" onclick="createDelivery()">확인</button>
+                    </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
 <script layout:fragment="script" type="text/javascript">
-    const $tbody = $("#tbody-modal");
-    const modalCoupon = new bootstrap.Modal("#modal-coupon");
-    const modalDeliveryModify = new bootstrap.Modal("#modal-delivery-modify");
 
-    $("#total-point-use-amount-tmp").on('keyup', function(event){
-        let inputValue = $(this).val();
+        const $tbody = $("#tbody-modal");
+        const modalCoupon = new bootstrap.Modal("#modal-coupon");
+        const modalDeliveryModify = new bootstrap.Modal("#modal-delivery-modify");
+        const modalDeliveryCreate = new bootstrap.Modal("#modal-delivery-create");
 
-        let numericValue = inputValue.replace(/[^\d]/g, '');
-        $(this).val(numericValue);
-
-        numericValue = parseInt(numericValue);
-        let totalPointAmount = parseInt($("#total-point-amount").text());
-
-        if (!isNaN(numericValue) && numericValue <= totalPointAmount) {
-
-        } else {
-            $(this).val('');
-        }
-    });
-
-    function updatePrices(){
-        let totalPrice = 0;
-        let totalBookDiscountPrice = 0;
-
-        $("tbody tr td[class=buy-book-price]").each(function(){
-            let price = parseInt($(this).text());
-            let count = parseInt($(this).closest('tr').find('.buy-book-count').text());
-            let discountRate = parseFloat($(this).closest('tr').find('.buy-book-discount-rate').text());
-            totalPrice += price * count;
-            totalBookDiscountPrice += (price * count * discountRate);
-        });
-        $("#total-price").val(totalPrice);
-        $("#total-book-discount-price").val(totalBookDiscountPrice);
-
-        updateFinalPrice();
-    }
-
-    function updateFinalPrice(){
-        let totalPrice = parseInt($("#total-price").val());
-        let totalBookDiscountPrice = parseInt($("#total-book-discount-price").val());
-        let deliveryPrice = parseInt($("#delivery-price").val());
-        let totalCouponDiscountAmount = parseInt($("#total-coupon-discount-amount").val());
-        let totalPointUseAmount = parseInt($("#total-point-use-amount").val());
-        let finalPrice = totalPrice + deliveryPrice - totalBookDiscountPrice - totalCouponDiscountAmount - totalPointUseAmount;
-
-        $("#final-price").val(finalPrice);
-    }
-
-    async function showCouponUseModal(){
-        let response = await fetch("/product/buy/coupon");
-
-        if(!response.ok){
-            alert("쿠폰 조회에 실패하였습니다");
-            return;
-        }
-
-        let jsonData = await response.json();
-        let couponList = jsonData;
-
-        if(couponList.length == 0){
-            $tbody.html("<tr><td colspan='5' class='text-center'>쿠폰정보가 없습니다.</td></tr>");
-            return;
-        }
-
-        let rows = "";
-        for(let index = 0; index < couponList.length; index++){
-            let couponProduced = couponList[index];
-
-            rows += `
-                   <tr id="tr-coupon">
-                        <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
-                        <td>${couponProduced.coupon.name}</td>
-                        <td><span class="couponDiscountAmount">${couponProduced.coupon.price}</span>원</td>
-                        <td><input name="couponDiscountAmountList"
-                        value="${couponProduced.coupon.price}" style="width: 70px;"/>원</td>
-                   </tr>
-            `;
-        }
-        $tbody.html(rows);
-
-        // 쿠폰 각각 체크박스 체크여부에 따라 input 값 바뀌도록
-        $("#tbody-modal").on('change', 'input[name="couponProducedNoList"]', function() {
-            if (!$(this).prop('checked')) {
-                $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val('0');
-            }
-            else if($(this).prop('checked')) {
-                let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
-                $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val(couponDiscountAmount);
-            }
-        });
-
-        // 쿠폰 각각 유효성 검사
-        $("#tbody-modal").on('keyup', 'input[name="couponDiscountAmountList"]', function(){
+        $("#total-point-use-amount-tmp").on('keyup', function(event){
             let inputValue = $(this).val();
-            let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
 
             let numericValue = inputValue.replace(/[^\d]/g, '');
             $(this).val(numericValue);
 
             numericValue = parseInt(numericValue);
+            let totalPointAmount = parseInt($("#total-point-amount").text());
 
-            if (!isNaN(numericValue) && numericValue <= couponDiscountAmount) {
-
+            if (!isNaN(numericValue) && numericValue <= totalPointAmount) {
+                $("#total-point-use-amount").val(numericValue);
+                if($("#total-point-use-amount").val() === '')
+                    $("#total-point-use-amount").val(0);
             } else {
                 $(this).val('');
+                $("#total-point-use-amount").val(0);
             }
+
+            updateFinalPrice();
+        });
+
+        $("#form-order").submit(function(){
+            $("#form-order").find("#tbody-modal tr").not(":has(:checkbox:checked)").each(function(index, tr){
+                $(tr).find("input[name=couponDiscountAmountList]").prop("disabled", true);
+            })
+            return true;
         })
 
-        modalCoupon.show();
-    }
+        function updatePrices(){
+            let totalPrice = 0;
+            let totalBookDiscountPrice = 0;
 
-    function useSelectedCoupon(){
-        let totalCouponDiscountAmount = 0;
-        $("#tbody-modal tr:has(:checkbox:checked) input[name^=couponDiscountAmountList]").each(function(){
-            totalCouponDiscountAmount += parseInt($(this).val());
-        });
-        $("#total-coupon-discount-amount-tmp").val(totalCouponDiscountAmount);
-        $("#total-coupon-discount-amount").val(totalCouponDiscountAmount);
-        modalCoupon.hide();
+            $("tbody tr td[class=buy-book-price]").each(function(){
+                let price = parseInt($(this).text());
+                let count = parseInt($(this).closest('tr').find('.buy-book-count').text());
+                let discountRate = parseFloat($(this).closest('tr').find('.buy-book-discount-rate').text());
+                totalPrice += price * count;
+                totalBookDiscountPrice += (price * count * discountRate);
+            });
+            $("#total-price").val(totalPrice);
+            $("#total-book-discount-price").val(totalBookDiscountPrice);
 
-        updateFinalPrice();
-    }
+            updateFinalPrice();
+        }
 
-    function useTotalPoint(){
-        let totalPointAmount = $("#total-point-amount").text();
-        $("#total-point-use-amount-tmp").val(totalPointAmount);
-        $("#total-point-use-amount").val(totalPointAmount)
+        function updateFinalPrice(){
+            let totalPrice = parseInt($("#total-price").val());
+            let totalBookDiscountPrice = parseInt($("#total-book-discount-price").val());
+            let deliveryPrice = parseInt($("#delivery-price").val());
+            let totalCouponDiscountAmount = parseInt($("#total-coupon-discount-amount").val());
+            let totalPointUseAmount = parseInt($("#total-point-use-amount").val());
+            let finalPrice = totalPrice + deliveryPrice - totalBookDiscountPrice - totalCouponDiscountAmount - totalPointUseAmount;
 
-        updateFinalPrice();
-    }
+            $("#final-price").val(finalPrice);
+        }
 
-    function showDeliveryModifyModal(){
-        modalDeliveryModify.show();
-    }
-
-    async function modifyDelivery() {
-        let $selectedCardBody = $(".radio-user-delivery:checked").closest('.card-body')
-
-        let selectedUserDeliveryNo = $("input[name=userDelivery]:checked").val();
-        $("#default-user-delivery-no").val(selectedUserDeliveryNo);
-        $("#default-user-delivery-name").text($selectedCardBody.find('.selected-user-delivery-name').text());
-        $("#default-user-delivery-tel").text($selectedCardBody.find('.selected-user-delivery-tel').text());
-        $("#default-user-delivery-zip-code").text($selectedCardBody.find('.selected-user-delivery-zip-code').text());
-        $("#default-user-delivery-address").text($selectedCardBody.find('.selected-user-delivery-address').text());
-        $("#default-user-delivery-address-detail").text($selectedCardBody.find('.selected-user-delivery-address-detail').text());
-
-        if($("input[name=setDefaultUserDelivery]").prop("checked")){
-            console.log(selectedUserDeliveryNo);
-            let response = await fetch("/product/buy/delivery/default/" + selectedUserDeliveryNo);
+        async function showCouponUseModal(){
+            let response = await fetch("/product/buy/coupon");
 
             if(!response.ok){
-                alert("기본 배송지 변경에 실패하였습니다");
+                alert("쿠폰 조회에 실패하였습니다");
                 return;
+            }
+
+            let jsonData = await response.json();
+            let couponList = jsonData;
+
+            if(couponList.length == 0){
+                $tbody.html("<tr><td colspan='5' class='text-center'>쿠폰정보가 없습니다.</td></tr>");
+                return;
+            }
+
+            let rows = "";
+            for(let index = 0; index < couponList.length; index++){
+                let couponProduced = couponList[index];
+
+                rows += `
+                       <tr id="tr-coupon">
+                            <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
+                            <td>${couponProduced.coupon.name}</td>
+                            <td><span class="couponDiscountAmount">${couponProduced.lastAmount}</span>원</td>
+                            <td><input name="couponDiscountAmountList"
+                            value="${couponProduced.lastAmount}" style="width: 70px;"/>원</td>
+                       </tr>
+                `;
+            }
+            $tbody.html(rows);
+
+            // 쿠폰 각각 체크박스 체크여부에 따라 input 값 바뀌도록
+            $("#tbody-modal").on('change', 'input[name="couponProducedNoList"]', function() {
+                if (!$(this).prop('checked')) {
+                    $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val('0');
+                }
+                else if($(this).prop('checked')) {
+                    let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
+                    $(this).closest('tr').find('input[name="couponDiscountAmountList"]').val(couponDiscountAmount);
+                }
+            });
+
+            // 쿠폰 각각 유효성 검사
+            $("#tbody-modal").on('keyup', 'input[name="couponDiscountAmountList"]', function(){
+                let inputValue = $(this).val();
+                let couponDiscountAmount = $(this).closest('tr').find('span[class="couponDiscountAmount"]').text();
+
+                let numericValue = inputValue.replace(/[^\d]/g, '');
+                $(this).val(numericValue);
+
+                numericValue = parseInt(numericValue);
+
+                if (!isNaN(numericValue) && numericValue <= couponDiscountAmount) {
+
+                } else {
+                    $(this).val('');
+                }
+            })
+
+            modalCoupon.show();
+        }
+
+        function useSelectedCoupon(){
+            let totalCouponDiscountAmount = 0;
+            $("#tbody-modal tr:has(:checkbox:checked) input[name^=couponDiscountAmountList]").each(function(){
+                totalCouponDiscountAmount += parseInt($(this).val());
+            });
+            $("#total-coupon-discount-amount-tmp").val(totalCouponDiscountAmount);
+            $("#total-coupon-discount-amount").val(totalCouponDiscountAmount);
+            modalCoupon.hide();
+
+            updateFinalPrice();
+        }
+
+        function useTotalPoint(){
+            let totalPointAmount = $("#total-point-amount").text();
+            $("#total-point-use-amount-tmp").val(totalPointAmount);
+            $("#total-point-use-amount").val(totalPointAmount)
+
+            updateFinalPrice();
+        }
+
+        function showModalDeliveryModify(){
+            modalDeliveryModify.show();
+        }
+
+        async function modifyDelivery() {
+            let $selectedCardBody = $(".radio-user-delivery:checked").closest('.card-body')
+
+            let selectedUserDeliveryNo = $("input[name=userDelivery]:checked").val();
+            $("#default-user-delivery-no").val(selectedUserDeliveryNo);
+            $("#default-user-delivery-name").text($selectedCardBody.find('.selected-user-delivery-name').text());
+            $("#default-user-delivery-tel").text($selectedCardBody.find('.selected-user-delivery-tel').text());
+            $("#default-user-delivery-zip-code").text($selectedCardBody.find('.selected-user-delivery-zip-code').text());
+            $("#default-user-delivery-address").text($selectedCardBody.find('.selected-user-delivery-address').text());
+            $("#default-user-delivery-address-detail").text($selectedCardBody.find('.selected-user-delivery-address-detail').text());
+
+            if($("input[name=setDefaultUserDelivery]").prop("checked")){
+                console.log(selectedUserDeliveryNo);
+                let response = await fetch("/product/buy/delivery/default/" + selectedUserDeliveryNo);
+
+                if(!response.ok){
+                    alert("기본 배송지 변경에 실패하였습니다");
+                    return;
+                }
+            }
+
+            modalDeliveryModify.hide();
+        }
+
+        function showModalDeliveryCreate(){
+            modalDeliveryCreate.show();
+        }
+
+        function createDelivery(){
+            let responseData;
+
+            let nameText = $("#created-name").val();
+            let telText = $("#created-tel1").val() + $("#created-tel2").val() + $("#created-tel3").val();
+            let zipCode = $("#sample6_postcode").val();
+            let address = $("#sample6_address").val();
+            let addressDetail = $("#sample6_detailAddress").val()
+
+            if(nameText === "" || telText === "" || zipCode === "" || address === "" || addressDetail === ""){
+                alert("배송지 입력을 완료해주세요");
+            }
+            else{
+                $.ajax({
+                    url: '/product/buy/delivery/create',
+                    type: 'POST',
+                    data: {
+                        name: nameText,
+                        tel: telText,
+                        zipCode: zipCode,
+                        address: address,
+                        addressDetail: addressDetail
+                    },
+                    success: function(response) {
+                        responseData = response;
+
+                        $divCards = $("#modal-delivery-modify .modal-body #cards")
+                        newCard = `
+                        <div class="card">
+                            <div class="card-body row">
+                                <div class="col-2">
+                                    <span class="form-check">
+                                        <input class="form-check-input radio-user-delivery" type="radio" name="userDelivery" value="${responseData.no}" />
+                                    </span>
+                                </div>
+                                <div class="col-10">
+                                    <div>
+                                        <span class="selected-user-delivery-name">${$("#created-name").val()}</span>
+                                        <span> / </span>
+                                        <span class="selected-user-delivery-tel">${$("#created-tel1").val() + $("#created-tel2").val() + $("#created-tel3").val()}</span>
+                                    </div>
+                                    <div>
+                                        <span class="selected-user-delivery-zip-code">${$("#sample6_postcode").val()}</span>
+                                        <span class="selected-user-delivery-address">${$("#sample6_address").val()}</span>
+                                        <span class="selected-user-delivery-address-detail">${$("#sample6_detailAddress").val()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      `
+                        $divCards.append(newCard);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('요청이 실패했습니다.');
+                    }
+                });
+
+                modalDeliveryCreate.hide();
             }
         }
 
-        modalDeliveryModify.hide();
-    }
+        function checkUserDelivery(){
+            if($("#default-user-delivery-name").text() === "")
+                alert("배송지 선택이 완료되지 되지 않았습니다. 수령자 이름을 입력해주세요");
+            else if($("#default-user-delivery-tel").text() === "")
+                alert("배송지 선택이 완료되지 되지 않았습니다. 수령자 전화번호를 입력해주세요");
+            else if($("#default-user-delivery-zip-code").text() === "")
+                alert("배송지 선택이 완료되지 되지 않았습니다. 수령자 우편번호를 입력해주세요");
+            else if($("#default-user-delivery-address").text() === "")
+                alert("배송지 선택이 완료되지 되지 않았습니다. 수령자 주소를 입력해주세요");
+            else if($("#default-user-delivery-address-detail").text() === "")
+                alert("배송지 선택이 완료되지 되지 않았습니다. 수령자 상세주소를 입력해주세요");
+            else{
+                $("#form-order").submit();
+            }
+        }
 
-    updatePrices();
-
+        updatePrices();
 </script>
 </html>

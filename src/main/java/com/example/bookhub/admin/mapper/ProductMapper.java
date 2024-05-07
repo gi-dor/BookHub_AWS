@@ -16,4 +16,6 @@ public interface ProductMapper {
                             @Param("limit") int limit, @Param("sort") String sort);
 
     List<Publisher> getPublishers();
+
+    void deleteProductByNo(Long deletedProductNo);
 }
