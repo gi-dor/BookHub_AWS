@@ -195,4 +195,52 @@
             BOOK_STATUS = '삭제'
         WHERE BOOK_NO = #{deletedProductNo}
     </update>
+
+    <select id="getProductByNo" parameterType="long" resultType="com.example.bookhub.admin.dto.Product">
+        SELECT
+                B.BOOK_NO                   AS no,
+                B.CATEGORY_NO               AS secondCategoryNo,
+                B.BOOK_NAME                 AS name,
+                B.BOOK_DESCRIPTION          AS description,
+                B.PUBLISHER_NO              AS publisherNo,
+                B.BOOK_STATUS               AS status,
+                B.BOOK_LIST_PRICE           AS listPrice,
+                B.BOOK_DISCOUNT_RATE        AS discountRate,
+                B.BOOK_STOCK                AS stock,
+                BI.BOOK_IMAGE_COVER         AS coverImage,
+                BI.BOOK_IMAGE_THUMBNAIL     AS thumbnailImage,
+                BI.BOOK_IMAGE_DESCRIPTION   AS descriptionImage
+        FROM
+                BookHub.BOOK B
+                INNER JOIN BOOK_IMAGES BI ON B.BOOK_NO = BI.BOOK_NO
+        WHERE
+                B.BOOK_NO = #{no}
+    </select>
+
+    <select id="getSuperCategoryNoBySubCategoryNo" parameterType="long" resultType="long">
+        SELECT
+                CATEGORY_NO
+        FROM
+                BookHub.CATEGORY
+        WHERE
+                CATEGORY_NO = (SELECT PARENT_CATEGORY_NO
+                               FROM BookHub.CATEGORY
+                               WHERE CATEGORY_NO = #{secondCategoryNo});
+    </select>
+
+    <update id="modifyProduct" parameterType="com.example.bookhub.admin.dto.Product">
+        UPDATE
+                BookHub.BOOK
+        SET
+                CATEGORY_NO = #{secondCategoryNo},
+                BOOK_NAME = #{name},
+                BOOK_DESCRIPTION = #{description},
+                PUBLISHER_NO = #{publisherNo},
+                BOOK_STATUS = #{status},
+                BOOK_LIST_PRICE = #{listPrice},
+                BOOK_DISCOUNT_RATE = #{discountRate},
+                BOOK_STOCK = #{stock}
+        WHERE
+                BOOK_NO = #{no}
+    </update>
 </mapper>

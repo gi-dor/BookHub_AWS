@@ -1,6 +1,7 @@
 package com.example.bookhub.admin.mapper;
 
 import com.example.bookhub.admin.dto.BookList;
+import com.example.bookhub.admin.dto.Product;
 import com.example.bookhub.admin.dto.ProductFilter;
 import com.example.bookhub.product.vo.Publisher;
 import java.util.List;
@@ -18,4 +19,10 @@ public interface ProductMapper {
     List<Publisher> getPublishers();
 
     void deleteProductByNo(Long deletedProductNo);
+
+    Product getProductByNo(Long productNo);
+
+    Long getSuperCategoryNoBySubCategoryNo(Long categoryNo);
+
+    void modifyProduct(Product modifiedProduct);
 }
