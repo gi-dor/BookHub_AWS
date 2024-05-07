@@ -2,6 +2,7 @@ package com.example.bookhub.product.service;
 
 import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
+import com.example.bookhub.product.dto.GiftReceiverForm;
 import com.example.bookhub.product.exception.BookHubException;
 import com.example.bookhub.product.mapper.BookMapper;
 import com.example.bookhub.product.mapper.BuyMapper;
@@ -212,5 +213,11 @@ public class GiftService {
         } catch (MessagingException e) {
             throw new RuntimeException("이메일 발송 오류", e);
         }
+    }
+
+    public void updateGiftReceiver(GiftReceiverForm giftReceiverForm, String userId) {
+        User user = userMapper.selectUserById(userId);
+
+        giftMapper.updateGiftReceiver(giftReceiverForm.getGiftReceiverNo(), giftReceiverForm.getUserDeliveryNo(), user.getNo());
     }
 }

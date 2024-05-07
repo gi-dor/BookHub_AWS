@@ -1,0 +1,182 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+<div layout:fragment="content" class="container my-3">
+    <div class="row">
+        <div class="col-12">
+            <form method="post" action="/product/gift/receiver">
+                <input type="hidden" name="giftReceiverNo" th:value="${giftReceiverNo}" />
+                <button type="button" class="btn btn-secondary" onclick="showModalDeliveryCreate()">배송지 추가</button>
+                <div id="cards">
+                    <div th:each="userDelivery : ${userDeliveryList}">
+                        <div class="card">
+                            <div class="card-body row">
+                                <div class="col-2">
+                                            <span class="form-check">
+                                                <input class="form-check-input radio-user-delivery" type="radio" name="userDeliveryNo" th:value="${userDelivery.no}"
+                                                       th:checked="${userDelivery.defaultAddressYn eq 'Y'}" />
+                                            </span>
+                                </div>
+                                <div class="col-10">
+                                    <div>
+                                                <span th:if="${userDelivery.defaultAddressYn eq 'Y'}">
+                                                    <span class="badge rounded-pill bg-dark">기본배송지</span>
+                                                </span>
+                                    </div>
+                                    <div>
+                                        <span class="selected-user-delivery-name" th:text="${userDelivery.name}"></span>
+                                        <span> / </span>
+                                        <span class="selected-user-delivery-tel" th:text="${userDelivery.tel}"></span>
+                                    </div>
+                                    <div>
+                                        <span class="selected-user-delivery-zip-code" th:text="${userDelivery.zipCode}"></span>
+                                        <span class="selected-user-delivery-address" th:text="${userDelivery.address}"></span>
+                                        <span class="selected-user-delivery-address-detail"th:text="${userDelivery.addressDetail}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" >확인</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 배송지 추가 모달 -->
+    <div class="modal" tabindex="-1" id="modal-delivery-create">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">배송지 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label class="form-label">이름</label>
+                        <div class="row">
+                            <div class="col-5">
+                                <input id="created-name" type="text" class="form-control" />
+                                <div class="text-danger"></div>
+                            </div>
+                            <div class="col-7">
+                                <p class="form-text" style="font-family: Arial, sans-serif; color: grey;">  이름은 한글 2글자 이상 입니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <label class="form-label">전화번호</label>
+                            <div class="col-2">
+                                <select id="created-tel1" class="form-select">
+                                    <option value="010">010</option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <input id="created-tel2" type="text" class="form-control"/>
+                                <div class="text-danger"></div>
+                            </div>
+                            <div class="col-2">
+                                <input id="created-tel3" type="text" class="form-control"/>
+                                <div class="text-danger"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">주소</label>
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <input type="text" id="sample6_postcode" class="form-control" placeholder="우편번호">
+                            </div>
+                            <div class="col-8">
+                                <input type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-7">
+                                <input type="text" id="sample6_address" placeholder="주소" class="form-control mb-1" >
+                                <input type="text" id="sample6_detailAddress" placeholder="상세주소" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="createDelivery()">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" type="text/javascript">
+    const modalDeliveryCreate = new bootstrap.Modal("#modal-delivery-create");
+
+    function showModalDeliveryCreate(){
+        modalDeliveryCreate.show();
+    }
+
+    function createDelivery(){
+        let responseData;
+
+        let nameText = $("#created-name").val();
+        let telText = $("#created-tel1").val() + $("#created-tel2").val() + $("#created-tel3").val();
+        let zipCode = $("#sample6_postcode").val();
+        let address = $("#sample6_address").val();
+        let addressDetail = $("#sample6_detailAddress").val()
+
+        if(nameText === "" || telText === "" || zipCode === "" || address === "" || addressDetail === ""){
+            alert("배송지 입력을 완료해주세요");
+        }
+        else{
+            $.ajax({
+                url: '/product/buy/delivery/create',
+                type: 'POST',
+                data: {
+                    name: nameText,
+                    tel: telText,
+                    zipCode: zipCode,
+                    address: address,
+                    addressDetail: addressDetail
+                },
+                success: function(response) {
+                    responseData = response;
+
+                    $divCards = $("#cards")
+                    newCard = `
+                        <div class="card">
+                            <div class="card-body row">
+                                <div class="col-2">
+                                    <span class="form-check">
+                                        <input class="form-check-input radio-user-delivery" type="radio" name="userDelivery" value="${responseData.no}" />
+                                    </span>
+                                </div>
+                                <div class="col-10">
+                                    <div>
+                                        <span class="selected-user-delivery-name">${$("#created-name").val()}</span>
+                                        <span> / </span>
+                                        <span class="selected-user-delivery-tel">${$("#created-tel1").val() + $("#created-tel2").val() + $("#created-tel3").val()}</span>
+                                    </div>
+                                    <div>
+                                        <span class="selected-user-delivery-zip-code">${$("#sample6_postcode").val()}</span>
+                                        <span class="selected-user-delivery-address">${$("#sample6_address").val()}</span>
+                                        <span class="selected-user-delivery-address-detail">${$("#sample6_detailAddress").val()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      `
+                    $divCards.append(newCard);
+                },
+                error: function(xhr, status, error) {
+                    console.error('요청이 실패했습니다.');
+                }
+            });
+
+            modalDeliveryCreate.hide();
+        }
+    }
+</script>
+</html>
+

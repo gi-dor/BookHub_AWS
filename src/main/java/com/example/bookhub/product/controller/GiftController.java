@@ -2,6 +2,7 @@ package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
+import com.example.bookhub.product.dto.GiftReceiverForm;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.GiftService;
@@ -81,5 +82,31 @@ public class GiftController {
         List<CouponProduced> couponList = buyService.getCouponsByUserNo(principal.getName());
         System.out.println(couponList);
         return ResponseEntity.ok(couponList);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/receiver/{giftReceiverNo}")
+    public String receiver(@PathVariable("giftReceiverNo") long giftReceiverNo, Model model, Principal principal){
+
+        UserDelivery defaultUserDelivery = null;
+        List<UserDelivery> userDeliveryList = buyService.getUserDeliveryByUserNo(principal.getName());
+        for(UserDelivery userDelivery : userDeliveryList){
+            if("Y".equals(userDelivery.getDefaultAddressYn())) {
+                defaultUserDelivery = userDelivery;
+            }
+        }
+
+        model.addAttribute("userDeliveryList", userDeliveryList);
+        model.addAttribute("defaultUserDelivery", defaultUserDelivery);
+        model.addAttribute("giftReceiveNo", giftReceiverNo);
+
+        return "product/gift/receiverDetail";
+    }
+
+    @PostMapping("/receiver")
+    public String receiver(GiftReceiverForm giftReceiverForm, Principal principal){
+        giftService.updateGiftReceiver(giftReceiverForm, principal.getName());
+
+        return "/product/gift/success";
     }
 }

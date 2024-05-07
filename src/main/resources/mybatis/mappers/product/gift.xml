@@ -21,4 +21,14 @@
             select last_insert_id()
         </selectKey>
     </insert>
+
+    <update id="updateGiftReceiver">
+        update
+            GIFT_RECEIVER
+        set
+            user_no = #{userNo},
+            delivery_no = #{userDeliveryNo}
+        where
+            gift_receiver_no = #{giftReceiverNo}
+    </update>
 </mapper>
