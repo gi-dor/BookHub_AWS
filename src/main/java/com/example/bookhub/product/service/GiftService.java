@@ -60,10 +60,8 @@ public class GiftService {
         insertBuyBook(buy.getBuyNo());
 
         Gift gift = insertGift(buy);
-        System.out.println(gift);
 
         List<GiftReceiver> giftReceiverList = insertGiftReceiver(gift);
-        System.out.println(giftReceiverList);
 
         // COUPON_USED 테이블, COUPON_PRODUCED 테이블
         insertAndUpdateCoupon(buy.getBuyNo());

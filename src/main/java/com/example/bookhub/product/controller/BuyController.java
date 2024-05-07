@@ -92,7 +92,6 @@ public class BuyController {
     @PostMapping("/delivery/create")
     @ResponseBody
     public ResponseEntity<UserDelivery> createUserDelivery(Principal principal, UserDelivery userDelivery){
-        System.out.println(userDelivery);
         buyService.createUserDelivery(principal.getName(), userDelivery);
         return ResponseEntity.ok().body(userDelivery);
     }
