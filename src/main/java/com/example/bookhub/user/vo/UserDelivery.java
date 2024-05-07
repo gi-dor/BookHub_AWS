@@ -21,4 +21,8 @@ public class UserDelivery {
     private String addressDetail;
     private String defaultAddressYn;
     private User user;
+    public String getFullAddress() {
+        return "우편번호 : "+zipCode + "    |  주소 :"  + address + " ,    " + addressDetail;
+    }
+
 }
