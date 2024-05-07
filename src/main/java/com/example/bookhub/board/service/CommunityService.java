@@ -38,7 +38,7 @@ public class CommunityService {
 
         int totalCount = communityMapper.getTotalCommunitiesCount(keyword);
         Pagination pagination = new Pagination(page, totalCount);
-        int offset = pagination.getBegin();
+        int offset = pagination.getBegin() - 1;
 
         List<Community> communities = communityMapper.findAllCommunity(keyword, offset);
 

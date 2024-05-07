@@ -13,7 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PageListDTO<T> {
 
-
     private List<T> items;
     private UserPagination userPagination;
 

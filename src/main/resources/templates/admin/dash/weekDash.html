@@ -10,11 +10,14 @@
                     <h2 class="mb-2">Range DashBoard</h2>
                     <h5 class="text-body-tertiary fw-semibold"></h5>
                 </div>
+            </div>
 
                 <!-- 중간선 그리고 그래프와의 여백   -->
-                <hr class="bg-body-secondary mb-6 mt-4">
+            <hr class="bg-body-secondary mb-6 mt-4">
+
+            <div class="col-12">
                 <!-- 그래프위에 div -->
-                <form action="/dash/getYesterDay.do" class="form-control">
+                <form action="/dash/getDetailRange.do" class="form-control">
                     <span>
                         <strong>조회하고 싶은 날짜의 범위를 선택하세요</strong> :
                     </span>
@@ -22,16 +25,17 @@
                     <input class="datepicker" name="startDay" id="startDay">
                     <input class="datepicker" name="endDay" id="endDay">
                 </form>
-                <div class="row flex-between-center mb-4 g-3">
-
-                    <div class="col-10 pt-3">
-                        <h3>해당하는 날짜의 매출</h3>
-                        <p class="text-body-tertiary lh-sm mb-0">매일 오전 10시에 업데이트 됩니다</p>
-                    </div>
+            </div>
+            <div class="row flex-between-center mb-4 g-3">
+                <div class="col-10 pt-3">
+                    <h3>해당하는 날짜의 매출</h3>
+                    <p class="text-body-tertiary lh-sm mb-0">매일 오전 10시에 업데이트 됩니다</p>
                 </div>
+            </div>
+            <div class="row">
                 <!-- 그래프 div chart.js 적용해야함 -->
-                <div class="col-8">
-                    <canvas id="myChart" class="pb-5"></canvas>
+                <div class="col-12">
+                    <canvas id="myChart" class="pb-5"  style="height: 300px; width: 100%;"></canvas>
                 </div>
             </div><!-- 위쪽 그래프 파트 -->
 
@@ -101,20 +105,24 @@
     $('#startDay').datepicker({
         maxDate: yesterday,
         minDate: startday,
-        onselect: function(text) {
+        onSelect: function(text) {
+
             getData();
+            detailChart();
         }
-    })
+    });
 
     $('#endDay').datepicker({
         maxDate: yesterday,
         minDate: startday,
         onSelect: function(text) {
            getData();
+           detailChart();
         }
-    })
+    });
 
     let chartInstance = null;
+    let detailChartInstance = null;
 
     function getData() {
         let startDay = document.getElementById("startDay").value;
@@ -129,28 +137,32 @@
                     let labelArray = [];
                     let dataArray = [];
 
-                    response.forEach(function(item) {
-                        labelArray.push(item.dayTotalDate);
-                        dataArray.push(item.dayTotalPrice);
+                    let stats = response.stats;
+                    let items = response.items;
+                    stats.forEach(function (item) {
+                        labelArray.push(item.day);
+                        dataArray.push(item.total);
                     });
+
+                    let $tbody = $("#xxx tbody").empty();
+                    // 여기서 response가 직접적으로 items 배열을 가지고 있는지 확인 필요
+                    items.forEach(function (item) { // 수정된 부분
+                        let tr = `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td>${item.cnt}</td>
+                                <td>${item.total}</td>
+                            </tr>
+                        `;
+                        $tbody.append(tr);
+                    });
+
 
                     // 차트가 이미 존재하는 경우, 데이터만 업데이트
                     if (chartInstance) {
                         chartInstance.data.labels = labelArray;
                         chartInstance.data.datasets[0].data = dataArray;
                         chartInstance.update();
-
-                        let $tbody = $("#xxx tbody").empty();
-                        response.items.forEach(function(item) {
-                            let tr = `
-                                <tr>
-                                    <td>${item.bookName.name}</td>
-                                    <td>${item.soldCount}</td>
-                                    <td>${item.soldSum}</td>
-                                </tr>
-                            `
-                            $tbody.append(tr);
-                        })
 
                     } else {
                         // 차트 인스턴스가 없는 경우, 새로운 차트 생성
@@ -174,7 +186,7 @@
                                 }
                             }
                         });
-                    }
+                    } // 이곳에 success 함수의 닫는 괄호 추가
                 },
                 error: function (xhr, status, error) {
                     // 오류 처리
@@ -183,9 +195,60 @@
         }
     }
 
+    function detailChart() {
+        let startDay = document.getElementById("startDay").value;
+        let endDay = document.getElementById("endDay").value;
+
+        if (startDay != "" && endDay != "") {
+            $.ajax({
+                url: "/dash/getRangePercent.do",
+                type: "Post",
+                dataType: "json",
+                data: {startDate: startDay, endDate: endDay},
+                success: function(response) {
+                    let labelArray = [];
+                    let dataArray = [];
+
+                    response.forEach(function(item) {
+                        labelArray.push(item.bookName.name);
+                        dataArray.push(item.percent);
+                    });
+
+                    const chartData = {
+                        labels: labelArray,
+                        datasets: [{
+                            label: '판매율',
+                            data: dataArray,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(255, 205, 86, 1)',
+                            borderWidth: 1
+                        }]
+                    };
+
+                    // 차트가 이미 존재하는 경우, 데이터만 업데이트
+                    if (detailChartInstance) {
+                        detailChartInstance.data = chartData;
+                        detailChartInstance.update();
+                    } else {
+                        // 차트 인스턴스가 없는 경우, 새로운 차트 생성
+                        detailChartInstance = new Chart(document.getElementById('detailChart'), {
+                            type: 'bar',
+                            data: chartData,
+                            options: {
+                                indexAxis: 'y'
+                            }
+                        });
+                    }
+                },
+                error: function() {
+                    alert("서버에서 데이터를 가져오는 데 실패했습니다.");
+                }
+            });
 
 
+        }
 
+    }
 </script>
 </div>
 </html>

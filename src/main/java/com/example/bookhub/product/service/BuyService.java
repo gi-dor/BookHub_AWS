@@ -74,6 +74,7 @@ public class BuyService {
                 .totalPointUseAmount(buyForm.getTotalPointUseAmount())
                 .finalPrice(buyForm.getFinalPrice())
                 .commonEntranceApproach(buyForm.getCommonEntranceApproach())
+                .giftYn("N")
                 .userDelivery(userDelivery)
                 .buyDeliveryRequest(buyDeliveryRequest)
                 .buyPayMethod(buyPayMethod)
@@ -116,7 +117,12 @@ public class BuyService {
                 couponUsed.setDiscountAmount(couponDiscountAmount);
 
                 buyMapper.createCouponUsed(couponUsed);
-                buyMapper.updateCouponProducedUsed(couponProducedNo);
+
+                int lastAmount = buyMapper.getCouponProducedLastAmount(couponProducedNo);
+                if(lastAmount > couponDiscountAmount)
+                    buyMapper.updateCouponProducedUsed(couponProducedNo, couponDiscountAmount, "N");
+                else
+                    buyMapper.updateCouponProducedUsed(couponProducedNo, couponDiscountAmount, "Y");
             }
         }
     }
@@ -170,8 +176,12 @@ public class BuyService {
             int count = buyForm.getBuyBookCountList().get(i);
 
             BookDto book = bookMapper.getBookByBookNo(bookNo);
-            if(book.getStock() > count){
+            if(book.getStock() >= count){
                 buyMapper.updateBookStock(bookNo, count);
+                int updatedStock = buyMapper.getBookStock(bookNo);
+                if(updatedStock == 0){
+                    bookMapper.updateBookStatus(bookNo);
+                }
             }
             else {
                 throw new BookHubException("재고가 부족하여 주문이 취소되었습니다");
@@ -179,4 +189,8 @@ public class BuyService {
         }
     }
 
+    public int getCouponCountByUserNo(String userId) {
+        User user = userMapper.selectUserById(userId);
+        return buyMapper.getCouponCountByUserNo(user.getNo());
+    }
 }

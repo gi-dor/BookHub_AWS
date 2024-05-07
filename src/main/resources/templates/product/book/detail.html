@@ -6,7 +6,37 @@
 
 <div layout:fragment="content" class="container my-3">
     <div class="row mb-3">
-        <div class="col-4"></div>
+        <div class="col-4">
+            <div>
+                <span th:each="bookAuthor : ${bookAuthorList}">
+                    <div>
+                        <span th:if="${bookAuthor.authorType == '지은이'}">
+                            <span>저자 : </span>
+                            <span th:text="${bookAuthor.author.name}"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <span th:if="${bookAuthor.authorType == '옮긴이'}">
+                            <span>옮긴이 : </span>
+                            <span th:text="${bookAuthor.author.name}"></span>
+                        </span>
+                    </div>
+                </span>
+            </div>
+            <div>
+                <span>출판사 : </span>
+                <span th:text="${book.publisher.name}"></span>
+            </div>
+            <div class="card text-center mt-5" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.averageRating}"></h5>
+                    <div>
+                        <span class="card-text" th:text="${book.reviewCount}"></span>
+                        <span>개의 리뷰</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-3">
             <h3 id="book-no" th:text="${book.bookNo}" style="display:none">책 번호</h3>
             <h3 class="d-flex justify-content-center" th:text="${book.name}"><strong>책 제목</strong></h3>
@@ -111,7 +141,7 @@
         </tr>
         <tr th:if="${book.publishedDate != null}">
             <th>발행(출시)일자</th>
-            <td th:text="${book.publishedDate}"></td>
+            <td th:text="${#temporals.format(book.publishedDate, 'yyyy-MM-dd')}"></td>
         </tr>
         <tr th:if="${book.pages != null}">
             <th>쪽수</th>
@@ -128,7 +158,9 @@
     </table>
 
     <!-- 리뷰 -->
-    <button class="btn btn-outline-secondary me-3" type="button" onclick="createReview()">리뷰 작성</button>
+    <button class="btn btn-outline-secondary me-3"
+            type="button" onclick="createReview()"
+            sec:authorize="isAuthenticated()">리뷰 작성</button>
     <ul class="nav nav-underline">
         <li class="nav-item">
             <div class="nav-link" aria-current="page" href="">Active</div>
@@ -165,8 +197,8 @@
                                         <span th:if="${review.buyerYn eq 'Y'}">
                                             <span class="badge rounded-pill text-bg-dark">구매자</span>
                                         </span>
-                                        <span class="badge bg-light text-dark" th:text="${review.user.id}"></span>
-                                        <span class="badge bg-light text-dark" th:text="${review.createdDate}"></span>
+                                        <span class="badge bg-light text-dark" th:text="${#strings.substring(review.user.id, 0, 2) + '***'}"></span>
+                                        <span class="badge bg-light text-dark" th:text="${#temporals.format(review.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                         <span class="ms-3">신고/차단</span>
                                     </span>
                                      <span>
@@ -215,20 +247,26 @@
                         <!-- 댓글 목록 -->
                         <div th:if="${review.reviewReplyList != null and not #lists.isEmpty(review.reviewReplyList)}">
                             <div th:each="reviewReply: ${review.reviewReplyList}">
-                                <div class="card my-3">
+                                <div class="card my-3" id="div-replies">
                                     <div class="card-body py-1 px-2">
                                         <div class="d-flex justify-content-between">
                                             <div>
-                                                <span class="badge bg-light text-dark" th:text="${reviewReply.user.id}"></span>
-                                                <span class="badge bg-light text-dark" th:text="${reviewReply.updatedDate}">2024-03-21</span>
+                                                <span class="badge bg-light text-dark" th:text="${#strings.substring(reviewReply.user.id, 0, 2) + '***'}"></span>
+                                                <span class="badge bg-light text-dark" th:text="${#temporals.format(reviewReply.updatedDate, 'yyyy-MM-dd HH:mm:ss')}">2024-03-21</span>
                                             </div>
                                             <div>
-                                                <a class="btn btn-sm btn-outline-success">추천</a>
-                                                <a class="btn btn-sm btn-outline-secondary">수정</a>
-                                                <a class="btn btn-sm btn-outline-secondary">삭제</a>
+                                                <a class="btn btn-sm btn-outline-secondary modify-reply"
+                                                   onclick="modifyReply()"
+                                                   sec:authorize="isAuthenticated()"
+                                                   th:if="${#authentication.principal.username == reviewReply.user.id}">수정</a>
+                                                <a class="btn btn-sm btn-outline-secondary"
+                                                   th:href="@{|/product/review/reply/delete?reviewReplyNo=${reviewReply.reviewReplyNo}&reviewNo=${review.reviewNo}&bookNo=${book.bookNo}|}"
+                                                   sec:authorize="isAuthenticated()"
+                                                   th:if="${#authentication.principal.username == reviewReply.user.id}">삭제</a>
                                             </div>
                                         </div>
-                                        <p class="card=text ps-2 small" style="white-space: pre-line;"
+                                        <input type="hidden" class="review-reply-no" th:value="${reviewReply.reviewReplyNo}"/>
+                                        <p class="card-text ps-2 small reply-comment" style="white-space: pre-line;"
                                         th:text="${reviewReply.comment}"></p>
                                     </div>
                                 </div>
@@ -236,13 +274,15 @@
                         </div>
 
                         <!-- 댓글 작성폼 -->
-                        <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
+                        <form class="border p-3 mb-3" th:id="'form-reply-' + ${review.reviewNo}" method="post" action="/product/review/reply/create"
+                        style="display: none;">
                             <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
                             <input type="hidden" name="reviewNo" th:value="${review.reviewNo}"/>
                             <div class="row g-3">
                                 <div class="col-12 position-relative">
                                     <textarea rows="3" class="form-control" name="comment"></textarea>
-                                    <button type="submit" class="btn btn-outline-dark btn-sm position-absolute" style="bottom: 15px; right: 25px;">댓글 등록</button>
+                                    <button type="submit" class="btn btn-outline-dark btn-sm position-absolute"
+                                            style="bottom: 15px; right: 25px;" sec:authorize="isAuthenticated()">댓글 등록</button>
                                 </div>
                             </div>
                         </form>
@@ -276,13 +316,25 @@
     <!-- 바텀 네비게이션 바 -->
     <nav class="navbar fixed-bottom navbar-light bg-light">
         <div class="container-fluid justify-content-end">
-            <button class="btn btn-outline-secondary me-3" type="button" onclick="toggleAct(this)"><i id="wish-list" th:classappend="${wishListYn == 'Y' ? 'bi bi-heart-fill' : 'bi bi-heart'}"></i></button>
-            <button class="btn btn-outline-secondary me-3" type="button" onclick="createOrIncreaseCart()">장바구니</button>
-            <button class="btn btn-outline-success me-3" type="button">선물하기</button>
+            <button class="btn btn-outline-secondary me-3"
+                    type="button" onclick="toggleAct(this)"
+                    sec:authorize="isAuthenticated()">
+                <i id="wish-list" th:classappend="${wishListYn == 'Y' ? 'bi bi-heart-fill' : 'bi bi-heart'}"></i>
+            </button>
+            <button class="btn btn-outline-secondary me-3"
+                    type="button" onclick="createOrIncreaseCart()"
+                    sec:authorize="isAuthenticated()">장바구니</button>
+            <form method="post" action="/product/gift">
+                <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
+                <input type="hidden" name="buyBookCountList" value=1 />
+                <button type="submit" class="btn btn-outline-success me-3"
+                    sec:authorize="isAuthenticated()">선물하기</button>
+            </form>
             <form method="post" action="/product/buy/order">
                 <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
                 <input type="hidden" name="buyBookCountList" value=1 />
-                <button type="submit" class="btn btn-outline-success me-3">바로 주문</button>
+                <button type="submit" class="btn btn-outline-success me-3"
+                        sec:authorize="isAuthenticated()">바로 주문</button>
             </form>
         </div>
     </nav>
@@ -375,7 +427,7 @@
                                                 <span class="rate_bg"></span>
                                             </div>
                                         </div>
-                                        <p class="card-text"><small class="text-body-secondary">/10</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">/5</small></p>
                                     </div>
                                 </div>
                             </div>
@@ -419,6 +471,33 @@
             </div>
         </form>
     </div>
+
+    <!-- 댓글 수정 모달 창 -->
+    <div id="modal-modify-reply" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">댓글 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/product/review/reply/modify">
+                    <input type="hidden" id="review-reply-no" name="reviewReplyNo"/>
+                    <div class="modal-body">
+                        <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
+                        <div class="row g-3">
+                            <div class="col-12 position-relative">
+                                <textarea id="reply-comment-modify" rows="3" class="form-control" name="comment"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="btn btn-primary" >수정</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <script layout:fragment="script" type="text/javascript">
 
@@ -427,6 +506,7 @@
     const modalMoveToCart = new bootstrap.Modal("#modal-move-to-cart");
     const modalIncreaseCart = new bootstrap.Modal("#modal-increase-cart");
     const modalCreateReview = new bootstrap.Modal("#modal-create-review");
+    const modalModifyReply = new bootstrap.Modal("#modal-modify-reply");
 
     let chartRateCountCanvas = document.getElementById('chart-rate-count');
     let chartReviewTagCountCanvas = document.getElementById('chart-review-tag-count');
@@ -513,8 +593,18 @@
         });
     })
 
-    $("#div-reviews").on("click", ".chat", function(event){
+    $("#div-reviews").on("click", ".reply", function(event){
+        let reviewNo = $(this).closest(".review").find(".review-no").text();
+        let formId = "#form-reply-" + reviewNo;
+        $(formId).toggle();
+    })
 
+    $("#div-replies").on("click", ".modify-reply", function(event){
+        let comment = $(this).closest(".card").find(".reply-comment").text();
+        $("#reply-comment-modify").text(comment);
+        let reviewReplyNo = $(this).closest(".card").find(".review-reply-no").val();
+        $("#review-reply-no").val(reviewReplyNo);
+        modalModifyReply.show();
     })
 
     // 장바구니 추가 시 모달
@@ -634,6 +724,10 @@
         $("#review-comment").val(review.comment);
 
         document.querySelector('input[name="rate"][value="' + review.rate + '"]').checked = true;
+
+    }
+
+    function modifyReply(){
 
     }
 

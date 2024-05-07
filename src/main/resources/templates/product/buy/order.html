@@ -103,14 +103,14 @@
                             <tbody>
                             <tr>
                                 <td>북허브 쿠폰</td>
-                                <td></td>
+                                <td><span th:text="${couponCount}"></span>장 사용가능</td>
                                 <td><input id="total-coupon-discount-amount-tmp" style="width: 80px" readonly />원</td>
                                 <td><button type="button" class="btn btn-primary" onclick="showCouponUseModal()">사용하기</button></td>
                             </tr>
                             <tr>
                                 <td>북허브 포인트</td>
                                 <td><span id="total-point-amount" th:text="${point}"/>원</td>
-                                <td><input id="total-point-use-amount-tmp" style="width: 80px"/>원</td>
+                                <td><input id="total-point-use-amount-tmp" style="width: 80px" />원</td>
                                 <td><button type="button" class="btn btn-primary" onclick="useTotalPoint()">모두 사용</button></td>
                             </tr>
                             </tbody>
@@ -350,11 +350,23 @@
             let totalPointAmount = parseInt($("#total-point-amount").text());
 
             if (!isNaN(numericValue) && numericValue <= totalPointAmount) {
-
+                $("#total-point-use-amount").val(numericValue);
+                if($("#total-point-use-amount").val() === '')
+                    $("#total-point-use-amount").val(0);
             } else {
                 $(this).val('');
+                $("#total-point-use-amount").val(0);
             }
+
+            updateFinalPrice();
         });
+
+        $("#form-order").submit(function(){
+            $("#form-order").find("#tbody-modal tr").not(":has(:checkbox:checked)").each(function(index, tr){
+                $(tr).find("input[name=couponDiscountAmountList]").prop("disabled", true);
+            })
+            return true;
+        })
 
         function updatePrices(){
             let totalPrice = 0;
@@ -408,9 +420,9 @@
                        <tr id="tr-coupon">
                             <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
                             <td>${couponProduced.coupon.name}</td>
-                            <td><span class="couponDiscountAmount">${couponProduced.coupon.price}</span>원</td>
+                            <td><span class="couponDiscountAmount">${couponProduced.lastAmount}</span>원</td>
                             <td><input name="couponDiscountAmountList"
-                            value="${couponProduced.coupon.price}" style="width: 70px;"/>원</td>
+                            value="${couponProduced.lastAmount}" style="width: 70px;"/>원</td>
                        </tr>
                 `;
             }
