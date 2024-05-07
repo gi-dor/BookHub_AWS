@@ -92,7 +92,7 @@
                                 <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
                             </li>
                             <!-- 페이지 번호를 표시 -->
-                            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
+                            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(page.beginPage, page.endPage)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
                                 <a class="page-link" th:attr="data-page=${pageNumber}" onclick="page(event)" th:href="@{/board/faq/list(page=${pageNumber})}" th:text="${pageNumber}"></a>
                             </li>
                             <!-- 다음 페이지 링크 -->
