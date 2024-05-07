@@ -22,7 +22,7 @@ public class Buy {
     private String commonEntranceApproach;
     private String commonEntrancePassword;
     private LocalDateTime buyDate;
-    private String gift;
+    private String giftYn;
     private BuyPayMethod buyPayMethod;
     private BuyStatus buyStatus;
     private BuyDeliveryRequest buyDeliveryRequest;
@@ -35,7 +35,7 @@ public class Buy {
 
     @Builder
     public Buy(Long buyNo, int totalPrice, int totalBookDiscountPrice, int totalCouponDiscountAmount, int totalPointUseAmount, int finalPrice, int pointAccumulationAmount,
-               UserDelivery userDelivery, String commonEntranceApproach, String commonEntrancePassword, LocalDateTime buyDate, String gift,
+               UserDelivery userDelivery, String commonEntranceApproach, String commonEntrancePassword, LocalDateTime buyDate, String giftYn,
                BuyPayMethod buyPayMethod, BuyStatus buyStatus, BuyDeliveryRequest buyDeliveryRequest, User user) {
         super();
         this.buyNo = buyNo;
@@ -49,7 +49,7 @@ public class Buy {
         this.commonEntranceApproach = commonEntranceApproach;
         this.commonEntrancePassword = commonEntrancePassword;
         this.buyDate = buyDate;
-        this.gift = gift;
+        this.giftYn = giftYn;
         this.buyPayMethod = buyPayMethod;
         this.buyStatus = buyStatus;
         this.buyDeliveryRequest = buyDeliveryRequest;

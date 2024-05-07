@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,8 +16,8 @@ public class Review {
     private float rate;
     private int recommendCount;
     private int accuseCount;
-    private Date createdDate;
-    private Date updatedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
     private ReviewTag reviewTag;
     private int replyCount;
     private String buyerYn;
@@ -25,7 +25,7 @@ public class Review {
     private Book book;
 
     @Builder
-    public Review(long reviewNo, String comment, float rate, int recommendCount, int accuseCount, Date createdDate, Date updatedDate,
+    public Review(long reviewNo, String comment, float rate, int recommendCount, int accuseCount, LocalDateTime createdDate, LocalDateTime updatedDate,
                   ReviewTag reviewTag, int replyCount, String buyerYn, User user, Book book) {
         super();
         this.reviewNo = reviewNo;
