@@ -243,6 +243,7 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
           and buy.BUY_NO = buyBook.BUY_NO
           and user.USER_ID = #{id}
           and buy.BUY_NO = #{no}
+          and buy.REFUND_YN = 'N'
     </select>
 
     <select id="deliveryDetail" resultType="com.example.bookhub.user.dto.OrderDetailDTO">
