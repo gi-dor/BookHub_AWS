@@ -26,4 +26,5 @@ public interface BuyMapper {
     String getBuyerYn(@Param("bookNo") long bookNo, @Param("userNo") long userNo);
     int getBookStock(long bookNo);
     int getCouponProducedLastAmount(long couponProducedNo);
+    int getCouponCountByUserNo(long userNo);
 }

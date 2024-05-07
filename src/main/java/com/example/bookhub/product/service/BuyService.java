@@ -189,4 +189,8 @@ public class BuyService {
         }
     }
 
+    public int getCouponCountByUserNo(String userId) {
+        User user = userMapper.selectUserById(userId);
+        return buyMapper.getCouponCountByUserNo(user.getNo());
+    }
 }

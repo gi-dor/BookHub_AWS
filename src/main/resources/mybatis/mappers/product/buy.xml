@@ -205,4 +205,15 @@
             END AS result
     </select>
 
+    <select id="getCouponCountByUserNo" parameterType="long" resultType="int">
+        select
+            count(*)
+        from
+            COUPON_PRODUCED
+        where
+            user_no = #{value}
+            and due_date >= sysdate()
+            and used = 'N'
+    </select>
+
 </mapper>
