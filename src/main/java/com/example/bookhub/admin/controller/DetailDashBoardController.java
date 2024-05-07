@@ -1,8 +1,6 @@
 package com.example.bookhub.admin.controller;
 
-import com.example.bookhub.admin.dto.DailyDto;
 import com.example.bookhub.admin.dto.DayRangeDto;
-import com.example.bookhub.admin.dto.DayTotalDto;
 import com.example.bookhub.admin.dto.DetailPercentDto;
 import com.example.bookhub.admin.service.DetailDashBoardService;
 import lombok.RequiredArgsConstructor;
