@@ -4,6 +4,7 @@ import com.example.bookhub.admin.dto.*;
 import com.example.bookhub.admin.mapper.DetailDashBoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,14 +15,17 @@ public class DetailDashBoardService {
     private final DetailDashBoardMapper detailDashBoardMapper;
 
 
+    @Transactional(readOnly = true)
     public List<DailyDto> getDetailDaily(String value){
         return detailDashBoardMapper.getDetailDaily(value);
     }
 
+    @Transactional(readOnly = true)
     public List<DetailPercentDto> getDetailPercent(String searchData){
         return detailDashBoardMapper.getDetailPercent(searchData);
     }
 
+    @Transactional(readOnly = true)
     public DayRangeDto getDetailRange(String startDate, String endDate) {
         DayRangeDto dto = new DayRangeDto();
 
@@ -34,6 +38,7 @@ public class DetailDashBoardService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public List<DetailPercentDto> getRangePercent(String startDate, String endDate){
         return detailDashBoardMapper.getRangePercent(startDate, endDate);
     }
