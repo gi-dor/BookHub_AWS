@@ -197,7 +197,7 @@
                                         <span th:if="${review.buyerYn eq 'Y'}">
                                             <span class="badge rounded-pill text-bg-dark">구매자</span>
                                         </span>
-                                        <span class="badge bg-light text-dark" th:text="${review.user.id}"></span>
+                                        <span class="badge bg-light text-dark" th:text="${#strings.substring(review.user.id, 0, 2) + '***'}"></span>
                                         <span class="badge bg-light text-dark" th:text="${#temporals.format(review.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                         <span class="ms-3">신고/차단</span>
                                     </span>
@@ -251,7 +251,7 @@
                                     <div class="card-body py-1 px-2">
                                         <div class="d-flex justify-content-between">
                                             <div>
-                                                <span class="badge bg-light text-dark" th:text="${reviewReply.user.id}"></span>
+                                                <span class="badge bg-light text-dark" th:text="${#strings.substring(reviewReply.user.id, 0, 2) + '***'}"></span>
                                                 <span class="badge bg-light text-dark" th:text="${#temporals.format(reviewReply.updatedDate, 'yyyy-MM-dd HH:mm:ss')}">2024-03-21</span>
                                             </div>
                                             <div>
