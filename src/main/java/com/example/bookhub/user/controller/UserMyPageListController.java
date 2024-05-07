@@ -1,6 +1,7 @@
 package com.example.bookhub.user.controller;
 
 import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.OrderDetailDTO;
 import com.example.bookhub.user.dto.OrderListDTO;
 import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
@@ -8,12 +9,14 @@ import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
 import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -70,10 +73,10 @@ public class UserMyPageListController {
         String id = principal.getName();
         User user = userService.selectUserById(id);
 
-        // 사용자 정보로 주문내역 갯수 조회
+        // 구매자 정보로 주문내역 갯수 조회
         int totalRows = myPageService.countOrder(user.getId());
 
-        // 사용자 주문내역 , 페이징 정보조회
+        // 구매자 주문내역 , 페이징 정보조회
         PageListDTO<OrderListDTO> orderList = myPageService.getOrderListByIdPage(user.getId() , page);
 
         model.addAttribute("totalRows" , totalRows);
@@ -82,6 +85,31 @@ public class UserMyPageListController {
 
         return "user/list/orderList";
     }
+
+    @GetMapping("/orderDetail/{no}")
+    public String orderDetail(Model model ,
+                              Principal principal,
+                            @PathVariable("no") Long no ) {
+
+        String id = principal.getName();
+        User user = userService.selectUserById(id);
+
+        //  구매자의 주문내역 상세페이지
+        List<OrderDetailDTO> orderDetailDTO = myPageService.orderDetail(user.getId(),no);
+
+        // 배송 상세
+        List<OrderDetailDTO> deliveryDetail = myPageService.deliveryDetail(user.getId(),no);
+
+        model.addAttribute("orderList",orderDetailDTO);
+        model.addAttribute("delivery",deliveryDetail);
+
+        System.out.println("=====================================================");
+        System.out.println(":::::::::::"+orderDetailDTO);
+        System.out.println("=====================================================");
+
+        return "user/list/orderDetail";
+    }
+
 
     // inquiryList?page=1
     @PreAuthorize("isAuthenticated()")

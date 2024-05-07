@@ -3,6 +3,7 @@ package com.example.bookhub.user.mapper;
 import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.OrderDetailDTO;
 import com.example.bookhub.user.dto.OrderListDTO;
 import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
@@ -45,4 +46,10 @@ public interface MyPageMapper {
     List<OrderListDTO> selectOrderListByIdPaging(@Param("id") String id, @Param("offset") int offset);
 
     int countOrder(String id);
+
+    List<OrderDetailDTO> selectOrderDetailById(@Param("id") String id ,
+                                               @Param("no") Long no);
+
+    List<OrderDetailDTO> deliveryDetail(@Param("id") String id ,
+                                        @Param("no") Long no);
 }
