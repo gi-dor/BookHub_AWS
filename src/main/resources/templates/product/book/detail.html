@@ -324,8 +324,12 @@
             <button class="btn btn-outline-secondary me-3"
                     type="button" onclick="createOrIncreaseCart()"
                     sec:authorize="isAuthenticated()">장바구니</button>
-            <button class="btn btn-outline-success me-3" type="button"
+            <form method="post" action="/product/gift">
+                <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
+                <input type="hidden" name="buyBookCountList" value=1 />
+                <button type="submit" class="btn btn-outline-success me-3"
                     sec:authorize="isAuthenticated()">선물하기</button>
+            </form>
             <form method="post" action="/product/buy/order">
                 <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
                 <input type="hidden" name="buyBookCountList" value=1 />
