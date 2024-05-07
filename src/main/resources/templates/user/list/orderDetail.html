@@ -1,0 +1,136 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<!-- stylesheet    -->
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/user/listCommon.css}">
+    <style>
+        .truncate {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+</th:block>
+
+<!-- content -->
+<div layout:fragment="content" class="container my-3">
+    <div class="row mb-3">
+    <!-- 마에피이지 사이드바  -->
+        <div th:replace="~{layout/myPageSidebar :: myPageSidebar} "></div>
+
+        <div class="col-9">
+            <h3 id="listTitle">주문상세 내역</h3>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table" style="text-align: center">
+                        <colgroup>
+                            <col width="">
+                            <col width="">
+                            <col width="">
+                            <col width="">
+                            <col width="">
+                        </colgroup>
+                        <thead>
+                            <th class="table-secondary">주문번호</th>
+                            <th class="table-secondary">주문 상태</th>
+                            <th class="table-secondary">주문 일자</th>
+                            <th class="table-secondary">가격</th>
+                            <th class="table-secondary">주문 상품</th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order : ${orderList}">
+                                <td th:text="${order.no}">12345</td>
+                                <td th:text="${order.buyStatus.name}">출고완료</td>
+                                <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}">2021-01-05</td>
+                                <td th:text="${order.book.price}">17,000 원</td>
+                                <td>
+                                    <span class="truncate" th:text="${order.book.name}">이세카이이세카이이세카이이세카이이세카이이세카이이세카이</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" class="p-3"></td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <th class="table-secondary">할인 금액</th>
+                            <th class="table-secondary">할인 적용된 금액</th>
+                            <th class="table-secondary" colspan="3"></th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order : ${orderList}">
+                                <td th:text="${order.discountedPrice}">800 원</td>
+                                <td th:text="${order.resultPrice}">32,000 원</td>
+                                <td colspan="3"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+<!--                    <br>-->
+<!--                    <br>-->
+<!--                    <h3 id="listTitle">배송 상세 내역</h3>-->
+<!--                    <br>-->
+                    <table class="table" style="text-align: center">
+                        <thead></thead>
+                        <tbody>
+                            <tr class="table-secondary">
+                                <th colspan="4">배송 상세 내역</th>
+                            </tr>
+                            <tr th:each="del : ${delivery}">
+                                <th class="table-secondary">주문 번호</th>
+                                <td th:text="${del.no}">123456</td>
+                                <th class="table-secondary">주문 일자</th>
+                                <td th:text="${#temporals.format(del.buyDate, 'yyyy-MM-dd')}">2023.12.11</td>
+                            </tr>
+                            <tr th:each="del : ${delivery}">
+                                <th class="table-secondary">주문하신 분</th>
+                                <td th:text="${del.user.name}"> 한기선 </td>
+                                <th class="table-secondary"> 받으시는 분 </th>
+                                <td th:text="${del.userDelivery.name}"> 한기선</td>
+                            </tr>
+                            <tr th:each="del : ${delivery}">
+                                <th class="table-secondary">휴대폰 번호</th>
+                                <td th:text="${del.user.tel}">010-1234-5678</td>
+                                <th class="table-secondary">받으시는분 번호</th>
+                                <td th:text="${del.userDelivery.tel}">010-1111-2222</td>
+                            </tr>
+                            <tr th:each="del : ${delivery}">
+                                <th class="table-secondary">배송지 주소</th>
+                                <td colspan="3" align="left" th:text="${del.FullAddress}">경기도 남양주시 </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let elements = document.getElementsByClassName("truncate");
+            for (let i = 0; i < elements.length; i++) {
+                truncateText(elements[i]);
+            }
+        });
+
+        function truncateText(element) {
+            let maxLength = 40; // 최대 길이 설정
+            let text = element.textContent;
+            if (text.length > maxLength) {
+                text = text.substring(0, maxLength) + ".....";
+            }
+            element.textContent = text;
+        }
+
+    </script>
+</th:block>
+
+</html>

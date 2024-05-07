@@ -25,7 +25,7 @@ public class AdminService {
 
 
         // DB에 id가 존재하지 않거나 저장된 비밀번호가 일치하지 않는 경우를 체크
-        if((findId == null) || passwordEncoder.matches(password, findPw) == false) {// 입력된 비밀번호와 저장된 비밀번호를 비교하는 메소드
+        if((findId == null) || !passwordEncoder.matches(password, findPw)) {// 입력된 비밀번호와 저장된 비밀번호를 비교하는 메소드
             return null;
         }
 

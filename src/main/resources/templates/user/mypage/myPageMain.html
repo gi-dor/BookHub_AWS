@@ -78,9 +78,10 @@
                 </a>
                 <table class="table" style="text-align: center">
                     <colgroup>
+                        <col width="15%">
+                        <col width="10%">
                         <col width="">
-                        <col width="">
-                        <col width="">
+                        <col width="15%">
                         <col width="">
                         <col width="">
                     </colgroup>
@@ -108,7 +109,9 @@
                             </td>
                             <td th:text="${order.buyStatus.name}"></td>
                             <td th:text="${order.finalPrice}"></td>
-                            <td><button type="submit" class="btn btn-secondary btn-sm">주문 취소</button></td>
+                            <td>
+                                <button type="submit" class="btn btn-secondary btn-sm">주문 취소</button>
+                            </td>
                             </form>
                     </tbody>
                 </table>

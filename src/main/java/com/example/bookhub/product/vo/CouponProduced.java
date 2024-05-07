@@ -11,6 +11,7 @@ public class CouponProduced {
     private long couponProducedNo;
     private Date dueDate;
     private String used;
+    private int lastAmount;
     private User user;
     private Coupon coupon;
 }

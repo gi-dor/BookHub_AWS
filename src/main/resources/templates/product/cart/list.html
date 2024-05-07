@@ -77,7 +77,8 @@
                                 <span id="final-price">0</span>
                             </li>
                         </ul>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">주문하기</button>
+                        <button type="button" id="btn-order" class="w-100 btn btn-lg btn-primary mb-3">주문하기</button>
+                        <button type="button" id="btn-gift" class="w-100 btn btn-lg btn-primary">선물하기</button>
                     </div>
                 </div>
             </div>
@@ -167,5 +168,19 @@
             console.log("장바구니 수량 변경 실패");
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 주문하기 버튼 클릭 이벤트 핸들러
+        document.querySelector("#btn-order").addEventListener("click", function() {
+            document.querySelector("#form-cart").action = "/product/buy/order";
+            document.querySelector("#form-cart").submit();
+        });
+
+        // 선물하기 버튼 클릭 이벤트 핸들러
+        document.querySelector("#btn-gift").addEventListener("click", function() {
+            document.querySelector("#form-cart").action = "/product/gift";
+            document.querySelector("#form-cart").submit();
+        });
+    });
     updatePrices();
 </script>

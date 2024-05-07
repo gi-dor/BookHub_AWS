@@ -4,8 +4,8 @@
     <h1 style="text-align: center; font-size: 24px; margin-bottom: 20px;" th:text="${community.title}"></h1>
     <div style="text-align: right; font-size: 14px; color: #6c757d; margin-bottom: 20px;" th:text="${community.user.getName()} + ' | ' + ${#temporals.format(community.createDate,'yyyy.MM.dd')} + ' | 조회수: ' + ${community.count}"></div>
     <hr>
-    <textarea style="min-height: 200px; resize: none;" class="form-control content" readonly th:text="${community.content}"></textarea>
-    <img th:src="@{|/image/board/${community.images.imagePath}|}" alt="게시글 이미지" style="max-width: 100%; height: auto;"><hr>
+    <span style="min-height: 200px; resize: none;" class="form-control content" readonly th:utext="${community.content}"></span>
+    <img th:src="@{|/image/board/${community.images.imagePath}|}" alt="등록된 이미지가 없습니다" style="width: 300px; height: auto;"><hr>
     <div class="comment-section">
         <form th:action="@{/board/community/comment/add}" method="post">
             <input type="hidden" name="communityNo" th:value="${community.no}">

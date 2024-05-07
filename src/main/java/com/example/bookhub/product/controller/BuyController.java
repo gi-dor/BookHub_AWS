@@ -60,6 +60,9 @@ public class BuyController {
         }
         model.addAttribute("buyBookCountList", buyBookCountList);
 
+        int couponCount = buyService.getCouponCountByUserNo(principal.getName());
+        model.addAttribute("couponCount", couponCount);
+
         int point = buyService.getPointByUserNo(principal.getName());
         model.addAttribute("point", point);
 
@@ -74,7 +77,6 @@ public class BuyController {
     @ResponseBody
     public ResponseEntity<List<CouponProduced>> getCoupon(Principal principal){
         List<CouponProduced> couponList = buyService.getCouponsByUserNo(principal.getName());
-        System.out.println(couponList);
         return ResponseEntity.ok(couponList);
     }
 
@@ -90,8 +92,8 @@ public class BuyController {
     @PostMapping("/delivery/create")
     @ResponseBody
     public ResponseEntity<UserDelivery> createUserDelivery(Principal principal, UserDelivery userDelivery){
-        System.out.println(userDelivery);
         buyService.createUserDelivery(principal.getName(), userDelivery);
         return ResponseEntity.ok().body(userDelivery);
     }
+
 }

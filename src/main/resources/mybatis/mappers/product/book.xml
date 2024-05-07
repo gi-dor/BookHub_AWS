@@ -20,6 +20,8 @@
         <result column="book_sales_volume" property="salesVolume"/>
         <result column="book_stock" property="stock"/>
         <result column="book_status" property="status"/>
+        <result column="book_average_rating" property="averageRating"/>
+        <result column="book_review_count" property="reviewCount"/>
         <association column="category_no" property="category"
                      select="com.example.bookhub.product.mapper.BookMapper.getCategoryByNo"/>
         <association column="publisher_no" property="publisher"
@@ -42,6 +44,20 @@
     <resultMap type="com.example.bookhub.product.vo.Publisher" id="PublisherResultMap">
         <id column="publisher_no" property="no"/>
         <result column="publisher_name" property="name"/>
+    </resultMap>
+
+    <resultMap type="com.example.bookhub.product.vo.BookAuthor" id="BookAuthorResultMap">
+        <result column="author_type" property="authorType"/>
+        <association column="author_no" property="author"
+                     select="com.example.bookhub.product.mapper.BookMapper.getAuthorByAuthorNo"/>
+    </resultMap>
+
+    <resultMap type="com.example.bookhub.product.vo.Author" id="AuthorResultMap">
+        <id column="author_no" property="authorNo"/>
+        <result column="author_name" property="name"/>
+        <result column="author_introduction" property="introduction"/>
+        <result column="author_created_date" property="createdDate"/>
+        <result column="author_updated_date" property="updatedDate"/>
     </resultMap>
 
     <select id="getCategoryByNo" parameterType="long" resultMap="CategoryResultMap">
@@ -82,7 +98,9 @@
             B.BOOK_DISCOUNT_RATE,
             B.BOOK_SALES_VOLUME,
             B.BOOK_STOCK,
-            B.BOOK_STATUS
+            B.BOOK_STATUS,
+            B.BOOK_AVERAGE_RATING,
+            B.BOOK_REVIEW_COUNT
         from
             BOOK B, BOOK_IMAGES BI
         where
@@ -100,4 +118,36 @@
         for update
     </select>
 
+    <update id="updateBookStatus" parameterType="long">
+        update
+            BOOK
+        set
+            book_status = '품절'
+        where
+            book_no = #{bookNo}
+    </update>
+
+    <select id="getAuthorByBookNo" parameterType="long" resultMap="BookAuthorResultMap">
+        select
+            author_type,
+            author_no
+        from
+            BOOK_AUTHOR
+        where
+            book_no = #{bookNo}
+    </select>
+
+    <!-- association -->
+    <select id="getAuthorByAuthorNo" parameterType="long" resultMap="AuthorResultMap">
+        select
+            author_no,
+            author_name,
+            author_introduction,
+            author_created_date,
+            author_updated_date
+        from
+            AUTHOR
+        where
+            author_no = #{authorNo}
+    </select>
 </mapper>
