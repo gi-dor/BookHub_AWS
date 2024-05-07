@@ -4,6 +4,7 @@ import com.example.bookhub.board.vo.Inquiry;
 import com.example.bookhub.product.vo.Buy;
 import com.example.bookhub.user.dto.ChangePasswordForm;
 import com.example.bookhub.user.dto.InquiryListDTO;
+import com.example.bookhub.user.dto.OrderDetailDTO;
 import com.example.bookhub.user.dto.OrderListDTO;
 import com.example.bookhub.user.dto.PageListDTO;
 import com.example.bookhub.user.dto.WishListDTO;
@@ -165,5 +166,17 @@ public class MyPageService {
         pageListDTO.setUserPagination(userPagination);
 
         return pageListDTO;
+    }
+
+    public List<OrderDetailDTO> orderDetail(String id , Long no ) {
+       User user =  userMapper.selectUserById(id);
+
+       return myPageMapper.selectOrderDetailById(user.getId(),no );
+
+    }
+
+    public List<OrderDetailDTO> deliveryDetail (String id , Long no) {
+        User user = userMapper.selectUserById(id);
+        return myPageMapper.deliveryDetail(user.getId(),no);
     }
 }
