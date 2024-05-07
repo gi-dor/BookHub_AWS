@@ -6,7 +6,7 @@ import com.example.bookhub.product.vo.Publisher;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @ToString
@@ -15,7 +15,7 @@ public class BookDto {
     private long bookNo;
     private String imageCover;
     private String name;
-    private Date publishedDate;
+    private LocalDateTime publishedDate;
     private String description;
     private String isbn;
     private int price;

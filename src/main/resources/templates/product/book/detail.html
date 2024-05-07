@@ -141,7 +141,7 @@
         </tr>
         <tr th:if="${book.publishedDate != null}">
             <th>발행(출시)일자</th>
-            <td th:text="${book.publishedDate}"></td>
+            <td th:text="${#temporals.format(book.publishedDate, 'yyyy-MM-dd')}"></td>
         </tr>
         <tr th:if="${book.pages != null}">
             <th>쪽수</th>
@@ -196,7 +196,7 @@
                                             <span class="badge rounded-pill text-bg-dark">구매자</span>
                                         </span>
                                         <span class="badge bg-light text-dark" th:text="${review.user.id}"></span>
-                                        <span class="badge bg-light text-dark" th:text="${review.createdDate}"></span>
+                                        <span class="badge bg-light text-dark" th:text="${#temporals.format(review.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                         <span class="ms-3">신고/차단</span>
                                     </span>
                                      <span>
@@ -250,7 +250,7 @@
                                         <div class="d-flex justify-content-between">
                                             <div>
                                                 <span class="badge bg-light text-dark" th:text="${reviewReply.user.id}"></span>
-                                                <span class="badge bg-light text-dark" th:text="${reviewReply.updatedDate}">2024-03-21</span>
+                                                <span class="badge bg-light text-dark" th:text="${#temporals.format(reviewReply.updatedDate, 'yyyy-MM-dd HH:mm:ss')}">2024-03-21</span>
                                             </div>
                                             <div>
                                                 <a class="btn btn-sm btn-outline-secondary modify-reply" onclick="modifyReply()">수정</a>
