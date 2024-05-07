@@ -1,6 +1,7 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.dto.DailyDto;
+import com.example.bookhub.admin.dto.DayRangeDto;
 import com.example.bookhub.admin.dto.DayTotalDto;
 import com.example.bookhub.admin.dto.DetailPercentDto;
 import com.example.bookhub.admin.service.DetailDashBoardService;
@@ -37,8 +38,13 @@ public class DetailDashBoardController {
     }
 
     @RequestMapping("/getDetailRange.do")
-    public @ResponseBody List<DayTotalDto> getDetailRange(String startDate, String endDate){
+    public @ResponseBody DayRangeDto getDetailRange(String startDate, String endDate){
         return detailDashBoardService.getDetailRange(startDate, endDate);
+    }
+
+    @RequestMapping("/getRangePercent.do")
+    public @ResponseBody List<DetailPercentDto> getRangePercent(String startDate, String endDate){
+        return detailDashBoardService.getRangePercent(startDate, endDate);
     }
 
     

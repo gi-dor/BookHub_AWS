@@ -1,8 +1,6 @@
 package com.example.bookhub.admin.service;
 
-import com.example.bookhub.admin.dto.DailyDto;
-import com.example.bookhub.admin.dto.DayTotalDto;
-import com.example.bookhub.admin.dto.DetailPercentDto;
+import com.example.bookhub.admin.dto.*;
 import com.example.bookhub.admin.mapper.DetailDashBoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,15 +22,19 @@ public class DetailDashBoardService {
         return detailDashBoardMapper.getDetailPercent(searchData);
     }
 
-    public List<DayTotalDto> getDetailRange(String startDate, String endDate) {
-        List<DayTotalDto> dtoList = detailDashBoardMapper.getDetailRange(startDate, endDate);
+    public DayRangeDto getDetailRange(String startDate, String endDate) {
+        DayRangeDto dto = new DayRangeDto();
 
-        // 각각의 DayTotalDto 객체에 DailyDto 리스트를 설정합니다.
-        for (DayTotalDto dto : dtoList) {
-            List<DailyDto> item = detailDashBoardMapper.getDetailRangeItem(startDate, endDate);
-            dto.setItems(item);
-        }
+        List<DayRangeStat> stats = detailDashBoardMapper.getDayRangeStats(startDate, endDate);
+        List<DayRangeItem> items = detailDashBoardMapper.getDayRangeItems(startDate, endDate);
 
-        return dtoList;
+        dto.setStats(stats);
+        dto.setItems(items);
+
+        return dto;
+    }
+
+    public List<DetailPercentDto> getRangePercent(String startDate, String endDate){
+        return detailDashBoardMapper.getRangePercent(startDate, endDate);
     }
 }

@@ -1,8 +1,6 @@
 package com.example.bookhub.admin.mapper;
 
-import com.example.bookhub.admin.dto.DailyDto;
-import com.example.bookhub.admin.dto.DayTotalDto;
-import com.example.bookhub.admin.dto.DetailPercentDto;
+import com.example.bookhub.admin.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,6 +13,8 @@ public interface DetailDashBoardMapper {
     List<DetailPercentDto> getDetailPercent(String searchData);
 
 
-    List<DayTotalDto> getDetailRange(String startDate, String endDate);
-    List<DailyDto> getDetailRangeItem(String startDate, String endDate);
+    List<DayRangeStat> getDayRangeStats(String startDate, String endDate);
+    List<DayRangeItem> getDayRangeItems(String startDate, String endDate);
+
+    List<DetailPercentDto> getRangePercent(String startDate, String endDate);
 }
