@@ -19,5 +19,4 @@ public class Gift {
     private String sendMethod;
     private Date giftDate;
     private Buy buy;
-    private User user;
 }
