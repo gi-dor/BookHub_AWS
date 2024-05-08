@@ -7,7 +7,7 @@
 <div layout:fragment="content" class="container-fluid">
         <form class="mb-4" action="/main/catelist" method="get" id="cateList">
             <div class="mb-4">
-                <!--<input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubdate, '1')}"/> 기본이 주간-->
+                <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubdate, '1')}"/>
                 <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'1')}"/>
                 <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '0')}"/>
                 <input type="hidden" name="page" th:value="${#strings.defaultString(param.page, '1')}"/>
@@ -17,7 +17,7 @@
         <!-- Sidebar -->
         <div id="sidebar" class="col-2" >
             <div>
-                <h2 th:text="${book[0].categoryName}"></h2>
+                <h2 th:text="${category.name}"></h2>
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
