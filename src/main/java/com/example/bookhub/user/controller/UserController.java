@@ -2,6 +2,7 @@ package com.example.bookhub.user.controller;
 
 
 import com.example.bookhub.user.dto.UserSignupForm;
+import com.example.bookhub.user.exception.UserJoinException;
 import com.example.bookhub.user.service.MyPageService;
 import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.util.MailService;
@@ -79,33 +80,22 @@ public class UserController {
         }
 
         try {
-            //  UserService를 사용하여 사용자를 등록하고, 결과로 생성된 사용자 객체를 받는다
-
             // 동기
-            // User user = userService.registerUser(form);
+             User user = userService.registerUser(form);
 
             // 비동기
-            User user = userService.registerUserAsync(form);
+            //User user = userService.registerUserAsync(form);
 
-            // 사용자 등록이 완료되면 이메일 보내기
-            /*
-            String to = form.getEmail1() + "@" + form.getEmail2();
-            String subject = "회원 가입이 완료되었습니다.";
-            String html = mailService.registerHtmlTemplate(form); // loadHtmlTemplate 메서드를 호출할 때는 괄호를 포함하여 호출해야 합니다.
-            mailService.sendEmail(to, subject, html);
-            */
             //  사용자 등록이 성공했을 경우, 사용자의 ID를 포함한 URL로 리다이렉트
             return "redirect:/user/completed?id=" + user.getId();
 
-        } catch (Exception ex) {
+        } catch (UserJoinException ex) {
+            // 예외를 로깅 , 출력 하기
             System.out.println(ex);
-            // 예외를 로깅하기
             logger.error("에러 발생: ", ex); // 에러 레벨
             String message = ex.getMessage();
 
-            if("id".equals(message)) {
-                errors.rejectValue("id", null, "사용 할 수 없는 아이디");
-            }
+            errors.rejectValue("id", null, ex.getMessage());
             return "user/registerForm";
         }
 
