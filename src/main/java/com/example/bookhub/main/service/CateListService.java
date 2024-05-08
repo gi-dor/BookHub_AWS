@@ -17,12 +17,7 @@ public class CateListService {
 
     public BookListDto cateBooks(SearchCriteria criteria) {
         List<BookDto> cateBook = cateListMapper.categoryList(criteria);
-        for (BookDto book : cateBook) {
-            // bookDescription이 100글자를 초과하는 경우 처음 100글자만을 남기고 "..."을 추가
-            if (book.getDescription() != null && book.getDescription().length() > 100) {
-                book.setDescription(book.getDescription().substring(0, 100) + "...");
-            }
-        }
+
 
         int totalRows = cateListMapper.count(criteria);
         criteria.setTotalRows(totalRows);
