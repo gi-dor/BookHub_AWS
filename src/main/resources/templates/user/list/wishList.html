@@ -75,37 +75,37 @@
                     </div>
                 </div>
                 <br>
+                <div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <!-- 이전 페이지 링크 -->
+                            <li class="page-item">
+                                <a class="page-link" th:attr="data-page=${page.currentPage - 1}"  onclick="page(event)"
+                                   th:href="@{/mypage/list/wishList(page=${page.currentPage - 1})}"
+                                   th:if="${page.currentPage > 1}">이전</a>
+                                <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
+                            </li>
+                            <!-- 페이지 번호를 표시하기 위한 리스트 아이템 -->
+                            <li class="page-item" th:each="pageNo : ${#numbers.sequence(page.beginPage, page.endPage)}"
+                                th:class="${pageNo == page.currentPage} ? 'active' : ''">        <!-- 현재 페이지와 페이지 번호를 비교하여 활성화 클래스를 동적으로 설정 -->
+                                <a class="page-link" th:attr="data-page=${pageNo}" onclick="page(event)"
+                                   th:href="@{/mypage/list/wishList(page=${pageNo})}" th:text="${pageNo}"></a>
+                            </li>
+                            <!-- 다음 페이지 링크 -->
+                            <li class="page-item">
+                                <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)"
+                                   th:href="@{/mypage/list/wishList(page=${page.currentPage + 1})}"
+                                   th:if="${page.currentPage < page.totalPages}">다음</a>
+                                <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
 
         <div class="col-1"></div>
 
-        <div>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center pagination-sm">
-                    <!-- 이전 페이지 링크 -->
-                    <li class="page-item">
-                        <a class="page-link" th:attr="data-page=${page.currentPage - 1}"  onclick="page(event)"
-                           th:href="@{/mypage/list/wishList(page=${page.currentPage - 1})}"
-                           th:if="${page.currentPage > 1}">이전</a>
-                        <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
-                    </li>
-                    <!-- 페이지 번호를 표시하기 위한 리스트 아이템 -->
-                    <li class="page-item" th:each="pageNo : ${#numbers.sequence(page.beginPage, page.endPage)}"
-                        th:class="${pageNo == page.currentPage} ? 'active' : ''">        <!-- 현재 페이지와 페이지 번호를 비교하여 활성화 클래스를 동적으로 설정 -->
-                        <a class="page-link" th:attr="data-page=${pageNo}" onclick="page(event)"
-                           th:href="@{/mypage/list/wishList(page=${pageNo})}" th:text="${pageNo}"></a>
-                    </li>
-                    <!-- 다음 페이지 링크 -->
-                    <li class="page-item">
-                        <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)"
-                           th:href="@{/mypage/list/wishList(page=${page.currentPage + 1})}"
-                           th:if="${page.currentPage < page.totalPages}">다음</a>
-                        <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
-                    </li>
-                </ul>
-            </nav>
-        </div>
 
         <!-- ##### row 종료 ##### -->
     </div>

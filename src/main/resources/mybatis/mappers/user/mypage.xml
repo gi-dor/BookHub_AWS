@@ -10,7 +10,45 @@
     </select>
 
 
-
+  <select id="countOrder" parameterType="string" resultType="int">
+      select count(*)
+      from BUY b , USER u
+      where u.USER_NO = b.USER_NO
+      and u.USER_ID = #{id}
+  </select>
+    
+  <select id="selectOrderListByIdPaging" resultType="com.example.bookhub.user.dto.OrderListDTO">
+   select
+        b.BUY_NO                            as no,
+        b.FINAL_PRICE                       as finalPrice,
+        b.BUY_DATE                          as buyDate,
+        status.BUY_STATUS_NAME              as "buyStatus.name",
+        u.USER_ID                           as "user.id",
+        (select z.BUY_PAY_METHOD_NAME
+         from BUY_PAY_METHOD z
+         where
+            z.BUY_PAY_METHOD_NO = pay.BUY_PAY_METHOD_NO)
+                                            as "buyPayMethod.name" , -- 결제 방법
+        (select y.BOOK_NAME
+         from  BUY_BOOK bb , BOOK y
+         where bb.BOOK_NO = y.BOOK_NO
+         order by y.BOOK_NO DESC
+         limit 1)
+                                            as "book.name",
+        (select count(*)
+         from BUY_BOOK x
+         where x.BUY_NO = b.BUY_NO)
+                                            as cnt
+from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
+      where b.USER_NO = u.USER_NO
+        and b.BUY_STATUS_NO = status.BUY_STATUS_NO
+        and b.BUY_PAY_METHOD_NO = pay.BUY_PAY_METHOD_NO
+        and u.USER_ID = #{id}
+      ORDER BY
+          b.BUY_NO DESC
+      LIMIT #{offset} ,10
+  </select>
+    
 
   <select id="selectOrderListById" parameterType="string" resultType="com.example.bookhub.product.vo.Buy">
       select
@@ -182,6 +220,51 @@
             i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate
         from INDIVIDUAL_INQUIRIES i
         where INDIVIDUAL_INQUIRY_CREATE_DATE BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <select id="selectOrderDetailById" resultType="com.example.bookhub.user.dto.OrderDetailDTO">
+        select
+            buy.BUY_NO              as no,              -- 주문번호
+            book.BOOK_NO            as "book.no",       -- 책 번호
+            book.BOOK_NAME          as "book.name",     -- 책 이름
+            status.BUY_STATUS_NAME  as "buyStatus.name",   -- 배송 상태 이름
+            buy.BUY_DATE            as buyDate,             -- 구매날짜
+            book.BOOK_LIST_PRICE    as "book.price",        -- 책의 원가
+            FLOOR(book.BOOK_LIST_PRICE*book.BOOK_DISCOUNT_RATE)  as discountedPrice, -- 책의 할인금액
+            CEIL(book.BOOK_LIST_PRICE - (book.BOOK_LIST_PRICE * book.BOOK_DISCOUNT_RATE) )    as resultPrice, -- 할인적용된 금액
+--             buy.FINAL_PRICE         as finalPrice,  -- 최종 가격
+            user.USER_ID            as "user.id",
+            user.USER_NAME          as "user.name"
+        from BUY buy , BOOK book , BUY_BOOK buyBook, BUY_STATUS status  , USER user
+        where
+            buy.USER_NO = user.USER_NO
+          and book.BOOK_NO = buyBook.BOOK_NO
+          and buy.BUY_STATUS_NO = status.BUY_STATUS_NO
+          and buy.BUY_NO = buyBook.BUY_NO
+          and user.USER_ID = #{id}
+          and buy.BUY_NO = #{no}
+          and buy.REFUND_YN = 'N'
+    </select>
+
+    <select id="deliveryDetail" resultType="com.example.bookhub.user.dto.OrderDetailDTO">
+        select
+            user.USER_NAME          as "user.name",
+            user.USER_ID            as "user.id",
+            user.USER_TEL           as "user.tel",
+            buy.BUY_NO              as no,              -- 주문번호
+            buy.BUY_DATE            as buyDate,             -- 구매날짜
+            delivery.RECIPIENT_NAME as "userDelivery.name",
+            delivery.RECIPIENT_TEL  as "userDelivery.tel",
+            delivery.USER_ZIP_CODE  as "userDelivery.zipCode",
+            delivery.USER_ADDRESS   as "userDelivery.address",
+            delivery.USER_ADDRESS_DETAIL as "userDelivery.addressDetail",
+            buy.FINAL_PRICE         as "finalPrice"
+        from BUY buy , USER user , USER_DELIVERY delivery
+        where user.USER_ID = #{id}
+        and BUY_NO = #{no}
+        and buy.USER_NO = user.USER_NO
+        and user.USER_NO = delivery.USER_NO
+
     </select>
 
 

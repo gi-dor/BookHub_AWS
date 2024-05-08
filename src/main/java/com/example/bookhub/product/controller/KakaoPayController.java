@@ -5,6 +5,7 @@ import com.example.bookhub.product.dto.KakaoApproveResponse;
 import com.example.bookhub.product.dto.KakaoCancelResponse;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayBusinessLogicException;
 import com.example.bookhub.product.service.BuyService;
+import com.example.bookhub.product.service.GiftService;
 import com.example.bookhub.product.service.KakaoPayService;
 import com.example.bookhub.product.service.RefundService;
 import com.example.bookhub.product.vo.Buy;
@@ -25,6 +26,7 @@ public class KakaoPayController {
 
     private final KakaoPayService kakaoPayService;
     private final BuyService buyService;
+    private final GiftService giftService;
     private final RefundService refundService;
 
     /**
@@ -42,7 +44,10 @@ public class KakaoPayController {
 
         KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
         if(kakaoApprove != null) {
-            buyService.createBuy(buyForm, kakaoApprove.getTid(), principal.getName());
+            if("Y".equals(buyForm.getGiftYn()))
+                giftService.createGift(buyForm, kakaoApprove.getTid(), principal.getName());
+            else
+                buyService.createBuy(buyForm, kakaoApprove.getTid(), principal.getName());
         }
 
         model.addAttribute("successMessage", "결제 성공");

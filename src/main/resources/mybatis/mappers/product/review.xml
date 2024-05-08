@@ -277,4 +277,55 @@
             review_tag_no = #{reviewTagNo}
             and book_no = #{bookNo}
     </select>
+
+    <update id="updateReviewCount" parameterType="long">
+        update
+            BOOK
+        set
+            book_review_count = book_review_count + 1
+        where
+            book_no = #{value}
+    </update>
+
+    <update id="updateBookAverageRating">
+        update
+            BOOK
+        set
+            book_average_rating = ROUND((book_average_rating * (book_review_count - 1) + #{rate}) / book_review_count, 1)
+        where
+            book_no = #{bookNo}
+    </update>
+
+    <update id="modifyReviewReply">
+        update
+            REVIEW_REPLY
+        set
+            comment = #{comment}
+        where
+            review_reply_no = #{reviewReplyNo}
+    </update>
+
+    <delete id="deleteReviewReply" parameterType="long">
+        delete from
+            REVIEW_REPLY
+        where
+            review_reply_no = #{reviewReplyNo}
+    </delete>
+
+    <update id="updateReviewReplyCount" parameterType="map">
+        update REVIEW
+        <set>
+            reply_count =
+            <choose>
+                <when test="option == 'create'">
+                    reply_count + 1
+                </when>
+                <when test="option == 'delete'">
+                    reply_count - 1
+                </when>
+            </choose>
+        </set>
+        where review_no = #{reviewNo}
+    </update>
+
 </mapper>

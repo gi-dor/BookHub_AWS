@@ -1,0 +1,117 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<!-- ##### css  ##### -->
+<th:block layout:fragment="style">
+    <link rel="stylesheet" th:href="@{/css/user/listCommon.css}" />
+    <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+</th:block>
+<!-- ###### content 시작 ###### -->
+<div layout:fragment="content" class="container my-3">
+    <div class="row mt-5">
+
+        <!-- 마이페이지 사이드 바 시작 ################-->
+        <div th:replace="~{layout/myPageSidebar :: myPageSidebar} "></div>  <!-- col-3 가지고 있음 -->
+        <!-- 마이페이지 사이드 바 종료 ################-->
+
+        <div class="col-9">
+            <h3 id="listTitle">주문 내역</h3>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        <p style="text-align: right">
+                            총 <span th:text="${totalRows}"></span> 개
+                        </p>
+                        <table class="table" style="text-align: center">
+                            <colgroup>
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>주문 번호</th>
+                                    <th>주문 일자</th>
+                                    <th>주문 상품</th>
+                                    <th>주문 상태</th>
+                                    <th>주문 금액 </th>
+                                    <th>주문 취소</th>
+                                </tr>
+                            </thead>
+                                <tbody>
+                                    <tr th:if="${#lists.isEmpty(orderList)}">
+                                        <td colspan="6" align="center"> 주문 내역이 없습니다</td>
+                                    </tr>
+                                    <tr th:each="order : ${orderList}" align="center">
+                                        <td th:text="${order.no}">주문번호</td>
+                                        <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}">결제 일자</td>
+                                        <td>
+                                            <a th:href="@{/mypage/list/orderDetail/{orderId}(orderId=${order.no})}">
+                                            <span th:text="${order.book.name}"></span>
+                                            <span th:if="${order.cnt > 1}" th:text=" ' 외' + ${order.cnt} + '개' "></span>
+                                            </a>
+                                        </td>
+                                        <td th:text="${order.buyStatus.name}">결제 상태</td>
+                                        <td th:text="${order.finalPrice}">가격</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm" type=submit>주문취소</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center pagination-sm">
+                                <!-- 첫 페이지로 이동하는 링크 -->
+                                <li class="page-item">
+                                    <a class="page-link" th:if="${page.currentPage > 1}"
+                                       th:href="@{/mypage/list/orderList(page=1)}" >&laquo;</a>
+                                    <span class="page-link disabled" th:unless="${page.currentPage > 1}">&laquo;</span>
+                                </li>
+                                <!-- 이전 페이지 링크 -->
+                                <li class="page-item">
+                                    <a class="page-link" th:attr="data-page=${page.currentPage - 1}"  onclick="page(event)"
+                                       th:href="@{/mypage/list/orderList(page=${page.currentPage - 1})}"
+                                       th:if="${page.currentPage > 1}">&lt;</a>
+                                    <span class="page-link disabled" th:unless="${page.currentPage > 1}">&lt;</span>
+                                </li>
+                                <!-- 페이지 번호를 표시하기 위한 리스트 아이템 -->
+                                <li class="page-item" th:each="pageNo : ${#numbers.sequence(page.beginPage, page.endPage)}"
+                                    th:class="${pageNo == page.currentPage} ? 'active' : ''">        <!-- 현재 페이지와 페이지 번호를 비교하여 활성화 클래스를 동적으로 설정 -->
+                                    <a class="page-link" th:attr="data-page=${pageNo}" onclick="page(event)"
+                                       th:href="@{/mypage/list/orderList(page=${pageNo})}" th:text="${pageNo}"></a>
+                                </li>
+                                <!-- 다음 페이지 링크 -->
+                                <li class="page-item">
+                                    <a class="page-link" th:attr="data-page=${page.currentPage + 1}" onclick="page(event)"
+                                       th:href="@{/mypage/list/orderList(page=${page.currentPage + 1})}"
+                                       th:if="${page.currentPage < page.totalPages}">&gt;</a>
+                                    <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">&gt;</span>
+                                </li>
+                                <!-- 마지막 페이지로 이동하는 링크 -->
+                                <li class="page-item">
+                                    <a class="page-link" th:if="${page.currentPage < page.totalPages}"
+                                       th:href="@{/mypage/list/orderList(page=${page.totalPages})}">&raquo;</a>
+                                    <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">&raquo;</span>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</html>
