@@ -189,6 +189,16 @@
                 PUBLISHER_NAME ASC
     </select>
 
+    <select id="getAuthors" resultType="com.example.bookhub.product.vo.Author">
+            SELECT
+                AUTHOR_NO AS no,
+                AUTHOR_NAME AS name
+            FROM
+                BookHub.AUTHOR
+            ORDER BY
+                AUTHOR_NAME ASC
+    </select>
+
     <update id="deleteProductByNo" parameterType="long">
         UPDATE BookHub.BOOK
         SET BOOK_DELETED_YN = 'Y',
@@ -243,4 +253,27 @@
         WHERE
                 BOOK_NO = #{no}
     </update>
+
+    <insert id="registerProduct" parameterType="com.example.bookhub.admin.dto.Product">
+        <selectKey resultType="long" keyProperty="no" order="BEFORE">
+            SELECT max(BOOK_NO) + 1
+            FROM BookHub.BOOK
+        </selectKey>
+        INSERT INTO BookHub.BOOK
+        (BOOK_NO, BOOK_NAME, BOOK_PUBLISHED_DATE, BOOK_DESCRIPTION, ISBN, BOOK_LIST_PRICE, PUBLISHER_NO, CATEGORY_NO, BOOK_PAGES, BOOK_LANGUAGE, BOOK_WEIGHT, BOOK_INDEX, BOOK_TOTAL_NUMBER, BOOK_SIZE, BOOK_DISCOUNT_RATE, BOOK_STOCK, BOOK_STATUS)
+        VALUES
+        (#{no} , #{name}, #{publishedDate}, #{description}, #{isbn}, #{listPrice}, #{publisherNo}, #{categoryNo}, #{pages}, #{language}, #{weight}, #{index}, #{totalNumber}, #{size}, #{discountRate}, #{stock}, #{status})
+    </insert>
+
+    <insert id="registerImage" parameterType="com.example.bookhub.admin.dto.Product">
+        <selectKey resultType="long" keyProperty="no" order="BEFORE">
+            SELECT max(BOOK_NO)
+            FROM BookHub.BOOK
+        </selectKey>
+        INSERT INTO BookHub.BOOK_IMAGES
+        (BOOK_NO, BOOK_IMAGE_THUMBNAIL, BOOK_IMAGE_COVER, BOOK_IMAGE_DESCRIPTION)
+        VALUES
+        (#{no}, #{thumbnailImg}, #{coverImg}, #{descriptionImg})
+    </insert>
+
 </mapper>

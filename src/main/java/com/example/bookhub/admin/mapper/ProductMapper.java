@@ -3,6 +3,7 @@ package com.example.bookhub.admin.mapper;
 import com.example.bookhub.admin.dto.BookList;
 import com.example.bookhub.admin.dto.Product;
 import com.example.bookhub.admin.dto.ProductFilter;
+import com.example.bookhub.product.vo.Author;
 import com.example.bookhub.product.vo.Publisher;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,6 +19,8 @@ public interface ProductMapper {
 
     List<Publisher> getPublishers();
 
+    List<Author> getAuthors();
+
     void deleteProductByNo(Long deletedProductNo);
 
     Product getProductByNo(Long productNo);
@@ -25,4 +28,8 @@ public interface ProductMapper {
     Long getSuperCategoryNoBySubCategoryNo(Long categoryNo);
 
     void modifyProduct(Product modifiedProduct);
+
+    void registerProduct(Product product);
+
+    void registerImage(Product product);
 }

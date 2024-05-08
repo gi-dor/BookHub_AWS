@@ -4,6 +4,7 @@ import com.example.bookhub.admin.dto.BookList;
 import com.example.bookhub.admin.dto.Product;
 import com.example.bookhub.admin.dto.ProductFilter;
 import com.example.bookhub.admin.mapper.ProductMapper;
+import com.example.bookhub.product.vo.Author;
 import com.example.bookhub.product.vo.Publisher;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ public class ProductService {
         return productMapper.getPublishers();
     }
 
+    public List<Author> getAuthors() {
+        return productMapper.getAuthors();
+    }
+
     public void deleteProductByNo(List<Long> deletedProductNos) {
         for (Long deletedProductNo : deletedProductNos) {
             productMapper.deleteProductByNo(deletedProductNo);
@@ -43,5 +48,35 @@ public class ProductService {
 
     public void modifyProduct(Product modifiedProduct) {
         productMapper.modifyProduct(modifiedProduct);
+    }
+
+    public void createProduct(Product createdProduct) {
+        Product product = new Product();
+        product = createdProduct;
+        long topCategoryNo = createdProduct.getTopCategoryNo();
+        long secondCategoryNo = createdProduct.getSecondCategoryNo();
+        long thirdCategoryNo = createdProduct.getThirdCategoryNo();
+        int height = createdProduct.getHeight();
+        int width = createdProduct.getWidth();
+        String size = height + "*" + width;
+
+        product.setSize(size);
+
+        if (thirdCategoryNo != 0) {
+            product.setCategoryNo(thirdCategoryNo);
+            productMapper.registerProduct(product);
+            productMapper.registerImage(product);
+            return;
+        }
+        if (secondCategoryNo != 0) {
+            product.setCategoryNo(secondCategoryNo);
+            productMapper.registerProduct(product);
+            productMapper.registerImage(product);
+            return;
+        }
+
+        product.setCategoryNo(topCategoryNo);
+        productMapper.registerProduct(product);
+        productMapper.registerImage(product);
     }
 }
