@@ -100,7 +100,7 @@ public class MyPageService {
         UserPagination userPagination = new UserPagination(page,totalRows);
 
         // offset에 getBegin사용
-        int offset = userPagination.getBegin();
+        int offset = userPagination.getBegin()-1;
 
         // 사용자의 페이징 정보를 기반으로 찜 목록을 가져온다
         List<WishListDTO> wishListDTO =   myPageMapper.selectWishListById(user.getId() , offset);
