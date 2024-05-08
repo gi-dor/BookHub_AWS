@@ -134,8 +134,8 @@ public class MyPageService {
     }
 
 
-    public List<Inquiry> findInquiryByDate(LocalDateTime startDate, LocalDateTime endDate ) {
-        return myPageMapper.findInquiryByDate(startDate,endDate );
+    public List<Inquiry> findInquiryByDate(LocalDateTime startDate, LocalDateTime endDate , String id ) {
+        return myPageMapper.findInquiryByDate(startDate,endDate , id);
     }
 
     public int countOrder(String id) {
