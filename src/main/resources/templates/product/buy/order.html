@@ -138,38 +138,42 @@
 
             <!-- 주문 합계 -->
             <div class="col-3">
-                    <div class="card mb-4 rounded-3 shadow-sm">
+                    <div id="card-order-total" class="card mb-4 rounded-3 shadow-sm">
                         <div class="card-header py-3">
                             <h5 class="my-0 fw-normal">주문 합계</h5>
                         </div>
                         <div class="card-body">
-                            <ul class="list-unstyled mt-3 mb-4">
-                                <li class="d-flex justify-content-between">
-                                    <span>상품금액</span>
-                                    <input id="total-price" name="totalPrice" />
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>배송비</span>
-                                    +<input id="delivery-price" name="deliveryPrice" value=2000 />
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>상품할인</span>
-                                    -<input id="total-book-discount-price" name="totalBookDiscountPrice" value=0 />
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>쿠폰할인</span>
-                                    -<input id="total-coupon-discount-amount" name="totalCouponDiscountAmount" value=0 />
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <span>포인트적용</span>
-                                    -<input id="total-point-use-amount" name="totalPointUseAmount" value=0 />
-                                </li>
-                                <hr class="my-4">
-                                <li class="d-flex justify-content-between">
-                                    <span>결제 예정 금액</span>
-                                    <input id="final-price" name="finalPrice" value=0 />
-                                </li>
-                            </ul>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>상품금액</td>
+                                    <td><input id="total-price" name="totalPrice" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <td>배송비</td>
+                                    <td>+<input id="delivery-price" name="deliveryPrice" value="2000" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <td>상품할인</td>
+                                    <td>-<input id="total-book-discount-price" name="totalBookDiscountPrice" value="0" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <td>쿠폰할인</td>
+                                    <td>-<input id="total-coupon-discount-amount" name="totalCouponDiscountAmount" value="0" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <td>포인트적용</td>
+                                    <td>-<input id="total-point-use-amount" name="totalPointUseAmount" value="0" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><hr class="my-4"></td>
+                                </tr>
+                                <tr>
+                                    <td>결제 예정 금액</td>
+                                    <td><input id="final-price" name="finalPrice" value="0" readonly/></td>
+                                </tr>
+                                </tbody>
+                            </table>
                                 <button type="button" class="w-100 btn btn-lg btn-primary" onclick="checkUserDelivery()">결제하기</button>
                         </div>
                     </div>
