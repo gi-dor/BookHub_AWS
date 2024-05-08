@@ -24,6 +24,8 @@ public class OrderDetailDTO {
     // 주문상품 bookName
     Book book;
 
+    int count;
+
     // 주문상태 statusName
     BuyStatus buyStatus;
 

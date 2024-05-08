@@ -78,4 +78,32 @@
         where
             user_no = #{userNo}
     </update>
+
+    <update id="refundPartBuy" parameterType="map">
+        update
+            BUY
+        set
+            total_price = total_price - #{totalReturnPrice},
+            total_book_discount_price = total_book_discount_price - #{totalBookDiscountReturnPrice},
+            final_price = final_price - #{finalReturnPrice}
+        where
+            buy_no = #{buyNo}
+    </update>
+
+    <update id="refundPartBuyBook">
+        update
+            BUY_BOOK
+        set
+            count = count - #{count}
+        where
+            buy_no = #{buyNo}
+            and book_no = #{bookNo}
+    </update>
+
+    <delete id="deleteRefundBuyBook">
+        delete from
+            BUY_BOOK
+        where
+            count = 0;
+    </delete>
 </mapper>
