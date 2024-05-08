@@ -158,21 +158,6 @@
     </table>
 
     <!-- 리뷰 -->
-    <button class="btn btn-outline-secondary me-3"
-            type="button" onclick="createReview()"
-            sec:authorize="isAuthenticated()">리뷰 작성</button>
-    <ul class="nav nav-underline">
-        <li class="nav-item">
-            <div class="nav-link" aria-current="page" href="">Active</div>
-        </li>
-        <li class="nav-item">
-            <div class="nav-link" href="">Link</div>
-        </li>
-        <li class="nav-item">
-            <div class="nav-link" href="">Link</div>
-        </li>
-    </ul>
-
     <div class="row">
         <div class="col-1"></div>
         <div class="col-3">
@@ -183,6 +168,29 @@
             <canvas id="chart-review-tag-count"></canvas>
         </div>
         <div class="col-1"></div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-5 mb-3">
+        <div>
+            <input type="radio" class="btn-check" name="radio-option" id="all-reviews" value="total" autocomplete="off"
+                   th:checked="${option eq 'total'}" onchange="changeSortOption()">
+            <label class="btn" for="all-reviews">전체 리뷰</label>
+
+            <input type="radio" class="btn-check" name="radio-option" id="buyer-reviews" value="buyer" autocomplete="off"
+                   th:checked="${option eq 'buyer'}" onchange="changeSortOption()">
+            <label class="btn" for="buyer-reviews">구매자 리뷰</label>
+
+            <input type="radio" class="btn-check" name="radio-option" id="my-reviews" value="my" autocomplete="off"
+                   th:checked="${option eq 'my'}" onchange="changeSortOption()">
+            <label class="btn" for="my-reviews">내 리뷰</label>
+        </div>
+        <div>
+            <select class="form-select" name="select-sort" onchange="changeSortOption()" th:attr="value=${sort}">
+                <option value="date" th:selected="${sort eq 'date'}">최신순</option>
+                <option value="recommend" th:selected="${sort eq 'recommend'}">추천순</option>
+                <option value="reply" th:selected="${sort eq 'reply'}">댓글순</option>
+            </select>
+        </div>
     </div>
 
     <div class="col-12">
@@ -296,16 +304,16 @@
                 <ul class="pagination justify-content-center pagination-sm">
                     <!-- 이전 페이지 링크 -->
                     <li class="page-item">
-                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage - 1})}" th:if="${page.currentPage > 1}">이전</a>
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage - 1},sort=${sort},option=${option})}" th:if="${page.currentPage > 1}">이전</a>
                         <span class="page-link disabled" th:unless="${page.currentPage > 1}">이전</span>
                     </li>
                     <!-- 페이지 번호를 표시 -->
                     <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}" th:class="${pageNumber == page.currentPage} ? 'active' : ''">
-                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${pageNumber},sort=${sort},option=${option})}" th:text="${pageNumber}"></a>
                     </li>
                     <!-- 다음 페이지 링크 -->
                     <li class="page-item">
-                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage + 1})}" th:if="${page.currentPage < page.totalPages}">다음</a>
+                        <a class="page-link" th:href="@{|/product/book/detail?bookNo=${book.bookNo}|(page=${page.currentPage + 1},sort=${sort},option=${option})}" th:if="${page.currentPage < page.totalPages}">다음</a>
                         <span class="page-link disabled" th:unless="${page.currentPage < page.totalPages}">다음</span>
                     </li>
                 </ul>
@@ -727,10 +735,30 @@
 
     }
 
-    function modifyReply(){
+    function changeSortOption(){
+        let sort = document.querySelector("select[name=select-sort]").value;
+        let option = document.querySelector("input[name=radio-option]:checked").value;
 
+        let url = window.location.href;
+
+        url = updateQueryStringParameter(url, "page", 1);
+        url = updateQueryStringParameter(url, "option", option);
+        url = updateQueryStringParameter(url, "sort", sort);
+
+        // 새로운 URL로 페이지 리로드
+        window.location.href = url;
     }
 
+    // URL에 쿼리 매개변수 추가 또는 업데이트하는 함수
+    function updateQueryStringParameter(uri, key, value) {
+        let re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        let separator = uri.indexOf("?") !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, "$1" + key + "=" + value + "$2");
+        } else {
+            return uri + separator + key + "=" + value;
+        }
+    }
 
     // 리뷰들 조회
     // async function getReviews(bookNo){

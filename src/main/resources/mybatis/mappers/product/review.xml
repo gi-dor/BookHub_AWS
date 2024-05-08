@@ -114,13 +114,32 @@
             review_no = #{value}
     </select>
 
-    <select id="getReviewTotalRows" parameterType="long" resultType="int">
+    <select id="getReviewTotalRows" parameterType="map" resultType="int">
         select
             count(*)
         from
             REVIEW
         where
             book_no = #{bookNo}
+        <choose>
+            <when test="option == 'buyer'">
+                and buyer_yn = 'Y'
+            </when>
+            <when test="option == 'my'">
+                and user_no = #{userNo}
+            </when>
+        </choose>
+        <choose>
+            <when test="sort == 'date'">
+                order by created_date desc
+            </when>
+            <when test="sort == 'recommend'">
+                order by recommend_count desc
+            </when>
+            <when test="sort == 'reply'">
+                order by reply_count desc
+            </when>
+        </choose>
     </select>
 
     <select id="getReviewsByBookNo" parameterType="map" resultMap="ReviewListResultMap">
@@ -154,13 +173,21 @@
         where
             book_no = #{bookNo}
         <choose>
+            <when test="option == 'buyer'">
+                and buyer_yn = 'Y'
+            </when>
+            <when test="option == 'my'">
+                and user_no = #{userNo}
+            </when>
+        </choose>
+        <choose>
             <when test="sort == 'date'">
                 order by created_date desc
             </when>
             <when test="sort == 'recommend'">
                 order by recommend_count desc
             </when>
-            <when test="sort == 'comment'">
+            <when test="sort == 'reply'">
                 order by reply_count desc
             </when>
         </choose>
