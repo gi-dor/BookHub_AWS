@@ -1,0 +1,284 @@
+<html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<div layout:fragment="create" class="container-fluid">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col">
+                        <h3>상품 등록</h3>
+                    </div>
+                    <div class="col text-end">
+                        <button type="submit" class="btn btn-primary">등록</button>
+                    </div>
+                </div>
+
+                <form th:object="${product}" method="post">
+                    <!-- 카테고리 선택 영역-->
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <h5>카테고리</h5>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">카테고리 선택</td>
+                                <td>
+                                    <table class="table table-bordered text-center">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 33%;">대분류</th>
+                                            <th style="width: 33%;">중분류</th>
+                                            <th style="width: 33%;">소분류</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <select th:field="*{topCategoryNo}" class="form-select" size="10"
+                                                        style="width: 100%;">
+                                                    <option th:each="topLevelCategory : ${topLevelCategories}"
+                                                            th:value="${topLevelCategory.no}"
+                                                            th:text="${topLevelCategory.name}">
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select th:field="*{secondCategoryNo}" class="form-select" size="10"
+                                                        style="width: 100%;">
+                                                    <option th:each="secondLevelCategory : ${secondLevelCategories}"
+                                                            th:value="${secondLevelCategory.no}"
+                                                            th:text="${secondLevelCategory.name}">
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select th:field="*{thirdCategoryNo}" class="form-select" size="10"
+                                                        style="width: 100%;">
+                                                    <option th:each="thirdLevelCategory : ${thirdLevelCategories}"
+                                                            th:value="${thirdLevelCategory.no}"
+                                                            th:text="${thirdLevelCategory.name}">
+                                                    </option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 기본정보 등록 영역-->
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <h5>기본정보</h5>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">상품명</td>
+                                <td colspan="3">
+                                    <input type="text" th:field="*{name}" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">상품설명</td>
+                                <td colspan="3">
+                                    <textarea class="form-control" th:field="*{description}">
+                                    </textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">목차</td>
+                                <td colspan="3">
+                                    <textarea class="form-control" th:field="*{index}">
+                                    </textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">출판일</td>
+                                <td colspan="3">
+                                    <input type="date" th:field="*{publishedDate}" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">출판사</td>
+                                <td colspan="3">
+                                    <select th:field="*{publisherNo}" class="form-select-sm" style="width: 100%;">
+                                        <option th:each="publisher : ${publishers}"
+                                                th:value="${publisher.no}"
+                                                th:text="${publisher.name}">
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">저자</td>
+                                <td colspan="3">
+                                    <select th:field="*{authorNo}" class="form-select-sm" style="width: 100%;">
+                                        <option th:each="author : ${authors}"
+                                                th:value="${author.authorNo}"
+                                                th:text="${author.name}">
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">ISBN</td>
+                                <td colspan="3">
+                                    <input type="number" th:field="*{isbn}" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">페이지수</td>
+                                <td>
+                                    <input type="number" id="pages" th:field="*{pages}" class="form-control-sm">
+                                    <label for="pages">쪽</label>
+                                </td>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">언어</td>
+                                <td>
+                                    <input type="text" th:field="*{language}" class="form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">무게</td>
+                                <td>
+                                    <input type="number" id="weight" th:field="*{weight}" class="form-control-sm">
+                                    <label for="weight">g</label>
+                                </td>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">묶음개수</td>
+                                <td>
+                                    <input type="number" id="totalNumber" th:field="*{totalNumber}"
+                                           class="form-control-sm">
+                                    <label for="totalNumber">권</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">사이즈</td>
+                                <td colspan="3">
+                                    <label for="height">높이:</label>
+                                    <input type="number" id="height" th:field="*{height}" class="form-control-sm">
+                                    <label for="width" class="ms-5">너비:</label>
+                                    <input type="number" id="width" th:field="*{width}" class="form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">판매상태</td>
+                                <td colspan="3">
+                                    <label><input type="radio" name="status" value="정상" checked> 정상</label>
+                                    <label><input type="radio" name="status" value="절판"> 절판</label>
+                                    <label><input type="radio" name="status" value="품절"> 품절</label>
+                                    <label><input type="radio" name="status" value="삭제"> 삭제</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 가격 및 재고 등록 영역-->
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <h5>가격 및 재고</h5>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">정가</td>
+                                <td>
+                                    <input type="text" class="form-control-sm price" th:field="*{listPrice}"> 원
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">할인율</td>
+                                <td>
+                                    <input type="text" th:field="*{discountRate}" class="form-control-sm price">
+                                    <label for="sellingPrice" class="ms-5">판매가격</label>
+                                    <input id="sellingPrice" type="text"
+                                           th:value="${#numbers.formatInteger(product.listPrice * (1 - product.discountRate), 1, 'COMMA')}"
+                                           class="form-control-sm" disabled> 원
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">재고</td>
+                                <td>
+                                    <input type="text" th:field="*{stock}" class="form-control-sm"> 개
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 이미지 등록 영역-->
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <h5>이미지</h5>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">대표 이미지</td>
+                                <td>
+                                    <input type="text" class="form-control" th:field="*{coverImg}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">썸네일 이미지</td>
+                                <td>
+                                    <input type="text" class="form-control" th:field="*{thumbnailImg}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 250px;">설명 이미지</td>
+                                <td>
+                                    <input type="text" class="form-control" th:field="*{descriptionImg}">
+                                </td>
+                            </tr>
+                        </table>
+                        <p style="font-size: smaller; color: #888;">- 이미지는 URL 형식으로 입력해야 합니다.</p>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="createProductScript" type="text/javascript">
+    $(function () {
+
+        $("#topCategoryNo").change(function () {
+            const topCategoryNo = $(this).val();
+            let $secondCategorySelector = $("#secondCategoryNo");
+            getSubCategoryOptions(topCategoryNo, $secondCategorySelector);
+        })
+
+        $("#secondCategoryNo").change(function () {
+            const secondCategoryNo = $(this).val();
+            let $thirdCategorySelector = $("#thirdCategoryNo");
+            getSubCategoryOptions(secondCategoryNo, $thirdCategorySelector);
+        })
+
+        function getSubCategoryOptions(superCategoryNo, $selector) {
+
+            $.ajax({
+                url: "/admin/getSubCategories",
+                method: "GET",
+                data: {categoryNo: superCategoryNo},
+                success: function (subCategories) {
+                    $selector.empty();
+
+                    subCategories.forEach(secondLevelCategory => {
+                        let option = $('<option>')
+                            .val(secondLevelCategory.no)
+                            .text(secondLevelCategory.name);
+
+                        $selector.append(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        }
+
+        // 판매가격 표시
+        $("input.price").on("input", function () {
+            let discountRate = parseFloat($("input[name='discountRate']").val());
+            let listPrice = parseFloat($("input[name='listPrice']").val());
+
+            let sellingPrice = Math.round(listPrice * (1 - discountRate));
+            $("#sellingPrice").val(sellingPrice.toLocaleString());
+        });
+
+    });
+</script>
+
+</html>

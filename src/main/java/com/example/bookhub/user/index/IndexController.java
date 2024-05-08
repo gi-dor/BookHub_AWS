@@ -37,12 +37,16 @@ public class IndexController {
 
     @GetMapping("/dates")
     public Object findInquiryByDate(@RequestParam("startDate") String startDate ,
-                                    @RequestParam("endDate") String endDate) {
+                                    @RequestParam("endDate") String endDate,
+                                    @RequestParam("id") String id) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime startDate1 =  LocalDateTime.parse(startDate, formatter);
         LocalDateTime endDate1 = LocalDateTime.parse(endDate, formatter);
 
-        List<Inquiry> inquiryList = myPageService.findInquiryByDate(startDate1,endDate1);
+
+        User user = userService.selectUserById(id);
+
+        List<Inquiry> inquiryList = myPageService.findInquiryByDate(startDate1,endDate1 , user.getId());
         return inquiryList;
     }
 

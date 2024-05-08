@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.main.mapper.CateListMapper">
+
+    <select id="getCategory" parameterType="int" resultType="com.example.bookhub.product.vo.Category">
+        select
+            CATEGORY_NO AS no,
+            CATEGORY_NAME AS name
+        from CATEGORY
+        where CATEGORY_NO = #{value}
+    </select>
+
     <select id="categoryList" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
         SELECT
         B.BOOK_NO,
@@ -62,7 +71,7 @@
                 AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
             </when>
             <otherwise>
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
             </otherwise>
         </choose>
         <choose>
@@ -83,6 +92,7 @@
             </otherwise>
         </choose>
         LIMIT #{offset}, #{recordSize};
+
     </select>
 
 
@@ -107,7 +117,6 @@
     <select id="count" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultType="int" >
         SELECT
         COUNT(*)
-
         FROM
         BOOK B, BOOK_IMAGES BI, BOOK_AUTHOR BA, AUTHOR A, PUBLISHER P,CATEGORY C
         WHERE
@@ -150,11 +159,10 @@
                 AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
             </when>
             <otherwise>
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
             </otherwise>
         </choose>
 
 
     </select>
-
 </mapper>
