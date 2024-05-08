@@ -10,7 +10,7 @@
         <result column="final_price" property="finalPrice"/>
         <result column="point_accumulation_amount" property="pointAccumulationAmount"/>
         <result column="buy_date" property="buyDate"/>
-        <result column="gift" property="gift"/>
+        <result column="gift_yn" property="giftYn"/>
         <result column="order_id" property="orderId"/>
     </resultMap>
 
@@ -23,7 +23,7 @@
                final_price,
                point_accumulation_amount,
                buy_date,
-               gift,
+               gift_yn,
                order_id
         from BUY
         where buy_no = #{value}

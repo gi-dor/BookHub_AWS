@@ -1,7 +1,7 @@
 <html  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
        layout:decorate="~{layout/base}">
 <th:block layout:fragment="style">
-    <link rel="stylesheet" th:href="@{/css/product/buyOrder.css}" />
+    <link rel="stylesheet" th:href="@{/css/product/order.css}" />
 </th:block>
 <div layout:fragment="content" class="container my-3">
     <form method="post" id="form-order" th:action="@{/kakaoPay/ready}">
