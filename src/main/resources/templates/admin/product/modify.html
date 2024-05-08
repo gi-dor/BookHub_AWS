@@ -111,7 +111,7 @@
                             <tr>
                                 <td class="bg-light align-middle text-center" style="width: 250px;">정가</td>
                                 <td>
-                                    <input name="listPrice" type="text" class="form-control-sm"
+                                    <input name="listPrice" type="text" class="form-control-sm price"
                                            th:value="${product.listPrice}"> 원
                                 </td>
                             </tr>
@@ -119,10 +119,10 @@
                                 <td class="bg-light align-middle text-center" style="width: 250px;">할인율</td>
                                 <td>
                                     <input name="discountRate" type="text" th:value="${product.discountRate}"
-                                           class="form-control-sm">
+                                           class="form-control-sm price">
                                     <span class="ms-5">판매가격</span>
                                     <input id="sellingPrice" type="text"
-                                           th:value="${#numbers.formatInteger(product.listPrice * product.discountRate, 1, 'COMMA')}"
+                                           th:value="${#numbers.formatInteger(product.listPrice * (1 - product.discountRate), 1, 'COMMA')}"
                                            class="form-control-sm" disabled> 원
                                 </td>
                             </tr>
@@ -181,12 +181,13 @@
             });
         }
 
-        $("input[name='discountRate']").on("input", function () {
-            let discountRate = parseFloat($(this).val());
-            let listPrice = parseFloat($("input[name='listPrice']").val().replace(/\,/g, ''));
 
-            let discountPrice = Math.round(listPrice * discountRate);
-            $("#sellingPrice").val(discountPrice.toLocaleString());
+        $("input.price").on("input", function () {
+            let discountRate = parseFloat($("input[name='discountRate']").val());
+            let listPrice = parseFloat($("input[name='listPrice']").val());
+
+            let sellingPrice = Math.round(listPrice * (1 - discountRate));
+            $("#sellingPrice").val(sellingPrice.toLocaleString());
         });
 
     });
