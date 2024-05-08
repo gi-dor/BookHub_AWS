@@ -56,6 +56,7 @@ $(".btn-add-cart").click(function () {
     }
 
     $("#book-form").attr("action", "/product/cart/add").trigger("submit");
+    alert("장바구니에 담았습니다.");
 });
 
     // 전체 선택
@@ -79,5 +80,6 @@ $(".btn-add-cart").click(function () {
         }
 
         $("#book-form").attr("action", "/product/wishlist/add").trigger("submit");
+        alert("위시리스트에 담았습니다.");
     });
 
