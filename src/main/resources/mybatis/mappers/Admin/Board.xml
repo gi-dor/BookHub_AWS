@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.BoardMapper">
+
+    <!-- 재사용 조건절 -->
+    <sql id="where">
+        <where>
+            <!-- 검색어 -->
+            <if test="filter.opt != null">
+                <choose>
+                    <when test="filter.opt == 'writer'">
+                        A.ADMIN_ID = #{filter.keyword}
+                    </when>
+                    <when test="filter.opt == 'title'">
+                        AND N.NOTICE_TITLE = #{filter.keyword}
+                    </when>
+                    <when test="filter.opt == 'content'">
+                        AND N.NOTICE_CONTETNT = #{filter.keyword}
+                    </when>
+                </choose>
+            </if>
+
+            <!-- 기간 검색 -->
+            <if test="filter.moreDate != '' and filter.lessDate != ''">
+                <choose>
+                    <when test="filter.dateOpt == 'createdDate'">
+                        AND B.BOOK_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                    <when test="filter.dateOpt == 'updatedDate'">
+                        AND B.BOOK_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                </choose>
+            </if>
+
+            <if test="filter.moreDate == '' and filter.lessDate != ''">
+                <choose>
+                    <when test="filter.dateOpt == 'createdDate'">
+                        AND B.BOOK_CREATED_DATE BETWEEN '0001-01-01 00:00:00'
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                    <when test="filter.dateOpt == 'updatedDate'">
+                        AND B.BOOK_UPDATED_DATE BETWEEN '0001-01-01 00:00:00'
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                </choose>
+            </if>
+
+            <if test="filter.moreDate != '' and filter.lessDate == ''">
+                <choose>
+                    <when test="filter.dateOpt == 'createdDate'">
+                        AND B.BOOK_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND '9999-12-31 23:59:59'
+                    </when>
+                    <when test="filter.dateOpt == 'updatedDate'">
+                        AND B.BOOK_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND '9999-12-31 23:59:59'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </sql>
+
+    <select id="getTotalRows" resultType="int">
+        SELECT
+                count(*)
+        FROM
+                BookHub.NOTICE N
+                INNER JOIN ADMIN A ON A.ADMIN_NO = N.ADMIN_NO
+        <include refid="where"></include>
+    </select>
+
+    <select id="getPosts" resultType="com.example.bookhub.admin.dto.Posts">
+    		SELECT
+                    N.NOTICE_NO                   AS no,
+    		        N.NOTICE_TITLE			      AS title,
+    				N.NOTICE_CONTENT           	  AS content,
+                    N.NOTICE_PRIORITY			  AS priority,
+                    N.NOTICE_CREATED_DATE         AS createdDate,
+                    N.NOTICE_UPDATED_DATE         AS updatedDate,
+                    A.ADMIN_ID                    AS writer
+
+    		FROM
+                    BookHub.NOTICE N
+                    INNER JOIN ADMIN A ON A.ADMIN_NO = N.ADMIN_NO
+
+            <include refid="where"></include>
+
+            <choose>
+                    <when test="sort == 'recentlyCreated'">
+                        ORDER BY NOTICE_CREATED_DATE DESC
+                    </when>
+                    <when test="sort == 'recentlyUpdated'">
+                        ORDER BY NOTICE_UPDATED_DATE DESC
+                    </when>
+                    <when test="sort == 'priority'">
+                        ORDER BY NOTICE_PRIORITY ASC
+                    </when>
+            </choose>
+
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+</mapper>

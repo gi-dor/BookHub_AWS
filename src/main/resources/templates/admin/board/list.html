@@ -1,0 +1,453 @@
+<html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="boardList" class="container-fluid">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h3>게시글 조회</h3>
+
+                <!-- 필터 선택 영역-->
+                <form th:action="@{/admin/board/list}" th:object="${filter}">
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <td class="bg-light">검색어</td>
+                                <td>
+                                    <select th:field="*{filter.opt}" class="form-select-sm">
+                                        <option value="null">전체</option>
+                                        <option value="productName">작성자</option>
+                                        <option value="authorName">제목</option>
+                                        <option value="publisherName">내용</option>
+                                    </select>
+                                    <input type="text" th:field="*{filter.keyword}" placeholder="검색어를 입력하세요"
+                                           class="form-control-sm">
+                                    <input type="checkbox" th:field="*{filter.deleteYN}" class="form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light">기간 검색</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <select th:field="*{filter.dateOpt}" class="form-select-sm me-2">
+                                            <option value="createdDate">등록일</option>
+                                            <option value="updatedDate">수정일</option>
+                                        </select>
+                                        <input th:field="*{filter.moreDate}" type="date" class="form-control-sm me-2"> -
+                                        <input th:field="*{filter.lessDate}" type="date"
+                                               class="form-control-sm ms-2 me-2">
+                                        <div class="input-group">
+                                            <input type="hidden" th:field="*{filter.period}"/>
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="0"
+                                                    th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
+                                            </button>
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="3"
+                                                    th:classappend="${filter.period == '3' ? 'active' : ''}">3일간
+                                            </button>
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="7"
+                                                    th:classappend="${filter.period == '7' ? 'active' : ''}">일주일
+                                            </button>
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="30"
+                                                    th:classappend="${filter.period == '30' ? 'active' : ''}">1개월
+                                            </button>
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="90"
+                                                    th:classappend="${filter.period == '90' ? 'active' : ''}">3개월
+                                            </button>
+                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                    type="button" data-offset="all"
+                                                    th:classappend="${filter.period == 'all' ? 'active' : ''}">전체
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light">분류</td>
+                                <td>
+                                    <label><input type="radio" value="공지" th:field="boardType"> 공지</label>
+                                    <label><input type="radio" value="미정1" th:field="boardType"> 미정1</label>
+                                    <label><input type="radio" value="미정2" th:field="boardType"> 미정2</label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
+                        </div>
+                    </div>
+
+                    <!-- 조회 결과 영역 -->
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <input type="hidden" name="page"/>
+                        <div class="my-3 d-flex justify-content-between">
+                            <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
+                            <div class="d-flex">
+                                <!-- 조회 개수 설정 -->
+                                <select class="form-control-sm me-2" th:field="*{filter.rows}">
+                                    <option value="10">10개씩</option>
+                                    <option value="20">20개씩</option>
+                                    <option value="50">50개씩</option>
+                                    <option value="100">100개씩</option>
+                                </select>
+
+                                <!-- 조회 정렬 설정-->
+                                <select class="form-control-sm" th:field="*{filter.sort}">
+                                    <option value="recentlyCreated">최근 등록일 순</option>
+                                    <option value="recentlyUpdated">최근 수정일 순</option>
+                                    <option value="priority">우선순위 순</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- 선택 삭제 버튼 -->
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="text-left">
+                                <button id="btn-delete" type="button" class="btn btn-outline-secondary btn-sm">선택 삭제
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 조회 리스트 -->
+                        <table class="table text-center" id="table-products" th:if="${paging.totalRows != 0}">
+                            <colgroup>
+                                <col width="5%">
+                                <col width="5%">
+                                <col width="*">
+                                <col width="10%">
+                                <col width="10%">
+                                <col width="10%">
+                                <col width="15%">
+                                <col width="15%">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th><input id="chk-select-all-product" type="checkbox"></th>
+                                <th>번호</th>
+                                <th>분류</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>등록일/수정일</th>
+                                <th>조회수</th>
+                                <th>우선순위</th>
+                                <th>관리</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--
+                                ** 게시글 순번 **
+
+                                1. 마지막 숫자부터 시작
+                                    전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
+                                    ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
+
+                                2. 1번부터 시작
+                                    ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
+                                    ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
+                            -->
+                            <tr th:each="post, loop : ${posts}">
+                                <td><input name="selectProduct" type="checkbox" th:data-delete-no="${post.no}"></td>
+                                <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
+                                    번호
+                                </td>
+                                <td th:text="${post.boardType}">분류</td>
+                                <td>
+                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${post.title}">제목</a>
+                                </td>
+                                <td th:text="${post.writer}">작성자</td>
+                                <td th:text="${post.view}">조회수</td>
+                                <td th:text="${post.priority}">우선순위</td>
+                                <td>
+                                    <p th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                    <p th:text="${#dates.format(post.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                </td>
+                                <td>
+                                    <button id="btn-modify-post-${post.no}" type="button"
+                                            class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">수정
+                                    </button>
+                                    <button id="btn-delete-post-${post.no}" type="button"
+                                            class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">삭제
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
+                            <p>조회된 결과가 없습니다.</p>
+                        </div>
+
+                        <!-- 페이징 처리-->
+                        <!--
+                               th:classappend="${조건식} ? 값1 : 값2"
+                               th:classappend="${조건식} ? 값1"
+                                   조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
+                                   조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
+                                   * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                        -->
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                                <a th:href="@{/admin/product/list(page=${paging.currentPage - 1})}"
+                                   class="page-link">이전</a>
+                            </li>
+
+                            <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
+                                th:if="${num >= 1 and num <= paging.totalPages}"
+                                class="page-item"
+                                th:classappend="${num == paging.currentPage} ? 'active'">
+                                <a th:href="@{/admin/product/list(page=${num})}" th:text="${num}"
+                                   class="page-link">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                                <a th:href="@{/admin/product/list(page=${paging.currentPage + 1})}"
+                                   class="page-link">다음</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="boardListScript" type="text/javascript">
+    /*$(function () {
+
+        $("#topCategoryNo").change(function () {
+            const topCategoryNo = $(this).val();
+            let $secondCategorySelector = $("#secondCategoryNo");
+            getSubCategoryOptions(topCategoryNo, $secondCategorySelector);
+        })
+
+        $("#secondCategoryNo").change(function () {
+            const secondCategoryNo = $(this).val();
+            let $thirdCategorySelector = $("#thirdCategoryNo");
+            getSubCategoryOptions(secondCategoryNo, $thirdCategorySelector);
+        })
+
+        function getSubCategoryOptions(superCategoryNo, $selector) {
+
+            $.ajax({
+                url: "/admin/getSubCategories",
+                method: "GET",
+                data: {categoryNo: superCategoryNo},
+                success: function (subCategories) {
+                    $selector.not(':first').empty();
+
+                    subCategories.forEach(secondLevelCategory => {
+                        let option = $('<option>')
+                            .val(secondLevelCategory.no)
+                            .text(secondLevelCategory.name);
+
+                        $selector.append(option);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생:", error);
+                }
+            });
+        }
+
+        $("#btn-reset").click(function () {
+            // 검색어 초기화
+            $("select[name='opt']").val("null");
+            $("input[name='keyword']").val("");
+
+            // 카테고리 초기화
+            $("select[name='topCategoryNo']").val("0");
+            $("select[name='secondCategoryNo']").val("0");
+            $("select[name='thirdCategoryNo']").val("0");
+
+            // 기간 검색 초기화
+            $("select[name='dateOpt']").val("createdDate");
+            $("input[name='moreDate']").val("");
+            $("input[name='lessDate']").val("");
+            $("button[name='btn-date']").removeClass("active");
+
+            // 판매 상태 초기화
+            $("#chk-select-all-status").prop("checked", false);
+            $("input[name='status']").prop("checked", false);
+
+            // 재고 초기화
+            $("#stockOpt").val("0");
+            $("input[name='moreStock']").val("0");
+            $("input[name='lessStock']").val("0");
+
+            // 출판사 초기화
+            $("select[name='publisherNo']").val("0");
+        });
+
+        // '전체' 체크박스를 선택하면 '정상', '절판', '품절' 체크박스도 선택된다.
+        $("#chk-select-all-status").click(function () {
+            checkAll();
+        });
+
+        function checkAll() {
+            let isChecked = $("#chk-select-all-status").prop("checked");
+            $("input.chk-status").prop("checked", isChecked);
+        }
+
+        // 판매 상태 체크박스를 선택하지 않으면 모두 선택되도록 함
+        checkAll2();
+
+        function checkAll2() {
+            let checkedBox = $("input.chk-status:checked").length;
+            const NONE_CHECKED_BOX = 0;
+            if (checkedBox === NONE_CHECKED_BOX) {
+                checkAll();
+            }
+        }
+
+        $("input.chk-status").click(function () {
+            updateSelectAllStatusCheckbox();
+        });
+
+        updateSelectAllStatusCheckbox();
+
+        // '정상', '절판', '품절' 체크박스가 모두 선택된 경우 '전체' 체크박스를 선택하고, 아닌 경우 선택 해제한다.
+        function updateSelectAllStatusCheckbox() {
+            let checkedBox = $("input.chk-status:checked").length;
+            let numberOfStatusCheckboxes = $("input.chk-status").length;
+
+            if (checkedBox === numberOfStatusCheckboxes) {
+                $("#chk-select-all-status").prop("checked", true);
+            }
+            if (checkedBox !== numberOfStatusCheckboxes) {
+                $("#chk-select-all-status").prop("checked", false);
+            }
+        }
+
+        $("#stockOpt").change(function () {
+            let selectedValue = $(this).val();
+            const stockOfOptOne = $("#opt1").val();
+            const stockOfOptTwo = $("#opt2").val();
+            const stockOfOptThree = $("#opt3").val();
+            const stockOfOptFour = $("#opt4").val();
+            const stockOfOptFive = $("#opt5").val();
+
+            if (selectedValue === stockOfOptOne) {
+                $("#lessStock").val(stockOfOptOne);
+            }
+            if (selectedValue === stockOfOptTwo) {
+                $("#lessStock").val(stockOfOptTwo);
+            }
+            if (selectedValue === stockOfOptThree) {
+                $("#lessStock").val(stockOfOptThree);
+            }
+            if (selectedValue === stockOfOptFour) {
+                $("#lessStock").val(stockOfOptFour);
+            }
+            if (selectedValue === stockOfOptFive) {
+                $("#lessStock").val(stockOfOptFive);
+            }
+        });
+
+        // 기간 검색 버튼 클릭 시 해당 날짜 입력
+        $("button[name='btn-date']").click(function () {
+            let offset = $(this).data('offset');
+            let today = new Date();
+
+            if (offset === 'all') {
+                $("#moreDate").val('');
+                $("#lessDate").val('');
+            }
+            if (offset !== 'all') {
+                let endDate = new Date(today);
+                endDate.setDate(today.getDate() - parseInt(offset));
+                $("#moreDate").val(endDate.toISOString().split('T')[0]);
+                $("#lessDate").val(today.toISOString().split('T')[0]);
+            }
+
+            $("button[name='btn-date']").removeClass("active");
+            $(this).addClass("active");
+
+            $("input[name=period]").val(offset);
+        });
+
+        $("input[name$='Date']").click(function () {
+            $("button[name='btn-date']").removeClass("active");
+        });
+
+        $("select[name='rows']").change(function () {
+            $(this).closest('form').submit();
+        });
+
+        $("select[name='sort']").change(function () {
+            $(this).closest('form').submit();
+        });
+
+        // '전체 선택' 체크박스를 선택하면 각 상품 체크박스를 모두 선택한다.
+        $("#chk-select-all-product").click(function () {
+            let isChecked = $(this).prop("checked");
+
+            $("input[name='selectProduct']").prop("checked", isChecked);
+        });
+
+        $("input[name='selectProduct']").click(function () {
+            updateSelectAllProductCheckbox();
+        });
+
+        // 각 상품의 체크박스를 모두 선택하면 '전체 선택' 체크박스가 선택된다. 그렇지 않은 경우 '전체 선택' 체크박스가 선택 해제된다.
+        function updateSelectAllProductCheckbox() {
+            let checkedBox = $("input[name='selectProduct']:checked").length;
+            let numberOfStatusCheckboxes = $("input[name='selectProduct']").length;
+
+            if (checkedBox === numberOfStatusCheckboxes) {
+                $("#chk-select-all-product").prop("checked", true);
+            }
+            if (checkedBox !== numberOfStatusCheckboxes) {
+                $("#chk-select-all-product").prop("checked", false);
+            }
+        }
+
+        // 상품 선택 삭제 함수
+        $("#btn-delete").click(function () {
+            let checkedNos = [];
+            $("#table-products tbody :checkbox:checked").each(function () {
+                checkedNos.push($(this).data("deleteNo"));
+            });
+            console.log(checkedNos);
+            if (checkedNos.length === 0) {
+                alert("선택된 상품이 없습니다.");
+                return;
+            }
+
+            if (!confirm("선택한 상품을 삭제하시겠습니까?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/product/delete",
+                type: "POST",
+                data: JSON.stringify(checkedNos), // [100, 100, 100]
+                contentType: 'application/json',
+                success: function () {
+                    $("#table-products tbody :checkbox:checked").closest("tr").remove();
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                },
+                complete: function () {
+                    alert("삭제가 완료되었습니다.");
+                }
+            });
+        });
+
+        // 상품 수정 함수
+        $("[id^=btn-modify-product]").click(function () {
+            let productNo = $(this).data("no");
+            window.location.href = "/admin/product/modify?no=" + productNo;
+        });
+
+    });*/
+
+</script>
+
+</html>
