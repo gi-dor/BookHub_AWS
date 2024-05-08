@@ -30,6 +30,15 @@ public class CartController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/add")
+    public String addCart(@RequestParam("no") List<Long> bookNoList, Principal principal) {
+
+        cartService.addCart(bookNoList, principal.getName());
+
+        return "redirect:/product/cart";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create/{bookNo}")
     @ResponseBody
     public ResponseEntity<String> createCart(@PathVariable("bookNo") long bookNo, Principal principal){

@@ -30,7 +30,9 @@ public class BookController {
 
     @GetMapping("/detail")
     public String home(@RequestParam("bookNo") long bookNo, Model model, Principal principal,
-                       @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue="date") String sort){
+                       @RequestParam(required = false, defaultValue = "1") int page,
+                       @RequestParam(required = false, defaultValue="date") String sort,
+                       @RequestParam(required = false, defaultValue="total") String option){
         BookDto book = bookService.getBookDetailByNo(bookNo);
         if(principal != null) {
             userId = principal.getName();
@@ -42,7 +44,7 @@ public class BookController {
         List<BookAuthor> bookAuthorList = bookService.getAuthorByBookNo(bookNo);
 
         String wishListYn = wishListService.getWishListYn(bookNo, userId);
-        ReviewListDto reviewListDto = reviewService.getReviewsByBookNo(bookNo, userId, page, sort);
+        ReviewListDto reviewListDto = reviewService.getReviewsByBookNo(bookNo, userId, page, sort, option);
         String buyerYn = buyService.getBuyerYn(bookNo, userId);
 
         model.addAttribute("book", book);
@@ -51,6 +53,8 @@ public class BookController {
         model.addAttribute("reviewDtoList", reviewListDto.getReviewDtoList());
         model.addAttribute("page", reviewListDto.getPagination());
         model.addAttribute("buyerYn", buyerYn);
+        model.addAttribute("option", option);
+        model.addAttribute("sort", sort);
 
         return "product/book/detail";
     }

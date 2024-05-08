@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RefundMapper {
@@ -17,5 +18,7 @@ public interface RefundMapper {
     void deleteCouponUsedByBuyNo(long buyNo);
     void updateCouponProducedUsedByBuyNo(long buyNo);
     void updatePointUsedByUserNo(@Param("userNo") long userNo, @Param("totalPointUseAmount") int totalPointUseAmount);
-
+    void refundPartBuy(Map<String, Object> map);
+    void refundPartBuyBook(@Param("buyNo") long buyNo, @Param("bookNo") long bookNo, @Param("count") int count);
+    void deleteRefundBuyBook();
 }

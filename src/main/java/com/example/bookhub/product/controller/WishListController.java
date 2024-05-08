@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/product/wishlist")
@@ -29,5 +30,12 @@ public class WishListController {
     public ResponseEntity<Void> deleteWishList(@PathVariable("bookNo") long bookNo, Principal principal){
         wishListService.deleteWishList(bookNo, principal.getName());
         return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/add")
+    public String addWishList(@RequestParam("no") List<Long> bookNoList, Principal principal) {
+        wishListService.addWishList(bookNoList, principal.getName());
+        return "redirect:/product/wishlist";
     }
 }

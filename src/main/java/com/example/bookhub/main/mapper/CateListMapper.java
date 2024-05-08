@@ -3,6 +3,7 @@ package com.example.bookhub.main.mapper;
 
 import com.example.bookhub.main.dto.BookDto;
 import com.example.bookhub.main.dto.SearchCriteria;
+import com.example.bookhub.product.vo.Category;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -22,5 +23,7 @@ public interface CateListMapper {
      * @return 검색 수
      */
     int count(SearchCriteria criteria);
+
+    Category getCategory(int categoryNo);
 
 }

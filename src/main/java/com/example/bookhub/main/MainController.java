@@ -8,7 +8,7 @@ public class MainController {
 
     @GetMapping("/")
     public String mainPage() {
-        return "main";
+        return "main/main2";
     }
 
 
@@ -17,10 +17,6 @@ public class MainController {
         return "navbar";
     }
 
-    @GetMapping("/main2")
-    public String mainPage2() {
-        return "main/main2";
-    }
 
     @GetMapping("/list")
     public String BestSellerList() {

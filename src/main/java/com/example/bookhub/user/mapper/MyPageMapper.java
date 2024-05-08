@@ -41,7 +41,8 @@ public interface MyPageMapper {
 
 
     List<Inquiry> findInquiryByDate(@Param("startDate") LocalDateTime startDate,
-                                    @Param("endDate") LocalDateTime endDate);
+                                    @Param("endDate") LocalDateTime endDate,
+                                    @Param("id") String id);
 
     List<OrderListDTO> selectOrderListByIdPaging(@Param("id") String id, @Param("offset") int offset);
 

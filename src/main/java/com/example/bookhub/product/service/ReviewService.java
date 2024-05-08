@@ -66,26 +66,28 @@ public class ReviewService {
             }
     }
 
-    public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort) {
+    public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort, String option) {
         long userNo = 0;
         if(!"guest".equals(userId)) {
             User user = userMapper.selectUserById(userId);
             userNo = user.getNo();
         }
 
-        int totalRows = reviewMapper.getReviewTotalRows(bookNo);
+        Map map = new HashMap<String, Object>();
+        map.put("bookNo", bookNo);
+        map.put("userNo", userNo);
+        map.put("sort", sort);
+        map.put("option", option);
+
+        int totalRows = reviewMapper.getReviewTotalRows(map);
         Pagination pagination = new Pagination(page, totalRows);
 
         int offset = 0;
         if(totalRows > 0) {
             offset = pagination.getBegin() - 1;
         }
-
-        Map map = new HashMap<String, Object>();
-        map.put("bookNo", bookNo);
-        map.put("userNo", userNo);
-        map.put("sort", sort);
         map.put("offset", offset);
+
         List<ReviewDto> reviewDtoList = reviewMapper.getReviewsByBookNo(map);
 
         ReviewListDto reviewListDto = new ReviewListDto(reviewDtoList, pagination);

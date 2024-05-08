@@ -24,12 +24,6 @@ public class BestSellerService {
                 if (book.getDescription() == null) {
                     book.setDescription(""); // null인 경우 빈 문자열로 설정
                 }
-
-                // bookDescription이 100글자를 초과하는 경우 처음 100글자만을 남기고 "..."을 추가합니다.
-                if (book.getDescription().length() > 100) {
-                    book.setDescription(book.getDescription().substring(0, 100) + "...");
-                }
-
             }
         }
 

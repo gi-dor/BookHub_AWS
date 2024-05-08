@@ -2,6 +2,7 @@ package com.example.bookhub.user.service;
 
 import com.example.bookhub.user.dto.UserDetailsImpl;
 import com.example.bookhub.user.dto.UserSignupForm;
+import com.example.bookhub.user.exception.UserJoinException;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.util.MailService;
 import com.example.bookhub.user.util.RandomPassword;
@@ -84,20 +85,24 @@ public class UserService implements UserDetailsService {
      * @return 등록된 사용자
      * @throws RuntimeException 이미 존재하는 아이디나 이메일일 경우 발생
      */
-    public User registerUser(UserSignupForm form) throws Exception {
+    public User registerUser(UserSignupForm form) {
         long beforeTime = System.currentTimeMillis();
+
+        User saveUser = userMapper.selectUserById(form.getId());
+
+        if (saveUser != null) {
+            throw new UserJoinException("[" + form.getId() +"]는 이미 사용중인 아이디입니다");
+        }
+
+        User user = form.toEntity(passwordEncoder);
+        userMapper.insertUser(user);
+
 
         String to = form.getEmail1() + "@" + form.getEmail2();
         String subject = "회원 가입이 완료되었습니다.";
         String html = mailService.registerHtmlTemplate(form); // load
         mailService.sendEmail(to, subject, html);
 
-        if (userMapper.selectUserById(form.getId()) != null) {
-            throw new RuntimeException("이미 존재하는 아이디입니다: " + form.getId());
-        }
-
-        User user = form.toEntity(passwordEncoder);
-        userMapper.insertUser(user);
 
         long afterTime = System.currentTimeMillis();
         long diffTime = afterTime - beforeTime;
@@ -107,7 +112,7 @@ public class UserService implements UserDetailsService {
     }
 
     // 회원가입 - 이메일 보내기 ( 비동기 사용하기 )
-    public User registerUserAsync(UserSignupForm form) throws Exception {
+    public User registerUserAsync(UserSignupForm form)  {
         long beforeTime = System.currentTimeMillis();
 
         CompletableFuture<Boolean> future = mailService.sendEmailAsync(form);
@@ -120,7 +125,7 @@ public class UserService implements UserDetailsService {
         });
 
         if (userMapper.selectUserById(form.getId()) != null) {
-            throw new RuntimeException("이미 존재하는 아이디입니다: " + form.getId());
+            throw new UserJoinException("이미 존재하는 아이디입니다: " + form.getId());
         }
 
         User user = form.toEntity(passwordEncoder);
