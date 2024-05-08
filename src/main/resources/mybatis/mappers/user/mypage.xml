@@ -32,7 +32,7 @@
         (select y.BOOK_NAME
          from  BUY_BOOK bb , BOOK y
          where bb.BOOK_NO = y.BOOK_NO
-         order by y.BOOK_NO DESC
+         and b.BUY_NO = bb.BUY_NO
          limit 1)
                                             as "book.name",
         (select count(*)
@@ -217,9 +217,12 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
             i.INDIVIDUAL_INQUIRY_ANSWER_YN      as answerYn,
             i.INDIVIDUAL_INQUIRY_DELETE_YN      as deleteYn,
             i.INDIVIDUAL_INQUIRY_CREATE_DATE    as createdDate ,
-            i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate
-        from INDIVIDUAL_INQUIRIES i
+            i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate,
+            u.USER_ID                           as "user.id"
+        from INDIVIDUAL_INQUIRIES i , USER u
         where INDIVIDUAL_INQUIRY_CREATE_DATE BETWEEN #{startDate} AND #{endDate}
+          and u.USER_ID = #{id}
+        order by i.INDIVIDUAL_INQUIRY_CREATE_DATE desc
     </select>
 
     <select id="selectOrderDetailById" resultType="com.example.bookhub.user.dto.OrderDetailDTO">

@@ -16,12 +16,12 @@
                             <div class="row" >
                                 <div class="col-3">
                                     <input type="text" class="form-control" th:field="*{id}" id="id" placeholder="아이디 입력" />
-                                    <div th:errors="*{id}" class="text-danger"></div>
                                 </div>
                                 <div class="col-2">
                                     <button class="btn btn-secondary" type="button" onclick="idCheck()"  id="btn-check-id" >중복체크</button>
                                 </div>
                                 <div class="col-6">
+                                    <div th:errors="*{id}" class="text-danger"></div>
                                     <span class="id_ok">사용 가능한 아이디입니다.</span>
                                     <span class="id_already">누군가 이 아이디를 사용하고 있어요.</span>
                                     <p class="form-text" style="font-family: Arial, sans-serif; color: grey;">영어 소문자와 숫자만 사용하여 5~20자리여야 합니다.</p>
