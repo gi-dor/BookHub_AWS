@@ -23,7 +23,7 @@ public interface ReturnMapper {
     void deleteBuyCancelAllBuyBook(long buyNo);
     void deleteBuyCancelBuyBook(long buyNo);
     List<ReturnReason> getReturnReasonList();
-    void insertRefund(Return returnProduct);
+    void insertReturn(Return returnProduct);
     void insertReturnBook(ReturnBook returnBook);
     Return getRefundByReturnNo(long refundNo);
     void updateBuyStatus(@Param("buyNo") long buyNo, @Param("buyStatusNo") long buyStatusNo);

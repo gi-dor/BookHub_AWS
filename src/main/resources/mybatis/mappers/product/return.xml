@@ -169,7 +169,7 @@
             RETURN_REASON
     </select>
 
-    <insert id="insertRefund" parameterType="com.example.bookhub.product.vo.Return">
+    <insert id="insertReturn" parameterType="com.example.bookhub.product.vo.Return">
         insert into RETURNS
         (buy_no, return_reason_no, user_no, return_price, return_type)
         values

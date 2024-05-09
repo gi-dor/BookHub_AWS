@@ -28,8 +28,10 @@ public class ReturnController {
     }
 
     @PostMapping("/refund")
-    public String refundPart(ReturnForm returnForm, Principal principal){
+    public String refund(ReturnForm returnForm, Principal principal, Model model){
         returnService.createRefund(returnForm, principal.getName());
+
+        model.addAttribute("returnType", "환불");
         return "/product/return/success";
     }
 
@@ -38,6 +40,14 @@ public class ReturnController {
          returnService.refundApprove(refundNo);
 
         return ResponseEntity.ok().body("환불승인완료");
+    }
+
+    @PostMapping("/exchange")
+    public String exchange(ReturnForm returnForm, Principal principal, Model model){
+        returnService.createExchange(returnForm, principal.getName());
+
+        model.addAttribute("returnType", "교환");
+        return "/product/return/success";
     }
 
 

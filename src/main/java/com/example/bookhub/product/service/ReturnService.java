@@ -119,7 +119,7 @@ public class ReturnService {
         User user = userMapper.selectUserById(userId);
 
         long returnNo = insertRefund(buy, returnForm, user);
-        insertRefundBook(returnNo, returnForm);
+        insertReturnBook(returnNo, returnForm);
         returnMapper.updateBuyStatus(buy.getBuyNo(), 7);
     }
 
@@ -137,11 +137,11 @@ public class ReturnService {
                 .type("환불")
                 .build();
 
-        returnMapper.insertRefund(returnProduct);
+        returnMapper.insertReturn(returnProduct);
         return returnProduct.getReturnNo();
     }
 
-    public void insertRefundBook(long returnNo, ReturnForm returnForm){
+    public void insertReturnBook(long returnNo, ReturnForm returnForm){
         for(int i = 0; i < returnForm.getReturnBookNoList().size(); i++){
             long bookNo = returnForm.getReturnBookNoList().get(i);
             int count = returnForm.getReturnCountList().get(i);
@@ -195,4 +195,27 @@ public class ReturnService {
         returnMapper.updatePointUsedByUserNo(user.getNo(), buy.getTotalPointUseAmount());
     }
 
+    public void createExchange(ReturnForm returnForm, String userId) {
+        Buy buy = returnMapper.getBuyByBuyNo(returnForm.getBuyNo());
+        User user = userMapper.selectUserById(userId);
+
+        long returnNo = insertExchange(buy, returnForm, user);
+        insertReturnBook(returnNo, returnForm);
+        returnMapper.updateBuyStatus(buy.getBuyNo(), 9);
+    }
+
+    public long insertExchange(Buy buy, ReturnForm returnForm, User user){
+        ReturnReason returnReason = new ReturnReason();
+        returnReason.setReturnReasonNo(returnForm.getReturnReasonNo());
+
+        Return returnProduct = Return.builder()
+                .returnReason(returnReason)
+                .buy(buy)
+                .user(user)
+                .type("교환")
+                .build();
+
+        returnMapper.insertReturn(returnProduct);
+        return returnProduct.getReturnNo();
+    }
 }
