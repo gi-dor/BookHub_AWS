@@ -260,6 +260,7 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
             user.USER_TEL           as "user.tel",
             buy.BUY_NO              as no,              -- 주문번호
             buy.BUY_DATE            as buyDate,             -- 구매날짜
+            delivery.DELIVERY_NO    as "userDelivery.no",
             delivery.RECIPIENT_NAME as "userDelivery.name",
             delivery.RECIPIENT_TEL  as "userDelivery.tel",
             delivery.USER_ZIP_CODE  as "userDelivery.zipCode",
@@ -271,7 +272,7 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
         and BUY_NO = #{no}
         and buy.USER_NO = user.USER_NO
         and user.USER_NO = delivery.USER_NO
-
+        and buy.DELIVERY_NO = delivery.DELIVERY_NO
     </select>
 
 
