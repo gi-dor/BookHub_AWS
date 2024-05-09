@@ -29,5 +29,10 @@
 <!--    DELETE FROM ATTENDANCE_CHECKS-->
 <!--</delete>-->
 
+<select id="attendanceCheckCount" resultType="int">
+    SELECT COUNT(*)
+    FROM ATTENDANCE_CHECKS
+    WHERE ATTENDANCE_CHECK_USER_NO = #{no}
+</select>
 
 </mapper>

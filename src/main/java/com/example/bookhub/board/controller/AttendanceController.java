@@ -6,6 +6,7 @@ import com.example.bookhub.user.service.UserService;
 import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
     private final UserService userService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/")
     public String attendance(Model model, Principal principal) {
 
@@ -41,6 +43,7 @@ public class AttendanceController {
         return "board/attendance/attendance";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/attendanceCheck.do")
     @ResponseBody
     public  List<Attendance> attendanceCheck(Principal principal) {
@@ -51,11 +54,15 @@ public class AttendanceController {
         return attendanceService.userAttendanceCheck(user.getNo());
 
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/attendanceCheck")
     public String insertAttendance(@RequestParam("userNo") int userNo) {
 
         attendanceService.insertAttendance(userNo);
+
+        if (attendanceService.attendanceCheckCount(userNo) == 10) {
+            attendanceService.insertAttendanceCoupon(userNo);
+        }
 
         return "redirect:/board/attendance/";
     }
