@@ -27,5 +27,5 @@ public interface ReturnMapper {
     void updateBuyStatus(@Param("buyNo") long buyNo, @Param("buyStatusNo") long buyStatusNo);
     int getBuyBookCount(long buyNo);
     List<ReturnBook> getRefundBook(long returnNo);
-
+    void updateReturnedYn(long returnNo);
 }

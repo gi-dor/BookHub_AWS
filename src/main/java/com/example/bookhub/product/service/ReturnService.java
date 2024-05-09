@@ -155,6 +155,7 @@ public class ReturnService {
             bookMapper.returnBookStock(returnBook.getBookNo(), returnBook.getCount());
         }
 
+        returnMapper.updateReturnedYn(returnNo);
         KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(returnProduct.getBuy().getOrderId(), returnProduct.getPrice());
     }
 

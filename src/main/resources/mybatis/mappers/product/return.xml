@@ -66,13 +66,6 @@
         where buy_no = #{value}
     </select>
 
-    <select id="createBuyCancel" parameterType="com.example.bookhub.product.vo.Return">
-        insert into REFUND
-            (buy_no, user_no)
-        values
-            (#{buy.buyNo}, #{user.no})
-    </select>
-
     <update id="updateRefundYn" parameterType="long">
         update
             BUY
@@ -238,4 +231,13 @@
         where
             return_no = #{value}
     </select>
+
+    <update id="updateReturnedYn" parameterType="long">
+        update
+            RETURNS
+        set
+            returned_yn = 'Y'
+        where
+            return_no = #{value}
+    </update>
 </mapper>
