@@ -135,4 +135,15 @@
                 N.NOTICE_NO = #{postNo}
     </select>
 
+    <update id="modifyPost" parameterType="com.example.bookhub.admin.dto.Post">
+        UPDATE
+                BookHub.NOTICE
+        SET
+                NOTICE_TITLE = #{title},
+                NOTICE_CONTENT = #{content},
+                NOTICE_IMPORTANT_YN = #{important}
+        WHERE
+                NOTICE_NO = #{no}
+    </update>
+
 </mapper>

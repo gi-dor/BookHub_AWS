@@ -41,19 +41,33 @@ public class BoardService {
     }
 
     public void createPost(Post createdPost) {
-        String boardType = createdPost.getBoardType();
-        String important = createdPost.getImportant();
+        Post post = new Post();
+        post = createdPost;
+        String boardType = post.getBoardType();
+        String important = post.getImportant();
 
         if (important == null) {
-            createdPost.setImportant("N");
+            post.setImportant("N");
         }
 
         if (boardType != null && boardType.equals("notice")) {
-            boardMapper.registerNotice(createdPost);
+            boardMapper.registerNotice(post);
         }
     }
 
     public Post getPostByNo(long postNo) {
         return boardMapper.getPostByNo(postNo);
+    }
+
+    public void modifyPost(Post modifiedPost) {
+        Post post = new Post();
+        post = modifiedPost;
+        String important = post.getImportant();
+
+        if (important == null) {
+            post.setImportant("N");
+        }
+
+        boardMapper.modifyPost(post);
     }
 }

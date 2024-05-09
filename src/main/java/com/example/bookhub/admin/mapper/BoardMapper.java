@@ -19,4 +19,6 @@ public interface BoardMapper {
     void registerNotice(Post createdPost);
 
     Post getPostByNo(long postNo);
+
+    void modifyPost(Post modifiedPost);
 }

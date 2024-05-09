@@ -229,18 +229,14 @@
                     <form th:action="@{/admin/board/modify}" th:object="${post}" method="post">
                         <div class="col-12 bg-light p-3 mb-3">
                             <table class="table table-bordered">
+                                <input type="hidden" th:field="*{no}">
                                 <tr>
-                                    <td class="bg-light align-middle text-center" style="width: 200px;">작성자</td>
+                                    <td class="bg-light align-middle text-center" style="width: 150px;">작성자</td>
                                     <td id="modal-writer"></td>
                                 </tr>
                                 <tr>
-                                    <td class="bg-light align-middle text-center" style="width: 200px;">제목</td>
+                                    <td class="bg-light align-middle text-center" style="width: 150px;">제목</td>
                                     <td>
-                                        <select th:field="*{boardType}" class="form-select-sm">
-                                            <option value="null" selected>분류 선택</option>
-                                            <option value="notice">공지</option>
-                                            <option value="undecided">미정</option>
-                                        </select>
                                         <input type="text" th:field="*{title}" class="form-control-sm">
                                         <input type="checkbox" class="form-check-input" value="Y" id="important"
                                                th:field="*{important}">
@@ -248,7 +244,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="bg-light align-middle text-center" style="width: 200px;">내용</td>
+                                    <td class="bg-light align-middle text-center" style="width: 150px;">내용</td>
                                     <td>
                                         <!-- Quill.js 에디터 적용 -->
                                         <div id="editor" style=" height: 300px; width: 100%;"></div>
@@ -258,7 +254,8 @@
                             </table>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">저장</button>
-                                <button type="button" class="btn btn-outline-secondary">취소</button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -406,25 +403,31 @@
 
         // 게시글 수정 모달창 열기
         $("[id^='btn-modify-post']").click(function () {
-            let postNo = $(this).data("no");
+            createModifyPostFormBuPostNo();
+
+            let modifyPostModal = new bootstrap.Modal($("#modify-post-modal"));
+            modifyPostModal.show();
+        });
+
+        // 수정 버튼 클릭 시 게시글 번호에 해당하는 게시글 수정 폼 생성
+        function createModifyPostFormBuPostNo() {
+            let postNo = $("[id^='btn-modify-post']").data("no");
 
             $.ajax({
                 url: "/admin/board/getPostByNo",
                 type: "GET",
                 data: {postNo: postNo},
                 success: function (post) {
-                    // 모달 창에 게시물 정보를 표시하는 코드
-
+                    $("input[name='no']").val(postNo);
                     $("#modal-writer").text(post.writer);
-                    // $("#modify-post-modal input[name='boardType']").val(post.boardType); // 분류 선택 설정
                     $("#modify-post-modal input[name='title']").val(post.title);
                     if (post.important === "Y") {
                         $("#modify-post-modal input[name='important']").prop("checked", true);
                     }
-                    if (post.important !== "Y") {
+                    if (post.important === "N") {
                         $("#modify-post-modal input[name='important']").prop("checked", false);
                     }
-                    // 내용 설정
+                    // 내용(content) 설정
                     let editor = new Quill('#editor');
                     editor.root.innerHTML = post.content;
                 },
@@ -432,10 +435,7 @@
                     console.error("오류 발생", error);
                 }
             });
-
-            let modifyPostModal = new bootstrap.Modal($("#modify-post-modal"));
-            modifyPostModal.show();
-        });
+        }
 
     })
 

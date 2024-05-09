@@ -84,4 +84,11 @@ public class BoardController {
         return boardService.getPostByNo(postNo);
     }
 
+    @PostMapping("/modify")
+    public String modify(@ModelAttribute("post") Post modifiedPost) {
+        boardService.modifyPost(modifiedPost);
+
+        return "redirect:/admin/board/list";
+    }
+
 }
