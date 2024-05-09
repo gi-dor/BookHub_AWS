@@ -53,7 +53,9 @@
                                 <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}">2021-01-05</td>
                                 <td th:text="${order.book.price}">17,000 원</td>
                                 <td>
+                                    <a th:href="@{/product/book/detail(bookNo=${order.book.bookNo})}">
                                     <span class="truncate" th:text="${order.book.name}">이세카이이세카이이세카이이세카이이세카이이세카이이세카이</span>
+                                    </a>
                                 </td>
                                 <td th:text="${order.count}">2개</td>
                             </tr>
@@ -62,22 +64,38 @@
                             </tr>
                         </tbody>
                         <thead>
+                            <th class="table-secondary">가격</th>
+                            <th class="table-secondary">( + )</th>
                             <th class="table-secondary">할인 금액</th>
-                            <th class="table-secondary">할인 적용된 금액</th>
-                            <th class="table-secondary" colspan="3"></th>
+                            <th class="table-secondary">( = )</th>
+                            <th class="table-secondary" colspan="2">할인 적용된 금액</th>
                         </thead>
                         <tbody>
                             <tr th:each="order : ${orderList}">
-                                <td th:text="${order.discountedPrice}">800 원</td>
-                                <td th:text="${order.resultPrice}">32,000 원</td>
-                                <td colspan="3"></td>
+                                <td th:text="${order.book.price} + ' 원' ">17,000 원</td>
+                                <td></td>
+                                <td th:text="${order.discountedPrice} + ' 원' ">800 원</td>
+                                <td></td>
+                                <td colspan="2" th:text="${order.resultPrice} +' 원' " class="resultPrice">32,000 원</td>
                             </tr>
                         </tbody>
                     </table>
-<!--                    <br>-->
-<!--                    <br>-->
-<!--                    <h3 id="listTitle">배송 상세 내역</h3>-->
-<!--                    <br>-->
+                    <table class="table" style="text-align: center">
+                        <thead>
+                            <th class="table-secondary"> 기본 택배비 </th>
+                            <th class="table-secondary"> 금액 합계 </th>
+                            <th class="table-secondary"> 최종 금액 </th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2000 원</td>
+                                <td class="lastPriceResult"></td>
+                                <td class="lastPriceFinal"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
                     <table class="table" style="text-align: center">
                         <thead></thead>
                         <tbody>
@@ -202,6 +220,28 @@
             })
             return true;
         })
+
+        $(document).ready(function() {
+            let delPrice = 2000; // 기본 택배비
+            let totalResultPrice = 0; // 총 할인 적용된 금액을 저장할 변수 초기화
+
+            // 할인된 금액 합계
+            // 클래스가 resultPrice인 모든 요소를 선택하여 반복
+            $(".resultPrice").each(function() {
+                // 요소의 텍스트를 가져와서 숫자로 변환하여 합계에 더함
+                let resultPrice = parseInt($(this).text().replace("원", "").replace(",", "").trim());
+                totalResultPrice += resultPrice;
+            });
+
+            // 최종 금액 계산 = 할인된금액 합계 + 택배비
+            let finalPrice = delPrice + totalResultPrice;
+
+            // 각각의 <td>에 계산된 값을 넣기
+            $(".lastPriceResult").text(totalResultPrice.toLocaleString() + " 원"); // 금액 합계
+            $(".lastPriceFinal").text(finalPrice.toLocaleString() + " 원"); // 최종 금액
+        });
+
+
 
     </script>
 </th:block>
