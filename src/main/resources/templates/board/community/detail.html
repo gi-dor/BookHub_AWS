@@ -11,7 +11,9 @@
             <input type="hidden" name="communityNo" th:value="${community.no}">
             <input type="hidden" name="principal" th:value="${community.user.getName()}">
             <textarea class="form-control" name="comment" rows="3" placeholder="댓글을 입력하세요"></textarea>
-            <button type="submit" class="btn btn-primary mt-2">댓글 작성</button>
+            <div class="text-end"> <!-- 오른쪽 정렬 클래스 추가 -->
+                <button type="submit" class="btn btn-primary mt-2">댓글 작성</button>
+            </div>
         </form>
     </div>
     <hr>
@@ -21,7 +23,7 @@
             <p>댓글이 존재하지 않습니다</p>
         </div>
         <div th:unless="${#lists.isEmpty(comments)}">
-            <div th:each="comment : ${comments}" class="comment row mb-3">
+            <div th:each="comment : ${comments}" class="comment row mb-3" style="border-bottom: 1px solid #e0e0e0;">
                 <div class="col-10">
                     <div th:class="${comment.parentNo != comment.no ? 'ms-5' : ''}">
                         <div th:text="${comment.user.getName()} + ' | ' + ${#temporals.format(comment.createDate,'yyyy.MM.dd')}"></div>
@@ -35,13 +37,15 @@
                             </div>
                         </form>
                     </div>
-                    <!-- 대댓글 작성 폼 -->
-                    <form th:action="@{/board/community/comment/addChild}" method="post" class="reply-form" style="display: none;">
-                        <input type="hidden" name="parentNo" th:value="${comment.no}">
-                        <input type="hidden" name="communityNo" th:value="${community.no}">
-                        <textarea class="form-control" name="content" placeholder="대댓글을 작성해주세요"></textarea>
-                        <button type="submit" class="btn btn-sm btn-primary">작성</button>
-                    </form>
+                        <!-- 대댓글 작성 폼 -->
+                        <form th:action="@{/board/community/comment/addChild}" method="post" class="reply-form" style="display: none;">
+                            <input type="hidden" name="parentNo" th:value="${comment.no}">
+                            <input type="hidden" name="communityNo" th:value="${community.no}">
+                            <textarea class="form-control" name="content" placeholder="대댓글을 작성해주세요"></textarea>
+                            <div class=" text-end mt-2">
+                                <button type="submit" class="btn btn-sm btn-primary">작성</button>
+                            </div>
+                        </form>
                 </div>
                 <div class="col-2 text-right">
                     <!-- 수정 버튼 -->
@@ -52,8 +56,7 @@
                         <input type="hidden" name="no" th:value="${comment.no}">
                         <button type="submit" class="btn btn-sm btn-danger delete-button">삭제</button>
                     </form>
-                    <!-- 대댓글 작성 버튼 -->
-                    <button type="button" class="btn btn-sm btn-info reply-button">댓글</button>
+                    <button th:unless="${comment.parentNo != comment.no}" type="button" class="btn btn-sm btn-info reply-button">대댓글</button>
                 </div>
             </div>
         </div>
@@ -81,15 +84,15 @@
         </nav>
     </div>
     <div style="text-align: right; margin-bottom: 20px;">
-        <a th:href="@{|/board/community/modify/${community.no}|(no=${community.no})}" class="btn btn-primary">수정</a>
+        <a th:href="@{|/board/community/modify/${community.no}|(no=${community.no})}" class="btn btn-primary">게시글 수정</a>
         <form th:action="@{/board/community/delete}" method="post" style="display: inline-block;">
             <input type="hidden" name="no" th:value="${community.no}">
-            <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?')">게시글 삭제</button>
         </form>
     </div>
     <div style="text-align: center;">
         <a href="/board/community/list" class="btn btn-secondary">목록으로 돌아가기</a>
-</div>
+    </div>
     <div layout:fragment="script">
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

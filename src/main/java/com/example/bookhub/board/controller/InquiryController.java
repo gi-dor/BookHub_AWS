@@ -27,7 +27,7 @@ public class InquiryController {
     private final FaqService faqService;
     private final UserService userService;
     private final IndividualService individualService;
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String findAllInquiry(Model model, @RequestParam(defaultValue = "1") int page, Principal principal) {
 
@@ -44,7 +44,7 @@ public class InquiryController {
         return "board/inquiry/list";
     }
 
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/register")
     public String registerForm(Model model) {
 
@@ -66,7 +66,7 @@ public class InquiryController {
 
         return "redirect:/board/inquiry/list";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{no}")
     public String getInquiryDetail(@PathVariable long no, Model model) {
         Inquiry inquiry = inquiryService.getInquiryByNo(no);
@@ -80,7 +80,7 @@ public class InquiryController {
 
         return "board/inquiry/detail";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{no}")
     public String modifyInquiryForm(@PathVariable long no, Model model) {
         Inquiry inquiry = inquiryService.getInquiryByNo(no);
@@ -92,7 +92,7 @@ public class InquiryController {
 
         return "board/inquiry/modify";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{no}")
     public String modifyInquiry(@ModelAttribute("inquiry") Inquiry inquiry, @RequestParam(name = "catNo") long catNo) {
 
@@ -104,7 +104,7 @@ public class InquiryController {
 
         return "redirect:/board/inquiry/detail/{no}";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/delete")
     public String deleteInquiry(@RequestParam("no") long no) {
         inquiryService.deleteInquiry(no);
