@@ -56,8 +56,8 @@
                                         <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}">결제 일자</td>
                                         <td>
                                             <a th:href="@{/mypage/list/orderDetail/{orderId}(orderId=${order.no})}">
-                                            <span th:text="${order.book.name}"></span>
-                                            <span th:if="${order.cnt > 1}" th:text=" ' 외' + ${order.cnt} + '개' "></span>
+                                                <span th:text="${order.book.name}"></span>
+                                                <span th:if="${order.cnt > 1}" th:text=" ' 외' + ${order.cnt} + '개' "></span>
                                             </a>
                                         </td>
                                         <td th:text="${order.buyStatus.name}">결제 상태</td>
