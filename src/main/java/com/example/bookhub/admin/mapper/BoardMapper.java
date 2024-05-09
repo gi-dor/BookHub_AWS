@@ -11,7 +11,8 @@ public interface BoardMapper {
 
     int getTotalRows(@Param("filter") BoardFilter filter);
 
-    List<Posts> getPosts(@Param("filter") BoardFilter filter, @Param("offset") int offset,
-                         @Param("limit") int limit, @Param("sort") String sort);
+    List<Posts> getNotices(@Param("filter") BoardFilter filter, @Param("offset") int offset,
+                           @Param("limit") int limit, @Param("sort") String sort);
 
+    void deletePostByNo(Long deletedPostNo);
 }

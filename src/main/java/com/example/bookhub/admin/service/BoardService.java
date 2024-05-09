@@ -18,6 +18,18 @@ public class BoardService {
     }
 
     public List<Posts> getPosts(BoardFilter filter, int offset, int limit, String sort) {
-        return boardMapper.getPosts(filter, offset, limit, sort);
+        String boardType = filter.getBoardType();
+
+        if (boardType != null && boardType.equals("notice")) {
+            return boardMapper.getNotices(filter, offset, limit, sort);
+        }
+
+        return boardMapper.getNotices(filter, offset, limit, sort);
+    }
+
+    public void deletePostByNo(List<Long> deletedPostNos) {
+        for (Long deletedPostNo : deletedPostNos) {
+            boardMapper.deletePostByNo(deletedPostNo);
+        }
     }
 }

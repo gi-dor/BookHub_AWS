@@ -8,7 +8,7 @@ import lombok.Setter;
 public class BoardFilter {
     private String opt;
     private String keyword;
-    private char deleteYN;
+    private String deletedYN;
     private String dateOpt;
     private String period;
     private String moreDate;

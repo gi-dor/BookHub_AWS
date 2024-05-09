@@ -14,30 +14,32 @@
                             <tr>
                                 <td class="bg-light">검색어</td>
                                 <td>
-                                    <select th:field="*{filter.opt}" class="form-select-sm">
+                                    <select th:field="*{opt}" class="form-select-sm">
                                         <option value="null">전체</option>
-                                        <option value="productName">작성자</option>
-                                        <option value="authorName">제목</option>
-                                        <option value="publisherName">내용</option>
+                                        <option value="writer">작성자</option>
+                                        <option value="title">제목</option>
+                                        <option value="content">내용</option>
                                     </select>
-                                    <input type="text" th:field="*{filter.keyword}" placeholder="검색어를 입력하세요"
+                                    <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
                                            class="form-control-sm">
-                                    <input type="checkbox" th:field="*{filter.deleteYN}" class="form-control-sm">
+                                    <input type="checkbox" class="form-check-input" th:field="*{deletedYN}" value="N"
+                                           id="deletedYN">
+                                    <label for="deletedYN">삭제글 제외</label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="bg-light">기간 검색</td>
                                 <td>
                                     <div class="d-flex">
-                                        <select th:field="*{filter.dateOpt}" class="form-select-sm me-2">
+                                        <select th:field="*{dateOpt}" class="form-select-sm me-2">
                                             <option value="createdDate">등록일</option>
                                             <option value="updatedDate">수정일</option>
                                         </select>
-                                        <input th:field="*{filter.moreDate}" type="date" class="form-control-sm me-2"> -
-                                        <input th:field="*{filter.lessDate}" type="date"
+                                        <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
+                                        <input th:field="*{lessDate}" type="date"
                                                class="form-control-sm ms-2 me-2">
                                         <div class="input-group">
-                                            <input type="hidden" th:field="*{filter.period}"/>
+                                            <input type="hidden" th:field="*{period}"/>
                                             <button name="btn-date" class="btn btn-outline-secondary btn-sm"
                                                     type="button" data-offset="0"
                                                     th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
@@ -69,9 +71,9 @@
                             <tr>
                                 <td class="bg-light">분류</td>
                                 <td>
-                                    <label><input type="radio" value="공지" th:field="boardType"> 공지</label>
-                                    <label><input type="radio" value="미정1" th:field="boardType"> 미정1</label>
-                                    <label><input type="radio" value="미정2" th:field="boardType"> 미정2</label>
+                                    <label><input type="radio" value="공지" th:field="*{boardType}"> 공지</label>
+                                    <label><input type="radio" value="미정1" th:field="*{boardType}"> 미정1</label>
+                                    <label><input type="radio" value="미정2" th:field="*{boardType}"> 미정2</label>
                                 </td>
                             </tr>
                             </tbody>
@@ -89,7 +91,7 @@
                             <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
                             <div class="d-flex">
                                 <!-- 조회 개수 설정 -->
-                                <select class="form-control-sm me-2" th:field="*{filter.rows}">
+                                <select class="form-control-sm me-2" th:field="*{rows}">
                                     <option value="10">10개씩</option>
                                     <option value="20">20개씩</option>
                                     <option value="50">50개씩</option>
@@ -97,7 +99,7 @@
                                 </select>
 
                                 <!-- 조회 정렬 설정-->
-                                <select class="form-control-sm" th:field="*{filter.sort}">
+                                <select class="form-control-sm" th:field="*{sort}">
                                     <option value="recentlyCreated">최근 등록일 순</option>
                                     <option value="recentlyUpdated">최근 수정일 순</option>
                                     <option value="priority">우선순위 순</option>
@@ -116,8 +118,9 @@
                         </div>
 
                         <!-- 조회 리스트 -->
-                        <table class="table text-center" id="table-products" th:if="${paging.totalRows != 0}">
+                        <table class="table text-center" id="table-posts" th:if="${paging.totalRows != 0}">
                             <colgroup>
+                                <col width="5%">
                                 <col width="5%">
                                 <col width="5%">
                                 <col width="*">
@@ -125,7 +128,7 @@
                                 <col width="10%">
                                 <col width="10%">
                                 <col width="15%">
-                                <col width="15%">
+                                <col width="10%">
                             </colgroup>
                             <thead>
                             <tr>
@@ -134,9 +137,9 @@
                                 <th>분류</th>
                                 <th>제목</th>
                                 <th>작성자</th>
-                                <th>등록일/수정일</th>
                                 <th>조회수</th>
                                 <th>우선순위</th>
+                                <th>등록일/수정일</th>
                                 <th>관리</th>
                             </tr>
                             </thead>
@@ -159,7 +162,7 @@
                                 </td>
                                 <td th:text="${post.boardType}">분류</td>
                                 <td>
-                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${post.title}">제목</a>
+                                    <a th:href="@{/book/detail(id=${post.no})}" th:text="${post.title}">제목</a>
                                 </td>
                                 <td th:text="${post.writer}">작성자</td>
                                 <td th:text="${post.view}">조회수</td>
@@ -193,7 +196,7 @@
                         -->
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                                <a th:href="@{/admin/product/list(page=${paging.currentPage - 1})}"
+                                <a th:href="@{/admin/board/list(page=${paging.currentPage - 1})}"
                                    class="page-link">이전</a>
                             </li>
 
@@ -201,12 +204,12 @@
                                 th:if="${num >= 1 and num <= paging.totalPages}"
                                 class="page-item"
                                 th:classappend="${num == paging.currentPage} ? 'active'">
-                                <a th:href="@{/admin/product/list(page=${num})}" th:text="${num}"
+                                <a th:href="@{/admin/board/list(page=${num})}" th:text="${num}"
                                    class="page-link">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                                <a th:href="@{/admin/product/list(page=${paging.currentPage + 1})}"
+                                <a th:href="@{/admin/board/list(page=${paging.currentPage + 1})}"
                                    class="page-link">다음</a>
                             </li>
                         </ul>
@@ -218,52 +221,14 @@
 </div>
 
 <script layout:fragment="boardListScript" type="text/javascript">
-    /*$(function () {
+    $(function () {
 
-        $("#topCategoryNo").change(function () {
-            const topCategoryNo = $(this).val();
-            let $secondCategorySelector = $("#secondCategoryNo");
-            getSubCategoryOptions(topCategoryNo, $secondCategorySelector);
-        })
-
-        $("#secondCategoryNo").change(function () {
-            const secondCategoryNo = $(this).val();
-            let $thirdCategorySelector = $("#thirdCategoryNo");
-            getSubCategoryOptions(secondCategoryNo, $thirdCategorySelector);
-        })
-
-        function getSubCategoryOptions(superCategoryNo, $selector) {
-
-            $.ajax({
-                url: "/admin/getSubCategories",
-                method: "GET",
-                data: {categoryNo: superCategoryNo},
-                success: function (subCategories) {
-                    $selector.not(':first').empty();
-
-                    subCategories.forEach(secondLevelCategory => {
-                        let option = $('<option>')
-                            .val(secondLevelCategory.no)
-                            .text(secondLevelCategory.name);
-
-                        $selector.append(option);
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error("오류 발생:", error);
-                }
-            });
-        }
-
+        // 초기화 버튼
         $("#btn-reset").click(function () {
             // 검색어 초기화
             $("select[name='opt']").val("null");
             $("input[name='keyword']").val("");
-
-            // 카테고리 초기화
-            $("select[name='topCategoryNo']").val("0");
-            $("select[name='secondCategoryNo']").val("0");
-            $("select[name='thirdCategoryNo']").val("0");
+            $("#deletedYN").prop("checked", false);
 
             // 기간 검색 초기화
             $("select[name='dateOpt']").val("createdDate");
@@ -271,82 +236,9 @@
             $("input[name='lessDate']").val("");
             $("button[name='btn-date']").removeClass("active");
 
-            // 판매 상태 초기화
-            $("#chk-select-all-status").prop("checked", false);
-            $("input[name='status']").prop("checked", false);
+            // 분류 초기화
+            $("input[type='radio'][value='공지']").prop("checked", true);
 
-            // 재고 초기화
-            $("#stockOpt").val("0");
-            $("input[name='moreStock']").val("0");
-            $("input[name='lessStock']").val("0");
-
-            // 출판사 초기화
-            $("select[name='publisherNo']").val("0");
-        });
-
-        // '전체' 체크박스를 선택하면 '정상', '절판', '품절' 체크박스도 선택된다.
-        $("#chk-select-all-status").click(function () {
-            checkAll();
-        });
-
-        function checkAll() {
-            let isChecked = $("#chk-select-all-status").prop("checked");
-            $("input.chk-status").prop("checked", isChecked);
-        }
-
-        // 판매 상태 체크박스를 선택하지 않으면 모두 선택되도록 함
-        checkAll2();
-
-        function checkAll2() {
-            let checkedBox = $("input.chk-status:checked").length;
-            const NONE_CHECKED_BOX = 0;
-            if (checkedBox === NONE_CHECKED_BOX) {
-                checkAll();
-            }
-        }
-
-        $("input.chk-status").click(function () {
-            updateSelectAllStatusCheckbox();
-        });
-
-        updateSelectAllStatusCheckbox();
-
-        // '정상', '절판', '품절' 체크박스가 모두 선택된 경우 '전체' 체크박스를 선택하고, 아닌 경우 선택 해제한다.
-        function updateSelectAllStatusCheckbox() {
-            let checkedBox = $("input.chk-status:checked").length;
-            let numberOfStatusCheckboxes = $("input.chk-status").length;
-
-            if (checkedBox === numberOfStatusCheckboxes) {
-                $("#chk-select-all-status").prop("checked", true);
-            }
-            if (checkedBox !== numberOfStatusCheckboxes) {
-                $("#chk-select-all-status").prop("checked", false);
-            }
-        }
-
-        $("#stockOpt").change(function () {
-            let selectedValue = $(this).val();
-            const stockOfOptOne = $("#opt1").val();
-            const stockOfOptTwo = $("#opt2").val();
-            const stockOfOptThree = $("#opt3").val();
-            const stockOfOptFour = $("#opt4").val();
-            const stockOfOptFive = $("#opt5").val();
-
-            if (selectedValue === stockOfOptOne) {
-                $("#lessStock").val(stockOfOptOne);
-            }
-            if (selectedValue === stockOfOptTwo) {
-                $("#lessStock").val(stockOfOptTwo);
-            }
-            if (selectedValue === stockOfOptThree) {
-                $("#lessStock").val(stockOfOptThree);
-            }
-            if (selectedValue === stockOfOptFour) {
-                $("#lessStock").val(stockOfOptFour);
-            }
-            if (selectedValue === stockOfOptFive) {
-                $("#lessStock").val(stockOfOptFive);
-            }
         });
 
         // 기간 검색 버튼 클릭 시 해당 날짜 입력
@@ -407,13 +299,36 @@
             }
         }
 
-        // 상품 선택 삭제 함수
+        // 처음 페이지 로드 시 '공지' 라디오 버튼 선택
+        function checkNotice() {
+            let checkedRadio = $("input[name='boardType']:checked").length;
+            const NONE_CHECKED_RADIO = 0;
+            if (checkedRadio === NONE_CHECKED_RADIO) {
+                $("input[type='radio'][value='공지']").prop("checked", true);
+            }
+        }
+
+        checkNotice();
+
+        // 선택 삭제 버튼 클릭 시 선택된 게시글 삭제
         $("#btn-delete").click(function () {
             let checkedNos = [];
-            $("#table-products tbody :checkbox:checked").each(function () {
+            $("#table-posts tbody :checkbox:checked").each(function () {
                 checkedNos.push($(this).data("deleteNo"));
             });
-            console.log(checkedNos);
+
+            deletePostByNo(checkedNos);
+        });
+
+        // 삭제 버튼 클릭 시 해당 게시글 삭제
+        $("button[id^='btn-delete-post']").click(function () {
+            let checkedNos = [];
+            checkedNos.push($(this).data("no"));
+
+            deletePostByNo(checkedNos);
+        });
+
+        function deletePostByNo(checkedNos) {
             if (checkedNos.length === 0) {
                 alert("선택된 상품이 없습니다.");
                 return;
@@ -424,12 +339,12 @@
             }
 
             $.ajax({
-                url: "/admin/product/delete",
+                url: "/admin/board/delete",
                 type: "POST",
                 data: JSON.stringify(checkedNos), // [100, 100, 100]
                 contentType: 'application/json',
                 success: function () {
-                    $("#table-products tbody :checkbox:checked").closest("tr").remove();
+                    $("#table-posts tbody :checkbox:checked").closest("tr").remove();
                 },
                 error: function (xhr, status, error) {
                     console.error("오류 발생", error);
@@ -438,15 +353,15 @@
                     alert("삭제가 완료되었습니다.");
                 }
             });
-        });
+        }
 
         // 상품 수정 함수
-        $("[id^=btn-modify-product]").click(function () {
-            let productNo = $(this).data("no");
-            window.location.href = "/admin/product/modify?no=" + productNo;
+        $("[id^=btn-modify-post]").click(function () {
+            let postNo = $(this).data("no");
+            // window.location.href = "/admin/board/modify?no=" + postNo;
         });
 
-    });*/
+    })
 
 </script>
 
