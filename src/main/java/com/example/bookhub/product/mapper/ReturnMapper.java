@@ -17,9 +17,11 @@ public interface ReturnMapper {
     void deleteCouponUsedByBuyNo(long buyNo);
     void updateCouponProduced(@Param("couponProducedNo") long couponProducedNo, @Param("discountAmount") int discountAmount);
     void updatePointUsedByUserNo(@Param("userNo") long userNo, @Param("totalPointUseAmount") int totalPointUseAmount);
-    void updateBuyCancelPartBuy(Map<String, Object> map);
-    void buyCancelPartBuyBook(@Param("buyNo") long buyNo, @Param("bookNo") long bookNo, @Param("count") int count);
-    void deleteBuyCancelBuyBook();
+    void updateBuyCancelBuy(Map<String, Object> map);
+    void buyCancelBuyBook(@Param("buyNo") long buyNo, @Param("bookNo") long bookNo, @Param("count") int count);
+    void deleteBuyCancelBuy(long buyNo);
+    void deleteBuyCancelAllBuyBook(long buyNo);
+    void deleteBuyCancelBuyBook(long buyNo);
     List<ReturnReason> getReturnReasonList();
     void insertRefund(Return returnProduct);
     void insertReturnBook(ReturnBook returnBook);
@@ -28,4 +30,5 @@ public interface ReturnMapper {
     int getBuyBookCount(long buyNo);
     List<ReturnBook> getRefundBook(long returnNo);
     void updateReturnedYn(long returnNo);
+    Buy getTotalDiscountAmount(long buyNo);
 }

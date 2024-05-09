@@ -75,34 +75,4 @@ public class KakaoPayController {
         throw new KakaoPayBusinessLogicException("카카오 결제 실패");
     }
 
-    @PostMapping("/buyCancel")
-    public String buyCancel(long buyNo, Model model, Principal principal) {
-        Buy buy = returnService.getBuyByBuyNo(buyNo);
-        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy.getOrderId(), buy.getFinalPrice());
-        if(kakaoCancelResponse != null) {
-            returnService.buyCancel(buy, principal.getName());
-        }
-
-        int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();
-        model.addAttribute("successMessage", "결제 취소 성공");
-        model.addAttribute("finalPrice", finalPrice);
-
-        return "product/pay/success";
-    }
-
-    @PostMapping("/buyCancel/part")
-    public String buyCancelPart(Model model, ReturnForm returnForm) {
-        Map<String, Object> map = returnService.calculateReturnPrice(returnForm);
-        Buy buy = returnService.getBuyByBuyNo(returnForm.getBuyNo());
-        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy.getOrderId(), (Integer) map.get("finalReturnPrice"));
-        if(kakaoCancelResponse != null) {
-            returnService.buyCancelPart(map);
-        }
-
-        int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();
-        model.addAttribute("successMessage", "결제 취소 성공");
-        model.addAttribute("finalPrice", finalPrice);
-
-        return "product/pay/success";
-    }
 }

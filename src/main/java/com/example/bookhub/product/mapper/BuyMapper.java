@@ -27,5 +27,4 @@ public interface BuyMapper {
     int getBookStock(long bookNo);
     int getCouponProducedLastAmount(long couponProducedNo);
     int getCouponCountByUserNo(long userNo);
-    Buy getTotalCouponDiscountAmount(long buyNo);
 }

@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,58 +22,100 @@ public class ReturnService {
     private final ReturnMapper returnMapper;
     private final UserMapper userMapper;
     private final BookMapper bookMapper;
-    private final BuyMapper buyMapper;
     private final KakaoPayService kakaoPayService;
-    private ReturnForm returnForm;
+    private Set<String> processedBuyNoSet = new HashSet<>();
 
-    public Buy getBuyByBuyNo(long buyNo) {
-        return returnMapper.getBuyByBuyNo(buyNo);
-    }
 
     @Transactional
-    public void buyCancel(Buy buy, String userId){
+    public int createBuyCancel(ReturnForm returnForm, String userId) {
+
+        Map<String, Object> map = calculateReturnPrice(returnForm);
+        Buy buy = returnMapper.getBuyByBuyNo(returnForm.getBuyNo());
         User user = userMapper.selectUserById(userId);
 
-        //createBuyCancel(buy.getBuyNo(), user);
-        updateRefundYn(buy.getBuyNo());
-        revertCouponAndPoint(buy, user);
+        if(BuyCancelAllYn(returnForm)) {
+            revertCouponAndPoint(buy, user);
+            returnMapper.deleteCouponUsedByBuyNo(returnForm.getBuyNo());
+            returnMapper.deleteBuyCancelAllBuyBook(returnForm.getBuyNo());
+            returnMapper.deleteBuyCancelBuy(returnForm.getBuyNo());
+        }
+        else{
+            updateBuyAndBuyBook(returnForm, map);
+            returnMapper.deleteBuyCancelBuyBook(returnForm.getBuyNo());
+        }
+
+        updateBookStock(returnForm);
+        returnMapper.updateBuyStatus(buy.getBuyNo(), 6);
+
+        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy.getOrderId(), (Integer) map.get("finalReturnPrice"));
+        return (Integer) map.get("finalReturnPrice");
     }
 
-//    public void createBuyCancel(long buyNo, User user) {
-//
-//        Refund refund = new Refund();
-//
-//        Buy buy = new Buy();
-//        buy.setBuyNo(buyNo);
-//        refund.setBuy(buy);
-//
-//        refund.setUser(user);
-//
-//        refundMapper.createRefund(refund);
-//    }
+    public Map<String, Object> calculateReturnPrice(ReturnForm returnForm) {
+        System.out.println(returnForm);
+        int totalReturnPrice = 0;
+        int finalReturnPrice = 0;
+        int totalBookDiscountReturnPrice = 0;
 
-    public void updateRefundYn(long buyNo) {
+        for(int i = 0; i < returnForm.getReturnBookNoList().size(); i++){
+            BookDto book = bookMapper.getBookDetailByNo(returnForm.getReturnBookNoList().get(i));
+            totalReturnPrice += book.getPrice() * returnForm.getReturnCountList().get(i);
+            finalReturnPrice += book.getPrice() * (1 - book.getDiscountRate()) * returnForm.getReturnCountList().get(i);
+            totalBookDiscountReturnPrice = (int)(book.getPrice() * book.getDiscountRate()) * returnForm.getReturnCountList().get(i);
+        }
 
-        returnMapper.updateRefundYn(buyNo);
+        if (!processedBuyNoSet.contains(returnForm.getBuyNo())) {
+            Buy buy = returnMapper.getTotalDiscountAmount(returnForm.getBuyNo());
+            finalReturnPrice = finalReturnPrice - buy.getTotalCouponDiscountAmount() - buy.getTotalPointUseAmount();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("buyNo", returnForm.getBuyNo());
+        map.put("totalReturnPrice", totalReturnPrice);
+        map.put("finalReturnPrice", finalReturnPrice);
+        map.put("totalBookDiscountReturnPrice", totalBookDiscountReturnPrice);
+
+        return map;
     }
 
-    public void buyCancelPart(Map<String, Object> map) {
-        System.out.println(map);
-        returnMapper.updateBuyCancelPartBuy(map);
+    public boolean BuyCancelAllYn(ReturnForm returnForm){
+        int buyBookTotalCount = returnMapper.getBuyBookCount(returnForm.getBuyNo());
+        int buyCancelTotalCount = 0;
+        for(int i = 0; i < returnForm.getReturnBookNoList().size(); i++)
+            buyCancelTotalCount += returnForm.getReturnCountList().get(i);
+
+        if(buyBookTotalCount == buyCancelTotalCount)
+            return true;
+        else
+            return false;
+    }
+
+    public void updateBuyAndBuyBook(ReturnForm returnForm, Map<String, Object> map) {
+        returnMapper.updateBuyCancelBuy(map);
         for(int i = 0; i < returnForm.getReturnBookNoList().size(); i++) {
             long bookNo = returnForm.getReturnBookNoList().get(i);
             int count = returnForm.getReturnCountList().get(i);
-            returnMapper.buyCancelPartBuyBook(returnForm.getBuyNo(), bookNo, count);
+            returnMapper.buyCancelBuyBook(returnForm.getBuyNo(), bookNo, count);
         }
-        returnMapper.deleteBuyCancelBuyBook();
     }
+
+    private void updateBookStock(ReturnForm returnForm) {
+        for(int i = 0; i < returnForm.getReturnBookNoList().size(); i++) {
+            long bookNo = returnForm.getReturnBookNoList().get(i);
+            int count = returnForm.getReturnCountList().get(i);
+            bookMapper.returnBookStock(bookNo, count);
+        }
+    }
+
+
 
     public List<ReturnReason> getReturnReasonList() {
         return returnMapper.getReturnReasonList();
     }
 
     @Transactional
-    public void createRefund(Buy buy, ReturnForm returnForm, String userId) {
+    public void createRefund(ReturnForm returnForm, String userId) {
+        Buy buy = returnMapper.getBuyByBuyNo(returnForm.getBuyNo());
         User user = userMapper.selectUserById(userId);
 
         long returnNo = insertRefund(buy, returnForm, user);
@@ -101,31 +141,6 @@ public class ReturnService {
         return returnProduct.getReturnNo();
     }
 
-    public Map<String, Object> calculateReturnPrice(ReturnForm returnForm) {
-        System.out.println(returnForm);
-        int totalReturnPrice = 0;
-        int finalReturnPrice = 0;
-        int totalBookDiscountReturnPrice = 0;
-
-        for(int i = 0; i < returnForm.getReturnBookNoList().size(); i++){
-            BookDto book = bookMapper.getBookDetailByNo(returnForm.getReturnBookNoList().get(i));
-            totalReturnPrice += book.getPrice() * returnForm.getReturnCountList().get(i);
-            finalReturnPrice += book.getPrice() * (1 - book.getDiscountRate()) * returnForm.getReturnCountList().get(i);
-            totalBookDiscountReturnPrice = (int)(book.getPrice() * book.getDiscountRate()) * returnForm.getReturnCountList().get(i);
-        }
-
-        Buy buy =  buyMapper.getTotalCouponDiscountAmount(returnForm.getBuyNo());
-        finalReturnPrice = finalReturnPrice - buy.getTotalCouponDiscountAmount() - buy.getTotalPointUseAmount();
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("buyNo", returnForm.getBuyNo());
-        map.put("totalReturnPrice", totalReturnPrice);
-        map.put("finalReturnPrice", finalReturnPrice);
-        map.put("totalBookDiscountReturnPrice", totalBookDiscountReturnPrice);
-
-        return map;
-    }
-
     public void insertRefundBook(long returnNo, ReturnForm returnForm){
         for(int i = 0; i < returnForm.getReturnBookNoList().size(); i++){
             long bookNo = returnForm.getReturnBookNoList().get(i);
@@ -140,6 +155,8 @@ public class ReturnService {
         }
     }
 
+
+
     @Transactional
     public void refundApprove(long returnNo){
         Return returnProduct = returnMapper.getRefundByReturnNo(returnNo);
@@ -148,7 +165,7 @@ public class ReturnService {
         returnMapper.updateBuyStatus(returnProduct.getBuy().getBuyNo(), 8);
 
         // 전체환불일 경우 쿠폰, 포인트 되돌리기
-        revertCouponAndPointYn(returnProduct, returnBookList);
+        refundAllYn(returnProduct, returnBookList);
 
         //재고 되돌리기
         for(ReturnBook returnBook : returnBookList) {
@@ -159,7 +176,7 @@ public class ReturnService {
         KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(returnProduct.getBuy().getOrderId(), returnProduct.getPrice());
     }
 
-    public void revertCouponAndPointYn(Return returnProduct, List<ReturnBook> returnBookList){
+    public void refundAllYn(Return returnProduct, List<ReturnBook> returnBookList){
         int buyBookTotalCount = returnMapper.getBuyBookCount(returnProduct.getBuy().getBuyNo());
         int returnTotalCount = 0;
         for(ReturnBook returnBook : returnBookList){
@@ -177,4 +194,5 @@ public class ReturnService {
         }
         returnMapper.updatePointUsedByUserNo(user.getNo(), buy.getTotalPointUseAmount());
     }
+
 }

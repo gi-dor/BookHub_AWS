@@ -50,6 +50,12 @@
         <result column="discount_amount" property="discountAmount"/>
     </resultMap>
 
+    <resultMap id="BuyDiscountResultMap" type="com.example.bookhub.product.vo.Buy">
+        <id column="buy_no" property="buyNo"/>
+        <result column="total_coupon_discount_amount" property="totalCouponDiscountAmount"/>
+        <result column="total_point_use_amount" property="totalPointUseAmount"/>
+    </resultMap>
+
 
     <select id="getBuyByBuyNo" parameterType="long" resultMap="BuyDetailMap">
         select buy_no,
@@ -112,7 +118,7 @@
             user_no = #{userNo}
     </update>
 
-    <update id="updateBuyCancelPartBuy" parameterType="map">
+    <update id="updateBuyCancelBuy" parameterType="map">
         update
             BUY
         set
@@ -123,7 +129,7 @@
             buy_no = #{buyNo}
     </update>
 
-    <update id="buyCancelPartBuyBook">
+    <update id="buyCancelBuyBook">
         update
             BUY_BOOK
         set
@@ -133,11 +139,26 @@
             and book_no = #{bookNo}
     </update>
 
-    <delete id="deleteBuyCancelBuyBook">
+    <delete id="deleteBuyCancelBuy" parameterType="long">
+        delete from
+            BUY
+        where
+            buy_no = #{value}
+    </delete>
+
+    <delete id="deleteBuyCancelAllBuyBook" parameterType="long">
         delete from
             BUY_BOOK
         where
-            count = 0;
+            buy_no = #{value}
+    </delete>
+
+    <delete id="deleteBuyCancelBuyBook" parameterType="long">
+        delete from
+            BUY_BOOK
+        where
+            buy_no = #{value}
+            and count = 0
     </delete>
 
     <select id="getReturnReasonList" resultMap="ReturnReasonResultMap">
@@ -240,4 +261,15 @@
         where
             return_no = #{value}
     </update>
+
+    <select id="getTotalDiscountAmount" parameterType="long" resultMap="BuyDiscountResultMap">
+        select
+            buy_no,
+            total_coupon_discount_amount,
+            total_point_use_amount
+        from
+            BUY
+        where
+            buy_no = #{value}
+    </select>
 </mapper>
