@@ -16,6 +16,8 @@ public class CateListController {
     @GetMapping("/main/catelist")
     public String Cate(SearchCriteria searchCriteria, Model model) {;
         BookListDto dto = cateListService.cateBooks(searchCriteria);
+
+        model.addAttribute("category", cateListService.getCategory(searchCriteria.getCateKeyword()));
         model.addAttribute("book", dto.getBooks()); // 모델에 책 정보를 담아서 HTML로 전달
         model.addAttribute("criteria", dto.getCriteria());
         return "main/cateList";

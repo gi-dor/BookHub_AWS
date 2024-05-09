@@ -1,6 +1,7 @@
 package com.example.bookhub.user.util;
 
 import com.example.bookhub.user.dto.UserSignupForm;
+import com.example.bookhub.user.exception.UserMailSendException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
@@ -55,6 +56,8 @@ public class MailService {
             long finishTime = endTime - startTime;
             log.info(":::    이메일 총 작업 소요 시간 " + finishTime + "ms");
 
+            // 이메일 전송 작업이 완료되면 결과를 반환
+            // 호출자에게 이메일 전송이 성공적으로 완료되었음을 알려줌
             return CompletableFuture.completedFuture(true);
         } catch (Exception e) {
             return CompletableFuture.completedFuture(false);
@@ -62,25 +65,28 @@ public class MailService {
     }
 
     // 이메일 보내기
-    public void sendEmail(String to, String subject, String html) throws Exception {
-        long startTime = System.currentTimeMillis();
+    public void sendEmail(String to, String subject, String html)  {
+        try {
+            long startTime = System.currentTimeMillis();
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(html, true);
+            javaMailSender.send(message);
 
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(html, true);
-        javaMailSender.send(message);
+            long endTime = System.currentTimeMillis();
+            long finishTime = endTime - startTime;
+            log.info(":::    이메일 총 작업 소요 시간 " + finishTime + "ms");
+        } catch (MessagingException ex) {
+            throw new UserMailSendException(ex.getMessage());
+        }
 
-        long endTime = System.currentTimeMillis();
-        long finishTime = endTime - startTime;
-
-        log.info(":::    이메일 총 작업 소요 시간 " + finishTime + "ms");
     }
 
 
     // 긁어와서 사용한 코드라 자세히 모름;
-    public String registerHtmlTemplate(UserSignupForm form) throws Exception {
+    public String registerHtmlTemplate(UserSignupForm form) {
 
         ClassPathResource resource = new ClassPathResource("templates/user/mail/registerEmail.html");
         String htmlTemplate = null;
@@ -89,13 +95,13 @@ public class MailService {
             htmlTemplate = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
 
         } catch (IOException ex) {
-            System.err.println("이메일 템플릿을 로드하는 도중 오류가 발생했습니다.");
             ex.printStackTrace();
+            throw new UserMailSendException("이메일 템플릿을 로드하는 도중 오류가 발생했습니다.");
         }
         return htmlTemplate.replace("NAME", form.getName());
     }
 
-    public String resetPasswordTemplate(String password) throws Exception {
+    public String resetPasswordTemplate(String password)  {
 
         ClassPathResource resource = new ClassPathResource("templates/user/mail/resetPassword.html");
         String htmlTemplate = null;

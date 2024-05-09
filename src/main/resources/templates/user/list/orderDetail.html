@@ -44,6 +44,7 @@
                             <th class="table-secondary">주문 일자</th>
                             <th class="table-secondary">가격</th>
                             <th class="table-secondary">주문 상품</th>
+                            <th class="table-secondary">수량</th>
                         </thead>
                         <tbody>
                             <tr th:each="order : ${orderList}">
@@ -54,6 +55,7 @@
                                 <td>
                                     <span class="truncate" th:text="${order.book.name}">이세카이이세카이이세카이이세카이이세카이이세카이이세카이</span>
                                 </td>
+                                <td th:text="${order.count}">2개</td>
                             </tr>
                             <tr>
                                 <td colspan="5" class="p-3"></td>
@@ -83,8 +85,8 @@
                                 <th colspan="4">배송 상세 내역</th>
                             </tr>
                             <tr th:each="del : ${delivery}">
-                                <th class="table-secondary">주문 번호</th>
-                                <td th:text="${del.no}">123456</td>
+                                <th class="table-secondary">배송 번호</th>
+                                <td th:text="${del.userDelivery.no}">123456</td>
                                 <th class="table-secondary">주문 일자</th>
                                 <td th:text="${#temporals.format(del.buyDate, 'yyyy-MM-dd')}">2023.12.11</td>
                             </tr>
@@ -106,14 +108,77 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div>
+                        <button type="button" class="btn btn-outline-success">교환</button>
+                        <button type="button" class="btn btn-outline-danger">환불</button>
+                        <button type="button" class="btn btn-outline-warning" onclick="showModalBuyCancel()">주문취소</button>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" id="modal-buy-cancel">
+        <form id="form-buy-cancel" method="post" action="/kakaoPay/refund/part">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">주문 취소 선택</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <colgroup>
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" id="checkbox-all"></th>
+                                <th>제목 및 가격</th>
+                                <th>수량</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <input type="hidden" name="buyNo" th:value="${orderList[0].no}"/>
+                            <tbody id="tbody-cancel">
+                            <tr th:each="order : ${orderList}">
+                                <td><input type="checkbox" name="returnBookNoList" th:value="${order.book.bookNo}"></td>
+                                <td>
+                                    <div th:text="${order.book.name}">책 제목</div>
+                                    <span class="order-book-price" th:text="${order.book.price}">가격</span>
+                                    <span class="order-book-discountPrice" th:text="${order.book.price * (1-order.book.discountRate)}">할인후가격</span>
+                                </td>
+                                <td>
+                                    <select class="form-select" name="returnCountList">
+                                        <option th:each="i : ${#numbers.sequence(1, order.count)}" th:value="${i}" th:text="${i}"></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="btn btn-primary">주문취소</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 <th:block layout:fragment="script">
     <script>
+        const modalBuyCancel = new bootstrap.Modal("#modal-buy-cancel");
+
+        function showModalBuyCancel(){
+            modalBuyCancel.show();
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             let elements = document.getElementsByClassName("truncate");
             for (let i = 0; i < elements.length; i++) {
@@ -129,6 +194,14 @@
             }
             element.textContent = text;
         }
+
+        $("#form-buy-cancel").submit(function() {
+            $("#form-buy-cancel").find("#tbody-cancel tr").not(":has(:checkbox:checked)").each(function(index, tr) {
+                $(tr).find("select").prop("disabled", true);
+                $(tr).find("input[name=returnPriceList]").prop("disabled", true);
+            })
+            return true;
+        })
 
     </script>
 </th:block>

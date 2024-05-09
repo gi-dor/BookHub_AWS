@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
-                <h1 class="fs-3">상품 조회</h1>
+                <h3>상품 조회</h3>
 
                 <!-- 필터 선택 영역-->
                 <form th:action="@{/admin/product/list}" th:object="${filter}">
@@ -306,13 +306,13 @@
         $("#topCategoryNo").change(function () {
             const topCategoryNo = $(this).val();
             let $secondCategorySelector = $("#secondCategoryNo");
-            getSubCategoryOptions(topCategoryNo, $secondCategorySelector, "secondCategoryNo");
+            getSubCategoryOptions(topCategoryNo, $secondCategorySelector);
         })
 
         $("#secondCategoryNo").change(function () {
             const secondCategoryNo = $(this).val();
             let $thirdCategorySelector = $("#thirdCategoryNo");
-            getSubCategoryOptions(secondCategoryNo, $thirdCategorySelector, "thirdCategoryNo");
+            getSubCategoryOptions(secondCategoryNo, $thirdCategorySelector);
         })
 
         function getSubCategoryOptions(superCategoryNo, $selector) {
@@ -322,7 +322,7 @@
                 method: "GET",
                 data: {categoryNo: superCategoryNo},
                 success: function (subCategories) {
-                    $selector.not(':first').remove();
+                    $selector.not(':first').empty();
 
                     subCategories.forEach(secondLevelCategory => {
                         let option = $('<option>')

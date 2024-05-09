@@ -15,6 +15,7 @@
       from BUY b , USER u
       where u.USER_NO = b.USER_NO
       and u.USER_ID = #{id}
+      and b.REFUND_YN = 'N'
   </select>
     
   <select id="selectOrderListByIdPaging" resultType="com.example.bookhub.user.dto.OrderListDTO">
@@ -32,7 +33,7 @@
         (select y.BOOK_NAME
          from  BUY_BOOK bb , BOOK y
          where bb.BOOK_NO = y.BOOK_NO
-         order by y.BOOK_NO DESC
+         and b.BUY_NO = bb.BUY_NO
          limit 1)
                                             as "book.name",
         (select count(*)
@@ -44,6 +45,7 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
         and b.BUY_STATUS_NO = status.BUY_STATUS_NO
         and b.BUY_PAY_METHOD_NO = pay.BUY_PAY_METHOD_NO
         and u.USER_ID = #{id}
+        and b.REFUND_YN = 'N'
       ORDER BY
           b.BUY_NO DESC
       LIMIT #{offset} ,10
@@ -217,19 +219,24 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
             i.INDIVIDUAL_INQUIRY_ANSWER_YN      as answerYn,
             i.INDIVIDUAL_INQUIRY_DELETE_YN      as deleteYn,
             i.INDIVIDUAL_INQUIRY_CREATE_DATE    as createdDate ,
-            i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate
-        from INDIVIDUAL_INQUIRIES i
+            i.INDIVIDUAL_INQUIRY_UPDATE_DATE    as updatedDate,
+            u.USER_ID                           as "user.id"
+        from INDIVIDUAL_INQUIRIES i , USER u
         where INDIVIDUAL_INQUIRY_CREATE_DATE BETWEEN #{startDate} AND #{endDate}
+          and u.USER_ID = #{id}
+        order by i.INDIVIDUAL_INQUIRY_CREATE_DATE desc
     </select>
 
     <select id="selectOrderDetailById" resultType="com.example.bookhub.user.dto.OrderDetailDTO">
         select
             buy.BUY_NO              as no,              -- 주문번호
-            book.BOOK_NO            as "book.no",       -- 책 번호
+            book.BOOK_NO            as "book.bookNo",       -- 책 번호
             book.BOOK_NAME          as "book.name",     -- 책 이름
             status.BUY_STATUS_NAME  as "buyStatus.name",   -- 배송 상태 이름
             buy.BUY_DATE            as buyDate,             -- 구매날짜
             book.BOOK_LIST_PRICE    as "book.price",        -- 책의 원가
+            buyBook.COUNT           as count,
+            book.BOOK_DISCOUNT_RATE as "book.discountRate",
             FLOOR(book.BOOK_LIST_PRICE*book.BOOK_DISCOUNT_RATE)  as discountedPrice, -- 책의 할인금액
             CEIL(book.BOOK_LIST_PRICE - (book.BOOK_LIST_PRICE * book.BOOK_DISCOUNT_RATE) )    as resultPrice, -- 할인적용된 금액
 --             buy.FINAL_PRICE         as finalPrice,  -- 최종 가격
@@ -253,6 +260,7 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
             user.USER_TEL           as "user.tel",
             buy.BUY_NO              as no,              -- 주문번호
             buy.BUY_DATE            as buyDate,             -- 구매날짜
+            delivery.DELIVERY_NO    as "userDelivery.no",
             delivery.RECIPIENT_NAME as "userDelivery.name",
             delivery.RECIPIENT_TEL  as "userDelivery.tel",
             delivery.USER_ZIP_CODE  as "userDelivery.zipCode",
@@ -264,7 +272,7 @@ from BUY b , USER u , BUY_STATUS status , BUY_PAY_METHOD pay
         and BUY_NO = #{no}
         and buy.USER_NO = user.USER_NO
         and user.USER_NO = delivery.USER_NO
-
+        and buy.DELIVERY_NO = delivery.DELIVERY_NO
     </select>
 
 

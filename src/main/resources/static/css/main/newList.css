@@ -145,3 +145,15 @@
     color: #1D3559
 }
 
+#txt_post{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    margin-top:1px;
+    max-height:80px;
+    overflow:hidden;
+    vertical-align:top;
+    text-overflow: ellipsis;
+    word-break:break-all;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:3
+}

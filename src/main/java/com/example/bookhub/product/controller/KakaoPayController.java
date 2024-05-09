@@ -3,6 +3,7 @@ package com.example.bookhub.product.controller;
 import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
 import com.example.bookhub.product.dto.KakaoCancelResponse;
+import com.example.bookhub.product.dto.ReturnForm;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayBusinessLogicException;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.GiftService;
@@ -14,8 +15,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
+import java.util.Map;
 
 
 @Controller
@@ -34,6 +37,7 @@ public class KakaoPayController {
      */
     @PostMapping("/ready")
     public String kakaoPayReady(@ModelAttribute BuyForm buyForm) {
+        kakaoPayService.setRestTemplate(new RestTemplate());
         return "redirect:" + kakaoPayService.kakaoPayReady(buyForm);
     }
 
@@ -74,9 +78,25 @@ public class KakaoPayController {
     @PostMapping("/refund")
     public String refund(long buyNo, Model model, Principal principal) {
         Buy buy = refundService.getBuyByBuyNo(buyNo);
-        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy);
+        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy.getOrderId(), buy.getFinalPrice());
         if(kakaoCancelResponse != null) {
             refundService.refund(buy, principal.getName());
+        }
+
+        int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();
+        model.addAttribute("successMessage", "결제 취소 성공");
+        model.addAttribute("finalPrice", finalPrice);
+
+        return "product/pay/success";
+    }
+
+    @PostMapping("/refund/part")
+    public String refundPart(Model model, ReturnForm returnForm) {
+        Map<String, Object> map = refundService.calculateReturnPrice(returnForm);
+        Buy buy = refundService.getBuyByBuyNo(returnForm.getBuyNo());
+        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy.getOrderId(), (Integer) map.get("finalReturnPrice"));
+        if(kakaoCancelResponse != null) {
+            refundService.refundPart(map);
         }
 
         int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();
