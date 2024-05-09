@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class KakaoPayController {
      */
     @PostMapping("/ready")
     public String kakaoPayReady(@ModelAttribute BuyForm buyForm) {
+        kakaoPayService.setRestTemplate(new RestTemplate());
         return "redirect:" + kakaoPayService.kakaoPayReady(buyForm);
     }
 
