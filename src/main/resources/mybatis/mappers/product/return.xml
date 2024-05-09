@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.product.mapper.ReturnMapper">
+
+    <resultMap id="BuyDetailMap" type="com.example.bookhub.product.vo.Buy">
+        <id column="buy_no" property="buyNo"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="total_book_discount_amount" property="totalBookDiscountAmount"/>
+        <result column="total_point_use_amount" property="totalPointUseAmount"/>
+        <result column="final_price" property="finalPrice"/>
+        <result column="point_accumulation_amount" property="pointAccumulationAmount"/>
+        <result column="buy_date" property="buyDate"/>
+        <result column="gift_yn" property="giftYn"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+
+    <resultMap id="ReturnReasonResultMap" type="com.example.bookhub.product.vo.ReturnReason">
+        <id column="return_reason_no" property="returnReasonNo"/>
+        <result column="return_reason_name" property="name"/>
+    </resultMap>
+
+    <resultMap id="ReturnResultMap" type="com.example.bookhub.product.vo.Return">
+        <id column="return_no" property="returnNo"/>
+        <result column="return_date" property="returnDate"/>
+        <result column="return_price" property="price"/>
+        <result column="return_type" property="type"/>
+        <association column="return_reason_no" property="returnReason"
+                     select="com.example.bookhub.product.mapper.ReturnMapper.getReturnReasonByNo"/>
+        <association column="buy_no" property="buy"
+                     select="com.example.bookhub.product.mapper.ReturnMapper.getBuyByNo"/>
+        <association column="user_no" property="user"
+                     select="com.example.bookhub.product.mapper.ReturnMapper.getUserNo"/>
+    </resultMap>
+
+
+    <resultMap id="BuyResultMap" type="com.example.bookhub.product.vo.Buy">
+        <id column="buy_no" property="buyNo"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+
+    <resultMap id="ReturnBookResultMap" type="com.example.bookhub.product.vo.ReturnBook">
+        <id column="return_no" property="returnNo"/>
+        <result column="book_no" property="bookNo"/>
+        <result column="count" property="count"/>
+    </resultMap>
+
+    <resultMap id="CouponUsedResultMap" type="com.example.bookhub.product.vo.CouponUsed">
+        <id column="coupon_used_no" property="couponUsedNo"/>
+        <result column="coupon_produced_no" property="couponProducedNo"/>
+        <result column="discount_amount" property="discountAmount"/>
+    </resultMap>
+
+
+    <select id="getBuyByBuyNo" parameterType="long" resultMap="BuyDetailMap">
+        select buy_no,
+               total_price,
+               total_book_discount_price,
+               total_coupon_discount_amount,
+               total_point_use_amount,
+               final_price,
+               point_accumulation_amount,
+               buy_date,
+               gift_yn,
+               order_id
+        from BUY
+        where buy_no = #{value}
+    </select>
+
+    <select id="createBuyCancel" parameterType="com.example.bookhub.product.vo.Return">
+        insert into REFUND
+            (buy_no, user_no)
+        values
+            (#{buy.buyNo}, #{user.no})
+    </select>
+
+    <update id="updateRefundYn" parameterType="long">
+        update
+            BUY
+        set
+            refund_yn = 'Y',
+        where
+            buy_no = #{value}
+    </update>
+
+    <select id="getCouponUsedByBuyNo" parameterType="long" resultMap="CouponUsedResultMap">
+        select
+            coupon_used_no,
+            coupon_produced_no,
+            discount_amount
+        from
+            COUPON_USED
+        where
+            buy_no = #{value}
+    </select>
+
+    <delete id="deleteCouponUsedByBuyNo" parameterType="long">
+        delete from
+            COUPON_USED
+        where
+            buy_no = #{value}
+    </delete>
+
+    <update id="updateCouponProduced">
+        update
+            COUPON_PRODUCED
+        set
+            used = 'N',
+            last_amount = last_amount + #{discountAmount}
+        where
+            coupon_produced_no = #{couponProducedNo}
+    </update>
+
+    <update id="updatePointUsedByUserNo">
+        update
+            USER
+        set
+            user_point = user_point + #{totalPointUseAmount}
+        where
+            user_no = #{userNo}
+    </update>
+
+    <update id="updateBuyCancelPartBuy" parameterType="map">
+        update
+            BUY
+        set
+            total_price = total_price - #{totalReturnPrice},
+            total_book_discount_price = total_book_discount_price - #{totalBookDiscountReturnPrice},
+            final_price = final_price - #{finalReturnPrice}
+        where
+            buy_no = #{buyNo}
+    </update>
+
+    <update id="buyCancelPartBuyBook">
+        update
+            BUY_BOOK
+        set
+            count = count - #{count}
+        where
+            buy_no = #{buyNo}
+            and book_no = #{bookNo}
+    </update>
+
+    <delete id="deleteBuyCancelBuyBook">
+        delete from
+            BUY_BOOK
+        where
+            count = 0;
+    </delete>
+
+    <select id="getReturnReasonList" resultMap="ReturnReasonResultMap">
+        select
+            return_reason_no,
+            return_reason_name
+        from
+            RETURN_REASON
+    </select>
+
+    <insert id="insertRefund" parameterType="com.example.bookhub.product.vo.Return">
+        insert into RETURNS
+        (buy_no, return_reason_no, user_no, return_price, return_type)
+        values
+        (#{buy.buyNo}, #{returnReason.returnReasonNo}, #{user.no}, #{price}, #{type})
+        <selectKey keyProperty="returnNo" resultType="long" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <insert id="insertReturnBook" parameterType="com.example.bookhub.product.vo.ReturnBook">
+        insert into RETURN_BOOK
+        (return_no, book_no, count)
+        values
+        (#{returnNo}, #{bookNo}, #{count})
+    </insert>
+
+    <select id="getRefundByReturnNo" parameterType="long" resultType="com.example.bookhub.product.vo.Return">
+        select
+            R.return_no as returnNo,
+            R.return_date as returnDate,
+            R.buy_no as "buy.buyNo",
+            B.order_id as "buy.orderId",
+            R.user_no as "user.no",
+            R.return_reason_no as "returnReason.returnReasonNo",
+            R.return_price as price,
+            R.return_type as type
+        from
+            RETURNS R, BUY B, RETURN_REASON RR
+        where
+            R.return_no = #{value}
+            and R.return_reason_no = RR.return_reason_no
+            and R.buy_no = B.buy_no
+    </select>
+
+    <select id="getBuyByNo" parameterType="long" resultMap="BuyResultMap">
+        select
+            buy_no,
+            order_id
+        from
+            BUY
+        where
+            buy_no = #{value}
+    </select>
+
+    <select id="getReturnReasonByNo" parameterType="long" resultMap="ReturnReasonResultMap">
+        select
+            return_reason_no,
+            return_reason_name
+        from
+            RETURN_REASON
+        where
+            return_reason_no = #{value}
+    </select>
+
+    <update id="updateBuyStatus" parameterType="long">
+        update
+            BUY
+        set
+            buy_status_no = #{buyStatusNo}
+        where
+            buy_no = #{buyNo}
+    </update>
+
+    <select id="getBuyBookCount" parameterType="long" resultType="int">
+        select
+            sum(count)
+        from
+            BUY_BOOK
+        where
+            buy_no = #{value}
+    </select>
+
+    <select id="getRefundBook" parameterType="long" resultMap="ReturnBookResultMap">
+        select
+            return_no,
+            book_no,
+            count
+        from
+            RETURN_BOOK
+        where
+            return_no = #{value}
+    </select>
+</mapper>

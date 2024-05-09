@@ -152,4 +152,13 @@
         where
             author_no = #{authorNo}
     </select>
+
+    <update id="returnBookStock">
+        update
+            BOOK
+        set
+            book_stock = book_stock + #{count}
+        where
+            book_no = #{bookNo}
+    </update>
 </mapper>

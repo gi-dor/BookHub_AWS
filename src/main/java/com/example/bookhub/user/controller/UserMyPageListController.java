@@ -1,5 +1,7 @@
 package com.example.bookhub.user.controller;
 
+import com.example.bookhub.product.service.ReturnService;
+import com.example.bookhub.product.vo.ReturnReason;
 import com.example.bookhub.user.dto.InquiryListDTO;
 import com.example.bookhub.user.dto.OrderDetailDTO;
 import com.example.bookhub.user.dto.OrderListDTO;
@@ -28,6 +30,7 @@ public class UserMyPageListController {
 
     private final UserService userService;
     private final MyPageService myPageService;
+    private final ReturnService returnService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/wishList")
@@ -100,8 +103,12 @@ public class UserMyPageListController {
         // 배송 상세
         List<OrderDetailDTO> deliveryDetail = myPageService.deliveryDetail(user.getId(),no);
 
+        List<ReturnReason> returnReasonList = returnService.getReturnReasonList();
+        System.out.println(returnReasonList);
+
         model.addAttribute("orderList",orderDetailDTO);
         model.addAttribute("delivery",deliveryDetail);
+        model.addAttribute("returnReasonList", returnReasonList);
 
         System.out.println("=====================================================");
         System.out.println(":::::::::::"+orderDetailDTO);

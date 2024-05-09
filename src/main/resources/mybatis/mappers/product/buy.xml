@@ -31,6 +31,12 @@
         <result column="buy_delivery_request_name" property="name"/>
     </resultMap>
 
+    <resultMap id="BuyDiscountResultMap" type="com.example.bookhub.product.vo.Buy">
+        <id column="buy_no" property="buyNo"/>
+        <result column="total_coupon_discount_amount" property="totalCouponDiscountAmount"/>
+        <result column="total_point_use_amount" property="totalPointUseAmount"/>
+    </resultMap>
+
     <!-- association -->
     <select id="getCouponByNo" parameterType="long" resultMap="CouponResultMap">
         select
@@ -214,6 +220,17 @@
             user_no = #{value}
             and due_date >= sysdate()
             and used = 'N'
+    </select>
+
+    <select id="getTotalCouponDiscountAmount" parameterType="long" resultMap="BuyDiscountResultMap">
+        select
+            buy_no,
+            total_coupon_discount_amount,
+            total_point_use_amount
+        from
+            BUY
+        where
+            buy_no = #{value}
     </select>
 
 </mapper>

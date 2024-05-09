@@ -154,7 +154,7 @@ public class KakaoPayService {
                     requestEntity,
                     KakaoCancelResponse.class);
         } catch(RestClientException e){
-            throw new KakaoPayApproveException("카카오 결제 취소 실패");
+            throw new KakaoPayApproveException("이미 주문취소/환불된 주문입니다");
         }
 
         return kakaoCancelResponse;
