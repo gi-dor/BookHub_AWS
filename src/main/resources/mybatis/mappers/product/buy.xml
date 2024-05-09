@@ -196,7 +196,7 @@
                         SELECT 1
                         FROM BUY B, BUY_BOOK BB
                         WHERE B.refund_yn != 'N'
-                AND B.gift != 'Y'
+                AND B.gift_yn != 'Y'
                 AND B.user_no = #{userNo}
                 AND B.buy_no = BB.buy_no
                 AND BB.book_no = #{bookNo}

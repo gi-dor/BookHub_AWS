@@ -85,8 +85,8 @@
                                 <th colspan="4">배송 상세 내역</th>
                             </tr>
                             <tr th:each="del : ${delivery}">
-                                <th class="table-secondary">주문 번호</th>
-                                <td th:text="${del.no}">123456</td>
+                                <th class="table-secondary">배송 번호</th>
+                                <td th:text="${del.userDelivery.no}">123456</td>
                                 <th class="table-secondary">주문 일자</th>
                                 <td th:text="${#temporals.format(del.buyDate, 'yyyy-MM-dd')}">2023.12.11</td>
                             </tr>
