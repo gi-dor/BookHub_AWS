@@ -31,7 +31,7 @@ public class DashBoardScheduleService {
 
     // 매주 월요일 10시마다 지난주 값을 계산하여 저장하기
     @SchedulerLock(name = "lastWeek_lock", lockAtLeastFor = "20s", lockAtMostFor = "50s")
-    @Scheduled(cron = "0 00 10 * * TUE")
+    @Scheduled(cron = "0 00 10 * * MON")
     public void saveTotalLastWeek() {dashBoardScheduleMapper.saveTotalLastWeek();}
 
     // 매월 1일 오전 12시마다 지난달 값을 계산하여 저장하기
