@@ -35,6 +35,7 @@ public class CommentController {
         return "redirect:/board/community/detail/" + communityNo;
     }
 
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify")
     public String updateComment(@ModelAttribute("comment") CommunityComment comment, @RequestParam Long communityNo) {
