@@ -5,15 +5,18 @@ import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
 import com.example.bookhub.product.dto.KakaoCancelResponse;
 import com.example.bookhub.product.dto.KakaoReadyResponse;
+import com.example.bookhub.product.exception.BookHubException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayApproveException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayReadyException;
-import com.example.bookhub.product.vo.Buy;
 import groovy.util.logging.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -37,12 +40,23 @@ public class KakaoPayService {
     private KakaoReadyResponse kakaoReadyResponse;
     private KakaoApproveResponse kakaoApproveResponse;
     private KakaoCancelResponse kakaoCancelResponse;
+    private RestTemplate restTemplate;
+
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * 결제 준비
      */
-    public String kakaoPayReady(BuyForm buyForm) {
-        RestTemplate restTemplate = new RestTemplate();
+    @Retryable(
+            value = RuntimeException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
+    public String kakaoPayReady(BuyForm buyForm)  {
+        //restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory()); // 정확한 에러 파악을 위해 생성
 
         // 서버 요청 헤더
@@ -154,5 +168,10 @@ public class KakaoPayService {
         httpHeaders.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         return httpHeaders;
+    }
+
+    @Recover
+    public String recover(RuntimeException e, BuyForm buyForm) {
+        throw new BookHubException(e.getMessage());
     }
 }
