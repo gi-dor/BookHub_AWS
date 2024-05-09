@@ -42,6 +42,7 @@ public class CommunityController {
         return "board/community/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/register")
     public String registerForm() {
         return "board/community/register";
@@ -79,12 +80,14 @@ public class CommunityController {
         return "board/community/detail";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{no}")
     public String modifyForm(@PathVariable Long no, Model model) {
         Community community = communityService.getCommunityByNo(no);
         model.addAttribute("community", community);
         return "board/community/modify";
     }
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{no}")
     public String updateCommunity(@ModelAttribute("community") Community community) {
         communityService.updateCommunity(community);
@@ -92,6 +95,7 @@ public class CommunityController {
         return "redirect:/board/community/detail/{no}";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/delete")
     public String deleteCommunity(@RequestParam("no") Long no) {
         communityService.deleteCommunity(no);

@@ -26,4 +26,6 @@ public interface AttendanceMapper {
     void insertAttendance(@Param("no") long userNo);
 
 //    void deleteAttendance();
+
+    int attendanceCheckCount(@Param("no") long userNo);
 }

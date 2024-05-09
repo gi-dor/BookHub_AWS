@@ -86,6 +86,7 @@ public class UserMyPageListController {
         return "user/list/orderList";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/orderDetail/{no}")
     public String orderDetail(Model model ,
                               Principal principal,
