@@ -62,15 +62,20 @@
                             </tr>
                         </tbody>
                         <thead>
+                            <th class="table-secondary">가격</th>
+                            <th class="table-secondary">( + )</th>
                             <th class="table-secondary">할인 금액</th>
-                            <th class="table-secondary">할인 적용된 금액</th>
-                            <th class="table-secondary" colspan="3"></th>
+                            <th class="table-secondary">( = )</th>
+                            <th class="table-secondary" colspan="2">할인 적용된 금액</th>
+<!--                            <th class="table-secondary" colspan="4"></th>-->
                         </thead>
                         <tbody>
                             <tr th:each="order : ${orderList}">
+                                <td th:text="${order.book.price}">17,000 원</td>
+                                <td></td>
                                 <td th:text="${order.discountedPrice}">800 원</td>
-                                <td th:text="${order.resultPrice}">32,000 원</td>
-                                <td colspan="3"></td>
+                                <td></td>
+                                <td colspan="2" th:text="${order.resultPrice}">32,000 원</td>
                             </tr>
                         </tbody>
                     </table>
