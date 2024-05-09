@@ -118,13 +118,13 @@ public class KakaoPayService {
      * 결제 환불
      *
      */
-    public KakaoCancelResponse kakaoCancel(Buy buy) {
+    public KakaoCancelResponse kakaoCancel(String orderId, int refundPrice) {
 
         // 카카오페이 요청
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", "TC0ONETIME");
-        parameters.add("tid", buy.getOrderId());
-        parameters.add("cancel_amount", String.valueOf(buy.getFinalPrice()));
+        parameters.add("tid", orderId);
+        parameters.add("cancel_amount", String.valueOf(refundPrice));
         parameters.add("cancel_tax_free_amount", "0"); // 환불 비과세 금액 일단 0으로 설정
         parameters.add("cancel_vat_amount", "0"); // 환불 부가세 금액 일단 0으로 설정
 

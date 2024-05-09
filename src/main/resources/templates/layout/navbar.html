@@ -115,37 +115,37 @@
     <div class="container bg-white mb-1">
         <div class="row position-fixed d-none z-3 bg-white " id="menu-book-category">
             <div class="col-12">
-                <div class="row border">
+                <div class="row border" id="cateKeyword">
                     <div class="col-4">
-                        <div class="list-group list-group-flush" id="cateKeyword">
-                            <a class="list-group-item disabled bg-light fs-5" data-cateKeyword="1" ><strong>국내도서</strong></a>
-                            <a href="#" class="list-group-item " data-cateKeyword="10">건강/취미</a>
-                            <a href="#" class="list-group-item " data-cateKeyword="11"><strong>경제경영</strong></a>
-                            <a href="#" class="list-group-item">과학</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="12">대학교재</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="21">만화</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="8">사회과학</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="3"><strong>소설</strong></a>
-                            <a href="#" class="list-group-item" data-cateKeyword="7"><strong>수험서/자격증</strong></a>
-                            <a href="#" class="list-group-item" data-cateKeyword="18">유아/어린이</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="13">에세이</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="14">여행</a>
+                        <div class="list-group list-group-flush" >
+                            <a class="list-group-item  bg-light fs-5"  href="main/catelist" data-cateKeyword="1" ><strong>국내도서</strong></a>
+                            <a href="main/catelist" class="list-group-item " data-cateKeyword="10">건강/취미</a>
+                            <a href="main/catelist" class="list-group-item " data-cateKeyword="11"><strong>경제경영</strong></a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="11">과학</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="12">대학교재</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="21">만화</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="8">사회과학</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="3"><strong>소설</strong></a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="7"><strong>수험서/자격증</strong></a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="18">유아/어린이</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="13">에세이</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="14">여행</a>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="list-group list-group-flush">
-                            <a href="#" class="list-group-item " data-cateKeyword="15"><strong>역사</strong></a>
-                            <a href="#" class="list-group-item ">예술/대중문화</a>
-                            <a href="#" class="list-group-item " data-cateKeyword="17">외국어</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="10">가정/요리</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="19"><strong>인문학</strong></a>
-                            <a href="#" class="list-group-item" data-cateKeyword="20">자기계발</a>
-                            <a href="#" class="list-group-item">잡지</a>
-                            <a href="#" class="list-group-item">장르소설</a>
-                            <a href="#" class="list-group-item">종교/역학</a>
-                            <a href="#" class="list-group-item">청소년</a>
-                            <a href="#" class="list-group-item">컴퓨터/모바일</a>
-                            <a href="#" class="list-group-item" data-cateKeyword="9">초/중/고등학교 참고서</a>
+                            <a href="main/catelist" class="list-group-item " data-cateKeyword="15"><strong>역사</strong></a>
+                            <a href="main/catelist" class="list-group-item ">예술/대중문화</a>
+                            <a href="main/catelist" class="list-group-item " data-cateKeyword="17">외국어</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="10">가정/요리</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="19"><strong>인문학</strong></a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="20">자기계발</a>
+                            <a href="main/catelist" class="list-group-item">잡지</a>
+                            <a href="main/catelist" class="list-group-item">장르소설</a>
+                            <a href="main/catelist" class="list-group-item">종교/역학</a>
+                            <a href="main/catelist" class="list-group-item">청소년</a>
+                            <a href="main/catelist" class="list-group-item">컴퓨터/모바일</a>
+                            <a href="main/catelist" class="list-group-item" data-cateKeyword="9">초/중/고등학교 참고서</a>
                         </div>
                     </div>
                     <div class="col-4">
@@ -170,5 +170,6 @@
 
 <th:block layout:fragment="script">
     <script src="/js/main/navbar.js"></script>
+    <script src="/js/main/cateList.js"></script>
 </th:block>
 

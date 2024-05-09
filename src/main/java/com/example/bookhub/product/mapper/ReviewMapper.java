@@ -26,7 +26,7 @@ public interface ReviewMapper {
     void deleteReviewImageByReviewNo(long reviewNo);
     void updateReview(Review review);
     void deleteReview(long reviewNo);
-    int getReviewTotalRows(long bookNo);
+    int getReviewTotalRows(Map<String, Object> map);
     int getRateCount(@Param("bookNo") long bookNo, @Param("start") int start, @Param("end") int end);
     int getReviewTagCount(@Param("bookNo") long bookNo, @Param("reviewTagNo") int reviewTagNo);
     void updateReviewCount(long bookNo);

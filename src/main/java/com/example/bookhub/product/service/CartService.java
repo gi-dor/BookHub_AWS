@@ -51,4 +51,13 @@ public class CartService {
             return "exist";
         }
     }
+
+    public void addCart(List<Long> bookNoList, String userId) {
+        User user = userMapper.selectUserById(userId);
+
+        for (Long bookNo : bookNoList) {
+            createCart(bookNo, userId);
+        }
+
+    }
 }

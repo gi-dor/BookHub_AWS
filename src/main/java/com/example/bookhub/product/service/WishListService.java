@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,6 +17,14 @@ public class WishListService {
 
     private final UserMapper userMapper;
     private final WishListMapper wishListMapper;
+
+    public void addWishList(List<Long> bookNoList, String userId) {
+        User user = userMapper.selectUserById(userId);
+
+        for (Long bookNo : bookNoList) {
+            createWishList(bookNo, userId);
+        }
+    }
 
     public void createWishList(long bookNo, String userId) {
         Map map = getUserAndMap(bookNo, userId);

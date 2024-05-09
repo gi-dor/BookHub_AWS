@@ -4,6 +4,7 @@
     <select id="bestSeller" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
         SELECT
             A.BOOK_NO,
+            B.BOOK_DESCRIPTION,
             B.BOOK_NAME,
                 (SELECT GROUP_CONCAT(Y.AUTHOR_NAME SEPARATOR ', ')
                 FROM BOOK_AUTHOR X, AUTHOR Y
@@ -12,6 +13,8 @@
             C.PUBLISHER_NAME,
             B.BOOK_LIST_PRICE,
             D.BOOK_IMAGE_COVER,
+            B.CATEGORY_NO,
+            F.CATEGORY_NAME,
             A.AMOUNT
         FROM (SELECT B.BOOK_NO, SUM(B.COUNT) AMOUNT
               FROM BUY A, BUY_BOOK B, BOOK C
@@ -30,7 +33,7 @@
                             AND A.BUY_DATE = CURRENT_DATE()
                         </when>
                         <otherwise>
-                            AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+                            AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
                         </otherwise>
                     </choose>
 
@@ -50,10 +53,12 @@
               AND B.BOOK_NO = C.BOOK_NO
               GROUP BY B.BOOK_NO
               ORDER BY AMOUNT DESC
-              LIMIT #{offset}, #{recordSize}) A, BOOK B, PUBLISHER C, BOOK_IMAGES D
+              LIMIT #{offset}, #{recordSize}) A, BOOK B, PUBLISHER C, BOOK_IMAGES D,CATEGORY F
         WHERE A.BOOK_NO = B.BOOK_NO
         AND B.PUBLISHER_NO = C.PUBLISHER_NO
         AND B.BOOK_NO = D.BOOK_NO
+        AND B.CATEGORY_NO = F.CATEGORY_NO
+        <!--
         <choose>
             <when test="pubDate == 1">
                 AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
@@ -71,9 +76,10 @@
                 AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
             </when>
             <otherwise>
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
             </otherwise>
         </choose>
+        -->
         <choose>
         <when test="sort == 1">
             ORDER BY BOOK_SALES_VOLUME DESC
@@ -129,7 +135,7 @@
                 AND A.BUY_DATE = CURRENT_DATE()
             </when>
             <otherwise>
-                AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+                AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
             </otherwise>
         </choose>
 
@@ -170,7 +176,7 @@
             AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
         </when>
         <otherwise>
-            AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+            AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
         </otherwise>
     </choose>
     <choose>

@@ -1,0 +1,25 @@
+#card-order-total {
+    width: 100%;
+}
+
+#card-order-total .card-body {
+    padding: 1rem;
+}
+
+#card-order-total input {
+    border: none;
+    outline: none;
+    width: calc(100% - 20px); /* 입력란의 너비를 조정하여 깨지는 부분을 수정합니다. */
+}
+
+#card-order-total hr {
+    margin: 1rem 0;
+}
+
+.table {
+    border-collapse: collapse; /* 테이블 셀의 경계선을 합칩니다. */
+}
+
+.table td, .table th {
+    border: none; /* 테이블 셀의 경계선을 없앱니다. */
+}

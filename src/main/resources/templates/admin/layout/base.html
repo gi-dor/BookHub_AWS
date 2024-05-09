@@ -11,8 +11,8 @@
     <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js}"></script>
     <script th:src="@{/js/admin/color-modes.js}"></script>
     <script th:src="@{/js/admin/sidebars2.js}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" ></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
     <link rel="stylesheet" href="/css/admin/jquery-ui.css">
     <script src="/js/admin/jquery-ui.min.js"></script>
 
@@ -113,6 +113,8 @@
             <th:block layout:fragment="content"></th:block>
             <th:block layout:fragment="category"></th:block>
             <th:block layout:fragment="list"></th:block>
+            <th:block layout:fragment="modify"></th:block>
+            <th:block layout:fragment="create"></th:block>
         </div>
     </div>
     <div th:replace="~{/layout/footer :: footer}"></div>
@@ -120,6 +122,8 @@
 
 <th:block layout:fragment="categoryScript"></th:block>
 <th:block layout:fragment="listScript"></th:block>
+<th:block layout:fragment="modifyProductScript"></th:block>
+<th:block layout:fragment="createProductScript"></th:block>
 
 </body>
 </html>
