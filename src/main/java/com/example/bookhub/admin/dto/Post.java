@@ -8,14 +8,15 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Posts {
+public class Post {
     private long no;
     private String boardType;
     private String title;
     private String content;
     private String writer;
+    private long adminNo;
     private int view;
-    private int priority;
+    private String important;
     private Date createdDate;
     private Date updatedDate;
 

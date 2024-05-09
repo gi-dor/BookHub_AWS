@@ -67,7 +67,7 @@
         </where>
     </sql>
 
-    <select id="getTotalRows" resultType="int">
+    <select id="getTotalRowsInNotice" resultType="int">
         SELECT
                 count(*)
         FROM
@@ -76,12 +76,12 @@
         <include refid="where"></include>
     </select>
 
-    <select id="getNotices" resultType="com.example.bookhub.admin.dto.Posts">
+    <select id="getNotices" resultType="com.example.bookhub.admin.dto.Post">
     		SELECT
                     N.NOTICE_NO                   AS no,
     		        N.NOTICE_TITLE			      AS title,
     				N.NOTICE_CONTENT           	  AS content,
-                    N.NOTICE_PRIORITY			  AS priority,
+                    N.NOTICE_IMPORTANT_YN         AS important,
                     N.NOTICE_CREATED_DATE         AS createdDate,
                     N.NOTICE_UPDATED_DATE         AS updatedDate,
                     A.ADMIN_ID                    AS writer
@@ -99,8 +99,8 @@
                     <when test="sort == 'recentlyUpdated'">
                         ORDER BY N.NOTICE_UPDATED_DATE DESC
                     </when>
-                    <when test="sort == 'priority'">
-                        ORDER BY N.NOTICE_PRIORITY ASC
+                    <when test="sort == 'important'">
+                        ORDER BY N.NOTICE_IMPORTANT_YN DESC
                     </when>
             </choose>
 
@@ -112,5 +112,27 @@
            SET NOTICE_DELETED_YN = 'Y'
            WHERE NOTICE_NO = #{deletedPostNo}
     </update>
+
+    <insert id="registerNotice" parameterType="com.example.bookhub.admin.dto.Post">
+            INSERT INTO BookHub.NOTICE
+            (NOTICE_TITLE, NOTICE_CONTENT, NOTICE_IMPORTANT_YN, ADMIN_NO)
+            VALUES
+            (#{title}, #{content}, #{important}, #{adminNo})
+    </insert>
+
+    <select id="getPostByNo" parameterType="long" resultType="com.example.bookhub.admin.dto.Post">
+        SELECT
+                N.NOTICE_TITLE			      AS title,
+                N.NOTICE_CONTENT           	  AS content,
+                N.NOTICE_IMPORTANT_YN         AS important,
+                A.ADMIN_ID                    AS writer
+
+        FROM
+                BookHub.NOTICE N
+                INNER JOIN ADMIN A ON A.ADMIN_NO = N.ADMIN_NO
+
+        WHERE
+                N.NOTICE_NO = #{postNo}
+    </select>
 
 </mapper>
