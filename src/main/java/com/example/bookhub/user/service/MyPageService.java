@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -36,11 +37,13 @@ public class MyPageService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<Buy> getOrderListById(String id) {
         User user = userMapper.selectUserById(id);
       return   myPageMapper.selectOrderListById(user.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<Inquiry> getInquiryListById(String id) {
         User user = userMapper.selectUserById(id);
         return myPageMapper.selectInquiryList(user.getId());
@@ -89,6 +92,7 @@ public class MyPageService {
     }
 
 
+    @Transactional(readOnly = true)
     public PageListDTO<WishListDTO> getWishListById(String id , int page) {
         // 해당 사용자의 정보 조회
         User user = userMapper.selectUserById(id);
@@ -108,6 +112,7 @@ public class MyPageService {
         return  new PageListDTO(wishListDTO,userPagination );
     }
 
+    @Transactional(readOnly = true)
     public PageListDTO<InquiryListDTO> getInquiryListByIdPage(String id , int page) {
         // 사용자 정보조회
         User user = userMapper.selectUserById(id);
@@ -134,6 +139,7 @@ public class MyPageService {
     }
 
 
+
     public List<Inquiry> findInquiryByDate(LocalDateTime startDate, LocalDateTime endDate , String id ) {
         return myPageMapper.findInquiryByDate(startDate,endDate , id);
     }
@@ -146,6 +152,7 @@ public class MyPageService {
 
     }
 
+    @Transactional(readOnly = true)
     public PageListDTO<OrderListDTO> getOrderListByIdPage(String id, int page) {
         // 사용자 정보조회
         User user = userMapper.selectUserById(id);
@@ -168,6 +175,7 @@ public class MyPageService {
         return pageListDTO;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDetailDTO> orderDetail(String id , Long no ) {
        User user =  userMapper.selectUserById(id);
 
@@ -175,6 +183,7 @@ public class MyPageService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDetailDTO> deliveryDetail (String id , Long no) {
         User user = userMapper.selectUserById(id);
         return myPageMapper.deliveryDetail(user.getId(),no);
