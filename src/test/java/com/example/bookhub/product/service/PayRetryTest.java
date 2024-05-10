@@ -46,7 +46,7 @@ public class PayRetryTest {
         BuyForm buyForm = new BuyForm();
         buyForm.setBuyBookNoList(Arrays.asList(9791196222702L, 9791196222705L));
         buyForm.setFinalPrice(100000);
-        kakaoPayService.kakaoPayReady(buyForm);
+        kakaoPayService.kakaoPayReady(buyForm, "userId");
 
         verify(restTemplateMock, times(3)).postForObject(any(URI.class), any(HttpEntity.class), eq(KakaoReadyResponse.class));
     }
