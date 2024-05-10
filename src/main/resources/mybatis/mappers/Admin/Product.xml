@@ -38,15 +38,15 @@
             <!-- 기간 검색 -->
             <if test="filter.moreDate != '' and filter.lessDate != ''">
                 <choose>
-                    <when test="filter.period == 'createdDate'">
+                    <when test="filter.dateOpt == 'createdDate'">
                         AND B.BOOK_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
                                                 AND CONCAT(#{filter.lessDate}, ' 23:59:59')
                     </when>
-                    <when test="filter.period == 'updatedDate'">
+                    <when test="filter.dateOpt == 'updatedDate'">
                         AND B.BOOK_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
                                                 AND CONCAT(#{filter.lessDate}, ' 23:59:59')
                     </when>
-                    <when test="filter.period == 'publishedDate'">
+                    <when test="filter.dateOpt == 'publishedDate'">
                         AND B.BOOK_PUBLISHED_DATE BETWEEN #{filter.moreDate} AND #{filter.lessDate}
                     </when>
                 </choose>
@@ -54,15 +54,15 @@
 
             <if test="filter.moreDate == '' and filter.lessDate != ''">
                 <choose>
-                    <when test="filter.period == 'createdDate'">
+                    <when test="filter.dateOpt == 'createdDate'">
                         AND B.BOOK_CREATED_DATE BETWEEN '0001-01-01 00:00:00'
                                                 AND CONCAT(#{filter.lessDate}, ' 23:59:59')
                     </when>
-                    <when test="filter.period == 'updatedDate'">
+                    <when test="filter.dateOpt == 'updatedDate'">
                         AND B.BOOK_UPDATED_DATE BETWEEN '0001-01-01 00:00:00'
                                                 AND CONCAT(#{filter.lessDate}, ' 23:59:59')
                     </when>
-                    <when test="filter.period == 'publishedDate'">
+                    <when test="filter.dateOpt == 'publishedDate'">
                         AND B.BOOK_PUBLISHED_DATE BETWEEN '0001-01-01' AND #{filter.lessDate}
                     </when>
                 </choose>
@@ -70,15 +70,15 @@
 
             <if test="filter.moreDate != '' and filter.lessDate == ''">
                 <choose>
-                    <when test="filter.period == 'createdDate'">
+                    <when test="filter.dateOpt == 'createdDate'">
                         AND B.BOOK_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
                                                 AND '9999-12-31 23:59:59'
                     </when>
-                    <when test="filter.period == 'updatedDate'">
+                    <when test="filter.dateOpt == 'updatedDate'">
                         AND B.BOOK_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
                                                 AND '9999-12-31 23:59:59'
                     </when>
-                    <when test="filter.period == 'publishedDate'">
+                    <when test="filter.dateOpt == 'publishedDate'">
                         AND B.BOOK_PUBLISHED_DATE BETWEEN #{filter.moreDate} AND '9999-12-31'
                     </when>
                 </choose>
@@ -145,34 +145,34 @@
 
             <choose>
                     <when test="sort == 'productName'">
-                        ORDER BY BOOK_NAME ASC
+                        ORDER BY B.BOOK_NAME ASC
                     </when>
                     <when test="sort == 'highPrice'">
-                        ORDER BY BOOK_LIST_PRICE DESC
+                        ORDER BY B.BOOK_LIST_PRICE DESC
                     </when>
                     <when test="sort == 'lowPrice'">
-                        ORDER BY BOOK_LIST_PRICE ASC
+                        ORDER BY B.BOOK_LIST_PRICE ASC
                     </when>
                     <when test="sort == 'highSellingPrice'">
-                        ORDER BY BOOK_SELLING_PRICE DESC
+                        ORDER BY sellingPrice DESC
                     </when>
                     <when test="sort == 'lowSellingPrice'">
-                        ORDER BY BOOK_SELLING_PRICE ASC
+                        ORDER BY sellingPrice ASC
                     </when>
                     <when test="sort == 'highStock'">
-                        ORDER BY BOOK_STOCK DESC
+                        ORDER BY B.BOOK_STOCK DESC
                     </when>
                     <when test="sort == 'lowStock'">
-                        ORDER BY BOOK_STOCK ASC
+                        ORDER BY B.BOOK_STOCK ASC
                     </when>
                     <when test="sort == 'recentlyCreated'">
-                        ORDER BY BOOK_CREATED_DATE DESC
+                        ORDER BY B.BOOK_CREATED_DATE DESC
                     </when>
                     <when test="sort == 'recentlyUpdated'">
-                        ORDER BY BOOK_UPDATED_DATE DESC
+                        ORDER BY B.BOOK_UPDATED_DATE DESC
                     </when>
                     <when test="sort == 'recentlyPublished'">
-                        ORDER BY BOOK_PUBLISHED_DATE DESC
+                        ORDER BY B.BOOK_PUBLISHED_DATE DESC
                     </when>
             </choose>
 

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.BoardMapper">
+
+    <!-- 재사용 조건절 -->
+    <sql id="where">
+        <where>
+            <!-- 검색어 -->
+            <if test="filter.opt != null">
+                <choose>
+                    <when test="filter.opt == 'writer'">
+                        A.ADMIN_ID = #{filter.keyword}
+                    </when>
+                    <when test="filter.opt == 'title'">
+                        AND N.NOTICE_TITLE LIKE CONCAT('%', #{filter.keyword}, '%')
+                    </when>
+                    <when test="filter.opt == 'content'">
+                        AND N.NOTICE_CONTENT LIKE CONCAT('%', #{filter.keyword}, '%')
+                    </when>
+                </choose>
+            </if>
+
+            <!-- 삭제글 제외 -->
+            <if test='filter.deletedYN == "N"'>
+                AND N.NOTICE_DELETED_YN = #{filter.deletedYN}
+            </if>
+
+            <!-- 기간 검색 -->
+            <if test="filter.moreDate != '' and filter.lessDate != ''">
+                <choose>
+                    <when test="filter.dateOpt == 'createdDate'">
+                        AND N.NOTICE_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                    <when test="filter.dateOpt == 'updatedDate'">
+                        AND N.NOTICE_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                </choose>
+            </if>
+
+            <if test="filter.moreDate == '' and filter.lessDate != ''">
+                <choose>
+                    <when test="filter.dateOpt == 'createdDate'">
+                        AND N.NOTICE_CREATED_DATE BETWEEN '0001-01-01 00:00:00'
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                    <when test="filter.dateOpt == 'updatedDate'">
+                        AND N.NOTICE_UPDATED_DATE BETWEEN '0001-01-01 00:00:00'
+                                                AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                </choose>
+            </if>
+
+            <if test="filter.moreDate != '' and filter.lessDate == ''">
+                <choose>
+                    <when test="filter.dateOpt == 'createdDate'">
+                        AND N.NOTICE_CREATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND '9999-12-31 23:59:59'
+                    </when>
+                    <when test="filter.dateOpt == 'updatedDate'">
+                        AND N.NOTICE_UPDATED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                                AND '9999-12-31 23:59:59'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </sql>
+
+    <select id="getTotalRowsInNotice" resultType="int">
+        SELECT
+                count(*)
+        FROM
+                BookHub.NOTICE N
+                INNER JOIN ADMIN A ON A.ADMIN_NO = N.ADMIN_NO
+        <include refid="where"></include>
+    </select>
+
+    <select id="getNotices" resultType="com.example.bookhub.admin.dto.Post">
+    		SELECT
+                    N.NOTICE_NO                   AS no,
+    		        N.NOTICE_TITLE			      AS title,
+    				N.NOTICE_CONTENT           	  AS content,
+                    N.NOTICE_IMPORTANT_YN         AS important,
+                    N.NOTICE_CREATED_DATE         AS createdDate,
+                    N.NOTICE_UPDATED_DATE         AS updatedDate,
+                    A.ADMIN_ID                    AS writer
+
+    		FROM
+                    BookHub.NOTICE N
+                    INNER JOIN ADMIN A ON A.ADMIN_NO = N.ADMIN_NO
+
+            <include refid="where"></include>
+
+            <choose>
+                    <when test="sort == 'recentlyCreated'">
+                        ORDER BY N.NOTICE_CREATED_DATE DESC
+                    </when>
+                    <when test="sort == 'recentlyUpdated'">
+                        ORDER BY N.NOTICE_UPDATED_DATE DESC
+                    </when>
+                    <when test="sort == 'important'">
+                        ORDER BY N.NOTICE_IMPORTANT_YN DESC
+                    </when>
+            </choose>
+
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <update id="deletePostByNo" parameterType="long">
+           UPDATE BookHub.NOTICE
+           SET NOTICE_DELETED_YN = 'Y'
+           WHERE NOTICE_NO = #{deletedPostNo}
+    </update>
+
+    <insert id="registerNotice" parameterType="com.example.bookhub.admin.dto.Post">
+            INSERT INTO BookHub.NOTICE
+            (NOTICE_TITLE, NOTICE_CONTENT, NOTICE_IMPORTANT_YN, ADMIN_NO)
+            VALUES
+            (#{title}, #{content}, #{important}, #{adminNo})
+    </insert>
+
+    <select id="getPostByNo" parameterType="long" resultType="com.example.bookhub.admin.dto.Post">
+        SELECT
+                N.NOTICE_TITLE			      AS title,
+                N.NOTICE_CONTENT           	  AS content,
+                N.NOTICE_IMPORTANT_YN         AS important,
+                A.ADMIN_ID                    AS writer
+
+        FROM
+                BookHub.NOTICE N
+                INNER JOIN ADMIN A ON A.ADMIN_NO = N.ADMIN_NO
+
+        WHERE
+                N.NOTICE_NO = #{postNo}
+    </select>
+
+    <update id="modifyPost" parameterType="com.example.bookhub.admin.dto.Post">
+        UPDATE
+                BookHub.NOTICE
+        SET
+                NOTICE_TITLE = #{title},
+                NOTICE_CONTENT = #{content},
+                NOTICE_IMPORTANT_YN = #{important}
+        WHERE
+                NOTICE_NO = #{no}
+    </update>
+
+    <select id="getNoticeByNo" parameterType="long" resultType="com.example.bookhub.admin.dto.Post">
+        SELECT
+                N.NOTICE_TITLE              AS title,
+                A.ADMIN_ID                  AS writer,
+                N.NOTICE_CREATED_DATE       AS createdDate,
+                N.NOTICE_CONTENT           	AS content,
+                N.NOTICE_VIEWS              AS views
+        FROM
+                BookHub.NOTICE N
+                INNER JOIN ADMIN A ON A.ADMIN_NO = N.ADMIN_NO
+        WHERE
+                NOTICE_NO = #{noticeNo}
+    </select>
+
+    <update id="increaseViewCount" parameterType="long">
+        UPDATE
+                BookHub.NOTICE
+        SET
+                NOTICE_VIEWS = NOTICE_VIEWS + 1
+        WHERE
+                NOTICE_NO = #{noticeNo}
+    </update>
+
+</mapper>
