@@ -36,9 +36,9 @@ public class KakaoPayController {
      * 결제요청
      */
     @PostMapping("/ready")
-    public String kakaoPayReady(@ModelAttribute BuyForm buyForm) {
+    public String kakaoPayReady(@ModelAttribute BuyForm buyForm, Principal principal) {
         kakaoPayService.setRestTemplate(new RestTemplate());
-        return "redirect:" + kakaoPayService.kakaoPayReady(buyForm);
+        return "redirect:" + kakaoPayService.kakaoPayReady(buyForm, principal.getName());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -46,7 +46,7 @@ public class KakaoPayController {
     public String kakaoPaySuccess(@ModelAttribute BuyForm buyForm, Principal principal,
                                   @RequestParam("pg_token")String pgToken, Model model) {
 
-        KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
+        KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken, principal.getName());
         if(kakaoApprove != null) {
             if("Y".equals(buyForm.getGiftYn()))
                 giftService.createGift(buyForm, kakaoApprove.getTid(), principal.getName());

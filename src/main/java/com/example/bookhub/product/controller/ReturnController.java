@@ -36,10 +36,10 @@ public class ReturnController {
     }
 
     @GetMapping("/refund/approve/{returnNo}")
-    public ResponseEntity<String> refundApprove(@PathVariable("returnNo") long refundNo){
-         returnService.refundApprove(refundNo);
+    public ResponseEntity<Integer> refundApprove(@PathVariable("returnNo") long refundNo){
+         int returnPrice = returnService.refundApprove(refundNo);
 
-        return ResponseEntity.ok().body("환불승인완료");
+        return ResponseEntity.ok().body(returnPrice);
     }
 
     @PostMapping("/exchange")

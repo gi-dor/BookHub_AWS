@@ -8,6 +8,8 @@ import com.example.bookhub.product.dto.KakaoReadyResponse;
 import com.example.bookhub.product.exception.BookHubException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayApproveException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayReadyException;
+import com.example.bookhub.user.mapper.UserMapper;
+import com.example.bookhub.user.vo.User;
 import groovy.util.logging.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +45,6 @@ public class KakaoPayService {
     private KakaoCancelResponse kakaoCancelResponse;
     private RestTemplate restTemplate;
 
-
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -55,7 +57,8 @@ public class KakaoPayService {
             maxAttempts = 3,
             backoff = @Backoff(delay = 2000)
     )
-    public String kakaoPayReady(BuyForm buyForm)  {
+    public String kakaoPayReady(BuyForm buyForm, String userId)  {
+
         //restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory()); // 정확한 에러 파악을 위해 생성
 
@@ -67,7 +70,7 @@ public class KakaoPayService {
 
         params.add("cid", "TC0ONETIME"); // 가맹점 코드 - 테스트용
         params.add("partner_order_id", "1001"); // 주문 번호
-        params.add("partner_user_id", "lucy"); // 회원 아이디
+        params.add("partner_user_id", userId); // 회원 아이디
         params.add("item_name", "북허브 도서"); // 상품 명
         params.add("quantity", String.valueOf(buyForm.getBuyBookNoList().size())); // 상품 수량
         params.add("total_amount", String.valueOf(buyForm.getFinalPrice())); // 상품 가격
@@ -97,7 +100,7 @@ public class KakaoPayService {
     /**
      * 결제 완료 승인
      */
-    public KakaoApproveResponse approveResponse(String pgToken) {
+    public KakaoApproveResponse approveResponse(String pgToken, String userId) {
 
         // 서버 요청 헤더
         HttpHeaders headers = getHeaders();
@@ -108,7 +111,7 @@ public class KakaoPayService {
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoReadyResponse.getTid());
         params.add("partner_order_id", "1001");
-        params.add("partner_user_id", "lucy");
+        params.add("partner_user_id", userId);
         params.add("pg_token", pgToken);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);

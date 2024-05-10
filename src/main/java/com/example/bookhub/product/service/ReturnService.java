@@ -158,7 +158,7 @@ public class ReturnService {
 
 
     @Transactional
-    public void refundApprove(long returnNo){
+    public int refundApprove(long returnNo){
         Return returnProduct = returnMapper.getRefundByReturnNo(returnNo);
         List<ReturnBook> returnBookList = returnMapper.getRefundBook(returnNo);
 
@@ -174,6 +174,7 @@ public class ReturnService {
 
         returnMapper.updateReturnedYn(returnNo);
         KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(returnProduct.getBuy().getOrderId(), returnProduct.getPrice());
+        return kakaoCancelResponse.getApproved_cancel_amount().getTotal();
     }
 
     public void refundAllYn(Return returnProduct, List<ReturnBook> returnBookList){
