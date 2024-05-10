@@ -403,16 +403,15 @@
 
         // 게시글 수정 모달창 열기
         $("[id^='btn-modify-post']").click(function () {
-            createModifyPostFormByPostNo();
+            let postNo = $(this).data("no");
+            createModifyPostFormByPostNo(postNo);
 
             let modifyPostModal = new bootstrap.Modal($("#modify-post-modal"));
             modifyPostModal.show();
         });
 
         // 수정 버튼 클릭 시 게시글 번호에 해당하는 게시글 수정 폼 생성
-        function createModifyPostFormByPostNo() {
-            let postNo = $("[id^='btn-modify-post']").data("no");
-
+        function createModifyPostFormByPostNo(postNo) {
             $.ajax({
                 url: "/admin/board/getPostByNo",
                 type: "GET",
@@ -428,7 +427,7 @@
                         $("#modify-post-modal input[name='important']").prop("checked", false);
                     }
                     // 내용(content) 설정
-                    let editor = new Quill('#editor');
+                    let editor = quilljsediterInit()
                     editor.root.innerHTML = post.content;
                 },
                 error: function (xhr, status, error) {
@@ -458,9 +457,9 @@
         quill.on('text-change', function () {
             document.getElementById("content").value = quill.root.innerHTML;
         });
+        return quill;
     }
 
-    quilljsediterInit();
 
 </script>
 
