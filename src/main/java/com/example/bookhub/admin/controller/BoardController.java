@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/board")
@@ -89,6 +90,76 @@ public class BoardController {
         boardService.modifyPost(modifiedPost);
 
         return "redirect:/admin/board/list";
+    }
+
+    @GetMapping("/notice/list")
+    public String noticeList(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                             @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
+                             @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
+                             @ModelAttribute("filter") BoardFilter filter,
+                             Model model) {
+
+        filter.setBoardType("notice");
+        int totalRows = boardService.getTotalRows(filter);
+        Pagination pagination = new Pagination(page, totalRows, rows);
+
+        if (totalRows > 0) {
+            int begin = pagination.getBegin() - START_OFFSET;
+            List<Post> posts = boardService.getPosts(filter, begin, rows, sort);
+            model.addAttribute("posts", posts);
+        } else {
+            model.addAttribute("posts", List.of());
+        }
+
+        model.addAttribute("paging", pagination);
+        model.addAttribute("filter", filter);
+
+        return "board/notice/list";
+    }
+
+    @GetMapping("/notice/detail")
+    public String noticeDetail(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                               @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
+                               @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
+                               @ModelAttribute("filter") BoardFilter filter,
+                               @RequestParam("postNo") long postNo,
+                               Model model) {
+
+        filter.setBoardType("notice");
+        int totalRows = boardService.getTotalRows(filter);
+        Post notice = boardService.getNoticeByNo(postNo);
+
+        Pagination pagination = new Pagination(page, totalRows, rows);
+
+        if (totalRows > 0) {
+            int begin = pagination.getBegin() - START_OFFSET;
+            List<Post> posts = boardService.getPosts(filter, begin, rows, sort);
+            model.addAttribute("posts", posts);
+        } else {
+            model.addAttribute("posts", List.of());
+        }
+
+        model.addAttribute("paging", pagination);
+        model.addAttribute("filter", filter);
+        model.addAttribute("notice", notice);
+
+        return "board/notice/detail";
+    }
+
+    // 조회수 증가시키고 상세화면으로 보냄(상세화면에서 새로고침 시 조회수 증가 방지하기 위함)
+    @GetMapping("/notice/views")
+    public String noticeHit(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                            @ModelAttribute("filter") BoardFilter filter,
+                            @RequestParam("postNo") long postNo,
+                            RedirectAttributes redirectAttributes) {
+
+        boardService.increaseViewCount(postNo);
+        redirectAttributes.addAttribute("page", page);
+        redirectAttributes.addAttribute("opt", filter.getOpt());
+        redirectAttributes.addAttribute("keyword", filter.getKeyword());
+        redirectAttributes.addAttribute("postNo", postNo);
+
+        return "redirect:/admin/board/notice/detail";
     }
 
 }

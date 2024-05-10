@@ -21,4 +21,8 @@ public interface BoardMapper {
     Post getPostByNo(long postNo);
 
     void modifyPost(Post modifiedPost);
+
+    Post getNoticeByNo(long postNo);
+
+    void increaseViewCount(long postNo);
 }

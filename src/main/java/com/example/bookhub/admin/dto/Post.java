@@ -15,7 +15,7 @@ public class Post {
     private String content;
     private String writer;
     private long adminNo;
-    private int view;
+    private int views;
     private String important;
     private Date createdDate;
     private Date updatedDate;

@@ -162,7 +162,7 @@
                                     <a th:href="@{/book/detail(id=${post.no})}" th:text="${post.title}">제목</a>
                                 </td>
                                 <td th:text="${post.writer}">작성자</td>
-                                <td th:text="${post.view}">조회수</td>
+                                <td th:text="${post.views}">조회수</td>
                                 <td th:text="${post.important}">중요</td>
                                 <td>
                                     <p th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
@@ -403,14 +403,14 @@
 
         // 게시글 수정 모달창 열기
         $("[id^='btn-modify-post']").click(function () {
-            createModifyPostFormBuPostNo();
+            createModifyPostFormByPostNo();
 
             let modifyPostModal = new bootstrap.Modal($("#modify-post-modal"));
             modifyPostModal.show();
         });
 
         // 수정 버튼 클릭 시 게시글 번호에 해당하는 게시글 수정 폼 생성
-        function createModifyPostFormBuPostNo() {
+        function createModifyPostFormByPostNo() {
             let postNo = $("[id^='btn-modify-post']").data("no");
 
             $.ajax({

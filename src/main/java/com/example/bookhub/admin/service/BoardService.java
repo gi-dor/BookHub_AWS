@@ -70,4 +70,12 @@ public class BoardService {
 
         boardMapper.modifyPost(post);
     }
+
+    public Post getNoticeByNo(long postNo) {
+        return boardMapper.getNoticeByNo(postNo);
+    }
+
+    public void increaseViewCount(long postNo) {
+        boardMapper.increaseViewCount(postNo);
+    }
 }
