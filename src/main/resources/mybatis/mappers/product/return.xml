@@ -191,6 +191,7 @@
             R.return_no as returnNo,
             R.return_date as returnDate,
             R.buy_no as "buy.buyNo",
+            B.total_point_use_amount as "buy.totalPointUseAmount",
             B.order_id as "buy.orderId",
             R.user_no as "user.no",
             R.return_reason_no as "returnReason.returnReasonNo",

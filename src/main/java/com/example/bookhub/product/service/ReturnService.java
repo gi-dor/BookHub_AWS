@@ -193,6 +193,7 @@ public class ReturnService {
         for(CouponUsed couponUsed : couponUsedList){
             returnMapper.updateCouponProduced(couponUsed.getCouponProducedNo(), couponUsed.getDiscountAmount());
         }
+        System.out.println("포인트 사용 금액: " + buy.getTotalPointUseAmount());
         returnMapper.updatePointUsedByUserNo(user.getNo(), buy.getTotalPointUseAmount());
     }
 
