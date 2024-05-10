@@ -154,6 +154,7 @@
                     </a>
                 </div>
                 <div class="card-body col-12">
+                    <a th:href="@{|/product/book/detail?bookNo=${book.no}|}" style="text-decoration: none; color: inherit;">
                     <div class="text-section col-9">
                         <!-- 책 제목 -->
                         <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
@@ -180,6 +181,7 @@
                             9.8
                         </p>
                     </div>
+                    </a>
                     <div class="cta-section col-3">
                         <i id="zzim" class="far fa-heart mb-3"></i>
                         <a href="#" class="btn mb-3" id="cart">장바구니</a>
