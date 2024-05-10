@@ -36,6 +36,7 @@ public class ReturnController {
     }
 
     @GetMapping("/refund/approve/{returnNo}")
+    @ResponseBody
     public ResponseEntity<Integer> refundApprove(@PathVariable("returnNo") long refundNo){
          int returnPrice = returnService.refundApprove(refundNo);
 
