@@ -1,0 +1,99 @@
+<html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<div layout:fragment="createPost" class="container-fluid">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col">
+                        <h3>게시글 등록</h3>
+                    </div>
+                    <div class="col text-end">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </div>
+                <form th:object="${post}" method="post">
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 200px;">제목</td>
+                                <td>
+                                    <select th:field="*{boardType}" class="form-select-sm">
+                                        <option value="null" selected>분류 선택</option>
+                                        <option value="notice">공지</option>
+                                        <option value="undecided">미정</option>
+                                    </select>
+                                    <input type="text" th:field="*{title}" class="form-control-sm"
+                                           style="width: 500px;">
+                                    <input type="checkbox" class="form-check-input" value="Y" id="important"
+                                           th:field="*{important}">
+                                    <label for="important">중요</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 200px;">내용</td>
+                                <td>
+                                    <!-- Quill.js 에디터 적용 -->
+                                    <div id="editor" style=" height: 300px; width: 100%;"></div>
+                                    <input type="hidden" th:field="*{content}">
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">저장</button>
+                            <button type="button" class="btn btn-outline-secondary">취소</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="createPostScript" type="text/javascript">
+
+    // Quill.js 에디터 적용
+    function quilljsediterInit() {
+        var option = {
+            modules: {
+                toolbar: [
+                    [{header: [1, 2, 3, false]}],
+                    [{'font': []}],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{'color': []}, {'background': []}],
+                    [{list: 'ordered'}, {list: 'bullet'}]
+                ]
+            },
+            // placeholder: '자세한 내용을 입력해 주세요!',
+            theme: 'snow'
+        };
+        quill = new Quill('#editor', option);
+        quill.on('text-change', function () {
+            document.getElementById("content").value = quill.root.innerHTML;
+        });
+    }
+
+    quilljsediterInit();
+
+    $(function () {
+
+        // 페이지가 로드될 때 실행되는 함수
+        toggleImportantCheckbox(); // 중요 체크박스 상태 업데이트
+
+        // 분류 선택이 변경될 때마다 실행되는 함수
+        $("select[name='boardType']").change(function () {
+            toggleImportantCheckbox(); // 중요 체크박스 상태 업데이트
+        });
+
+        function toggleImportantCheckbox() {
+            let selectedValue = $("select[name='boardType']").val();
+            if (selectedValue === "notice") {
+                $("#important").show(); // 공지가 선택되면 중요 체크박스 표시
+                $("label[for='important']").show(); // 공지가 선택되면 중요 라벨 표시
+            } else {
+                $("#important").hide(); // 다른 값이 선택되면 중요 체크박스 숨김
+                $("label[for='important']").hide(); // 다른 값이 선택되면 중요 라벨 숨김
+            }
+        }
+    })
+
+</script>
+</html>
