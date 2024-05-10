@@ -247,6 +247,9 @@
         (comment, review_no, user_no)
         values
         (#{comment}, #{review.reviewNo}, #{user.no})
+        <selectKey keyProperty="reviewReplyNo" resultType="long" order="AFTER">
+            select last_insert_id()
+        </selectKey>
     </insert>
 
     <select id="getReviewByReviewNo" parameterType="long" resultMap="ReviewModifyResultMap">

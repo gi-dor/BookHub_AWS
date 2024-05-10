@@ -59,54 +59,54 @@
         </div>
 
         <div class="col-5">
-                <div class="order-md-last">
-                    <div class="d-flex justify-content-start align-items-center mb-3">
-                        <span class="badge rounded-pill text-bg-dark me-3">베스트셀러</span>
-                        <span class="badge rounded-pill text-bg-success">
+            <div class="order-md-last">
+                <div class="d-flex justify-content-start align-items-center mb-3">
+                    <span class="badge rounded-pill text-bg-dark me-3">베스트셀러</span>
+                    <span class="badge rounded-pill text-bg-success">
                             <span th:text="${#numbers.formatDecimal(book.discountRate * 100, 0, 0)}"></span>% 할인
                         </span>
-                    </div>
-                    <ul class="list-group mb-3">
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                <h6 class="my-0"><strong>가격</strong></h6>
-                            </div>
-                            <span>
+                </div>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0"><strong>가격</strong></h6>
+                        </div>
+                        <span>
                                 <span th:text="${#numbers.formatDecimal(book.discountRate * 100, 0, 0)}"></span>%
                                 <span><span th:text="${#numbers.formatDecimal(book.price * (1 - book.discountRate), 0, 0)}"></span>원</span>
                                 <span><span th:text="${book.price}"></span>원</span>
                             </span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                <h6 class="my-0"><strong>적립/혜택</strong></h6>
-                            </div>
-                            <span><span th:text="${#numbers.formatDecimal(book.price * 0.05, 0, 0)}"></span>P</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                <h6 class="my-0"><strong>판매 상태</strong></h6>
-                            </div>
-                            <div>
-                                <div class="badge text-bg-success" th:text="${book.status}"></div><br>
-                                <span th:text="${book.stock}"></span>개 남음
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between bg-light">
-                            <div class="text-success">
-                                <h6 class="my-0"><strong>배송 안내</strong></h6>
-                            </div>
-                            <span class="badge text-bg-light">당일 배송</span>
-                        </li>
-                    </ul>
-
-                    <form class="card p-2">
-                        <div class="input-group">
-                            <span class="form-control">품절 상품의 경우 알림신청 시 입고 정보를 받으실 수 있습니다</span>
-                            <button type="button" class="btn btn-secondary">알림신청</button>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0"><strong>적립/혜택</strong></h6>
                         </div>
-                    </form>
-                </div>
+                        <span><span th:text="${#numbers.formatDecimal(book.price * 0.05, 0, 0)}"></span>P</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0"><strong>판매 상태</strong></h6>
+                        </div>
+                        <div>
+                            <div class="badge text-bg-success" th:text="${book.status}"></div><br>
+                            <span th:text="${book.stock}"></span>개 남음
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-success">
+                            <h6 class="my-0"><strong>배송 안내</strong></h6>
+                        </div>
+                        <span class="badge text-bg-light">당일 배송</span>
+                    </li>
+                </ul>
+
+                <form class="card p-2">
+                    <div class="input-group">
+                        <span class="form-control">품절 상품의 경우 알림신청 시 입고 정보를 받으실 수 있습니다</span>
+                        <button type="button" class="btn btn-secondary">알림신청</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -157,6 +157,12 @@
         </tr>
     </table>
 
+    <!-- 도서 설명 사진 -->
+    <div>
+        <img th:src="${book.imageDescription}" class="d-block w-100" alt="...">
+    </div>
+
+
     <!-- 리뷰 -->
     <div class="row">
         <div class="col-1"></div>
@@ -170,6 +176,7 @@
         <div class="col-1"></div>
     </div>
 
+    <div id="review-block"></div>
     <div class="d-flex justify-content-between mt-5 mb-3">
         <div>
             <input type="radio" class="btn-check" name="radio-option" id="all-reviews" value="total" autocomplete="off"
@@ -185,6 +192,7 @@
             <label class="btn" for="my-reviews">내 리뷰</label>
         </div>
         <div>
+            <button type="button" class="btn btn-outline-primary" onclick="createReview()">리뷰 작성</button>
             <select class="form-select" name="select-sort" onchange="changeSortOption()" th:attr="value=${sort}">
                 <option value="date" th:selected="${sort eq 'date'}">최신순</option>
                 <option value="recommend" th:selected="${sort eq 'recommend'}">추천순</option>
@@ -196,6 +204,7 @@
     <div class="col-12">
         <div id="div-reviews">
             <div th:each="review: ${reviewDtoList}">
+                <a th:id="|review_${review.reviewNo}|"></a>
                 <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
                     <div class="col p-4  position-static">
                         <div class="d-flex justify-content-between">
@@ -209,7 +218,7 @@
                                         <span class="badge bg-light text-dark" th:text="${#temporals.format(review.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                         <span class="ms-3">신고/차단</span>
                                     </span>
-                                     <span>
+                            <span>
                                         <span th:text="${review.reviewTag.name}"></span>
                                         <span th:text="${review.rate}"></span>
                                          <span>
@@ -255,6 +264,7 @@
                         <!-- 댓글 목록 -->
                         <div th:if="${review.reviewReplyList != null and not #lists.isEmpty(review.reviewReplyList)}">
                             <div th:each="reviewReply: ${review.reviewReplyList}">
+                                <a th:id="|reply_${reviewReply.reviewReplyNo}|"></a>
                                 <div class="card my-3" id="div-replies">
                                     <div class="card-body py-1 px-2">
                                         <div class="d-flex justify-content-between">
@@ -275,7 +285,7 @@
                                         </div>
                                         <input type="hidden" class="review-reply-no" th:value="${reviewReply.reviewReplyNo}"/>
                                         <p class="card-text ps-2 small reply-comment" style="white-space: pre-line;"
-                                        th:text="${reviewReply.comment}"></p>
+                                           th:text="${reviewReply.comment}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -283,7 +293,7 @@
 
                         <!-- 댓글 작성폼 -->
                         <form class="border p-3 mb-3" th:id="'form-reply-' + ${review.reviewNo}" method="post" action="/product/review/reply/create"
-                        style="display: none;">
+                              style="display: none;">
                             <input type="hidden" name="bookNo" th:value="${book.bookNo}"/>
                             <input type="hidden" name="reviewNo" th:value="${review.reviewNo}"/>
                             <div class="row g-3">
@@ -336,7 +346,7 @@
                 <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
                 <input type="hidden" name="buyBookCountList" value=1 />
                 <button type="submit" class="btn btn-outline-success me-3"
-                    sec:authorize="isAuthenticated()">선물하기</button>
+                        sec:authorize="isAuthenticated()">선물하기</button>
             </form>
             <form method="post" action="/product/buy/order">
                 <input type="hidden" name="buyBookNoList" th:value="${book.bookNo}"/>
@@ -747,123 +757,27 @@
 
         // 새로운 URL로 페이지 리로드
         window.location.href = url;
+        scrollToReview();
     }
 
     // URL에 쿼리 매개변수 추가 또는 업데이트하는 함수
     function updateQueryStringParameter(uri, key, value) {
         let re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
         let separator = uri.indexOf("?") !== -1 ? "&" : "?";
+        // 해시 부분 제거
+        let parts = uri.split("#");
+        uri = parts[0];
         if (uri.match(re)) {
-            return uri.replace(re, "$1" + key + "=" + value + "$2");
+            return uri.replace(re, "$1" + key + "=" + value + "$2") + (parts.length > 1 ? "#" + parts[1] : "");
         } else {
             return uri + separator + key + "=" + value;
         }
     }
 
-    // 리뷰들 조회
-    // async function getReviews(bookNo){
-    //     let response = await fetch("/product/review/" + bookNo);
-    //
-    //     if(!response.ok){
-    //         alert("리뷰 조회에 실패하였습니다");
-    //         return;
-    //     }
-    //
-    //     let reviewDtoList = await response.json();
-    //     console.log(reviewDtoList)
-    //     let rows = "";
-    //     for(let index =  0; index < reviewDtoList.length; index++){
-    //         let review = reviewDtoList[index];
-    //
-    //         let buyerBadge = '';
-    //         if (review.buyer === 'Y') {
-    //             buyerBadge = '<span class="badge rounded-pill text-bg-dark">구매자</span>';
-    //         }
-    //
-    //         let recommendIcon = review.recommended === 'Y' ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
-    //
-    //         rows += `
-    //                     <div class="row g-0 rounded overflow-hidden h-md-250 position-relative border review">
-    //                         <div class="col p-4  position-static">
-    //                             <div class="d-flex justify-content-between">
-    //                                 <span>
-    //                                     <span class="review-no" style="display:none;">${review.reviewNo}</span>
-    //                                     <span class="badge rounded-pill text-bg-light">종이책</span>
-    //                                     ${buyerBadge}
-    //                                     <span class="ms-3" >${review.user.id}</span>
-    //                                     <span class="ms-3" >${review.createdDate}</span>
-    //                                     <span class="ms-3">신고/차단</span>
-    //                                 </span>
-    //                                 <span>
-    //                                     <span>${review.reviewTag.name}</span>
-    //                                     <span>${review.rate}</span>
-    //                                 </span>
-    //                             </div>
-    //                             <p class="card-text mb-auto mt-3 collapsed " id="cardContent-${review.reviewNo}" >
-    //                                ${review.comment}
-    //                             </p>
-    //                             <div class="d-flex justify-content-between mt-3">
-    //                                 <a href="#" class="" id="toggleLink-${review.reviewNo}" onclick="toggleCardContent(event, ${review.reviewNo})">
-    //                                     <i class="bi bi-chevron-double-down"></i>
-    //                                 </a>
-    //                                 <div>
-    //                                     <span class="recommend">
-    //                                          <i class="${recommendIcon}" id="recommend-${review.reviewNo}"></i>
-    //                                          <span class="me-3 " id="recommend-count-${review.reviewNo}">${review.recommendCount}</span>
-    //                                     </span>
-    //                                     <span class="reply">
-    //                                         <i class="bi bi-chat-dots"></i>
-    //                                         <span class="me-3">${review.replyCount}</span>
-    //                                     </span>
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                         <div class="col-auto d-none d-lg-block">
-    //                             <img src="/image/product/${review.reviewImageList[0]?.imagePath}" alt="리뷰 이미지" style="width: 200px; height: 200px"/>
-    //                         </div>
-    //                     </div>
-    //
-    //                     <!-- 댓글 목록 및 작성폼 -->
-    //                     <div class="row mb-3">
-    //                         <div class="col-12">
-    //                             <!-- 댓글 목록 -->
-    //                             <div class="card my-3">
-    //                                 <div class="card-body py-1 px-2">
-    //                                      <div class="d-flex justify-content-between">
-    //                                             <div>
-    //                                                     <span class="badge bg-light text-dark">홍길동</span>
-    //                                                     <span class="badge bg-light text-dark">2024-03-21</span>
-    //                                             </div>
-    //                                             <div>
-    //                                                     <a class="btn btn-sm btn-outline-success">추천</a>
-    //                                                     <a class="btn btn-sm btn-outline-secondary">수정</a>
-    //                                                     <a class="btn btn-sm btn-outline-secondary">삭제</a>
-    //                                             </div>
-    //                                     </div>
-    //                                     <p class="card=text ps-2 small" style="white-space: pre-line;">댓글내용입니다 내용입니다 내용입니다.</p>
-    //                                 </div>
-    //                             </div>
-    //
-    //                             <!-- 댓글 작성폼 -->
-    //                             <form class="border p-3 mb-3" method="post" action="/product/review/reply/create">
-    //                                 <input type="hidden" name="bookNo" value="${bookNo}"/>
-    //                                 <input type="hidden" name="reviewNo" value="${review.reviewNo}"/>
-    //                                <div class="row g-3">
-    //                                     <div class="col-12 position-relative">
-    //                                             <textarea rows="3" class="form-control" name="comment"></textarea>
-    //                                             <button type="submit" class="btn btn-outline-dark btn-sm position-absolute" style="bottom: 15px; right: 25px;">댓글 등록</button>
-    //                                     </div>
-    //                                 </div>
-    //                             </form>
-    //                         </div>
-    //                     </div>
-    //                     <br>
-    //             `;
-    //     }
-    //     $reviewDiv.html(rows);
-    // }
+    function scrollToReview() {
+        // review 앵커로 스크롤 이동
+        document.getElementById('review-block').scrollIntoView({ behavior: 'smooth' });
+    }
 
-    //getReviews(bookNo);
 </script>
 </html>
-

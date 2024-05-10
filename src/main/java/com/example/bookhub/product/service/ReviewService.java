@@ -27,7 +27,7 @@ public class ReviewService {
     private final UserMapper userMapper;
 
     @Transactional
-    public void createReview(ReviewForm reviewForm, String userId) {
+    public long createReview(ReviewForm reviewForm, String userId) {
 
         User user = userMapper.selectUserById(userId);
 
@@ -64,6 +64,8 @@ public class ReviewService {
                     reviewMapper.createReviewImage(reviewImage);
                 }
             }
+
+        return generatedReviewNo;
     }
 
     public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort, String option) {
@@ -140,7 +142,7 @@ public class ReviewService {
         }
     }
 
-    public void createReviewReply(ReviewReplyForm reviewReplyForm, String userId) {
+    public long createReviewReply(ReviewReplyForm reviewReplyForm, String userId) {
 
         Review review = new Review();
         review.setReviewNo(reviewReplyForm.getReviewNo());
@@ -155,6 +157,8 @@ public class ReviewService {
 
         reviewMapper.createReviewReply(reviewReply);
         reviewMapper.updateReviewReplyCount(reviewReplyForm.getReviewNo(), "create");
+
+        return reviewReply.getReviewReplyNo();
     }
 
     public Review getReviewByReviewNo(long reviewNo) {

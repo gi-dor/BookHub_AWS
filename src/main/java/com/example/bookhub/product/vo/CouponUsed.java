@@ -11,5 +11,5 @@ public class CouponUsed {
     private int discountAmount;
     private long couponProducedNo;
     private long buyNo;
-    private Date usedNo;
+    private Date usedDate;
 }
