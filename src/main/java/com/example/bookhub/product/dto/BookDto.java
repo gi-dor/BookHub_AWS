@@ -14,6 +14,7 @@ public class BookDto {
 
     private long bookNo;
     private String imageCover;
+    private String imageDescription;
     private String name;
     private LocalDateTime publishedDate;
     private String description;
