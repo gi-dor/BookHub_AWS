@@ -8,7 +8,7 @@ import com.example.bookhub.product.exception.kakaoPay.KakaoPayBusinessLogicExcep
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.GiftService;
 import com.example.bookhub.product.service.KakaoPayService;
-import com.example.bookhub.product.service.RefundService;
+import com.example.bookhub.product.service.ReturnService;
 import com.example.bookhub.product.vo.Buy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,15 +30,15 @@ public class KakaoPayController {
     private final KakaoPayService kakaoPayService;
     private final BuyService buyService;
     private final GiftService giftService;
-    private final RefundService refundService;
+    private final ReturnService returnService;
 
     /**
      * 결제요청
      */
     @PostMapping("/ready")
-    public String kakaoPayReady(@ModelAttribute BuyForm buyForm) {
+    public String kakaoPayReady(@ModelAttribute BuyForm buyForm, Principal principal) {
         kakaoPayService.setRestTemplate(new RestTemplate());
-        return "redirect:" + kakaoPayService.kakaoPayReady(buyForm);
+        return "redirect:" + kakaoPayService.kakaoPayReady(buyForm, principal.getName());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -46,7 +46,7 @@ public class KakaoPayController {
     public String kakaoPaySuccess(@ModelAttribute BuyForm buyForm, Principal principal,
                                   @RequestParam("pg_token")String pgToken, Model model) {
 
-        KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken);
+        KakaoApproveResponse kakaoApprove = kakaoPayService.approveResponse(pgToken, principal.getName());
         if(kakaoApprove != null) {
             if("Y".equals(buyForm.getGiftYn()))
                 giftService.createGift(buyForm, kakaoApprove.getTid(), principal.getName());
@@ -75,34 +75,4 @@ public class KakaoPayController {
         throw new KakaoPayBusinessLogicException("카카오 결제 실패");
     }
 
-    @PostMapping("/refund")
-    public String refund(long buyNo, Model model, Principal principal) {
-        Buy buy = refundService.getBuyByBuyNo(buyNo);
-        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy.getOrderId(), buy.getFinalPrice());
-        if(kakaoCancelResponse != null) {
-            refundService.refund(buy, principal.getName());
-        }
-
-        int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();
-        model.addAttribute("successMessage", "결제 취소 성공");
-        model.addAttribute("finalPrice", finalPrice);
-
-        return "product/pay/success";
-    }
-
-    @PostMapping("/refund/part")
-    public String refundPart(Model model, ReturnForm returnForm) {
-        Map<String, Object> map = refundService.calculateReturnPrice(returnForm);
-        Buy buy = refundService.getBuyByBuyNo(returnForm.getBuyNo());
-        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel(buy.getOrderId(), (Integer) map.get("finalReturnPrice"));
-        if(kakaoCancelResponse != null) {
-            refundService.refundPart(map);
-        }
-
-        int finalPrice = kakaoCancelResponse.getApproved_cancel_amount().getTotal();
-        model.addAttribute("successMessage", "결제 취소 성공");
-        model.addAttribute("finalPrice", finalPrice);
-
-        return "product/pay/success";
-    }
 }
