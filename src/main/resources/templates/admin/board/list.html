@@ -7,7 +7,7 @@
                 <h3>게시글 조회</h3>
 
                 <!-- 필터 선택 영역-->
-                <form th:action="@{/admin/board/list}" th:object="${filter}">
+                <form id="boardListForm" th:action="@{/admin/board/list}" th:object="${filter}">
                     <div class="col-12 bg-light p-3 mb-3">
                         <table class="table">
                             <tbody>
@@ -194,6 +194,7 @@
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
                                 <a th:href="@{/admin/board/list(page=${paging.currentPage - 1})}"
+                                   th:data-page="${paging.currentPage - 1}"
                                    class="page-link">이전</a>
                             </li>
 
@@ -202,11 +203,13 @@
                                 class="page-item"
                                 th:classappend="${num == paging.currentPage} ? 'active'">
                                 <a th:href="@{/admin/board/list(page=${num})}" th:text="${num}"
+                                   th:data-page="${num}"
                                    class="page-link">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
                                 <a th:href="@{/admin/board/list(page=${paging.currentPage + 1})}"
+                                   th:data-page="${paging.currentPage + 1}"
                                    class="page-link">다음</a>
                             </li>
                         </ul>
@@ -436,6 +439,14 @@
             });
         }
 
+        $(".pagination a").click(function (event) {
+            event.preventDefault();
+
+            let page = $(this).data("page");
+
+            $("input[name=page]").val(page)
+            $("#boardListForm").trigger("submit")
+        });
     })
 
     // Quill.js 에디터 적용
