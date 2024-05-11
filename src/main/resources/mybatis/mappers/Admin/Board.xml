@@ -84,6 +84,7 @@
                     N.NOTICE_IMPORTANT_YN         AS important,
                     N.NOTICE_CREATED_DATE         AS createdDate,
                     N.NOTICE_UPDATED_DATE         AS updatedDate,
+                    N.NOTICE_VIEWS                AS views,
                     A.ADMIN_ID                    AS writer
 
     		FROM
