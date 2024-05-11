@@ -16,7 +16,7 @@
                             <option value="content">내용</option>
                         </select>
                         <input type="text" th:field="*{keyword}" class="form-control-sm ms-2">
-                        <button type="submit" class="btn btn-outline-dark btn-sm ms-2">검색어</button>
+                        <button type="submit" class="btn btn-outline-dark btn-sm ms-2">검색</button>
                     </div>
 
                     <!-- 조회 결과 영역 -->
@@ -26,14 +26,14 @@
                             <colgroup>
                                 <col width="10%">
                                 <col width="*">
-                                <col width="15%">
+                                <col width="25%">
                                 <col width="10%">
                             </colgroup>
                             <thead>
                             <tr>
                                 <th>번호</th>
                                 <th>제목</th>
-                                <th>등록일/수정일</th>
+                                <th>등록일</th>
                                 <th>조회</th>
                             </tr>
                             </thead>
@@ -54,7 +54,7 @@
                                     번호
                                 </td>
                                 <td class="text-start">
-                                    <a th:href="@{/admin/board/notice/views(postNo=${post.no})}"
+                                    <a th:href="@{/admin/board/notice/views(postNo=${post.no}, page=${param.page}, opt=${param.opt}, keyword=${param.keyword})}"
                                        th:text="${post.title}">제목</a>
                                 </td>
                                 <td>
@@ -114,6 +114,7 @@
             $("input[name=page]").val(page)
             $("#noticeListForm").trigger("submit")
         });
+
     })
 </script>
 

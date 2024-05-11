@@ -119,29 +119,15 @@ public class BoardController {
 
     @GetMapping("/notice/detail")
     public String noticeDetail(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                               @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
-                               @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
                                @ModelAttribute("filter") BoardFilter filter,
                                @RequestParam("postNo") long postNo,
                                Model model) {
 
-        filter.setBoardType("notice");
-        // int totalRows = boardService.getTotalRows(filter);
         Post notice = boardService.getNoticeByNo(postNo);
-        List<Post> notices = boardService.getNoticesByNo(postNo);
+        List<Post> notices = boardService.getNoticesByNo(postNo, filter);
 
-        // Pagination pagination = new Pagination(page, totalRows, rows);
-        //
-        // if (totalRows > 0) {
-        //     int begin = pagination.getBegin() - START_OFFSET;
-        //     List<Post> posts = boardService.getPosts(filter, begin, rows, sort);
-        //     model.addAttribute("posts", posts);
-        // } else {
-        //     model.addAttribute("posts", List.of());
-        // }
-
-        // model.addAttribute("paging", pagination);
-        // model.addAttribute("filter", filter);
+        model.addAttribute("page", page);
+        model.addAttribute("filter", filter);
         model.addAttribute("notice", notice);
         model.addAttribute("notices", notices);
 
@@ -151,14 +137,16 @@ public class BoardController {
     // 조회수 증가시키고 상세화면으로 보냄(상세화면에서 새로고침 시 조회수 증가 방지하기 위함)
     @GetMapping("/notice/views")
     public String noticeHit(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                            @ModelAttribute("filter") BoardFilter filter,
+                            @RequestParam("opt") String opt,
+                            @RequestParam("keyword") String keyword,
                             @RequestParam("postNo") long postNo,
                             RedirectAttributes redirectAttributes) {
 
         boardService.increaseViewCount(postNo);
+
         redirectAttributes.addAttribute("page", page);
-        redirectAttributes.addAttribute("opt", filter.getOpt());
-        redirectAttributes.addAttribute("keyword", filter.getKeyword());
+        redirectAttributes.addAttribute("opt", opt);
+        redirectAttributes.addAttribute("keyword", keyword);
         redirectAttributes.addAttribute("postNo", postNo);
 
         return "redirect:/admin/board/notice/detail";

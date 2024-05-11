@@ -6,9 +6,10 @@
             <div class="col-12">
                 <h3>공지사항</h3>
 
-                <form th:action="@{/board/notice/list}" th:object="${filter}">
-                    <input type="hidden" name="page"/>
-
+                <form th:action="@{/admin/board/notice/list}" th:object="${filter}">
+                    <input type="hidden" name="page" th:value="${page}">
+                    <input type="hidden" name="opt" th:value="${filter.opt}">
+                    <input type="hidden" name="keyword" th:value="${filter.keyword}">
                     <!-- 게시글 정보 영역 -->
                     <div class="col-12 bg-light p-3 mb-3">
                         <div class="d-flex justify-content-end">
@@ -50,22 +51,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!--
-                                ** 게시글 순번 **
-
-                                1. 마지막 숫자부터 시작
-                                    전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
-                                    ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
-
-                                2. 1번부터 시작
-                                    ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
-                                    ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
-                            -->
                             <tr th:each="notice, loop : ${notices}"
                                 th:class="${#strings.equals(notice.no, param.postNo) ? 'table-secondary' : ' '}">
-                                <td th:text="${loop.count}">순번</td>
+                                <td th:text="${loop.size - loop.index}">순번</td>
                                 <td class="text-start">
-                                    <a th:href="@{/admin/board/notice/views(postNo=${notice.no})}"
+                                    <a th:href="@{/admin/board/notice/views(postNo=${notice.no}, page=${param.page}, opt=${param.opt}, keyword=${param.keyword})}"
                                        th:text="${notice.title}">제목</a>
                                 </td>
                                 <td>
@@ -76,6 +66,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <button type="submit" class="btn btn-secondary">목록</button>
                 </form>
             </div>
         </div>

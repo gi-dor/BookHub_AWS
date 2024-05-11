@@ -170,7 +170,7 @@
                 NOTICE_NO = #{noticeNo}
     </update>
 
-    <select id="getNoticesByNo" parameterType="long" resultType="com.example.bookhub.admin.dto.Post">
+    <select id="getNoticesByNo" resultType="com.example.bookhub.admin.dto.Post">
         SELECT
                     NOTICE_NO               AS no,
                     NOTICE_TITLE            AS title,
@@ -179,7 +179,17 @@
         FROM
                     BookHub.NOTICE
         WHERE
-                    NOTICE_NO BETWEEN (#{noticeNo} - 5) AND (#{noticeNo} + 5)
+                    NOTICE_NO BETWEEN (#{postNo} - 5) AND (#{postNo} + 5)
+                    <if test="filter.opt != null">
+                        <choose>
+                            <when test="filter.opt == 'title'">
+                                AND NOTICE_TITLE LIKE CONCAT('%', #{filter.keyword}, '%')
+                            </when>
+                            <when test="filter.opt == 'content'">
+                                AND NOTICE_CONTENT LIKE CONCAT('%', #{filter.keyword}, '%')
+                            </when>
+                        </choose>
+                    </if>
         ORDER BY
                     NOTICE_NO ASC;
         </select>
