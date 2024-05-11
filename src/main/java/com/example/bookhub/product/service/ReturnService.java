@@ -51,6 +51,7 @@ public class ReturnService {
         return (Integer) map.get("finalReturnPrice");
     }
 
+    @Transactional(readOnly = true)
     public Map<String, Object> calculateReturnPrice(ReturnForm returnForm) {
         System.out.println(returnForm);
         int totalReturnPrice = 0;
