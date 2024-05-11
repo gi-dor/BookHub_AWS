@@ -7,7 +7,7 @@
                 <h3>상품 조회</h3>
 
                 <!-- 필터 선택 영역-->
-                <form th:action="@{/admin/product/list}" th:object="${filter}">
+                <form id="productListForm" th:action="@{/admin/product/list}" th:object="${filter}">
                     <div class="col-12 bg-light p-3 mb-3">
                         <table class="table">
                             <tbody>
@@ -277,20 +277,20 @@
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
                                 <a th:href="@{/admin/product/list(page=${paging.currentPage - 1})}"
-                                   class="page-link">이전</a>
+                                   th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
                             </li>
 
                             <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
                                 th:if="${num >= 1 and num <= paging.totalPages}"
                                 class="page-item"
                                 th:classappend="${num == paging.currentPage} ? 'active'">
-                                <a th:href="@{/admin/product/list(page=${num})}" th:text="${num}"
+                                <a th:href="@{/admin/product/list(page=${num})}" th:text="${num}" th:data-page="${num}"
                                    class="page-link">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
                                 <a th:href="@{/admin/product/list(page=${paging.currentPage + 1})}"
-                                   class="page-link">다음</a>
+                                   th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
                             </li>
                         </ul>
                     </div>
@@ -527,6 +527,16 @@
         $("[id^=btn-modify-product]").click(function () {
             let productNo = $(this).data("no");
             window.location.href = "/admin/product/modify?no=" + productNo;
+        });
+
+        // 페이지 이동 시 필터 유지
+        $(".pagination a").click(function (event) {
+            event.preventDefault();
+
+            let page = $(this).data("page");
+
+            $("input[name=page]").val(page)
+            $("#productListForm").trigger("submit")
         });
 
     })
