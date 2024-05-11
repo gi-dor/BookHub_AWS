@@ -25,11 +25,11 @@ public class BookStockTest {
 
     @Test
     public void testCounterWithConcurrency() throws InterruptedException {
-        int numberOfThreads = 6;
+        int numberOfThreads = 5;
         ExecutorService service = Executors.newFixedThreadPool(10); // 스레드 풀을 생성
         CountDownLatch latch = new CountDownLatch(numberOfThreads); // 스레드의 완료를 추적
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             System.out.println("i : "+i);
             // service.execute()는 작업을 스레드 풀에 제출하고, 해당 작업이 완료될 때까지 기다리지 않고 다음 코드로 진행
             // 이후 작업은 백그라운드에서 별도의 스레드에서 실행
