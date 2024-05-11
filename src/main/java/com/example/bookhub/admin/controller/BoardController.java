@@ -126,22 +126,24 @@ public class BoardController {
                                Model model) {
 
         filter.setBoardType("notice");
-        int totalRows = boardService.getTotalRows(filter);
+        // int totalRows = boardService.getTotalRows(filter);
         Post notice = boardService.getNoticeByNo(postNo);
+        List<Post> notices = boardService.getNoticesByNo(postNo);
 
-        Pagination pagination = new Pagination(page, totalRows, rows);
+        // Pagination pagination = new Pagination(page, totalRows, rows);
+        //
+        // if (totalRows > 0) {
+        //     int begin = pagination.getBegin() - START_OFFSET;
+        //     List<Post> posts = boardService.getPosts(filter, begin, rows, sort);
+        //     model.addAttribute("posts", posts);
+        // } else {
+        //     model.addAttribute("posts", List.of());
+        // }
 
-        if (totalRows > 0) {
-            int begin = pagination.getBegin() - START_OFFSET;
-            List<Post> posts = boardService.getPosts(filter, begin, rows, sort);
-            model.addAttribute("posts", posts);
-        } else {
-            model.addAttribute("posts", List.of());
-        }
-
-        model.addAttribute("paging", pagination);
-        model.addAttribute("filter", filter);
+        // model.addAttribute("paging", pagination);
+        // model.addAttribute("filter", filter);
         model.addAttribute("notice", notice);
+        model.addAttribute("notices", notices);
 
         return "board/notice/detail";
     }

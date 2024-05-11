@@ -5,6 +5,7 @@ import com.example.bookhub.admin.dto.Post;
 import com.example.bookhub.admin.mapper.BoardMapper;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BoundedRangeModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -77,5 +78,9 @@ public class BoardService {
 
     public void increaseViewCount(long postNo) {
         boardMapper.increaseViewCount(postNo);
+    }
+
+    public List<Post> getNoticesByNo(long postNo) {
+        return boardMapper.getNoticesByNo(postNo);
     }
 }

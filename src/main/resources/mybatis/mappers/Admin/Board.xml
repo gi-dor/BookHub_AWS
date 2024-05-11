@@ -169,4 +169,18 @@
                 NOTICE_NO = #{noticeNo}
     </update>
 
+    <select id="getNoticesByNo" parameterType="long" resultType="com.example.bookhub.admin.dto.Post">
+        SELECT
+                    NOTICE_NO               AS no,
+                    NOTICE_TITLE            AS title,
+                    NOTICE_CREATED_DATE     AS createdDate,
+                    NOTICE_VIEWS            AS views
+        FROM
+                    BookHub.NOTICE
+        WHERE
+                    NOTICE_NO BETWEEN (#{noticeNo} - 5) AND (#{noticeNo} + 5)
+        ORDER BY
+                    NOTICE_NO ASC;
+        </select>
+
 </mapper>
