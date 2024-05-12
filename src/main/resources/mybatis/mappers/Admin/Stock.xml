@@ -78,9 +78,9 @@
             LIMIT #{limit} OFFSET #{offset}
     </select>
 
-    <select id="getBookNoBelowStockNotification" resultType="com.example.bookhub.admin.vo.Stock">
+    <select id="getBookNoBelowStockNotification" resultType="long">
     		SELECT
-                    BOOK_NO             AS bookNo
+                    BOOK_NO
     		FROM
                     BookHub.BOOK
     		WHERE

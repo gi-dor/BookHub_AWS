@@ -5,6 +5,8 @@ import com.example.bookhub.admin.mapper.StockMapper;
 import com.example.bookhub.admin.vo.Stock;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +23,8 @@ public class StockService {
         return stockMapper.getStockNotifications(filter, offset, limit);
     }
 
+    @Scheduled(cron = "0 * * * * *")
+    @SchedulerLock(name = "sendNoticeContentAutomatically", lockAtLeastFor = "20s", lockAtMostFor = "50s")
     public void notifyInsufficientStock() {
         List<Long> bookNos = stockMapper.getBookNoBelowStockNotification();
         for (Long bookNo : bookNos) {
