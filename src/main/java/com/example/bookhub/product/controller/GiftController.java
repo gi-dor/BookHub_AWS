@@ -2,6 +2,7 @@ package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
+import com.example.bookhub.product.dto.GiftDto;
 import com.example.bookhub.product.dto.GiftReceiverForm;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
@@ -83,8 +84,11 @@ public class GiftController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/receiver/{giftReceiverNo}")
-    public String receiver(@PathVariable("giftReceiverNo") long giftReceiverNo, Model model, Principal principal){
+    @GetMapping("/receiver/{giftOrderId}")
+    public String receiver(@PathVariable("giftOrderId") String giftOrderId,
+                           Model model, Principal principal){
+
+        long giftReceiverNo = giftService.getGiftReceiverNoByGiftOrderId(giftOrderId);
 
         UserDelivery defaultUserDelivery = null;
         List<UserDelivery> userDeliveryList = buyService.getUserDeliveryByUserNo(principal.getName());
@@ -94,9 +98,12 @@ public class GiftController {
             }
         }
 
+        List<GiftDto> giftDtoList = giftService.getGiftDetail(giftReceiverNo);
+
         model.addAttribute("userDeliveryList", userDeliveryList);
         model.addAttribute("defaultUserDelivery", defaultUserDelivery);
         model.addAttribute("giftReceiveNo", giftReceiverNo);
+        model.addAttribute("giftDtoList", giftDtoList);
 
         return "product/gift/receiverDetail";
     }

@@ -3,6 +3,25 @@
 <div layout:fragment="content" class="container my-3">
     <div class="row">
         <div class="col-12">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3 d-flex justify-content-between">
+                    <h5 class="my-0 fw-normal">선물받은 상품</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                        <tr th:each="gift : ${giftDtoList}">
+                            <td><img class="rounded mx-auto d-block" th:src="${gift.bookImageCover}"></td>
+                            <td th:text="${gift.bookName}"></td>
+                            <td th:text="${gift.authorName}"></td>
+                            <td th:text="${gift.publisherName}"></td>
+                            <td th:text="${gift.count}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <form method="post" action="/product/gift/receiver">
                 <input type="hidden" name="giftReceiverNo" th:value="${giftReceiverNo}" />
                 <button type="button" class="btn btn-secondary" onclick="showModalDeliveryCreate()">배송지 추가</button>

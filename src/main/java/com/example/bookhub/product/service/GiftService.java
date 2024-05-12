@@ -2,6 +2,7 @@ package com.example.bookhub.product.service;
 
 import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
+import com.example.bookhub.product.dto.GiftDto;
 import com.example.bookhub.product.dto.GiftReceiverForm;
 import com.example.bookhub.product.exception.BookHubException;
 import com.example.bookhub.product.mapper.BookMapper;
@@ -19,10 +20,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -70,10 +68,10 @@ public class GiftService {
         updatePoint(user);
 
         for(int i = 0; i < giftReceiverList.size(); i++){
-            long giftReceiverNo = giftReceiverList.get(i).getGiftReceiverNo();
+            String giftOrderId = giftReceiverList.get(i).getGiftOrderId();
             String receiverName = giftReceiverList.get(i).getName();
             String receiverEmail = giftReceiverList.get(i).getEmail();
-            makeEmail(giftReceiverNo, receiverEmail, receiverName);
+            makeEmail(giftOrderId, receiverEmail, receiverName);
         }
     }
 
@@ -132,6 +130,8 @@ public class GiftService {
     public List<GiftReceiver> insertGiftReceiver(Gift gift){
         List<GiftReceiver> giftReceiverList = new ArrayList<>();
 
+        UUID uuid4 = UUID.randomUUID();
+
         for(int i = 0; i < buyForm.getReceiverName().size(); i++) {
             String receiverName = buyForm.getReceiverName().get(i);
             String receiverEmail = buyForm.getReceiverEmail().get(i);
@@ -139,7 +139,9 @@ public class GiftService {
                     .name(receiverName)
                     .email(receiverEmail)
                     .gift(gift)
+                    .giftOrderId(uuid4.toString())
                     .build();
+
             giftMapper.insertGiftReceiver(giftReceiver);
             giftReceiverList.add(giftReceiver);
         }
@@ -191,8 +193,8 @@ public class GiftService {
         buyMapper.updatePointUsed(map);
     }
 
-    public void makeEmail(long giftReceiverNo, String receiverMail, String receiverName){
-        String url = "http://localhost:8080/product/gift/receiver/" + giftReceiverNo;
+    public void makeEmail(String giftOrderId, String receiverMail, String receiverName){
+        String url = "http://localhost:8080/product/gift/receiver/" + giftOrderId;
         String title = "북허브 도서 선물이 도착했습니다";
         String content = "<html><body>" + receiverName + "님, 북허브 도서 선물이 도착했습니다. <br/>" +
                 "주소를 입력하여 선물을 받아보세요!<br/><a href='" + url + "'>" + url + "</a></body></html>";
@@ -217,5 +219,13 @@ public class GiftService {
         User user = userMapper.selectUserById(userId);
 
         giftMapper.updateGiftReceiver(giftReceiverForm.getGiftReceiverNo(), giftReceiverForm.getUserDeliveryNo(), user.getNo());
+    }
+
+    public List<GiftDto> getGiftDetail(long giftReceiverNo) {
+        return giftMapper.getGiftDetail(giftReceiverNo);
+    }
+
+    public long getGiftReceiverNoByGiftOrderId(String giftOrderId) {
+        return giftMapper.getGiftReceiverNoByGiftOrderId(giftOrderId);
     }
 }

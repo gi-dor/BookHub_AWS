@@ -20,4 +20,5 @@ public class GiftReceiver {
     private UserDelivery userDelivery;
     private Gift gift;
     private User user;
+    private String giftOrderId;
 }
