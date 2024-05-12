@@ -242,7 +242,7 @@
                                 </td>
                                 <td><img th:src="${book.image}"/></td>
                                 <td>
-                                    <a th:href="@{/book/detail(id=${book.no})}" th:text="${book.bookName}">도서명</a>
+                                    <a th:href="@{/product/book/detail(bookNo=${book.no})}" th:text="${book.bookName}">도서명</a>
                                 </td>
                                 <td th:text="${book.authorName}">저자</td>
                                 <td th:text="${#numbers.formatInteger(book.listPrice, 1, 'COMMA')}">정가</td>
