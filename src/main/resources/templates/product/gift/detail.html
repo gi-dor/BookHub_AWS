@@ -12,16 +12,36 @@
         }
     </style>
 
+    <form id="form-cart" method="post" action="/product/gift/order">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="https://cdn.pixabay.com/animation/2023/12/30/05/37/05-37-00-276_512.gif" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="form-group mt-5">
+                                <textarea class="form-control custom-textarea" id="comment" name="comment" rows="8" placeholder="메시지 내용을 입력해주세요"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="row">
         <div class="col-9">
-            <form id="form-cart" method="post" action="/product/gift/order">
                 <!-- 테이블1 -->
                 <table class="table">
                     <tbody>
                         <tr>
                             <th>받는 분 수</th>
                             <td>
-                                <select class="form-select" name="receiverCount">
+                                <select class="form-select" id="select-receiver-count" name="receiverCount" onclick="addReceivers()">
                                     <option value="1" selected> 1</option>명
                                     <option value="2" > 2</option>명
                                     <option value="3" > 3</option>명
@@ -55,20 +75,54 @@
 
                 <!-- 테이블2 -->
                 <table class="table">
-                    <tr>
-                        <th>받는 분 1</th>
-                        <td>
-                            <input class="form-control" name="receiverName" />
-                            <input class="form-control" name="receiverEmail" />
-                        </td>
-                    </tr>
+                    <tbody id="tbody-receiver">
+                        <tr>
+                            <th>받는 분 1</th>
+                            <td>
+                                <input class="form-control" name="receiverName" />
+                                <input class="form-control" name="receiverEmail" />
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
                 <button type="submit" class="btn btn-secondary">확인</button>
-            </form>
         </div>
         <div class="col-3"></div>
     </div>
+    </form>
 </div>
 
+
+
 <script layout:fragment="script" type="text/javascript">
+
+    function addReceivers() {
+        let receiverCount = document.getElementById("select-receiver-count").value;
+        let tbodyReceiver = document.getElementById("tbody-receiver");
+
+       // tbodyReceiver.innerHTML = "";
+
+        let row = "";
+        for (let i = 0; i < receiverCount; i++) {
+            row += `
+                        <tr>
+                            <th>받는 분 <span>${i + 1}</span></th>
+                            <td>
+                                <input class="form-control" name="receiverName" />
+                                <input class="form-control" name="receiverEmail" />
+                            </td>
+                        </tr>
+                      `;
+            tbodyReceiver.innerHTML = row;
+            // let row = tableBody.insertRow(i);
+            //
+            // let cell1 = row.insertCell(0);
+            // let cell2 = row.insertCell(1);
+            //
+            // cell1.innerHTML = "받는 분 " + (i + 1);
+            // cell2.innerHTML = '<input class="form-control" name="receiverName" />' +
+            //     '<input class="form-control" name="receiverEmail" />';
+        }
+    }
 </script>
+</html>

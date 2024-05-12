@@ -4,9 +4,9 @@
 
     <insert id="insertGift" parameterType="com.example.bookhub.product.vo.Gift">
         insert into GIFT
-        (sender_name, gift_send_method, buy_no)
+        (sender_name, gift_send_method, gift_comment, buy_no)
         values
-        (#{senderName}, #{sendMethod}, #{buy.buyNo})
+        (#{senderName}, #{sendMethod}, #{comment}, #{buy.buyNo})
         <selectKey keyProperty="giftNo" resultType="long" order="AFTER">
             select last_insert_id()
         </selectKey>

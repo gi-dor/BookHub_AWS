@@ -29,6 +29,7 @@ public class BuyForm {
     private int receiverCount;
     private String senderName;
     private String sendMethod;
+    private String comment;
     private List<String> receiverName;
     private List<String> receiverEmail;
 }

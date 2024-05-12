@@ -120,6 +120,7 @@ public class GiftService {
         Gift gift = Gift.builder()
                 .senderName(buyForm.getSenderName())
                 .sendMethod(buyForm.getSendMethod())
+                .comment(buyForm.getComment())
                 .buy(buy)
                 .build();
 
@@ -130,9 +131,9 @@ public class GiftService {
     public List<GiftReceiver> insertGiftReceiver(Gift gift){
         List<GiftReceiver> giftReceiverList = new ArrayList<>();
 
-        UUID uuid4 = UUID.randomUUID();
-
         for(int i = 0; i < buyForm.getReceiverName().size(); i++) {
+            UUID uuid4 = UUID.randomUUID();
+
             String receiverName = buyForm.getReceiverName().get(i);
             String receiverEmail = buyForm.getReceiverEmail().get(i);
             GiftReceiver giftReceiver = GiftReceiver.builder()
