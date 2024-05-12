@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.main.mapper.BookViewCntScheduleMapper">
+
+    <!--모든 책에 대한 조회수 업데이트-->
+    <update id="updateBookViewCountForAll">
+        UPDATE BOOK
+        SET BOOK_VIEW_COUNT = BOOK_VIEW_COUNT + 1
+    </update>
+</mapper>

@@ -83,3 +83,30 @@ $(".btn-add-cart").click(function () {
         alert("위시리스트에 담았습니다.");
     });
 
+//리스트에 있는 하트(위시리스트 표시)
+$(".btn-add-wishlist2").click(function (event) {
+    // 기본 동작인 링크 이동을 막음
+    event.preventDefault();
+
+    // 위시리스트에 아이템이 추가되었다는 알림 표시
+    alert('위시리스트에 담겼습니다.');
+
+    // 클릭된 버튼 안에 있는 하트 아이콘에 대해 색을 변경
+    $(this).find('i').addClass('fas text-danger');
+
+    // 서버로 폼을 제출하여 위시리스트에 아이템 추가
+    $.get($(this).attr('href'), function(response) {
+    });
+});
+
+//리스트에 있는 장바구니
+$(".btn-add-cart2").click(function (event) {
+    // 기본 동작인 링크 이동을 막음
+    event.preventDefault();
+
+    alert('장바구니에 담겼습니다.');
+
+    // 서버로 폼을 제출하여 장바구니에 아이템 추가
+    $.get($(this).attr('href'), function(response) {
+    });
+});

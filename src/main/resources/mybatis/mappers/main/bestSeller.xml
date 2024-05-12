@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.bookhub.main.mapper.BestSellerMapper">
+
+
+
     <select id="bestSeller" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
         SELECT
             A.BOOK_NO,
@@ -97,6 +100,7 @@
             ORDER BY BOOK_SALES_VOLUME DESC
         </otherwise>
         </choose>
+
     </select>
 
     <!--조회 결과 집합을 객체로 매핑-->

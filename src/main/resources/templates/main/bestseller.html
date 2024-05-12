@@ -21,15 +21,44 @@
         <div class="sidebar col-2">
             <!-- 베스트셀러 -->
                 <h5 class="fw-bold">베스트셀러</h5>
-                <div id="period">
-                    <ul class="list">
-                        <li><a href="#" data-period="3"><strong>종합 베스트</strong></a></li>
-                        <li><a href="#" data-period="1">주간</a></li>
-                        <li><a href="#" data-period="2">월간</a></li>
-                        <li><a href="#" data-period="3">연간</a></li>
-                        <li><a href="#" data-period="4"><strong>실시간 베스트</strong></a></li>
-                    </ul>
+            <div id="period">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="#" class="card-link" data-period="3"><strong>종합 베스트</strong></a>
+                        </h5>
+
+                    </div>
                 </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="#" class="card-link" data-period="1">주간</a>
+                        </h5>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="#" class="card-link" data-period="2">월간</a>
+                        </h5>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="#" class="card-link" data-period="3">연간</a>
+                        </h5>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="#" class="card-link" data-period="4">실시간 베스트</a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
         </div>
             <!-- 결과내 검색 끝 -->
 
@@ -41,7 +70,7 @@
         <div class="col-8 mb-5" >
             <h1 class="mb-3">국내도서</h1>
             <ul id="cateKeyword">
-                <a href="" data-cateKeyword="1"><span class="catebadge rounded-pill text-bg-light me-5">전체</span></a>
+                <a href="#" data-cateKeyword="1"><span class="catebadge rounded-pill text-bg-light me-5">전체</span></a>
                 <a href="#" data-cateKeyword="3"><span class="catebadge rounded-pill text-bg-light me-5">소설</span></a>
                 <a href="#" data-cateKeyword="19"><span class="catebadge rounded-pill text-bg-light me-5">인문학</span></a>
                 <a href="#" data-cateKeyword="8"><span class="catebadge rounded-pill text-bg-light me-5">사회과학</span></a>
@@ -63,7 +92,9 @@
                     <a href="#" data-cateKeyword="21"><span class="catebadge rounded-pill text-bg-light me-5">만화</span></a>
                     <a href="#" data-cateKeyword="17"><span class="catebadge rounded-pill text-bg-light me-5">초/중/고참고서</span></a>
                     <a href="#" data-cateKeyword="16"><span class="catebadge rounded-pill text-bg-light me-5">예술/대중문화</span></a>
-                    <li><hr class="dropdown-divider"></li>
+                    <div class="mb-4">
+                        <li class="list"><hr class="dropdown-divider"></li>
+                    </div>
                     <a href="#" data-cateKeyword="10"><span class="catebadge rounded-pill text-bg-light me-5">요리/살림</span></a>
                     <a href="#" data-cateKeyword="18"><span class="catebadge rounded-pill text-bg-light me-5">종교/역학</span></a>
                     <a href="#" data-cateKeyword="19"><span class="catebadge rounded-pill text-bg-light me-5">컴퓨터/모바일</span></a>
@@ -147,9 +178,9 @@
                     </nav>
                 </div>
             <div class="col-5">
-                <button type="button" class="btn-all-choice me-2">전체선택</button>
-                <button type="button" class="btn-add-cart me-2" id="btn-add-cart">장바구니 담기</button>
-                <button type="button" class="btn-add-wishlist" >위시리스트 담기</button>
+                <button type="button" class="btn-all-choice me-2 btn btn-outline-primary">전체선택</button>
+                <button type="button" class="btn-add-cart me-2 btn btn-outline-primary" id="btn-add-cart">장바구니 담기</button>
+                <button type="button" class="btn-add-wishlist btn btn-outline-primary" >위시리스트 담기</button>
             </div>
         </div>
 
@@ -200,9 +231,9 @@
                             </p>
                         </div>
                         <div class="cta-section col-3">
-                            <a href="#" ><i id="wishList" class="far fa-heart mb-3"></i></a>
-                            <a href="#" class="btn-add-cart mb-3" id="cart">장바구니</a>
-                            <a href="#" class="btn-buy" id="buyButton">바로구매</a>
+                            <a th:href="@{/product/wishlist/add(no=${book.no})}" class="btn-add-wishlist2"><i id="wishList" class="far fa-heart" ></i></a>
+                            <a th:href="@{/product/cart/add(no=${book.no})}"class="btn-add-cart2 mb-3 btn btn-outline-primary" id="cart">장바구니</a>
+                            <a href="/product/buy" class="btn-buy btn btn-outline-primary" id="buyButton">바로구매</a>
                         </div>
                         <div class="mt-3" style="border-top: 1.5px solid #FFFFFF; "></div>
                     </div>

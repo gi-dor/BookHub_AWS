@@ -1,12 +1,12 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:th="http://thymeleaf.org"
       layout:decorate="~{layout/base}" >
 <th:block layout:fragment="style">
-    <link rel="stylesheet" th:href="@{/css/main/newList.css}" />
+    <link rel="stylesheet" th:href="@{/css/main/recoList.css}" />
 </th:block>
 
 <div layout:fragment="content" class="container-fluid">
 
-           <form class="mb-4" action="/main/newbook" method="get" id="newbook">
+           <form class="mb-4" action="/main/recobook" method="get" id="recobook">
                    <input type="hidden" name="pubDate" th:value="${#strings.defaultString(param.pubDate, '1')}"/>
                    <input type="hidden" name="cateKeyword" th:value="${#strings.defaultString(param.cateKeyword,'1')}"/>
                    <input type="hidden" name="sort" th:value="${#strings.defaultString(param.sort, '1')}"/>
@@ -16,9 +16,9 @@
        <div class="row">
            <!-- Sidebar -->
         <div class="sidebar col-2">
+            <h5>추천도서</h5>
         </div>
         <!-- /Sidebar -->
-
         <!-- Main content -->
         <!--카테고리 선택 - 전체, 소설, 참고서, 사회과학 ,,, 등등등-->
            <div class="col-8 mb-5"  >
@@ -100,7 +100,7 @@
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" >
-                                <a th:href="@{|new?page=${criteria.page - 1}|}"
+                                <a th:href="@{|reco?page=${criteria.page - 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.first ? 'disabled' : '' }"
                                    aria-label="Previous"
@@ -110,7 +110,7 @@
                             </li>
                             <th:block th:each="num : ${#numbers.sequence(criteria.beginPage, criteria.endPage)}">
                                 <li class="page-item" >
-                                    <a th:href="@{|new?page=${num}|}"
+                                    <a th:href="@{|reco?page=${num}|}"
                                        class="page-link"
                                        th:text="${num}"
                                        th:attr="data-page=${num}">
@@ -120,7 +120,7 @@
                                 </li>
                             </th:block>
                             <li class="page-item">
-                                <a th:href="@{|new?page=${criteria.page + 1}|}"
+                                <a th:href="@{|reco?page=${criteria.page + 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.last ? 'disabled' : '' }"
                                    aria-label="Next"
@@ -194,7 +194,7 @@
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script src="/js/main/newList.js"></script>
+    <script src="/js/main/recoList.js"></script>
     <script src="/js/main/navbar.js"></script>
 </th:block>
 </html>

@@ -150,4 +150,10 @@
         where
             author_no = #{authorNo}
     </select>
+
+    <update id="increaseBookViewCount" parameterType="long">
+        UPDATE BOOK
+        SET BOOK_VIEW_COUNT = BOOK_VIEW_COUNT + 1
+        WHERE BOOK_NO = #{bookNo}
+    </update>
 </mapper>

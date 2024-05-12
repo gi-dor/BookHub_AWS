@@ -31,9 +31,8 @@ public class SearchCriteria {
     private boolean isLast;         // 끝페이지인지 여부
     public SearchCriteria() {
         this.page = 1;
-        this.recordSize = 10;
+        this.recordSize = 20;
         this.pageSize = 10;
-        this.sort= 1;
         this.cateKeyword =1;
 
     }

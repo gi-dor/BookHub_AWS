@@ -25,4 +25,8 @@ public class BookService {
     public List<BookAuthor> getAuthorByBookNo(long bookNo) {
         return bookMapper.getAuthorByBookNo(bookNo);
     }
+
+    public void increaseBookViewCount(long bookNo) {
+        bookMapper.increaseBookViewCount(bookNo);
+    }
 }
