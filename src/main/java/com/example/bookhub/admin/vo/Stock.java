@@ -15,4 +15,6 @@ public class Stock {
     private Date completedDate;
     private String completedYn;
     private String publisherName;
+    private int stock;
+    private int stockNotification;
 }
