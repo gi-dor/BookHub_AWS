@@ -1,6 +1,6 @@
 <html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<div layout:fragment="list" class="container-fluid">
+<div layout:fragment="content" class="container-fluid">
     <div class="row me-5 mt-3 mb-5">
         <div class="col-12">
             <h3>환불 조회</h3>
@@ -192,7 +192,7 @@
     </div>
 </div>
 
-<script layout:fragment="listScript" type="text/javascript">
+<script layout:fragment="adminScriptBase" type="text/javascript">
     $(function () {
 
         // 초기화 버튼

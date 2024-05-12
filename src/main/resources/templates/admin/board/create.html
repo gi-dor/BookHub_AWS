@@ -1,5 +1,6 @@
 <html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
-<div layout:fragment="createPost" class="container-fluid">
+
+<div layout:fragment="content" class="container-fluid">
     <div class="row me-5 mt-3 mb-5">
         <div class="col-12">
             <div class="row">
@@ -46,7 +47,7 @@
         </div>
     </div>
 </div>
-<script layout:fragment="createPostScript" type="text/javascript">
+<script layout:fragment="script" type="text/javascript">
 
     // Quill.js 에디터 적용
     function quilljsediterInit() {
