@@ -1,9 +1,9 @@
 package com.example.bookhub.admin.service;
 
-import com.example.bookhub.admin.dto.BookList;
 import com.example.bookhub.admin.dto.Product;
-import com.example.bookhub.admin.dto.ProductFilter;
-import com.example.bookhub.admin.mapper.ProductMapper;
+import com.example.bookhub.admin.dto.StockFilter;
+import com.example.bookhub.admin.mapper.StockMapper;
+import com.example.bookhub.admin.vo.Stock;
 import com.example.bookhub.product.vo.Author;
 import com.example.bookhub.product.vo.Publisher;
 import java.util.List;
@@ -12,42 +12,42 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class StockService {
 
-    private final ProductMapper productMapper;
+    private final StockMapper stockMapper;
 
-    public int getTotalRows(ProductFilter filter) {
-        return productMapper.getTotalRows(filter);
+    public int getTotalRows(StockFilter filter) {
+        return stockMapper.getTotalRows(filter);
     }
 
-    public List<BookList> getBooks(ProductFilter filter, int offset, int limit, String sort) {
-        return productMapper.getBooks(filter, offset, limit, sort);
+    public List<Stock> getStockNotifications(StockFilter filter, int offset, int limit) {
+        return stockMapper.getStockNotifications(filter, offset, limit);
     }
 
     public List<Publisher> getPublishers() {
-        return productMapper.getPublishers();
+        return stockMapper.getPublishers();
     }
 
     public List<Author> getAuthors() {
-        return productMapper.getAuthors();
+        return stockMapper.getAuthors();
     }
 
     public void deleteProductByNo(List<Long> deletedProductNos) {
         for (Long deletedProductNo : deletedProductNos) {
-            productMapper.deleteProductByNo(deletedProductNo);
+            stockMapper.deleteProductByNo(deletedProductNo);
         }
     }
 
     public Product getProductByNo(Long productNo) {
-        return productMapper.getProductByNo(productNo);
+        return stockMapper.getProductByNo(productNo);
     }
 
     public Long getSuperCategoryNoBySubCategoryNo(Long categoryNo) {
-        return productMapper.getSuperCategoryNoBySubCategoryNo(categoryNo);
+        return stockMapper.getSuperCategoryNoBySubCategoryNo(categoryNo);
     }
 
     public void modifyProduct(Product modifiedProduct) {
-        productMapper.modifyProduct(modifiedProduct);
+        stockMapper.modifyProduct(modifiedProduct);
     }
 
     public void createProduct(Product createdProduct) {
@@ -64,23 +64,19 @@ public class ProductService {
 
         if (thirdCategoryNo != 0) {
             product.setCategoryNo(thirdCategoryNo);
-            productMapper.registerProduct(product);
-            productMapper.registerImage(product);
+            stockMapper.registerProduct(product);
+            stockMapper.registerImage(product);
             return;
         }
         if (secondCategoryNo != 0) {
             product.setCategoryNo(secondCategoryNo);
-            productMapper.registerProduct(product);
-            productMapper.registerImage(product);
+            stockMapper.registerProduct(product);
+            stockMapper.registerImage(product);
             return;
         }
 
         product.setCategoryNo(topCategoryNo);
-        productMapper.registerProduct(product);
-        productMapper.registerImage(product);
-    }
-
-    public int getStockNotificationTotalRows(ProductFilter filter) {
-        return productMapper.getStockNotificationTotalRows(filter);
+        stockMapper.registerProduct(product);
+        stockMapper.registerImage(product);
     }
 }
