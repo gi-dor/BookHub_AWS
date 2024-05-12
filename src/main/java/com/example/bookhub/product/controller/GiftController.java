@@ -102,7 +102,7 @@ public class GiftController {
 
         model.addAttribute("userDeliveryList", userDeliveryList);
         model.addAttribute("defaultUserDelivery", defaultUserDelivery);
-        model.addAttribute("giftReceiveNo", giftReceiverNo);
+        model.addAttribute("giftReceiverNo", giftReceiverNo);
         model.addAttribute("giftDtoList", giftDtoList);
 
         return "product/gift/receiverDetail";
@@ -114,4 +114,5 @@ public class GiftController {
 
         return "/product/gift/success";
     }
+
 }

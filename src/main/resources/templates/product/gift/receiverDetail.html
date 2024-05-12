@@ -13,7 +13,7 @@
                         <div class="card-body">
                             <h5 class="card-title mt-5"><strong><span th:text="${giftDtoList[0].senderName}"></span></strong>님이 선물을 보내셨습니다</h5>
                             <p class="card-text mt-5" th:text="${giftDtoList[0].comment}"></p>
-                            <p class="card-text mt-5"><small class="text-body-secondary" th:text="${#temporals.format(giftDtoList[0].d  ate, 'yyyy-MM-dd HH:mm:ss')}"></small></p>
+                            <p class="card-text mt-5"><small class="text-body-secondary" th:text="${#temporals.format(giftDtoList[0].date, 'yyyy-MM-dd HH:mm:ss')}"></small></p>
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,9 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" >확인</button>
+                <div>
+                    <button type="submit" class="w-10 btn btn-lg btn-dark" >확인</button>
+                </div>
             </form>
         </div>
     </div>
