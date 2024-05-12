@@ -258,7 +258,8 @@
         update
             RETURNS
         set
-            returned_yn = 'Y'
+            returned_yn = 'Y',
+            returned_date = CURRENT_TIMESTAMP
         where
             return_no = #{value}
     </update>
