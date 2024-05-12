@@ -12,9 +12,9 @@
         }
     </style>
 
-    <form id="form-cart" method="post" action="/product/gift/order">
+    <form id="form-gift-detail" method="post" action="/product/gift/order">
     <div class="row">
-        <div class="col-12">
+        <div class="col-9">
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
@@ -56,7 +56,7 @@
                         </tr>
                         <tr>
                             <th>보내는 분</th>
-                            <td><input class="form-control" name="senderName" /></td>
+                            <td><input class="form-control" id="sender-name" name="senderName" /></td>
                         </tr>
                         <tr>
                             <th>선물 전달 방법</th>
@@ -79,13 +79,13 @@
                         <tr>
                             <th>받는 분 1</th>
                             <td>
-                                <input class="form-control" name="receiverName" />
-                                <input class="form-control" name="receiverEmail" />
+                                <input class="form-control receiver-name" name="receiverName" />
+                                <input class="form-control receiver-email" name="receiverEmail" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="submit" class="btn btn-secondary">확인</button>
+                <button type="button" onclick="checkReceiverDelivery()" class="w-100 btn btn-lg btn-outline-dark">확인</button>
         </div>
         <div class="col-3"></div>
     </div>
@@ -108,21 +108,46 @@
                         <tr>
                             <th>받는 분 <span>${i + 1}</span></th>
                             <td>
-                                <input class="form-control" name="receiverName" />
-                                <input class="form-control" name="receiverEmail" />
+                                <input class="form-control receiver-name" name="receiverName" />
+                                <input class="form-control receiver-email" name="receiverEmail" />
                             </td>
                         </tr>
                       `;
             tbodyReceiver.innerHTML = row;
-            // let row = tableBody.insertRow(i);
-            //
-            // let cell1 = row.insertCell(0);
-            // let cell2 = row.insertCell(1);
-            //
-            // cell1.innerHTML = "받는 분 " + (i + 1);
-            // cell2.innerHTML = '<input class="form-control" name="receiverName" />' +
-            //     '<input class="form-control" name="receiverEmail" />';
         }
+    }
+
+    function checkReceiverDelivery(){
+        let allNamesValid = true;
+        let allEmailsValid = true;
+
+        if($("#sender-name").val() === "")
+            alert("보내는 분 이름 입력이 완료되지 되지 않았습니다");
+
+        $(".receiver-name").each(function() {
+            if ($(this).val() === "") {
+                alert("수령자 이름 입력이 완료되지 않았습니다");
+                allNamesValid = false;
+                return false;
+            }
+        });
+
+        $(".receiver-email").each(function() {
+            if ($(this).val() === "") {
+                alert("수령자 이메일 입력이 완료되지 않았습니다");
+                allEmailsValid = false;
+                return false;
+            }
+        });
+
+        if (!allNamesValid || !allEmailsValid) {
+            return;
+        }
+        else{
+            $("#form-gift-detail").submit();
+        }
+
+
     }
 </script>
 </html>

@@ -26,7 +26,7 @@
                                     <strong><span class="buy-book-discounted-price" th:text="${#numbers.formatDecimal(buyBook.price * (1 - buyBook.discountRate), 0, 0)}"></span></strong>원
                                     <span class="buy-book-price" th:text="${buyBook.price}" style="text-decoration: line-through; color: grey"></span>
                                 </td>
-                                <td class="buy-book-count" th:text="${buyBookCountList.get(iterStat.index)}"></td>
+                                <td class="buy-book-count" th:text="${buyBookCountList.get(iterStat.index) * buyForm.receiverCount}"></td>
                             </tr>
                             </tbody>
                         </table>
