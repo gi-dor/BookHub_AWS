@@ -1,268 +1,265 @@
 <html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <div layout:fragment="boardList" class="container-fluid">
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-12">
-                <h3>게시글 조회</h3>
+    <div class="row me-5 mt-3 mb-5">
+        <div class="col-12">
+            <h3>게시글 조회</h3>
 
-                <!-- 필터 선택 영역-->
-                <form id="boardListForm" th:action="@{/admin/board/list}" th:object="${filter}">
-                    <div class="col-12 bg-light p-3 mb-3">
-                        <table class="table">
-                            <tbody>
-                            <tr>
-                                <td class="bg-light">검색어</td>
-                                <td>
-                                    <select th:field="*{opt}" class="form-select-sm">
-                                        <option value="null">전체</option>
-                                        <option value="writer">작성자</option>
-                                        <option value="title">제목</option>
-                                        <option value="content">내용</option>
+            <!-- 필터 선택 영역-->
+            <form id="boardListForm" th:action="@{/admin/board/list}" th:object="${filter}">
+                <div class="col-12 bg-light p-3 mb-3">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td class="bg-light">검색어</td>
+                            <td>
+                                <select th:field="*{opt}" class="form-select-sm">
+                                    <option value="null">전체</option>
+                                    <option value="writer">작성자</option>
+                                    <option value="title">제목</option>
+                                    <option value="content">내용</option>
+                                </select>
+                                <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
+                                       class="form-control-sm">
+                                <input type="checkbox" class="form-check-input" th:field="*{deletedYN}" value="N"
+                                       id="deletedYN">
+                                <label for="deletedYN">삭제글 제외</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-light">기간 검색</td>
+                            <td>
+                                <div class="d-flex">
+                                    <select th:field="*{dateOpt}" class="form-select-sm me-2">
+                                        <option value="createdDate">등록일</option>
+                                        <option value="updatedDate">수정일</option>
                                     </select>
-                                    <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
-                                           class="form-control-sm">
-                                    <input type="checkbox" class="form-check-input" th:field="*{deletedYN}" value="N"
-                                           id="deletedYN">
-                                    <label for="deletedYN">삭제글 제외</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">기간 검색</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <select th:field="*{dateOpt}" class="form-select-sm me-2">
-                                            <option value="createdDate">등록일</option>
-                                            <option value="updatedDate">수정일</option>
-                                        </select>
-                                        <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
-                                        <input th:field="*{lessDate}" type="date"
-                                               class="form-control-sm ms-2 me-2">
-                                        <div class="input-group">
-                                            <input type="hidden" th:field="*{period}"/>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="0"
-                                                    th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="3"
-                                                    th:classappend="${filter.period == '3' ? 'active' : ''}">3일간
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="7"
-                                                    th:classappend="${filter.period == '7' ? 'active' : ''}">일주일
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="30"
-                                                    th:classappend="${filter.period == '30' ? 'active' : ''}">1개월
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="90"
-                                                    th:classappend="${filter.period == '90' ? 'active' : ''}">3개월
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="all"
-                                                    th:classappend="${filter.period == 'all' ? 'active' : ''}">전체
-                                            </button>
-                                        </div>
+                                    <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
+                                    <input th:field="*{lessDate}" type="date"
+                                           class="form-control-sm ms-2 me-2">
+                                    <div class="input-group">
+                                        <input type="hidden" th:field="*{period}"/>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="0"
+                                                th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="3"
+                                                th:classappend="${filter.period == '3' ? 'active' : ''}">3일간
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="7"
+                                                th:classappend="${filter.period == '7' ? 'active' : ''}">일주일
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="30"
+                                                th:classappend="${filter.period == '30' ? 'active' : ''}">1개월
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="90"
+                                                th:classappend="${filter.period == '90' ? 'active' : ''}">3개월
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="all"
+                                                th:classappend="${filter.period == 'all' ? 'active' : ''}">전체
+                                        </button>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">분류</td>
-                                <td>
-                                    <label><input type="radio" value="notice" th:field="*{boardType}"> 공지</label>
-                                    <label><input type="radio" value="undecided1" th:field="*{boardType}"> 미정1</label>
-                                    <label><input type="radio" value="undecided2" th:field="*{boardType}"> 미정2</label>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-sm">검색</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-light">분류</td>
+                            <td>
+                                <label><input type="radio" value="notice" th:field="*{boardType}"> 공지</label>
+                                <label><input type="radio" value="undecided1" th:field="*{boardType}"> 미정1</label>
+                                <label><input type="radio" value="undecided2" th:field="*{boardType}"> 미정2</label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
+                    </div>
+                </div>
+
+                <!-- 조회 결과 영역 -->
+                <div class="col-12 bg-light p-3 mb-3">
+                    <input type="hidden" name="page"/>
+                    <div class="my-3 d-flex justify-content-between">
+                        <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
+                        <div class="d-flex">
+                            <!-- 조회 개수 설정 -->
+                            <select class="form-control-sm me-2" th:field="*{rows}">
+                                <option value="10">10개씩</option>
+                                <option value="20">20개씩</option>
+                                <option value="50">50개씩</option>
+                                <option value="100">100개씩</option>
+                            </select>
+
+                            <!-- 조회 정렬 설정-->
+                            <select class="form-control-sm" th:field="*{sort}">
+                                <option value="recentlyCreated">최근 등록일 순</option>
+                                <option value="recentlyUpdated">최근 수정일 순</option>
+                                <option value="important">중요도 순</option>
+                            </select>
                         </div>
                     </div>
 
-                    <!-- 조회 결과 영역 -->
-                    <div class="col-12 bg-light p-3 mb-3">
-                        <input type="hidden" name="page"/>
-                        <div class="my-3 d-flex justify-content-between">
-                            <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
-                            <div class="d-flex">
-                                <!-- 조회 개수 설정 -->
-                                <select class="form-control-sm me-2" th:field="*{rows}">
-                                    <option value="10">10개씩</option>
-                                    <option value="20">20개씩</option>
-                                    <option value="50">50개씩</option>
-                                    <option value="100">100개씩</option>
-                                </select>
+                    <hr>
 
-                                <!-- 조회 정렬 설정-->
-                                <select class="form-control-sm" th:field="*{sort}">
-                                    <option value="recentlyCreated">최근 등록일 순</option>
-                                    <option value="recentlyUpdated">최근 수정일 순</option>
-                                    <option value="important">중요도 순</option>
-                                </select>
-                            </div>
+                    <!-- 선택 삭제 버튼 -->
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-left">
+                            <button id="btn-delete" type="button" class="btn btn-outline-secondary btn-sm">선택 삭제
+                            </button>
                         </div>
+                    </div>
 
-                        <hr>
-
-                        <!-- 선택 삭제 버튼 -->
-                        <div class="d-flex justify-content-between mb-3">
-                            <div class="text-left">
-                                <button id="btn-delete" type="button" class="btn btn-outline-secondary btn-sm">선택 삭제
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 조회 리스트 -->
-                        <table class="table text-center" id="table-posts" th:if="${paging.totalRows != 0}">
-                            <colgroup>
-                                <col width="5%">
-                                <col width="5%">
-                                <col width="*">
-                                <col width="10%">
-                                <col width="10%">
-                                <col width="10%">
-                                <col width="15%">
-                                <col width="10%">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th><input id="chk-select-all-product" type="checkbox"></th>
-                                <th>번호</th>
-                                <th>제목</th>
-                                <th>작성자</th>
-                                <th>조회수</th>
-                                <th>중요</th>
-                                <th>등록일/수정일</th>
-                                <th>관리</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <!--
-                                ** 게시글 순번 **
-
-                                1. 마지막 숫자부터 시작
-                                    전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
-                                    ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
-
-                                2. 1번부터 시작
-                                    ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
-                                    ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
-                            -->
-                            <tr th:each="post, loop : ${posts}">
-                                <td><input name="selectProduct" type="checkbox" th:data-delete-no="${post.no}"></td>
-                                <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
-                                    번호
-                                </td>
-                                <td>
-                                    <a th:href="@{/book/detail(id=${post.no})}" th:text="${post.title}">제목</a>
-                                </td>
-                                <td th:text="${post.writer}">작성자</td>
-                                <td th:text="${post.views}">조회수</td>
-                                <td th:text="${post.important}">중요</td>
-                                <td>
-                                    <p th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                                    <p th:text="${#dates.format(post.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                                </td>
-                                <td>
-                                    <button id="btn-modify-post-${post.no}" type="button"
-                                            class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">수정
-                                    </button>
-                                    <button id="btn-delete-post-${post.no}" type="button"
-                                            class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">삭제
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
-                            <p>조회된 결과가 없습니다.</p>
-                        </div>
-
-                        <!-- 페이징 처리-->
+                    <!-- 조회 리스트 -->
+                    <table class="table text-center" id="table-posts" th:if="${paging.totalRows != 0}">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="5%">
+                            <col width="*">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="15%">
+                            <col width="10%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><input id="chk-select-all-product" type="checkbox"></th>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>조회수</th>
+                            <th>중요</th>
+                            <th>등록일/수정일</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <!--
-                               th:classappend="${조건식} ? 값1 : 값2"
-                               th:classappend="${조건식} ? 값1"
-                                   조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
-                                   조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
-                                   * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                            ** 게시글 순번 **
+
+                            1. 마지막 숫자부터 시작
+                                전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
+                                ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
+
+                            2. 1번부터 시작
+                                ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
+                                ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
                         -->
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                                <a th:href="@{/admin/board/list(page=${paging.currentPage - 1})}"
-                                   th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
-                            </li>
+                        <tr th:each="post, loop : ${posts}">
+                            <td><input name="selectProduct" type="checkbox" th:data-delete-no="${post.no}"></td>
+                            <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
+                                번호
+                            </td>
+                            <td>
+                                <a th:href="@{/book/detail(id=${post.no})}" th:text="${post.title}">제목</a>
+                            </td>
+                            <td th:text="${post.writer}">작성자</td>
+                            <td th:text="${post.views}">조회수</td>
+                            <td th:text="${post.important}">중요</td>
+                            <td>
+                                <p th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                <p th:text="${#dates.format(post.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            </td>
+                            <td>
+                                <button id="btn-modify-post-${post.no}" type="button"
+                                        class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">수정
+                                </button>
+                                <button id="btn-delete-post-${post.no}" type="button"
+                                        class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">삭제
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
+                        <p>조회된 결과가 없습니다.</p>
+                    </div>
 
-                            <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
-                                th:if="${num >= 1 and num <= paging.totalPages}" class="page-item"
-                                th:classappend="${num == paging.currentPage} ? 'active'">
-                                <a th:href="@{/admin/board/list(page=${num})}" th:text="${num}" th:data-page="${num}"
-                                   class="page-link">1</a>
-                            </li>
+                    <!-- 페이징 처리-->
+                    <!--
+                           th:classappend="${조건식} ? 값1 : 값2"
+                           th:classappend="${조건식} ? 값1"
+                               조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
+                               조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
+                               * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                    -->
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                            <a th:href="@{/admin/board/list(page=${paging.currentPage - 1})}"
+                               th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
+                        </li>
 
-                            <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                                <a th:href="@{/admin/board/list(page=${paging.currentPage + 1})}"
-                                   th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
-                            </li>
-                        </ul>
+                        <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
+                            th:if="${num >= 1 and num <= paging.totalPages}" class="page-item"
+                            th:classappend="${num == paging.currentPage} ? 'active'">
+                            <a th:href="@{/admin/board/list(page=${num})}" th:text="${num}" th:data-page="${num}"
+                               class="page-link">1</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                            <a th:href="@{/admin/board/list(page=${paging.currentPage + 1})}"
+                               th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 게시글 수정 모달창 -->
+<div class="modal fade" id="modify-post-modal" tabindex="-1" aria-labelledby="modifyPostModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyPostModalLabel">게시글 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/admin/board/modify}" th:object="${post}" method="post">
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <table class="table table-bordered">
+                            <input type="hidden" th:field="*{no}">
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 150px;">작성자</td>
+                                <td id="modal-writer"></td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 150px;">제목</td>
+                                <td>
+                                    <input type="text" th:field="*{title}" class="form-control-sm">
+                                    <input type="checkbox" class="form-check-input" value="Y" id="important"
+                                           th:field="*{important}">
+                                    <label for="important">중요</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-light align-middle text-center" style="width: 150px;">내용</td>
+                                <td>
+                                    <!-- Quill.js 에디터 적용 -->
+                                    <div id="editor" style=" height: 300px; width: 100%;"></div>
+                                    <input type="hidden" th:field="*{content}">
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">저장</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <!-- 게시글 수정 모달창 -->
-    <div class="modal fade" id="modify-post-modal" tabindex="-1" aria-labelledby="modifyPostModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modifyPostModalLabel">게시글 수정</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/admin/board/modify}" th:object="${post}" method="post">
-                        <div class="col-12 bg-light p-3 mb-3">
-                            <table class="table table-bordered">
-                                <input type="hidden" th:field="*{no}">
-                                <tr>
-                                    <td class="bg-light align-middle text-center" style="width: 150px;">작성자</td>
-                                    <td id="modal-writer"></td>
-                                </tr>
-                                <tr>
-                                    <td class="bg-light align-middle text-center" style="width: 150px;">제목</td>
-                                    <td>
-                                        <input type="text" th:field="*{title}" class="form-control-sm">
-                                        <input type="checkbox" class="form-check-input" value="Y" id="important"
-                                               th:field="*{important}">
-                                        <label for="important">중요</label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bg-light align-middle text-center" style="width: 150px;">내용</td>
-                                    <td>
-                                        <!-- Quill.js 에디터 적용 -->
-                                        <div id="editor" style=" height: 300px; width: 100%;"></div>
-                                        <input type="hidden" th:field="*{content}">
-                                    </td>
-                                </tr>
-                            </table>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">저장</button>
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <script layout:fragment="boardListScript" type="text/javascript">

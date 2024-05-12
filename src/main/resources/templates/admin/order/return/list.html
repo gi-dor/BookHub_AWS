@@ -1,195 +1,193 @@
 <html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <div layout:fragment="list" class="container-fluid">
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col-12">
-                <h3>환불 조회</h3>
+    <div class="row me-5 mt-3 mb-5">
+        <div class="col-12">
+            <h3>환불 조회</h3>
 
-                <!-- 필터 선택 영역-->
-                <form id="returnListForm" th:action="@{/admin/order/return/list}" th:object="${filter}">
-                    <div class="col-12 bg-light p-3 mb-3">
-                        <table class="table">
-                            <tbody>
-                            <tr>
-                                <td class="bg-light">검색어</td>
-                                <td>
-                                    <select th:field="*{opt}" class="form-select-sm">
-                                        <option value="null">통합검색</option>
-                                        <option value="returnNo">환불번호</option>
-                                        <option value="buyNo">주문번호</option>
-                                        <option value="userName">주문자</option>
-                                    </select>
-                                    <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
-                                           class="form-control-sm">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">기간 검색</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <select th:field="*{dateOpt}" class="form-select-sm me-2">
-                                            <option value="returnDate">환불 신청일</option>
-                                            <option value="returnedDate">환불 완료일</option>
-                                        </select>
-                                        <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
-                                        <input th:field="*{lessDate}" type="date"
-                                               class="form-control-sm ms-2 me-2">
-                                        <div class="input-group">
-                                            <input type="hidden" th:field="*{period}"/>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="0"
-                                                    th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="3"
-                                                    th:classappend="${filter.period == '3' ? 'active' : ''}">3일간
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="7"
-                                                    th:classappend="${filter.period == '7' ? 'active' : ''}">일주일
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="30"
-                                                    th:classappend="${filter.period == '30' ? 'active' : ''}">1개월
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="90"
-                                                    th:classappend="${filter.period == '90' ? 'active' : ''}">3개월
-                                            </button>
-                                            <button name="btn-date" class="btn btn-outline-secondary btn-sm"
-                                                    type="button" data-offset="all"
-                                                    th:classappend="${filter.period == 'all' ? 'active' : ''}">전체
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">상태</td>
-                                <td>
-                                    <label><input type="checkbox" class="form-check-input chk-status"
-                                                  th:field="*{status}" value="N"> 환불 신청</label>
-                                    <label><input type="checkbox" class="form-check-input chk-status"
-                                                  th:field="*{status}" value="Y"> 환불 완료</label>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-sm">검색</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
-                        </div>
-                    </div>
-
-                    <!-- 조회 결과 영역 -->
-                    <div class="col-12 bg-light p-3 mb-3">
-                        <input type="hidden" name="page"/>
-                        <div class="my-3 d-flex justify-content-between">
-                            <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
-                            <div class="d-flex">
-                                <!-- 조회 개수 설정 -->
-                                <select class="form-control-sm me-2" th:field="*{rows}">
-                                    <option value="10">10개씩</option>
-                                    <option value="20">20개씩</option>
-                                    <option value="50">50개씩</option>
-                                    <option value="100">100개씩</option>
+            <!-- 필터 선택 영역-->
+            <form id="returnListForm" th:action="@{/admin/order/return/list}" th:object="${filter}">
+                <div class="col-12 bg-light p-3 mb-3">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td class="bg-light">검색어</td>
+                            <td>
+                                <select th:field="*{opt}" class="form-select-sm">
+                                    <option value="null">통합검색</option>
+                                    <option value="returnNo">환불번호</option>
+                                    <option value="buyNo">주문번호</option>
+                                    <option value="userName">주문자</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <!-- 조회 리스트 -->
-                        <table class="table text-center" id="table-posts" th:if="${paging.totalRows != 0}">
-                            <colgroup>
-                                <col width="5%">
-                                <col width="15%">
-                                <col width="15%">
-                                <col width="10%">
-                                <col width="10%">
-                                <col width="15%">
-                                <col width="20%">
-                                <col width="10%">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>환불번호</th>
-                                <th>주문번호</th>
-                                <th>주문자</th>
-                                <th>주문수량</th>
-                                <th>환불금액</th>
-                                <th>환불접수 일시/환불완료 일시</th>
-                                <th>환불 처리</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <!--
-                                ** 게시글 순번 **
-
-                                1. 마지막 숫자부터 시작
-                                    전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
-                                    ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
-
-                                2. 1번부터 시작
-                                    ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
-                                    ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
-                            -->
-                            <tr th:each="return, loop : ${returns}">
-                                <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
-                                    번호
-                                </td>
-                                <td th:text="${return.no}">환불번호</td>
-                                <td th:text="${return.buyNo}">주문번호</td>
-                                <td th:text="${return.userName}">주문자</td>
-                                <td th:text="${return.buyCount}">주문수량</td>
-                                <td th:text="${return.price}">환불금액</td>
-                                <td>
-                                    <p th:text="${#dates.format(return.returnDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                                    <p th:text="${#dates.format(return.returnedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                                </td>
-                                <td>
-                                    <button id="btn-complete-return-${return.no}" type="button"
-                                            class="btn btn-outline-secondary btn-sm" th:data-no="${return.no}">처리
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
-                            <p>조회된 결과가 없습니다.</p>
-                        </div>
-
-                        <!-- 페이징 처리-->
-                        <!--
-                               th:classappend="${조건식} ? 값1 : 값2"
-                               th:classappend="${조건식} ? 값1"
-                                   조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
-                                   조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
-                                   * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
-                        -->
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                                <a th:href="@{/admin/order/return/list(page=${paging.currentPage - 1})}"
-                                   th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
-                            </li>
-
-                            <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
-                                th:if="${num >= 1 and num <= paging.totalPages}" class="page-item"
-                                th:classappend="${num == paging.currentPage} ? 'active'">
-                                <a th:href="@{/admin/order/return/list(page=${num})}" th:text="${num}"
-                                   th:data-page="${num}" class="page-link">1</a>
-                            </li>
-
-                            <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                                <a th:href="@{/admin/order/return/list(page=${paging.currentPage + 1})}"
-                                   th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
-                            </li>
-                        </ul>
+                                <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
+                                       class="form-control-sm">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-light">기간 검색</td>
+                            <td>
+                                <div class="d-flex">
+                                    <select th:field="*{dateOpt}" class="form-select-sm me-2">
+                                        <option value="returnDate">환불 신청일</option>
+                                        <option value="returnedDate">환불 완료일</option>
+                                    </select>
+                                    <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
+                                    <input th:field="*{lessDate}" type="date"
+                                           class="form-control-sm ms-2 me-2">
+                                    <div class="input-group">
+                                        <input type="hidden" th:field="*{period}"/>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="0"
+                                                th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="3"
+                                                th:classappend="${filter.period == '3' ? 'active' : ''}">3일간
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="7"
+                                                th:classappend="${filter.period == '7' ? 'active' : ''}">일주일
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="30"
+                                                th:classappend="${filter.period == '30' ? 'active' : ''}">1개월
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="90"
+                                                th:classappend="${filter.period == '90' ? 'active' : ''}">3개월
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="all"
+                                                th:classappend="${filter.period == 'all' ? 'active' : ''}">전체
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-light">상태</td>
+                            <td>
+                                <label><input type="checkbox" class="form-check-input chk-status"
+                                              th:field="*{status}" value="N"> 환불 신청</label>
+                                <label><input type="checkbox" class="form-check-input chk-status"
+                                              th:field="*{status}" value="Y"> 환불 완료</label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <!-- 조회 결과 영역 -->
+                <div class="col-12 bg-light p-3 mb-3">
+                    <input type="hidden" name="page"/>
+                    <div class="my-3 d-flex justify-content-between">
+                        <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
+                        <div class="d-flex">
+                            <!-- 조회 개수 설정 -->
+                            <select class="form-control-sm me-2" th:field="*{rows}">
+                                <option value="10">10개씩</option>
+                                <option value="20">20개씩</option>
+                                <option value="50">50개씩</option>
+                                <option value="100">100개씩</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- 조회 리스트 -->
+                    <table class="table text-center" id="table-posts" th:if="${paging.totalRows != 0}">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="15%">
+                            <col width="15%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="15%">
+                            <col width="20%">
+                            <col width="10%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>환불번호</th>
+                            <th>주문번호</th>
+                            <th>주문자</th>
+                            <th>주문수량</th>
+                            <th>환불금액</th>
+                            <th>환불접수 일시/환불완료 일시</th>
+                            <th>환불 처리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--
+                            ** 게시글 순번 **
+
+                            1. 마지막 숫자부터 시작
+                                전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
+                                ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
+
+                            2. 1번부터 시작
+                                ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
+                                ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
+                        -->
+                        <tr th:each="return, loop : ${returns}">
+                            <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
+                                번호
+                            </td>
+                            <td th:text="${return.no}">환불번호</td>
+                            <td th:text="${return.buyNo}">주문번호</td>
+                            <td th:text="${return.userName}">주문자</td>
+                            <td th:text="${return.buyCount}">주문수량</td>
+                            <td th:text="${return.price}">환불금액</td>
+                            <td>
+                                <p th:text="${#dates.format(return.returnDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                <p th:text="${#dates.format(return.returnedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            </td>
+                            <td>
+                                <button id="btn-complete-return-${return.no}" type="button"
+                                        class="btn btn-outline-secondary btn-sm" th:data-no="${return.no}">처리
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
+                        <p>조회된 결과가 없습니다.</p>
+                    </div>
+
+                    <!-- 페이징 처리-->
+                    <!--
+                           th:classappend="${조건식} ? 값1 : 값2"
+                           th:classappend="${조건식} ? 값1"
+                               조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
+                               조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
+                               * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                    -->
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                            <a th:href="@{/admin/order/return/list(page=${paging.currentPage - 1})}"
+                               th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
+                        </li>
+
+                        <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
+                            th:if="${num >= 1 and num <= paging.totalPages}" class="page-item"
+                            th:classappend="${num == paging.currentPage} ? 'active'">
+                            <a th:href="@{/admin/order/return/list(page=${num})}" th:text="${num}"
+                               th:data-page="${num}" class="page-link">1</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                            <a th:href="@{/admin/order/return/list(page=${paging.currentPage + 1})}"
+                               th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
         </div>
     </div>
 </div>
