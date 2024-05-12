@@ -20,7 +20,6 @@ public class CartService {
     private final CartMapper cartMapper;
     private final UserMapper userMapper;
 
-    @Cacheable(value = "CartMapper.findCartList")
     public List<CartBookDto> findCartList(String userId){
         User user = userMapper.selectUserById(userId);
         return cartMapper.findCartList(user.getNo());
@@ -37,11 +36,12 @@ public class CartService {
         cartMapper.updateBookCountByCartNo(map);
     }
 
-    public String createCart(long bookNo, String userId) {
+    public String createCart(long bookNo, int count, String userId) {
         User user = userMapper.selectUserById(userId);
         Map<String, Object> map = new HashMap<>();
         map.put("bookNo", bookNo);
         map.put("userNo", user.getNo());
+        map.put("count", count);
         Optional<Long> optional = cartMapper.selectCartNoByBookNoAndUserNo(map);
         if(optional.isEmpty()){
             cartMapper.createCart(map);
@@ -49,7 +49,7 @@ public class CartService {
         }
         else{
             long cartNo = optional.get();
-            cartMapper.increaseBookCountByCartNo(cartNo);
+            cartMapper.increaseBookCountByCartNo(cartNo, count);
             return "exist";
         }
     }
@@ -58,7 +58,7 @@ public class CartService {
         User user = userMapper.selectUserById(userId);
 
         for (Long bookNo : bookNoList) {
-            createCart(bookNo, userId);
+            createCart(bookNo, 1, userId);
         }
 
     }

@@ -334,6 +334,14 @@
     <!-- 바텀 네비게이션 바 -->
     <nav class="navbar fixed-bottom navbar-light bg-light">
         <div class="container-fluid justify-content-end">
+            <div class="btn-group me-2" role="group" aria-label="Second group">
+                <a type="button" id="count-minus"
+                   class="btn btn-outline-secondary count-minus">-</a>
+                <input class="cart-count" name="buyBookCountList" value="1"
+                       style="width:30px; border: none;  background-color: transparent; padding: 0; margin: 10px"/>
+                <a type="button" id="count-plus"
+                   class="btn btn-outline-secondary count-plus">+</a>
+            </div>
             <button class="btn btn-outline-secondary me-3"
                     type="button" onclick="toggleAct(this)"
                     sec:authorize="isAuthenticated()">
@@ -625,6 +633,16 @@
         modalModifyReply.show();
     })
 
+    $("#count-minus").click(function(event){
+        let prevCount = parseInt($("input[name=buyBookCountList]").val());
+        $("input[name=buyBookCountList]").val(prevCount - 1);
+    })
+
+    $("#count-plus").click(function(event){
+        let prevCount = parseInt($("input[name=buyBookCountList]").val());
+        $("input[name=buyBookCountList]").val(prevCount + 1);
+    })
+
     // 장바구니 추가 시 모달
     function showAlertModal(existOrNot){
         console.log(existOrNot);
@@ -638,7 +656,8 @@
 
     // 장바구니 추가 비동기
     async function createOrIncreaseCart(){
-        let response = await fetch("/product/cart/create/" + bookNo);
+        let count = $("input[name=buyBookCountList]").val();
+        let response = await fetch("/product/cart/create/" + bookNo + "/" + count);
         if(!response.ok){
             console.log("장바구니 추가 실패");
         }
