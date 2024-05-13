@@ -237,6 +237,13 @@
                                 <img th:src="@{|/image/product/${review.reviewImageList.get(0).imagePath}|}" alt="리뷰 이미지" style="width: 200px; height: 200px"/>
                             </span>
                     </div>
+                    <div class="row" th:id="'review-images-' + ${review.reviewNo}" style="display: none">
+                        <span th:if="${review.reviewImageList != null and not #lists.isEmpty(review.reviewImageList)}">
+                            <span th:each="reviewImage : ${review.reviewImageList}">
+                                 <img th:src="@{|/image/product/${reviewImage.imagePath}|}" alt="리뷰 이미지" style="width: 200px; height: 200px;"/>
+                            </span>
+                        </span>
+                    </div>
                 </div>
 
                 <!-- 댓글 목록 및 작성폼 -->
@@ -699,9 +706,11 @@
         if (cardContent.classList.contains('collapsed')) {
             cardContent.classList.remove('collapsed');
             toggleLink.innerHTML = '<i class="bi bi-chevron-double-up"></i>';
+            $("#review-images-" + id).show();
         } else {
             cardContent.classList.add('collapsed');
             toggleLink.innerHTML = '<i class="bi bi-chevron-double-down"></i>';
+            $("#review-images-" + id).hide();
         }
     }
 
