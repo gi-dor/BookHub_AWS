@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.bookhub.admin.mapper.OrderMapper">
+
+    <!-- 재사용 조건절 -->
+    <sql id="where">
+        <where>
+            <!-- 검색어 -->
+            <if test="filter.opt != null">
+                <choose>
+                    <when test="filter.opt == 'returnNo'">
+                        R.RETURN_NO = #{filter.keyword}
+                    </when>
+                    <when test="filter.opt == 'buyNo'">
+                        AND R.BUY_NO = #{filter.keyword}
+                    </when>
+                    <when test="filter.opt == 'userName'">
+                        AND U.USER_NAME = #{filter.keyword}
+                    </when>
+                </choose>
+            </if>
+
+            <!-- 기간 검색 -->
+            <if test="filter.moreDate != '' and filter.lessDate != ''">
+                <choose>
+                    <when test="filter.dateOpt == 'returnDate'">
+                        AND R.RETURN_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                          AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                    <when test="filter.dateOpt == 'returnedDate'">
+                        AND R.RETURNED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                            AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                </choose>
+            </if>
+
+            <if test="filter.moreDate == '' and filter.lessDate != ''">
+                <choose>
+                    <when test="filter.dateOpt == 'returnDate'">
+                        AND R.RETURN_DATE BETWEEN '0001-01-01 00:00:00'
+                                          AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                    <when test="filter.dateOpt == 'returnedDate'">
+                        AND R.RETRURNED_DATE BETWEEN '0001-01-01 00:00:00'
+                                            AND CONCAT(#{filter.lessDate}, ' 23:59:59')
+                    </when>
+                </choose>
+            </if>
+
+            <if test="filter.moreDate != '' and filter.lessDate == ''">
+                <choose>
+                    <when test="filter.dateOpt == 'returnDate'">
+                        AND R.RETURN_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                          AND '9999-12-31 23:59:59'
+                    </when>
+                    <when test="filter.dateOpt == 'returnedDate'">
+                        AND R.RETURNED_DATE BETWEEN CONCAT(#{filter.moreDate},' 00:00:00')
+                                            AND '9999-12-31 23:59:59'
+                    </when>
+                </choose>
+            </if>
+
+            <if test="filter.status != null">
+                AND R.RETURNED_YN IN
+                    <foreach collection="filter.status" item="status" open="(" close=")" separator=",">
+                        #{status}
+                    </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <select id="getReturnTotalRows" resultType="int">
+        SELECT
+                count(DISTINCT R.RETURN_NO)
+        FROM
+                BookHub.RETURNS R
+                INNER JOIN USER U ON R.USER_NO = U.USER_NO
+
+        <include refid="where"></include>
+    </select>
+
+    <select id="getReturns" resultType="com.example.bookhub.admin.vo.Return">
+        SELECT
+                R.RETURN_NO                                                             AS no,
+                R.BUY_NO	    		                                                AS buyNo,
+                U.USER_NAME               	                                            AS userName,
+                (SELECT COUNT(*) FROM RETURN_BOOK RB WHERE RB.RETURN_NO = R.RETURN_NO)  AS buyCount,
+                R.RETURN_PRICE                                                          AS returnPrice,
+                R.RETURN_DATE                                                           AS returnDate,
+                R.RETURNED_DATE                                                         AS returnedDate
+        FROM
+                BookHub.RETURNS R
+                INNER JOIN USER U ON R.USER_NO = U.USER_NO
+
+        <include refid="where"></include>
+
+        <choose>
+            <when test="sort == 'returnDate'">
+                ORDER BY R.RETURN_DATE DESC
+            </when>
+        </choose>
+
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+</mapper>

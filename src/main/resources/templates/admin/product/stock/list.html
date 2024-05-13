@@ -3,10 +3,10 @@
 <div layout:fragment="content" class="container-fluid">
     <div class="row me-5 mt-3 mb-5">
         <div class="col-12">
-            <h3>게시글 조회</h3>
+            <h3>재고 관리</h3>
 
             <!-- 필터 선택 영역-->
-            <form id="boardListForm" th:action="@{/admin/board/list}" th:object="${filter}">
+            <form id="productListForm" th:action="@{/admin/stock/notification/list}" th:object="${filter}">
                 <div class="col-12 bg-light p-3 mb-3">
                     <table class="table">
                         <tbody>
@@ -15,15 +15,12 @@
                             <td>
                                 <select th:field="*{opt}" class="form-select-sm">
                                     <option value="null">전체</option>
-                                    <option value="writer">작성자</option>
-                                    <option value="title">제목</option>
-                                    <option value="content">내용</option>
+                                    <option value="notificationNo">통보번호</option>
+                                    <option value="bookNo">상품번호</option>
+                                    <option value="publisherName">출판사</option>
                                 </select>
                                 <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
                                        class="form-control-sm">
-                                <input type="checkbox" class="form-check-input" th:field="*{deletedYN}" value="N"
-                                       id="deletedYN">
-                                <label for="deletedYN">삭제글 제외</label>
                             </td>
                         </tr>
                         <tr>
@@ -31,12 +28,10 @@
                             <td>
                                 <div class="d-flex">
                                     <select th:field="*{dateOpt}" class="form-select-sm me-2">
-                                        <option value="createdDate">등록일</option>
-                                        <option value="updatedDate">수정일</option>
+                                        <option value="createdDate">재고 통보 일시</option>
                                     </select>
                                     <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
-                                    <input th:field="*{lessDate}" type="date"
-                                           class="form-control-sm ms-2 me-2">
+                                    <input th:field="*{lessDate}" type="date" class="form-control-sm ms-2 me-2">
                                     <div class="input-group">
                                         <input type="hidden" th:field="*{period}"/>
                                         <button name="btn-date" class="btn btn-outline-secondary btn-sm"
@@ -67,14 +62,6 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="bg-light">분류</td>
-                            <td>
-                                <label><input type="radio" value="notice" th:field="*{boardType}"> 공지</label>
-                                <label><input type="radio" value="undecided1" th:field="*{boardType}"> 미정1</label>
-                                <label><input type="radio" value="undecided2" th:field="*{boardType}"> 미정2</label>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                     <div class="text-center">
@@ -92,51 +79,46 @@
                             <!-- 조회 개수 설정 -->
                             <select class="form-control-sm me-2" th:field="*{rows}">
                                 <option value="10">10개씩</option>
-                                <option value="20">20개씩</option>
-                                <option value="50">50개씩</option>
-                                <option value="100">100개씩</option>
-                            </select>
-
-                            <!-- 조회 정렬 설정-->
-                            <select class="form-control-sm" th:field="*{sort}">
-                                <option value="recentlyCreated">최근 등록일 순</option>
-                                <option value="recentlyUpdated">최근 수정일 순</option>
-                                <option value="important">중요도 순</option>
+                                <option value="50">30개씩</option>
+                                <option value="100">50개씩</option>
+                                <option value="200">100개씩</option>
                             </select>
                         </div>
                     </div>
 
                     <hr>
 
-                    <!-- 선택 삭제 버튼 -->
+                    <!-- 재고 통보 수량 일괄 변경 버튼 -->
                     <div class="d-flex justify-content-between mb-3">
                         <div class="text-left">
-                            <button id="btn-delete" type="button" class="btn btn-outline-secondary btn-sm">선택 삭제
+                            <label for="modifyStockNotification">통보수량: </label>
+                            <input type="number" id="modifyStockNotification">
+                            <label for="modifyStockNotification">개</label>
+                            <button id="btn-modify-stock-notification" type="button"
+                                    class="btn btn-outline-secondary btn-sm">일괄 변경
                             </button>
                         </div>
                     </div>
 
                     <!-- 조회 리스트 -->
-                    <table class="table text-center" id="table-posts" th:if="${paging.totalRows != 0}">
+                    <table class="table text-center" id="table-products" th:if="${paging.totalRows != 0}">
                         <colgroup>
                             <col width="5%">
-                            <col width="5%">
-                            <col width="*">
                             <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
+                            <col width="20%">
+                            <col width="20%">
                             <col width="15%">
+                            <col width="20%">
                             <col width="10%">
                         </colgroup>
                         <thead>
                         <tr>
                             <th><input id="chk-select-all-product" type="checkbox"></th>
                             <th>번호</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>조회수</th>
-                            <th>중요</th>
-                            <th>등록일/수정일</th>
+                            <th>통보번호</th>
+                            <th>상품번호</th>
+                            <th>출판사</th>
+                            <th>재고통보 일시</th>
                             <th>관리</th>
                         </tr>
                         </thead>
@@ -152,27 +134,22 @@
                                 ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
                                 ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
                         -->
-                        <tr th:each="post, loop : ${posts}">
-                            <td><input name="selectProduct" type="checkbox" th:data-delete-no="${post.no}"></td>
+                        <tr th:each="stockNotification, loop : ${stockNotifications}">
+                            <td><input name="selectProduct" type="checkbox"
+                                       th:data-book-no="${stockNotification.bookNo}"></td>
                             <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
-                                번호
+                                순번
+                            </td>
+                            <td th:text="${stockNotification.notificationNo}">통보번호</td>
+                            <td th:text="${stockNotification.bookNo}">도서번호</td>
+                            <td th:text="${stockNotification.publisherName}">출판사</td>
+                            <td>
+                                <p th:text="${#dates.format(stockNotification.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             </td>
                             <td>
-                                <a th:href="@{/book/detail(id=${post.no})}" th:text="${post.title}">제목</a>
-                            </td>
-                            <td th:text="${post.writer}">작성자</td>
-                            <td th:text="${post.views}">조회수</td>
-                            <td th:text="${post.important}">중요</td>
-                            <td>
-                                <p th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                                <p th:text="${#dates.format(post.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
-                            </td>
-                            <td>
-                                <button id="btn-modify-post-${post.no}" type="button"
-                                        class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">수정
-                                </button>
-                                <button id="btn-delete-post-${post.no}" type="button"
-                                        class="btn btn-outline-secondary btn-sm" th:data-no="${post.no}">삭제
+                                <button id="btn-manage-stock-${stockNotification.notificationNo}" type="button"
+                                        class="btn btn-outline-secondary btn-sm"
+                                        th:data-no="${stockNotification.notificationNo}">처리
                                 </button>
                             </td>
                         </tr>
@@ -192,19 +169,21 @@
                     -->
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                            <a th:href="@{/admin/board/list(page=${paging.currentPage - 1})}"
+                            <a th:href="@{/admin/stock/notification/list(page=${paging.currentPage - 1})}"
                                th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
                         </li>
 
                         <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
-                            th:if="${num >= 1 and num <= paging.totalPages}" class="page-item"
+                            th:if="${num >= 1 and num <= paging.totalPages}"
+                            class="page-item"
                             th:classappend="${num == paging.currentPage} ? 'active'">
-                            <a th:href="@{/admin/board/list(page=${num})}" th:text="${num}" th:data-page="${num}"
+                            <a th:href="@{/admin/stock/notification/list(page=${num})}" th:text="${num}"
+                               th:data-page="${num}"
                                class="page-link">1</a>
                         </li>
 
                         <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                            <a th:href="@{/admin/board/list(page=${paging.currentPage + 1})}"
+                            <a th:href="@{/admin/stock/notification/list(page=${paging.currentPage + 1})}"
                                th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
                         </li>
                     </ul>
@@ -214,73 +193,19 @@
     </div>
 </div>
 
-<!-- 게시글 수정 모달창 -->
-<div class="modal fade" id="modify-post-modal" tabindex="-1" aria-labelledby="modifyPostModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modifyPostModalLabel">게시글 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form th:action="@{/admin/board/modify}" th:object="${post}" method="post">
-                    <div class="col-12 bg-light p-3 mb-3">
-                        <table class="table table-bordered">
-                            <input type="hidden" th:field="*{no}">
-                            <tr>
-                                <td class="bg-light align-middle text-center" style="width: 150px;">작성자</td>
-                                <td id="modal-writer"></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light align-middle text-center" style="width: 150px;">제목</td>
-                                <td>
-                                    <input type="text" th:field="*{title}" class="form-control-sm">
-                                    <input type="checkbox" class="form-check-input" value="Y" id="important"
-                                           th:field="*{important}">
-                                    <label for="important">중요</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light align-middle text-center" style="width: 150px;">내용</td>
-                                <td>
-                                    <!-- Quill.js 에디터 적용 -->
-                                    <div id="editor" style=" height: 300px; width: 100%;"></div>
-                                    <input type="hidden" th:field="*{content}">
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">저장</button>
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script layout:fragment="script" type="text/javascript">
     $(function () {
 
-        // 초기화 버튼
         $("#btn-reset").click(function () {
             // 검색어 초기화
             $("select[name='opt']").val("null");
             $("input[name='keyword']").val("");
-            $("#deletedYN").prop("checked", false);
 
             // 기간 검색 초기화
             $("select[name='dateOpt']").val("createdDate");
             $("input[name='moreDate']").val("");
             $("input[name='lessDate']").val("");
             $("button[name='btn-date']").removeClass("active");
-
-            // 분류 초기화
-            $("input[type='radio'][value='notice']").prop("checked", true);
-
         });
 
         // 기간 검색 버튼 클릭 시 해당 날짜 입력
@@ -313,10 +238,6 @@
             $(this).closest('form').submit();
         });
 
-        $("select[name='sort']").change(function () {
-            $(this).closest('form').submit();
-        });
-
         // '전체 선택' 체크박스를 선택하면 각 상품 체크박스를 모두 선택한다.
         $("#chk-select-all-product").click(function () {
             let isChecked = $(this).prop("checked");
@@ -341,130 +262,41 @@
             }
         }
 
-        // 처음 페이지 로드 시 '공지' 라디오 버튼 선택
-        function checkNotice() {
-            let checkedRadio = $("input[name='boardType']:checked").length;
-            const NONE_CHECKED_RADIO = 0;
-            if (checkedRadio === NONE_CHECKED_RADIO) {
-                $("input[type='radio'][value='notice']").prop("checked", true);
-            }
-        }
-
-        checkNotice();
-
-        // 선택 삭제 버튼 클릭 시 선택된 게시글 삭제
-        $("#btn-delete").click(function () {
+        // 재고통보수량 일괄 변경
+        $("#btn-modify-stock-notification").click(function () {
+            let modifiedStockNotification = $("#modifyStockNotification").val();
             let checkedNos = [];
-            $("#table-posts tbody :checkbox:checked").each(function () {
-                checkedNos.push($(this).data("deleteNo"));
+            $("#table-products tbody :checkbox:checked").each(function () {
+                checkedNos.push($(this).data("bookNo"));
             });
 
-            deletePostByNo(checkedNos);
-        });
-
-        // 삭제 버튼 클릭 시 해당 게시글 삭제
-        $("button[id^='btn-delete-post']").click(function () {
-            let checkedNos = [];
-            checkedNos.push($(this).data("no"));
-
-            deletePostByNo(checkedNos);
-        });
-
-        function deletePostByNo(checkedNos) {
             if (checkedNos.length === 0) {
                 alert("선택된 상품이 없습니다.");
                 return;
             }
 
-            if (!confirm("선택한 상품을 삭제하시겠습니까?")) {
+            if (!confirm("선택한 상품의 재고통보수량을 변경하시겠습니까?")) {
                 return;
             }
 
             $.ajax({
-                url: "/admin/board/delete",
+                url: "/admin/stock/notification/modify",
                 type: "POST",
-                data: JSON.stringify(checkedNos), // [100, 100, 100]
+                data: JSON.stringify({
+                    checkedNos: checkedNos, // [100, 100, 100]
+                    modifiedStockNotification: modifiedStockNotification // 50
+                }),
                 contentType: 'application/json',
                 success: function () {
-                    $("#table-posts tbody :checkbox:checked").closest("tr").remove();
-                },
-                error: function (xhr, status, error) {
-                    console.error("오류 발생", error);
-                },
-                complete: function () {
-                    alert("삭제가 완료되었습니다.");
-                }
-            });
-        }
-
-        // 게시글 수정 모달창 열기
-        $("[id^='btn-modify-post']").click(function () {
-            let postNo = $(this).data("no");
-            createModifyPostFormByPostNo(postNo);
-
-            let modifyPostModal = new bootstrap.Modal($("#modify-post-modal"));
-            modifyPostModal.show();
-        });
-
-        // 수정 버튼 클릭 시 게시글 번호에 해당하는 게시글 수정 폼 생성
-        function createModifyPostFormByPostNo(postNo) {
-            $.ajax({
-                url: "/admin/board/getPostByNo",
-                type: "GET",
-                data: {postNo: postNo},
-                success: function (post) {
-                    $("input[name='no']").val(postNo);
-                    $("#modal-writer").text(post.writer);
-                    $("#modify-post-modal input[name='title']").val(post.title);
-                    if (post.important === "Y") {
-                        $("#modify-post-modal input[name='important']").prop("checked", true);
-                    }
-                    if (post.important === "N") {
-                        $("#modify-post-modal input[name='important']").prop("checked", false);
-                    }
-                    // 내용(content) 설정
-                    let editor = quilljsediterInit()
-                    editor.root.innerHTML = post.content;
+                    alert("재고통보수량이 변경되었습니다.");
                 },
                 error: function (xhr, status, error) {
                     console.error("오류 발생", error);
                 }
             });
-        }
-
-        // 페이지 이동 시 필터 유지
-        $(".pagination a").click(function (event) {
-            event.preventDefault();
-
-            let page = $(this).data("page");
-
-            $("input[name=page]").val(page)
-            $("#boardListForm").trigger("submit")
         });
+
     })
-
-    // Quill.js 에디터 적용
-    function quilljsediterInit() {
-        var option = {
-            modules: {
-                toolbar: [
-                    [{header: [1, 2, 3, false]}],
-                    [{'font': []}],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{'color': []}, {'background': []}],
-                    [{list: 'ordered'}, {list: 'bullet'}]
-                ]
-            },
-            // placeholder: '자세한 내용을 입력해 주세요!',
-            theme: 'snow'
-        };
-        quill = new Quill('#editor', option);
-        quill.on('text-change', function () {
-            document.getElementById("content").value = quill.root.innerHTML;
-        });
-        return quill;
-    }
-
 
 </script>
 

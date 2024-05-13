@@ -79,4 +79,8 @@ public class ProductService {
         productMapper.registerProduct(product);
         productMapper.registerImage(product);
     }
+
+    public int getStockNotificationTotalRows(ProductFilter filter) {
+        return productMapper.getStockNotificationTotalRows(filter);
+    }
 }

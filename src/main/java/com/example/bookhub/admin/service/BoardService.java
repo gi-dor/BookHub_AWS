@@ -78,4 +78,8 @@ public class BoardService {
     public void increaseViewCount(long postNo) {
         boardMapper.increaseViewCount(postNo);
     }
+
+    public List<Post> getNoticesByNo(long postNo, BoardFilter filter) {
+        return boardMapper.getNoticesByNo(postNo, filter);
+    }
 }

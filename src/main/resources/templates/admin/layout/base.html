@@ -113,23 +113,12 @@
         </div>
         <div class="col-10 mt-3">
             <th:block layout:fragment="content"></th:block>
-            <th:block layout:fragment="category"></th:block>
-            <th:block layout:fragment="list"></th:block>
-            <th:block layout:fragment="modify"></th:block>
-            <th:block layout:fragment="create"></th:block>
-            <th:block layout:fragment="boardList"></th:block>
-            <th:block layout:fragment="createPost"></th:block>
         </div>
     </div>
     <div th:replace="~{/layout/footer :: footer}"></div>
 </div>
 
-<th:block layout:fragment="categoryScript"></th:block>
-<th:block layout:fragment="listScript"></th:block>
-<th:block layout:fragment="modifyProductScript"></th:block>
-<th:block layout:fragment="createProductScript"></th:block>
-<th:block layout:fragment="boardListScript"></th:block>
-<th:block layout:fragment="createPostScript"></th:block>
+<th:block layout:fragment="script"></th:block>
 
 </body>
 </html>

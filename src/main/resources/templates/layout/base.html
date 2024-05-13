@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/html">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title></title>
-<!--    Bootstrap CSS 파일을 링크-->
-<link href="" rel="stylesheet">
-<!--    부트스트랩 JavaScript 파일을 로드-->
-<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
-<link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css}">
-<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js}"></script>
-<!--    부트스트랩에서 제공하는 아이콘-->
-<!-- Google Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dongle&family=Noto+Serif:ital,wdth@1,75&display=swap" rel="stylesheet">
-<!--FontAwsome-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<!-- jQuery & Ajax -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!-- summernote -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-<link rel="stylesheet" href="/summernote/summernote-lite.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title></title>
+    <!--    Bootstrap CSS 파일을 링크-->
+    <link href="" rel="stylesheet">
+    <!--    부트스트랩 JavaScript 파일을 로드-->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css}">
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js}"></script>
+    <!--    부트스트랩에서 제공하는 아이콘-->
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Noto+Serif:ital,wdth@1,75&display=swap"
+          rel="stylesheet">
+    <!--FontAwsome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- jQuery & Ajax -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- summernote -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <link rel="stylesheet" href="/summernote/summernote-lite.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<!--  카카오 MAP API 시작 -->
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<!--  카카오 MAP API 끝-->
-<script src="/js/user/kakaoMap.js"></script>
-<!-- css -->
-<th:block layout:fragment="style">
-</th:block>
-<link rel="stylesheet" th:href="@{/css/main/navbar.css}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <!--  카카오 MAP API 시작 -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!--  카카오 MAP API 끝-->
+    <script src="/js/user/kakaoMap.js"></script>
+    <!-- css -->
+    <th:block layout:fragment="style">
+    </th:block>
+    <link rel="stylesheet" th:href="@{/css/main/navbar.css}"/>
 </head>
 <body>
 
@@ -42,18 +43,16 @@
 
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 <div style="margin-top: 260px;">
-<th:block layout:fragment="content" ></th:block>
-<th:block layout:fragment="noticeList" ></th:block>
+    <th:block layout:fragment="content"></th:block>
 </div>
 
 <!-- 푸터 -->
 <div style="margin-top: 200px;">
-<footer th:replace="~{layout/footer :: footer} "></footer>
+    <footer th:replace="~{layout/footer :: footer} "></footer>
 </div>
 <!--java script -->
 <th:block layout:fragment="script">
-<th:block layout:fragment="noticeListScript">
 </th:block>
 </body>
-    <script src="/js/main/navbar.js"></script>
+<script src="/js/main/navbar.js"></script>
 </html>

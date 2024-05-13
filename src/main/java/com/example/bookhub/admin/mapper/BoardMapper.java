@@ -25,4 +25,6 @@ public interface BoardMapper {
     Post getNoticeByNo(long postNo);
 
     void increaseViewCount(long postNo);
+
+    List<Post> getNoticesByNo(@Param("postNo") long postNo, @Param("filter") BoardFilter filter);
 }
