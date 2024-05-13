@@ -24,7 +24,17 @@ public interface MyPageMapper {
     int countInquiry(String id);
 
     List<InquiryListDTO>selectInquiryListPaging(@Param("id")String id , @Param("offset")int offset);
-//    PageListDTO<InquiryListDTO> selectInquiryListPaging(@Param("id") String id, @Param("offset") int offset);
+
+    // 캐싱 1:1 문의
+
+    List<InquiryListDTO>cacheInquiries( @Param("offset")int offset);
+
+    // 캐싱 X 1:1 문의
+    List<InquiryListDTO>NocacheInquiries( @Param("offset")int offset);
+
+
+    // 문의사항 전체 조회
+    int countInquiriesAll();
 
 
     List<Inquiry> selectInquiryList(String id );
