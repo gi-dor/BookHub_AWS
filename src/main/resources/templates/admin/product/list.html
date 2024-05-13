@@ -135,7 +135,7 @@
                                 <select th:field="*{publisherNo}" class="form-select-sm">
                                     <option selected value="0">전체</option>
                                     <option th:each="publisher : ${publishers}"
-                                            th:value="${publisher.no}"
+                                            th:value="${publisher.publisherNo}"
                                             th:text="${publisher.name}">
                                     </option>
                                 </select>
@@ -254,7 +254,6 @@
                                 <p th:text="${#dates.format(book.updatedDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-outline-secondary btn-sm me-1">통계</button>
                                 <button id="btn-modify-product-${book.no}" type="button"
                                         class="btn btn-outline-secondary btn-sm" th:data-no="${book.no}">수정
                                 </button>

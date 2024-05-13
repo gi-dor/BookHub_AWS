@@ -212,55 +212,56 @@
             </form>
         </div>
     </div>
-</div>
 
-<!-- 게시글 수정 모달창 -->
-<div class="modal fade" id="modify-post-modal" tabindex="-1" aria-labelledby="modifyPostModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modifyPostModalLabel">게시글 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form th:action="@{/admin/board/modify}" th:object="${post}" method="post">
-                    <div class="col-12 bg-light p-3 mb-3">
-                        <table class="table table-bordered">
-                            <input type="hidden" th:field="*{no}">
-                            <tr>
-                                <td class="bg-light align-middle text-center" style="width: 150px;">작성자</td>
-                                <td id="modal-writer"></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light align-middle text-center" style="width: 150px;">제목</td>
-                                <td>
-                                    <input type="text" th:field="*{title}" class="form-control-sm">
-                                    <input type="checkbox" class="form-check-input" value="Y" id="important"
-                                           th:field="*{important}">
-                                    <label for="important">중요</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light align-middle text-center" style="width: 150px;">내용</td>
-                                <td>
-                                    <!-- Quill.js 에디터 적용 -->
-                                    <div id="editor" style=" height: 300px; width: 100%;"></div>
-                                    <input type="hidden" th:field="*{content}">
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">저장</button>
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소
-                            </button>
+    <!-- 게시글 수정 모달창 -->
+    <div class="modal fade" id="modify-post-modal" tabindex="-1" aria-labelledby="modifyPostModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifyPostModalLabel">게시글 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/admin/board/modify}" th:object="${post}" method="post">
+                        <div class="col-12 bg-light p-3 mb-3">
+                            <table class="table table-bordered">
+                                <input type="hidden" th:field="*{no}">
+                                <tr>
+                                    <td class="bg-light align-middle text-center" style="width: 150px;">작성자</td>
+                                    <td id="modal-writer"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light align-middle text-center" style="width: 150px;">제목</td>
+                                    <td>
+                                        <input type="text" th:field="*{title}" class="form-control-sm">
+                                        <input type="checkbox" class="form-check-input" value="Y" id="important"
+                                               th:field="*{important}">
+                                        <label for="important">중요</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light align-middle text-center" style="width: 150px;">내용</td>
+                                    <td>
+                                        <!-- Quill.js 에디터 적용 -->
+                                        <div id="editor" style=" height: 300px; width: 100%;"></div>
+                                        <input type="hidden" th:field="*{content}">
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">저장</button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <script layout:fragment="script" type="text/javascript">
     $(function () {

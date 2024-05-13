@@ -7,28 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryMapper categoryMapper;
 
+    @Transactional(readOnly = true)
     public List<Category> getAllTopLevelCategories() {
         return categoryMapper.getAllTopLevelCategories();
     }
 
+    @Transactional(readOnly = true)
     public List<Category> getAllSecondLevelCategories() {
         return categoryMapper.getAllSecondLevelCategories();
     }
 
+    @Transactional(readOnly = true)
     public List<Category> getAllThirdLevelCategories() {
         return categoryMapper.getAllThirdLevelCategories();
     }
 
+    @Transactional(readOnly = true)
     public List<Category> getSubCategoriesByCategoryNo(long categoryNo) {
         return categoryMapper.getSubCategoriesByCategoryNo(categoryNo);
     }
 
+    @Transactional(readOnly = true)
     public Category getParentCategoryByCategoryNo(long categoryNo) {
         return categoryMapper.getParentCategoryByCategoryNo(categoryNo);
     }
@@ -43,10 +49,12 @@ public class CategoryService {
         categoryMapper.addSubCategory(categoryName, categoryNo);
     }
 
+    @Transactional(readOnly = true)
     public Category getTopLevelCategoryByCategoryName(String categoryName) {
         return categoryMapper.getTopLevelCategoryByCategoryName(categoryName);
     }
 
+    @Transactional(readOnly = true)
     public Category getSubLevelCategoryByCategoryNameAndSuperCategoryNo(String categoryName, long categoryNo) {
         return categoryMapper.getSubLevelCategoryByCategoryNameAndSuperCategoryNo(categoryName, categoryNo);
     }
@@ -85,6 +93,7 @@ public class CategoryService {
         categoryMapper.deleteTopCategory(targetCategoryNo);
     }
 
+    @Transactional(readOnly = true)
     public List<Category> getTotalSubCategories(long categoryNo) {
         List<Category> categories = categoryMapper.getSubCategoriesByCategoryNo(categoryNo);
         List<Category> totalSubCategories = new ArrayList<>(categories);
