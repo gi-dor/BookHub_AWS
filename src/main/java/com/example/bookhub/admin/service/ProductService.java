@@ -9,6 +9,7 @@ import com.example.bookhub.product.vo.Publisher;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,18 +17,22 @@ public class ProductService {
 
     private final ProductMapper productMapper;
 
+    @Transactional(readOnly = true)
     public int getTotalRows(ProductFilter filter) {
         return productMapper.getTotalRows(filter);
     }
 
+    @Transactional(readOnly = true)
     public List<BookList> getBooks(ProductFilter filter, int offset, int limit, String sort) {
         return productMapper.getBooks(filter, offset, limit, sort);
     }
 
+    @Transactional(readOnly = true)
     public List<Publisher> getPublishers() {
         return productMapper.getPublishers();
     }
 
+    @Transactional(readOnly = true)
     public List<Author> getAuthors() {
         return productMapper.getAuthors();
     }
@@ -38,10 +43,12 @@ public class ProductService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Product getProductByNo(Long productNo) {
         return productMapper.getProductByNo(productNo);
     }
 
+    @Transactional(readOnly = true)
     public Long getSuperCategoryNoBySubCategoryNo(Long categoryNo) {
         return productMapper.getSuperCategoryNoBySubCategoryNo(categoryNo);
     }
@@ -80,7 +87,7 @@ public class ProductService {
         productMapper.registerImage(product);
     }
 
-    public int getStockNotificationTotalRows(ProductFilter filter) {
-        return productMapper.getStockNotificationTotalRows(filter);
-    }
+    // public int getStockNotificationTotalRows(ProductFilter filter) {
+    //     return productMapper.getStockNotificationTotalRows(filter);
+    // }
 }

@@ -135,7 +135,7 @@
                                 <select th:field="*{publisherNo}" class="form-select-sm">
                                     <option selected value="0">전체</option>
                                     <option th:each="publisher : ${publishers}"
-                                            th:value="${publisher.no}"
+                                            th:value="${publisher.publisherNo}"
                                             th:text="${publisher.name}">
                                     </option>
                                 </select>
