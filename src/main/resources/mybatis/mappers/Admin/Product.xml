@@ -181,7 +181,7 @@
 
     <select id="getPublishers" resultType="com.example.bookhub.product.vo.Publisher">
             SELECT
-                PUBLISHER_NO AS no,
+                PUBLISHER_NO AS publisherNo,
                 PUBLISHER_NAME AS name
             FROM
                 BookHub.PUBLISHER
