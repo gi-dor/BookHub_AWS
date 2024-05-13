@@ -6,6 +6,8 @@ import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.vo.BuyDeliveryRequest;
 import com.example.bookhub.product.vo.CouponProduced;
+import com.example.bookhub.user.service.UserService;
+import com.example.bookhub.user.vo.User;
 import com.example.bookhub.user.vo.UserDelivery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ public class BuyController {
 
     private final BookService bookService;
     private final BuyService buyService;
+    private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/order")
@@ -65,6 +68,9 @@ public class BuyController {
 
         int point = buyService.getPointByUserNo(principal.getName());
         model.addAttribute("point", point);
+
+        User user = userService.selectUserById(principal.getName());
+        model.addAttribute("user", user);
 
         // BuyForm 객체 HttpSession에 저장
         model.addAttribute("buyForm", buyForm);

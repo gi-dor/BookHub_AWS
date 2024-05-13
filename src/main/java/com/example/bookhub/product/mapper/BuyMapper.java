@@ -27,4 +27,5 @@ public interface BuyMapper {
     int getBookStock(long bookNo);
     int getCouponProducedLastAmount(long couponProducedNo);
     int getCouponCountByUserNo(long userNo);
+    void updatePointAccumulated(@Param("userNo") long userNo, @Param("pointAccumulationAmount") int pointAccumulationAmount);
 }

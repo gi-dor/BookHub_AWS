@@ -72,6 +72,9 @@ public class GiftService {
         // 포인트 차감
         updatePoint(user);
 
+        // 포인트 적립
+        accumulatePoint(user);
+
         for(int i = 0; i < giftReceiverList.size(); i++){
             String giftOrderId = giftReceiverList.get(i).getGiftOrderId();
             String receiverName = giftReceiverList.get(i).getName();
@@ -90,6 +93,7 @@ public class GiftService {
                 .totalBookDiscountPrice(buyForm.getTotalBookDiscountPrice())
                 .totalCouponDiscountAmount(buyForm.getTotalCouponDiscountAmount())
                 .totalPointUseAmount(buyForm.getTotalPointUseAmount())
+                .pointAccumulationAmount(buyForm.getPointAccumulationAmount())
                 .finalPrice(buyForm.getFinalPrice())
                 .commonEntranceApproach(buyForm.getCommonEntranceApproach())
                 .buyPayMethod(buyPayMethod)
@@ -197,6 +201,11 @@ public class GiftService {
         map.put("userNo", user.getNo());
         map.put("totalPointUseAmount", totalPointUseAmount);
         buyMapper.updatePointUsed(map);
+    }
+
+    private void accumulatePoint(User user) {
+        int pointAccumulationAmount = buyForm.getPointAccumulationAmount();
+        buyMapper.updatePointAccumulated(user.getNo(), pointAccumulationAmount);
     }
 
     public void makeEmail(String giftOrderId, String receiverMail, String receiverName){

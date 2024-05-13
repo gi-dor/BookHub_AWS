@@ -178,6 +178,12 @@
                                     <td><strong><input id="final-price" name="finalPrice" value="0"
                                                        style="font-weight: bold" readonly/></strong></td>
                                 </tr>
+                                <tr>
+                                    <input id="user-grade-no" type="hidden" th:value="${user.userGrade.no}" disabled/>
+                                    <td>포인트 적립</td>
+                                    <td><input id="point-accumulation-amount" name="pointAccumulationAmount" value="0"
+                                               readonly/></td>
+                                </tr>
                                 </tbody>
                             </table>
                                 <button type="button" class="w-100 btn btn-lg btn-dark" onclick="checkUserDelivery()">결제하기</button>
@@ -386,8 +392,11 @@
                 totalPrice += price * count;
                 totalBookDiscountPrice += (price * count * discountRate);
             });
+            let pointAccumulationAmount = parseInt(totalPrice * parseInt($("#user-grade-no").val()) * 0.01);
+
             $("#total-price").val(totalPrice);
             $("#total-book-discount-price").val(totalBookDiscountPrice);
+            $("#point-accumulation-amount").val(pointAccumulationAmount);
 
             updateFinalPrice();
         }
