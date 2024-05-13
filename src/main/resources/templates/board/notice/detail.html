@@ -4,14 +4,14 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
-                <h3>공지사항</h3>
+                <h2 class="text-center">공지사항</h2>
 
                 <form th:action="@{/admin/board/notice/list}" th:object="${filter}">
                     <input type="hidden" name="page" th:value="${page}">
                     <input type="hidden" name="opt" th:value="${filter.opt}">
                     <input type="hidden" name="keyword" th:value="${filter.keyword}">
                     <!-- 게시글 정보 영역 -->
-                    <div class="col-12 bg-light p-3 mb-3">
+                    <div class="col-12 p-3 mb-3">
                         <div class="d-flex justify-content-end">
                             <table class="table table-bordered ">
                                 <tr>
@@ -32,6 +32,7 @@
                         <div th:utext="${notice.content}" style="min-height: 100px;"></div>
                     </div>
 
+                    <hr>
                     <!-- 게시글 조회 결과 영역 -->
                     <div class="col-12 bg-light p-3 mb-3">
                         <!-- 조회 리스트 -->
