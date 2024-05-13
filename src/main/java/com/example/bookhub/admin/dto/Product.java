@@ -32,6 +32,7 @@ public class Product {
     private int listPrice;
     private double discountRate;
     private int stock;
+    private int stockNotification;
     private String coverImg;
     private String thumbnailImg;
     private String descriptionImg;
