@@ -217,7 +217,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary" onclick="useSelectedCoupon()">사용</button>
+                        <button type="button" class="btn btn-dark" onclick="useSelectedCoupon()">사용</button>
                     </div>
                 </div>
             </div>
@@ -425,7 +425,7 @@
 
                 rows += `
                        <tr id="tr-coupon">
-                            <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
+                            <td><input type="checkbox" class="form-check-input" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
                             <td>${couponProduced.coupon.name}</td>
                             <td><span class="couponDiscountAmount">${couponProduced.lastAmount}</span>원</td>
                             <td><input name="couponDiscountAmountList"

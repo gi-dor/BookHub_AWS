@@ -66,6 +66,9 @@ public class GiftController {
         }
         model.addAttribute("buyBookCountList", buyBookCountList);
 
+        int couponCount = buyService.getCouponCountByUserNo(principal.getName());
+        model.addAttribute("couponCount", couponCount);
+
         int point = buyService.getPointByUserNo(principal.getName());
         model.addAttribute("point", point);
 

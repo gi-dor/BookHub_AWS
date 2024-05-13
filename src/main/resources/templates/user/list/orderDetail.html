@@ -166,7 +166,7 @@
                             <input type="hidden" name="buyNo" th:value="${orderList[0].no}"/>
                             <tbody id="tbody-buy-cancel">
                             <tr th:each="order : ${orderList}">
-                                <td><input type="checkbox" name="returnBookNoList" th:value="${order.book.bookNo}"></td>
+                                <td><input type="checkbox" class="form-check-input" name="returnBookNoList" th:value="${order.book.bookNo}"></td>
                                 <td>
                                     <div th:text="${order.book.name}">책 제목</div>
                                     <span class="order-book-price" th:text="${order.book.price}">가격</span>
@@ -183,7 +183,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="submit" class="btn btn-primary">주문취소</button>
+                        <button type="button" class="btn btn-dark" onclick="checkReturn('buy-cancel')">주문취소</button>
                     </div>
                 </div>
             </div>
@@ -222,7 +222,7 @@
                             <input type="hidden" name="buyNo" th:value="${orderList[0].no}"/>
                             <tbody id="tbody-refund">
                             <tr th:each="order : ${orderList}">
-                                <td><input type="checkbox" name="returnBookNoList" th:value="${order.book.bookNo}"></td>
+                                <td><input type="checkbox" class="form-check-input" name="returnBookNoList" th:value="${order.book.bookNo}"></td>
                                 <td>
                                     <div th:text="${order.book.name}">책 제목</div>
                                     <span class="order-book-price" th:text="${order.book.price}">가격</span>
@@ -239,7 +239,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="submit" class="btn btn-primary">환불하기</button>
+                        <button type="button" class="btn btn-dark" onclick="checkReturn('refund')">환불하기</button>
                     </div>
                 </div>
             </div>
@@ -278,7 +278,7 @@
                             <input type="hidden" name="buyNo" th:value="${orderList[0].no}"/>
                             <tbody id="tbody-exchange">
                             <tr th:each="order : ${orderList}">
-                                <td><input type="checkbox" name="returnBookNoList" th:value="${order.book.bookNo}"></td>
+                                <td><input type="checkbox" class="form-check-input" name="returnBookNoList" th:value="${order.book.bookNo}"></td>
                                 <td>
                                     <div th:text="${order.book.name}">책 제목</div>
                                     <span class="order-book-price" th:text="${order.book.price}">가격</span>
@@ -295,7 +295,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="submit" class="btn btn-primary">교환하기</button>
+                        <button type="button" class="btn btn-dark" onclick="checkReturn('exchange')" >교환하기</button>
                     </div>
                 </div>
             </div>
@@ -318,6 +318,23 @@
 
         function showModalExchange(){
             modalExchange.show();
+        }
+
+        function checkReturn(type){
+            let checkboxes = document.getElementsByName("returnBookNoList");
+            let isChecked = false;
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    isChecked = true;
+                    break;
+                }
+            }
+            if (!isChecked) {
+                alert("하나 이상의 책을 선택해주세요.");
+                return false;
+            }else{
+                $("#form-" + type).submit();
+            }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
