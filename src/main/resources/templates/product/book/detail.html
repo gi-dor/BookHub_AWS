@@ -139,7 +139,7 @@
     </table>
 
     <!-- 도서 설명 사진 -->
-    <div>
+    <div th:if="${book.imageDescription != null}">
         <img th:src="${book.imageDescription}" class="d-block w-100" alt="...">
     </div>
 
