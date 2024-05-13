@@ -16,5 +16,7 @@ public interface StockMapper {
 
     List<Long> getBookNoBelowStockNotification();
 
-    void updateStockNotification(long bookNo);
+    void insertIntoStockNotification(long bookNo);
+
+    void modifyStockNotification(long bookNo, int modifiedStockNotification);
 }

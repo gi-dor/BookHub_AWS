@@ -28,8 +28,13 @@ public class StockService {
     public void notifyInsufficientStock() {
         List<Long> bookNos = stockMapper.getBookNoBelowStockNotification();
         for (Long bookNo : bookNos) {
-            stockMapper.updateStockNotification(bookNo);
+            stockMapper.insertIntoStockNotification(bookNo);
         }
     }
 
+    public void modifyStockNotification(List<Long> bookNos, int modifiedStockNotification) {
+        for (long bookNo : bookNos) {
+            stockMapper.modifyStockNotification(bookNo, modifiedStockNotification);
+        }
+    }
 }

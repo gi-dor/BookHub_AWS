@@ -87,7 +87,7 @@
     		        BOOK_STOCK &lt; BOOK_STOCK_NOTIFICATION
     </select>
 
-    <insert id="updateStockNotification" parameterType="long">
+    <insert id="insertIntoStockNotification" parameterType="long">
         INSERT INTO BookHub.STOCK_NOTIFICATION
             (BOOK_NO)
             SELECT
@@ -101,5 +101,11 @@
                     WHERE BOOK_NO = #{bookNo}
                 )
     </insert>
+
+    <update id="modifyStockNotification" parameterType="map">
+        UPDATE BookHub.BOOK
+        SET BOOK_STOCK_NOTIFICATION = #{modifiedStockNotification}
+        WHERE BOOK_NO = #{bookNo}
+    </update>
 
 </mapper>

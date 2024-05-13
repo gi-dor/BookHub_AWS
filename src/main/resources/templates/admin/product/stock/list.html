@@ -262,11 +262,12 @@
             }
         }
 
-        // 상품 선택 삭제 함수
-        $("#btn-delete").click(function () {
+        // 재고통보수량 일괄 변경
+        $("#btn-modify-stock-notification").click(function () {
+            let modifiedStockNotification = $("#modifyStockNotification").val();
             let checkedNos = [];
             $("#table-products tbody :checkbox:checked").each(function () {
-                checkedNos.push($(this).data("deleteNo"));
+                checkedNos.push($(this).data("bookNo"));
             });
 
             if (checkedNos.length === 0) {
@@ -274,23 +275,23 @@
                 return;
             }
 
-            if (!confirm("선택한 상품을 삭제하시겠습니까?")) {
+            if (!confirm("선택한 상품의 재고통보수량을 변경하시겠습니까?")) {
                 return;
             }
 
             $.ajax({
-                url: "/admin/product/delete",
+                url: "/admin/stock/notification/modify",
                 type: "POST",
-                data: JSON.stringify(checkedNos), // [100, 100, 100]
+                data: JSON.stringify({
+                    checkedNos: checkedNos, // [100, 100, 100]
+                    modifiedStockNotification: modifiedStockNotification // 50
+                }),
                 contentType: 'application/json',
                 success: function () {
-                    $("#table-products tbody :checkbox:checked").closest("tr").remove();
+                    alert("재고통보수량이 변경되었습니다.");
                 },
                 error: function (xhr, status, error) {
                     console.error("오류 발생", error);
-                },
-                complete: function () {
-                    alert("삭제가 완료되었습니다.");
                 }
             });
         });
