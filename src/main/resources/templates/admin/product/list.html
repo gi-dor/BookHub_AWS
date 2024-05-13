@@ -496,7 +496,7 @@
             $("#table-products tbody :checkbox:checked").each(function () {
                 checkedNos.push($(this).data("deleteNo"));
             });
-            console.log(checkedNos);
+
             if (checkedNos.length === 0) {
                 alert("선택된 상품이 없습니다.");
                 return;
@@ -529,7 +529,7 @@
             window.location.href = "/admin/product/modify?no=" + productNo;
         });
 
-    });
+    })
 
 </script>
 

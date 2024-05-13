@@ -126,39 +126,41 @@
                 </a>
             </div>
             <div class="card-body col-12">
-                <div class="text-section col-9">
-                    <!-- 책 제목 -->
-                    <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
-                    <!-- 저자 -->
-                    <div th:each="author : ${book.authors}">
-                        <p class="card-text" th:text="${author.name + ' (' + author.type + ')'}">저자</p>
+                    <a th:href="@{|/product/book/detail?bookNo=${book.no}|}" style="text-decoration: none; color: inherit;">
+                    <div class="text-section col-9">
+                        <!-- 책 제목 -->
+                        <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
+                        <!-- 저자 -->
+                        <div th:each="author : ${book.authors}">
+                            <p class="card-text" th:text="${author.name + ' (' + author.type + ')'}">저자</p>
+                        </div>
+                        <!--출판사-->
+                        <p class="card-text">
+                            <span th:text="${book.publisherName}"></span>
+                        </p>
+                        <!-- 가격 -->
+                        <p class="card-text">
+                            <span th:text="${book.price} + '원'"></span>
+                        </p>
+                        <!-- 출판일 -->
+                        <p class="card-text">
+                            <span th:text="${book.publishedDate}"></span>
+                        </p>
+                        <!-- 책 설명 -->
+                        <p class="card-text" th:text="${book.description}" id="txt_post"></p>
+                        <p class="card-text">
+                            <i class="fas fa-star"></i>
+                            9.8
+                        </p>
                     </div>
-                    <!--출판사-->
-                    <p class="card-text">
-                        <span th:text="${book.publisherName}"></span>
-                    </p>
-                    <!-- 가격 -->
-                    <p class="card-text">
-                        <span th:text="${book.price} + '원'"></span>
-                    </p>
-                    <!-- 출판일 -->
-                    <p class="card-text">
-                        <span th:text="${book.publishedDate}"></span>
-                    </p>
-                    <!-- 책 설명 -->
-                    <p class="card-text" th:text="${book.description}" id="txt_post"></p>
-                    <p class="card-text">
-                        <i class="fas fa-star"></i>
-                        9.8
-                    </p>
+                    </a>
+                    <div class="cta-section col-3">
+                        <i id="zzim" class="far fa-heart mb-3"></i>
+                        <a href="#" class="btn mb-3" id="cart">장바구니</a>
+                        <a href="#" class="btn" id="buyButton">바로구매</a>
+                    </div>
+                    <div class="mt-3" style="border-top: 1.5px solid #FFFFFF; "></div>
                 </div>
-                <div class="cta-section col-3">
-                    <i id="zzim" class="far fa-heart mb-3"></i>
-                    <a href="#" class="btn mb-3" id="cart">장바구니</a>
-                    <a href="#" class="btn" id="buyButton">바로구매</a>
-                </div>
-                <div class="mt-3" style="border-top: 1.5px solid #FFFFFF; "></div>
-            </div>
         </div>
     </div>
 </div>

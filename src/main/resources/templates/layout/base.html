@@ -43,6 +43,7 @@
 <nav th:replace="~{layout/navbar :: navbar}"></nav>
 <div style="margin-top: 260px;">
 <th:block layout:fragment="content" ></th:block>
+<th:block layout:fragment="noticeList" ></th:block>
 </div>
 
 <!-- 푸터 -->
@@ -51,6 +52,7 @@
 </div>
 <!--java script -->
 <th:block layout:fragment="script">
+<th:block layout:fragment="noticeListScript">
 </th:block>
 </body>
     <script src="/js/main/navbar.js"></script>

@@ -170,6 +170,7 @@ public class BuyService {
         return buyerYn;
     }
 
+    @Transactional
     public void updateBookStock(BuyForm buyForm){
         for(int i = 0; i < buyForm.getBuyBookNoList().size(); i++) {
             long bookNo = buyForm.getBuyBookNoList().get(i);

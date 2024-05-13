@@ -72,7 +72,7 @@
          common_entrance_approach, common_entrance_password, gift_yn, buy_pay_method_no, buy_status_no, buy_delivery_request_no, user_no, delivery_no, order_id)
         values
         (#{totalPrice}, #{totalBookDiscountPrice}, #{totalCouponDiscountAmount}, #{totalPointUseAmount}, #{finalPrice}, 1000,
-         #{commonEntranceApproach}, "1234", #{giftYn}, #{buyPayMethod.buyPayMethodNo}, 1, #{buyDeliveryRequest.buyDeliveryRequestNo}, #{user.no}, #{userDelivery.no}, #{orderId})
+         #{commonEntranceApproach}, "1234", #{giftYn}, #{buyPayMethod.buyPayMethodNo}, 2, #{buyDeliveryRequest.buyDeliveryRequestNo}, #{user.no}, #{userDelivery.no}, #{orderId})
 
          <selectKey keyProperty="buyNo" resultType="long" order="AFTER">
              select last_insert_id()
