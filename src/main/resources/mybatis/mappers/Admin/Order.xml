@@ -69,7 +69,7 @@
         </where>
     </sql>
 
-    <select id="getTotalRowsInNotice" resultType="int">
+    <select id="getReturnTotalRows" resultType="int">
         SELECT
                 count(DISTINCT R.RETURN_NO)
         FROM

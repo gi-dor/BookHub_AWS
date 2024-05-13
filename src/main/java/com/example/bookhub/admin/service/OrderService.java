@@ -15,7 +15,7 @@ public class OrderService {
 
     public int getReturnTotalRows(OrderFilter filter) {
 
-        return orderMapper.getTotalRowsInNotice(filter);
+        return orderMapper.getReturnTotalRows(filter);
 
     }
 
