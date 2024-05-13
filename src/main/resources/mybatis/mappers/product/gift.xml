@@ -37,7 +37,13 @@
             BK.book_no as bookNo,
             BK.book_name as bookName,
             BI.book_image_cover as bookImageCover,
-            BB.count as count,
+            BB.count /
+            (select count(*)
+             from GIFT_RECEIVER
+             where gift_no = (select GR.gift_no
+                              from GIFT G, GIFT_RECEIVER GR
+                              where G.gift_no = GR.gift_no
+                                and GR.gift_receiver_no = 16 )) as count,
             A.author_name as authorName,
             P.publisher_name as publisherName,
             G.sender_name as senderName,
