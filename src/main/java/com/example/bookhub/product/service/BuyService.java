@@ -26,11 +26,13 @@ public class BuyService {
     private final BookMapper bookMapper;
     private BuyForm buyForm;
 
+    @Transactional(readOnly = true)
     public List<CouponProduced> getCouponsByUserNo(String userId) {
         User user = userMapper.selectUserById(userId);
         return buyMapper.getCouponsByUserNo(user.getNo());
     }
 
+    @Transactional(readOnly = true)
     public int getPointByUserNo(String userId) {
         User user = userMapper.selectUserById(userId);
         return buyMapper.getPointByUserNo(user.getNo());
@@ -144,12 +146,14 @@ public class BuyService {
         buyMapper.updatePointAccumulated(user.getNo(), pointAccumulationAmount);
     }
 
+    @Transactional(readOnly = true)
     public List<UserDelivery> getUserDeliveryByUserNo(String userId) {
         User user = userMapper.selectUserById(userId);
 
         return buyMapper.getUserDeliveryByUserNo(user.getNo());
     }
 
+    @Transactional(readOnly = true)
     public List<BuyDeliveryRequest> getBuyDeliveryRequest() {
         return buyMapper.getBuyDeliveryRequest();
     }
