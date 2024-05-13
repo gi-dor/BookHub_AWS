@@ -233,18 +233,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <button type="button" class="btn btn-secondary" onclick="showModalDeliveryCreate()">배송지 추가</button>
+                    <button type="button" class="btn btn-dark" onclick="showModalDeliveryCreate()">배송지 추가</button>
                     <div id="cards">
                         <div th:each="userDelivery : ${userDeliveryList}">
-                            <div class="card">
+                            <div class="card mt-2">
                                 <div class="card-body row">
-                                    <div class="col-2">
+                                    <div class="col-1">
                                         <span class="form-check">
                                             <input class="form-check-input radio-user-delivery" type="radio" name="userDelivery" th:value="${userDelivery.no}"
                                                    th:checked="${userDelivery.defaultAddressYn eq 'Y'}" />
                                         </span>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-11">
                                         <div>
                                             <span th:if="${userDelivery.defaultAddressYn eq 'Y'}">
                                                 <span class="badge rounded-pill bg-dark">기본배송지</span>
@@ -269,7 +269,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" onclick="modifyDelivery()">확인</button>
+                    <button type="button" class="btn btn-dark" onclick="modifyDelivery()">확인</button>
                 </div>
             </div>
         </div>
@@ -291,9 +291,6 @@
                                         <input id="created-name" type="text" class="form-control" />
                                         <div class="text-danger"></div>
                                     </div>
-                                    <div class="col-7">
-                                        <p class="form-text" style="font-family: Arial, sans-serif; color: grey;">  이름은 한글 2글자 이상 입니다.</p>
-                                    </div>
                                 </div>
                             </div>
 
@@ -301,16 +298,16 @@
                                 <div class="row">
                                     <label class="form-label">전화번호</label>
                                     <div class="col-2">
-                                        <select id="created-tel1" class="form-select">
+                                        <select id="created-tel1" class="form-select" style="width: 80px">
                                             <option value="010">010</option>
                                         </select>
                                     </div>
                                     <div class="col-2">
-                                        <input id="created-tel2" type="text" class="form-control"/>
+                                        <input id="created-tel2" type="text" class="form-control" style="width: 80px"/>
                                         <div class="text-danger"></div>
                                     </div>
                                     <div class="col-2">
-                                        <input id="created-tel3" type="text" class="form-control"/>
+                                        <input id="created-tel3" type="text" class="form-control" style="width: 80px"/>
                                         <div class="text-danger"></div>
                                     </div>
                                 </div>
@@ -323,7 +320,7 @@
                                         <input type="text" id="sample6_postcode" class="form-control" placeholder="우편번호">
                                     </div>
                                     <div class="col-8">
-                                        <input type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+                                        <input type="button" class="btn btn-dark" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -336,7 +333,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary" onclick="createDelivery()">확인</button>
+                        <button type="button" class="btn btn-dark" onclick="createDelivery()">확인</button>
                     </div>
             </div>
         </div>
