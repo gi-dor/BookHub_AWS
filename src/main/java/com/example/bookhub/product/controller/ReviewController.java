@@ -69,7 +69,7 @@ public class ReviewController {
                                     @RequestParam("reviewNo") long reviewNo,
                                     @RequestParam("bookNo") long bookNo){
         reviewService.deleteReviewReply(reviewReplyNo, reviewNo);
-        return String.format("redirect:/product/book/detail?bookNo=%d#reply_%d", bookNo, reviewReplyNo);
+        return String.format("redirect:/product/book/detail?bookNo=%d#review_%d", bookNo, reviewNo);
     }
 
     @GetMapping("/modify/{reviewNo}")
@@ -82,7 +82,7 @@ public class ReviewController {
     @GetMapping("/delete/{bookNo}/{reviewNo}")
     public String deleteReview(@PathVariable("bookNo") long bookNo, @PathVariable("reviewNo") long reviewNo){
         reviewService.deleteReview(reviewNo);
-        return String.format("redirect:/product/book/detail?bookNo=%d#review_%d", bookNo, reviewNo);
+        return String.format("redirect:/product/book/detail?bookNo=%d#review-block", bookNo);
     }
 
     @GetMapping("/rate/{bookNo}")

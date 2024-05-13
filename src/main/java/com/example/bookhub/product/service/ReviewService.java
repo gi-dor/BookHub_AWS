@@ -72,7 +72,6 @@ public class ReviewService {
         return generatedReviewNo;
     }
 
-    @Cacheable(value = "ReviewMapper.getReviewsByBookNo", key = "#bookNo + '-' + #page", condition = "#page <= 3")
     @Transactional(readOnly = true)
     public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort, String option) {
         long userNo = 0;

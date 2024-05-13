@@ -172,8 +172,8 @@
                    th:checked="${option eq 'my'}" onchange="changeSortOption()">
             <label class="btn" for="my-reviews">내 리뷰</label>
         </div>
-        <div>
-            <button type="button" class="btn btn-outline-primary" onclick="createReview()">리뷰 작성</button>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-dark me-3" onclick="createReview()" style="width: 100px">리뷰 작성</button>
             <select class="form-select" name="select-sort" onchange="changeSortOption()" th:attr="value=${sort}">
                 <option value="date" th:selected="${sort eq 'date'}">최신순</option>
                 <option value="recommend" th:selected="${sort eq 'recommend'}">추천순</option>
@@ -444,19 +444,19 @@
                         <p>가장 와 닿는 하나의 키워드를 선택해주세요.</p>
                         <div class="form-group">
                             <input type="radio" class="btn-check" name="reviewTagNo" id="option1" value=1 autocomplete="off" checked>
-                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option1">집중돼요</label>
+                            <label class="btn btn-outline-dark rounded-pill px-3 btn-sm" for="option1">집중돼요</label>
 
                             <input type="radio" class="btn-check" name="reviewTagNo" id="option2" value=2 autocomplete="off">
-                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option2">도움돼요</label>
+                            <label class="btn btn-outline-dark rounded-pill px-3 btn-sm" for="option2">도움돼요</label>
 
                             <input type="radio" class="btn-check" name="reviewTagNo" id="option3" value=3 autocomplete="off">
-                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option3">쉬웠어요</label>
+                            <label class="btn btn-outline-dark rounded-pill px-3 btn-sm" for="option3">쉬웠어요</label>
 
                             <input type="radio" class="btn-check" name="reviewTagNo" id="option4" value=4 autocomplete="off">
-                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option4">재밌어요</label>
+                            <label class="btn btn-outline-dark rounded-pill px-3 btn-sm" for="option4">재밌어요</label>
 
                             <input type="radio" class="btn-check" name="reviewTagNo" id="option5" value=5 autocomplete="off">
-                            <label class="btn btn-secondary rounded-pill px-3 btn-sm" for="option5">유익해요</label>
+                            <label class="btn btn-outline-dark rounded-pill px-3 btn-sm" for="option5">유익해요</label>
                         </div>
 
                         <div class="form-group mt-3">
