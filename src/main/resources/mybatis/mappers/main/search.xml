@@ -26,27 +26,37 @@
         AND
         B.PUBLISHER_NO = P.PUBLISHER_NO
 
-            <!--navbar 검색-->
+        <!--navbar 검색-->
         <if test="keyword != null">
             <choose>
                 <when test="opt == '국내'">
                     AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 1)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
+                        AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                        OR MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                        OR MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
 
                 </when>
                 <when test="opt == '국외'">
-                    AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 2)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
+                    AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 1)
+                        AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                        OR MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                        OR MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
 
                 </when>
                 <otherwise>
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
+                    AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 1)
+                        AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                        OR MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                        OR MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
 
                 </otherwise>
             </choose>
             <!--결과내 검색 -->
             <if test="extraKeyword != null">
-                AND (BOOK_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{extraKeyword}, '%') )
+                AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 1)
+                    AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    OR MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    OR MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)CH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
             </if>
         </if>
         <choose>
@@ -66,6 +76,7 @@
                 ORDER BY BOOK_SALES_VOLUME DESC
             </otherwise>
         </choose>
+
         LIMIT #{offset}, #{recordSize};
 
     </select>
@@ -105,22 +116,29 @@
             <choose>
                 <when test="opt == '국내'">
                     AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 1)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
+                    AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    AND MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    AND MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
 
                 </when>
                 <when test="opt == '국외'">
                     AND CATEGORY_NO IN (SELECT CATEGORY_NO FROM CATEGORY WHERE PARENT_CATEGORY_NO = 2)
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
-
+                    AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    AND MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    AND MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
                 </when>
                 <otherwise>
-                    AND (BOOK_NAME LIKE CONCAT('%', #{keyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{keyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{keyword}, '%') )
+                    AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    AND MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                    AND MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
 
                 </otherwise>
             </choose>
             <!--결과내 검색 -->
             <if test="extraKeyword != null">
-                AND (BOOK_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR AUTHOR_NAME LIKE CONCAT('%', #{extraKeyword}, '%') OR PUBLISHER_NAME LIKE CONCAT('%', #{extraKeyword}, '%') )
+                AND MATCH (BOOK_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                AND MATCH (AUTHOR_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
+                AND MATCH (PUBLISHER_NAME) AGAINST (#{keyword} IN BOOLEAN MODE)
             </if>
         </if>
     </select>

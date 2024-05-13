@@ -5,15 +5,13 @@ import com.example.bookhub.main.dto.SearchCriteria;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-
 @Mapper
-public interface NewBookMapper {
-
+public interface RecommendBookMapper {
     /**
-     * 신간도서 리스트 조회
+     * 추천책 리스트 조회
      * @return 결과 리스트
      */
-    List<BookDto> newBookList(SearchCriteria criteria);
+    List<BookDto> recoBookList(SearchCriteria criteria);
 
     /**
      *
@@ -21,6 +19,4 @@ public interface NewBookMapper {
      * @return 검색 수
      */
     int count(SearchCriteria criteria);
-
 }
-

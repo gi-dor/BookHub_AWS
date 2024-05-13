@@ -18,5 +18,6 @@ public class BookDto {
     private String publisherName;
     private String categoryName;
     private List<BookAuthorDto> authors;
+    private float averageRating;
     private int count;
 }

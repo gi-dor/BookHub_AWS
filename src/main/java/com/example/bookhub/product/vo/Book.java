@@ -22,6 +22,7 @@ public class Book {
     private char discontinuingYn;
     private float discountRate;
     private int salesVolume;
+    private float averageRating;
     private BookAuthor bookAuthor;
 
 }

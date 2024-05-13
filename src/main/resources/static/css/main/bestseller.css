@@ -136,3 +136,11 @@
     -webkit-box-orient:vertical;
     -webkit-line-clamp:3
 }
+
+.list{
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+}

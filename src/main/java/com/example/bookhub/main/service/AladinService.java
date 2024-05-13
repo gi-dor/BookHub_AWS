@@ -27,9 +27,9 @@ public class AladinService {
         String baseUrl = "https://www.aladin.co.kr/ttb/api/ItemList.aspx";
         String apiKey = "ttbdlwldmsgo1703001";
         String queryType = "ItemNewAll";
-        String categoryId = "1";
+        String categoryId = "170";
         int maxResults = 50;
-        int start = 4;
+        int start = 3;
         String searchTarget = "Book";
         String output = "js";
         String version = "20131101";
@@ -50,7 +50,7 @@ public class AladinService {
 
     private void saveBook(List<Aladin.Item> items) {
         Category cat = new Category();
-        cat.setCategoryNo(3);
+        cat.setCategoryNo(11);
 
         for (Aladin.Item item : items) {
             Book book = new Book();
