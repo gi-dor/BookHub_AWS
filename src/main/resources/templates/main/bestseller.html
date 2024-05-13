@@ -146,7 +146,7 @@
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" >
-                                <a th:href="@{|best?page=${criteria.page - 1}|}"
+                                <a th:href="@{|/main/bestseller?page=${criteria.page - 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.first ? 'disabled' : '' }"
                                    aria-label="Previous"
@@ -156,7 +156,7 @@
                             </li>
                             <th:block th:each="num : ${#numbers.sequence(criteria.beginPage, criteria.endPage)}">
                                 <li class="page-item" >
-                                    <a th:href="@{|best?page=${num}|}"
+                                    <a th:href="@{|/main/bestseller?page=${num}|}"
                                        class="page-link"
                                        th:text="${num}"
                                        th:attr="data-page=${num}">
@@ -166,7 +166,7 @@
                                 </li>
                             </th:block>
                             <li class="page-item">
-                                <a th:href="@{|best?page=${criteria.page + 1}|}"
+                                <a th:href="@{|/main/bestseller?page=${criteria.page + 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.last ? 'disabled' : '' }"
                                    aria-label="Next"

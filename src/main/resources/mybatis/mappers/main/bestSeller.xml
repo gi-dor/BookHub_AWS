@@ -5,103 +5,82 @@
 
 
     <select id="bestSeller" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
+        SELECT *
+        FROM (
         SELECT
-            A.BOOK_NO,
-            B.BOOK_DESCRIPTION,
-            B.BOOK_NAME,
-                (SELECT GROUP_CONCAT(Y.AUTHOR_NAME SEPARATOR ', ')
-                FROM BOOK_AUTHOR X, AUTHOR Y
-                WHERE X.AUTHOR_NO = Y.AUTHOR_NO
-                AND X.BOOK_NO = B.BOOK_NO) AUTHORS,
-            C.PUBLISHER_NAME,
-            B.BOOK_LIST_PRICE,
-            D.BOOK_IMAGE_COVER,
-            B.CATEGORY_NO,
-            F.CATEGORY_NAME,
-            A.AMOUNT
+        A.BOOK_NO,
+        B.BOOK_DESCRIPTION,
+        B.BOOK_NAME,
+        (SELECT GROUP_CONCAT(Y.AUTHOR_NAME SEPARATOR ', ')
+        FROM BOOK_AUTHOR X, AUTHOR Y
+        WHERE X.AUTHOR_NO = Y.AUTHOR_NO
+        AND X.BOOK_NO = B.BOOK_NO) AUTHORS,
+        C.PUBLISHER_NAME,
+        B.BOOK_LIST_PRICE,
+        D.BOOK_IMAGE_COVER,
+        B.CATEGORY_NO,
+        F.CATEGORY_NAME,
+        A.AMOUNT
         FROM (SELECT B.BOOK_NO, SUM(B.COUNT) AMOUNT
-              FROM BUY A, BUY_BOOK B, BOOK C
-                <where>
-                    <choose>
-                        <when test="period == 1 ">
-                            AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
-                        </when>
-                        <when test="period == 2 ">
-                            AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)
-                        </when>
-                        <when test="period == 3 ">
-                            AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
-                        </when>
-                        <when test="period == 4">
-                            AND A.BUY_DATE = CURRENT_DATE()
-                        </when>
-                        <otherwise>
-                            AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
-                        </otherwise>
-                    </choose>
+        FROM BUY A, BUY_BOOK B, BOOK C
+                    <where>AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)<choose>
+                            <when test="period == 1 "></when>
+                            <when test="period == 2 ">
+                                AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)
+                            </when>
+                            <when test="period == 3 ">
+                                AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
+                            </when>
+                            <when test="period == 4">
+                                AND A.BUY_DATE = CURRENT_DATE()
+                            </when>
+                            <otherwise>
+                                AND A.BUY_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
+                            </otherwise>
+                        </choose>
 
-                    <choose>
-                        <when test="cateKeyword != 1">
-                            AND C.CATEGORY_NO = #{cateKeyword}
-                        </when>
-                        <otherwise>
-                            AND C.CATEGORY_NO IN (SELECT CATEGORY_NO
-                            FROM CATEGORY
-                            WHERE PARENT_CATEGORY_NO = 1)
-                        </otherwise>
-                    </choose>
+                        <choose>
+                            <when test="cateKeyword != 1">
+                                AND C.CATEGORY_NO = #{cateKeyword}
+                            </when>
+                            <otherwise>
+                                AND C.CATEGORY_NO IN (SELECT CATEGORY_NO
+                                FROM CATEGORY
+                                WHERE PARENT_CATEGORY_NO = 1)
+                            </otherwise>
+                        </choose>
 
-            </where>
-              AND A.BUY_NO = B.BUY_NO
-              AND B.BOOK_NO = C.BOOK_NO
-              GROUP BY B.BOOK_NO
-              ORDER BY AMOUNT DESC
-              LIMIT #{offset}, #{recordSize}) A, BOOK B, PUBLISHER C, BOOK_IMAGES D,CATEGORY F
-        WHERE A.BOOK_NO = B.BOOK_NO
-        AND B.PUBLISHER_NO = C.PUBLISHER_NO
-        AND B.BOOK_NO = D.BOOK_NO
-        AND B.CATEGORY_NO = F.CATEGORY_NO
-        <!--
-        <choose>
-            <when test="pubDate == 1">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+                </where>
+                  AND A.BUY_NO = B.BUY_NO
+                  AND B.BOOK_NO = C.BOOK_NO
+                  GROUP BY B.BOOK_NO
+                  ORDER BY AMOUNT DESC
+                  LIMIT 0, 100) A, BOOK B, PUBLISHER C, BOOK_IMAGES D,CATEGORY F
+            WHERE A.BOOK_NO = B.BOOK_NO
+            AND B.PUBLISHER_NO = C.PUBLISHER_NO
+            AND B.BOOK_NO = D.BOOK_NO
+            AND B.CATEGORY_NO = F.CATEGORY_NO
+            <choose>
+            <when test="sort == 1">
+                ORDER BY BOOK_SALES_VOLUME DESC
             </when>
-            <when test="pubDate == 2">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 14 DAY)
+            <when test="sort == 2">
+                ORDER BY BOOK_PUBLISHED_DATE DESC
             </when>
-            <when test="pubDate == 3">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 56 DAY)
+            <when test="sort == 3 ">
+                ORDER BY BOOK_AVERAGE_RATING DESC
             </when>
-            <when test="pubDate == 4">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 84 DAY)
-            </when>
-            <when test="pubDate == 5">
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
+            <when test="sort == 4">
+                ORDER BY BOOK_TOTAL_REPLY_CNT DESC
             </when>
             <otherwise>
-                AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 168 DAY)
+                ORDER BY BOOK_SALES_VOLUME DESC
             </otherwise>
-        </choose>
-        -->
-        <choose>
-        <when test="sort == 1">
-            ORDER BY BOOK_SALES_VOLUME DESC
-        </when>
-        <when test="sort == 2">
-            ORDER BY BOOK_PUBLISHED_DATE DESC
-        </when>
-        <when test="sort == 3 ">
-            ORDER BY BOOK_AVERAGE_RATING DESC
-        </when>
-        <when test="sort == 4">
-            ORDER BY BOOK_TOTAL_REPLY_CNT DESC
-        </when>
-        <otherwise>
-            ORDER BY BOOK_SALES_VOLUME DESC
-        </otherwise>
-        </choose>
+            </choose>) AS PAGING
 
     </select>
+
+
 
     <!--조회 결과 집합을 객체로 매핑-->
     <resultMap id="bookResultMap" type="com.example.bookhub.main.dto.BookDto">
@@ -165,7 +144,7 @@
     AND B.BOOK_NO = D.BOOK_NO
     <choose>
         <when test="pubDate == 1">
-            AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
+              B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 7 DAY)
         </when>
         <when test="pubDate == 2">
             AND  B.BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(),INTERVAL 14 DAY)

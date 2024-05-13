@@ -4,7 +4,7 @@
 
         <select id="getCategory" parameterType="int" resultType="com.example.bookhub.product.vo.Category">
             select
-                CATEGORY_NO AS no,
+                CATEGORY_NO AS categoryNo,
                 CATEGORY_NAME AS name
             from CATEGORY
             where CATEGORY_NO = #{value}

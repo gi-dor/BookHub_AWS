@@ -14,7 +14,7 @@
            </form>
 
        <div class="row">
-           <!-- Sidebar -->
+           <h5>신간도서</h5>
         <div class="sidebar col-2">
         </div>
         <!-- /Sidebar -->
@@ -100,7 +100,7 @@
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" >
-                                <a th:href="@{|new?page=${criteria.page - 1}|}"
+                                <a th:href="@{|/main/newbook?page=${criteria.page - 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.first ? 'disabled' : '' }"
                                    aria-label="Previous"
@@ -110,7 +110,7 @@
                             </li>
                             <th:block th:each="num : ${#numbers.sequence(criteria.beginPage, criteria.endPage)}">
                                 <li class="page-item" >
-                                    <a th:href="@{|new?page=${num}|}"
+                                    <a th:href="@{|/main/newbook?page=${num}|}"
                                        class="page-link"
                                        th:text="${num}"
                                        th:attr="data-page=${num}">
@@ -120,7 +120,7 @@
                                 </li>
                             </th:block>
                             <li class="page-item">
-                                <a th:href="@{|new?page=${criteria.page + 1}|}"
+                                <a th:href="@{|/main/newbook?page=${criteria.page + 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.last ? 'disabled' : '' }"
                                    aria-label="Next"
