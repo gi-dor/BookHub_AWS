@@ -236,10 +236,12 @@ public class GiftService {
         giftMapper.updateGiftReceiver(giftReceiverForm.getGiftReceiverNo(), giftReceiverForm.getUserDeliveryNo(), user.getNo());
     }
 
+    @Transactional(readOnly = true)
     public List<GiftDto> getGiftDetail(long giftReceiverNo) {
         return giftMapper.getGiftDetail(giftReceiverNo);
     }
 
+    @Transactional(readOnly = true)
     public long getGiftReceiverNoByGiftOrderId(String giftOrderId) {
         return giftMapper.getGiftReceiverNoByGiftOrderId(giftOrderId);
     }
