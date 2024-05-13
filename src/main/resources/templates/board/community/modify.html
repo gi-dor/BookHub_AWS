@@ -2,7 +2,7 @@
       layout:decorate="~{layout/base}" >
 
 <div layout:fragment="content" class="container py-4">
-    <h1 class="text-center">Edit Community Post</h1>
+    <h1 class="text-center">게시글 수정하기</h1>
     <form th:action="@{/board/community/modify/{no}(no=${community.no})}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="no" th:value="${community.no}">
         <div class="mb-3">
