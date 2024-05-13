@@ -95,7 +95,7 @@ public class BoardController {
     @GetMapping("/notice/list")
     public String noticeList(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
                              @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
-                             @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
+                             @RequestParam(name = "sort", required = false, defaultValue = "important") String sort,
                              @ModelAttribute("filter") BoardFilter filter,
                              Model model) {
 
@@ -105,10 +105,10 @@ public class BoardController {
 
         if (totalRows > 0) {
             int begin = pagination.getBegin() - START_OFFSET;
-            List<Post> posts = boardService.getPosts(filter, begin, rows, sort);
-            model.addAttribute("posts", posts);
+            List<Post> notices = boardService.getPosts(filter, begin, rows, sort);
+            model.addAttribute("notices", notices);
         } else {
-            model.addAttribute("posts", List.of());
+            model.addAttribute("notices", List.of());
         }
 
         model.addAttribute("paging", pagination);
