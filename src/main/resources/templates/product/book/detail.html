@@ -110,30 +110,11 @@
         </div>
     </div>
 
-
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">이벤트</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">상품정보</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">리뷰()</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">교환/반품/품절</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <h3 class="mt-5">책 내용</h3>
+    <p th:text="${book.description}"></p>
 
     <!-- 도서 기본정보 -->
-    <h3>기본정보</h3>
+    <h3 class="mt-5">기본정보</h3>
     <table class="table">
         <tr th:if="${book.isbn != null}">
             <th>ISBN</th>
@@ -164,7 +145,7 @@
 
 
     <!-- 리뷰 -->
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-1"></div>
         <div class="col-3">
             <canvas id="chart-rate-count"></canvas>
@@ -773,10 +754,11 @@
         url = updateQueryStringParameter(url, "page", 1);
         url = updateQueryStringParameter(url, "option", option);
         url = updateQueryStringParameter(url, "sort", sort);
+        if(url.indexOf('#') === -1)
+            url += "#review-block"
 
         // 새로운 URL로 페이지 리로드
         window.location.href = url;
-        scrollToReview();
     }
 
     // URL에 쿼리 매개변수 추가 또는 업데이트하는 함수
@@ -791,11 +773,6 @@
         } else {
             return uri + separator + key + "=" + value;
         }
-    }
-
-    function scrollToReview() {
-        // review 앵커로 스크롤 이동
-        document.getElementById('review-block').scrollIntoView({ behavior: 'smooth' });
     }
 
 </script>
