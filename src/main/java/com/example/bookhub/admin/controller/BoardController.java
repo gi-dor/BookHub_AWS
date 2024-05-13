@@ -119,8 +119,8 @@ public class BoardController {
 
     @GetMapping("/notice/detail")
     public String noticeDetail(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                               @ModelAttribute("filter") BoardFilter filter,
                                @RequestParam("postNo") long postNo,
+                               @ModelAttribute("filter") BoardFilter filter,
                                Model model) {
 
         Post notice = boardService.getNoticeByNo(postNo);
@@ -136,11 +136,11 @@ public class BoardController {
 
     // 조회수 증가시키고 상세화면으로 보냄(상세화면에서 새로고침 시 조회수 증가 방지하기 위함)
     @GetMapping("/notice/views")
-    public String noticeHit(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                            @RequestParam("opt") String opt,
-                            @RequestParam("keyword") String keyword,
-                            @RequestParam("postNo") long postNo,
-                            RedirectAttributes redirectAttributes) {
+    public String noticeViews(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                              @RequestParam("opt") String opt,
+                              @RequestParam("keyword") String keyword,
+                              @RequestParam("postNo") long postNo,
+                              RedirectAttributes redirectAttributes) {
 
         boardService.increaseViewCount(postNo);
 

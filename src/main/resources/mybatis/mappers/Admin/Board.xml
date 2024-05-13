@@ -181,6 +181,7 @@
                     BookHub.NOTICE
         WHERE
                     NOTICE_NO BETWEEN (#{postNo} - 5) AND (#{postNo} + 5)
+
                     <if test="filter.opt != null">
                         <choose>
                             <when test="filter.opt == 'title'">
@@ -192,7 +193,7 @@
                         </choose>
                     </if>
         ORDER BY
-                    NOTICE_NO ASC;
+                    NOTICE_NO DESC
         </select>
 
 </mapper>
