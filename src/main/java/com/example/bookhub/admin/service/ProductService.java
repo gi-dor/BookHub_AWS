@@ -87,7 +87,4 @@ public class ProductService {
         productMapper.registerImage(product);
     }
 
-    // public int getStockNotificationTotalRows(ProductFilter filter) {
-    //     return productMapper.getStockNotificationTotalRows(filter);
-    // }
 }
