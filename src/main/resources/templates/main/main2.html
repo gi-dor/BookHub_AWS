@@ -193,12 +193,14 @@
                     <div class="carousel-item">
                         <div class="cards-wrapper">
                             <div class="newbook card d-none d-md-block" th:each="book, iterStat : ${mainNewBook.books}" th:if="${iterStat.index >= 4}">
+                                <a th:href="@{|/product/book/detail?bookNo=${book.no}|}" style="text-decoration: none; color: inherit;">
                                 <div class="newbook-img-wrapper" >
                                     <img th:src="${book.cover}" class="newbook-img" alt="책 사진">
                                 </div>
                                 <div class="card-body">
                                     <strong class="card-title fw-bold small txt_post" th:text="${book.name}"  ></strong>
                                 </div>
+                                </a>
                             </div>
                         </div>
                     </div>
