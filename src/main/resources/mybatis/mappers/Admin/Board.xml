@@ -175,7 +175,8 @@
                     NOTICE_NO               AS no,
                     NOTICE_TITLE            AS title,
                     NOTICE_CREATED_DATE     AS createdDate,
-                    NOTICE_VIEWS            AS views
+                    NOTICE_VIEWS            AS views,
+                    NOTICE_IMPORTANT_YN     AS important
         FROM
                     BookHub.NOTICE
         WHERE

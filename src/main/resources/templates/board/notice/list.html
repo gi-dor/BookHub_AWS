@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
-                <h3>공지사항</h3>
+                <h2 class="text-center">공지사항</h2>
 
                 <!-- 필터 선택 영역-->
                 <form id="noticeListForm" th:action="@{/admin/board/notice/list}" th:object="${filter}">
@@ -54,6 +54,8 @@
                                     번호
                                 </td>
                                 <td class="text-start">
+                                    <span th:if="${post.important == 'Y'}"
+                                          class="text-danger font-weight-bold border border-danger">필독</span>
                                     <a th:href="@{/admin/board/notice/views(postNo=${post.no}, page=${param.page}, opt=${param.opt}, keyword=${param.keyword})}"
                                        th:text="${post.title}">제목</a>
                                 </td>
