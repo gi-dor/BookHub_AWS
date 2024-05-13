@@ -39,10 +39,10 @@ public class CartController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/create/{bookNo}")
+    @GetMapping("/create/{bookNo}/{count}")
     @ResponseBody
-    public ResponseEntity<String> createCart(@PathVariable("bookNo") long bookNo, Principal principal){
-        String existOrNot = cartService.createCart(bookNo, principal.getName());
+    public ResponseEntity<String> createCart(@PathVariable("bookNo") long bookNo, @PathVariable("count") int count, Principal principal){
+        String existOrNot = cartService.createCart(bookNo, count, principal.getName());
         return ResponseEntity.ok().body("{\"existOrNot\": \"" + existOrNot + "\"}");
     }
 

@@ -1,12 +1,11 @@
 package com.example.bookhub.product.vo;
 
-import com.example.bookhub.user.vo.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +16,7 @@ public class Gift {
     private long giftNo;
     private String senderName;
     private String sendMethod;
-    private Date giftDate;
+    private String comment;
+    private LocalDateTime date;
     private Buy buy;
 }

@@ -4,9 +4,9 @@
 
     <insert id="insertGift" parameterType="com.example.bookhub.product.vo.Gift">
         insert into GIFT
-        (sender_name, gift_send_method, buy_no)
+        (sender_name, gift_send_method, gift_comment, buy_no)
         values
-        (#{senderName}, #{sendMethod}, #{buy.buyNo})
+        (#{senderName}, #{sendMethod}, #{comment}, #{buy.buyNo})
         <selectKey keyProperty="giftNo" resultType="long" order="AFTER">
             select last_insert_id()
         </selectKey>
@@ -14,9 +14,9 @@
 
     <insert id="insertGiftReceiver" parameterType="com.example.bookhub.product.vo.GiftReceiver">
         insert into GIFT_RECEIVER
-        (name, email, gift_no)
+        (name, email, gift_no, gift_order_id)
         values
-        (#{name}, #{email}, #{gift.giftNo})
+        (#{name}, #{email}, #{gift.giftNo}, #{giftOrderId})
         <selectKey keyProperty="giftReceiverNo" resultType="long" order="AFTER">
             select last_insert_id()
         </selectKey>
@@ -31,4 +31,45 @@
         where
             gift_receiver_no = #{giftReceiverNo}
     </update>
+
+    <select id="getGiftDetail" parameterType="long" resultType="com.example.bookhub.product.dto.GiftDto">
+        select
+            BK.book_no as bookNo,
+            BK.book_name as bookName,
+            BI.book_image_cover as bookImageCover,
+            BB.count /
+            (select count(*)
+             from GIFT_RECEIVER
+             where gift_no = (select GR.gift_no
+                              from GIFT G, GIFT_RECEIVER GR
+                              where G.gift_no = GR.gift_no
+                                and GR.gift_receiver_no = 16 )) as count,
+            A.author_name as authorName,
+            P.publisher_name as publisherName,
+            G.sender_name as senderName,
+            G.gift_comment as comment,
+            G.gift_date as date
+        from
+            BOOK BK, BOOK_IMAGES BI, AUTHOR A, BOOK_AUTHOR BA, PUBLISHER P, BUY B, BUY_BOOK BB, GIFT G, GIFT_RECEIVER GR
+        where
+            G.gift_no = GR.gift_no
+            and B.buy_no = G.buy_no
+            and B.buy_no = BB.buy_no
+            and BK.book_no = BB.book_no
+            and BK.book_no = BI.book_no
+            and BK.book_no = BA.book_no
+            and BA.author_type = '지은이'
+            and BA.author_no = A.author_no
+            and BK.publisher_no = P.publisher_no
+            and GR.gift_receiver_no = #{value}
+    </select>
+
+    <select id="getGiftReceiverNoByGiftOrderId" parameterType="String" resultType="long">
+        select
+            gift_receiver_no
+        from
+            GIFT_RECEIVER
+        where
+            gift_order_id = #{value}
+    </select>
 </mapper>
