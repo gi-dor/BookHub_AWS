@@ -7,6 +7,7 @@ import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ public class CartService {
     private final CartMapper cartMapper;
     private final UserMapper userMapper;
 
+    @Transactional(readOnly = true)
     public List<CartBookDto> findCartList(String userId){
         User user = userMapper.selectUserById(userId);
         return cartMapper.findCartList(user.getNo());
