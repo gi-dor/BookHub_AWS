@@ -175,15 +175,15 @@
                         <tr>
                             <td class="bg-light align-middle text-center" style="width: 250px;">정가</td>
                             <td>
-                                <input type="text" class="form-control-sm price" th:field="*{listPrice}"> 원
+                                <input type="number" class="form-control-sm price" th:field="*{listPrice}"> 원
                             </td>
                         </tr>
                         <tr>
                             <td class="bg-light align-middle text-center" style="width: 250px;">할인율</td>
                             <td>
-                                <input type="text" th:field="*{discountRate}" class="form-control-sm price">
+                                <input type="number" th:field="*{discountRate}" class="form-control-sm price">
                                 <label for="sellingPrice" class="ms-5">판매가격</label>
-                                <input id="sellingPrice" type="text"
+                                <input id="sellingPrice" type="number"
                                        th:value="${#numbers.formatInteger(product.listPrice * (1 - product.discountRate), 1, 'COMMA')}"
                                        class="form-control-sm" disabled> 원
                             </td>
@@ -191,7 +191,9 @@
                         <tr>
                             <td class="bg-light align-middle text-center" style="width: 250px;">재고</td>
                             <td>
-                                <input type="text" th:field="*{stock}" class="form-control-sm"> 개
+                                <input type="number" th:field="*{stock}" class="form-control-sm"> 개
+                                <span class="ms-4">재고통보수량</span>
+                                <input type="number" th:field="*{stockNotification}" class="form-control-sm"> 개
                             </td>
                         </tr>
                     </table>

@@ -47,7 +47,7 @@
                         </tr>
                     </table>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-sm">저장</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@
                         </tr>
                     </table>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-sm">저장</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
                     </div>
                 </div>
 
@@ -111,14 +111,14 @@
                         <tr>
                             <td class="bg-light align-middle text-center" style="width: 250px;">정가</td>
                             <td>
-                                <input name="listPrice" type="text" class="form-control-sm price"
+                                <input name="listPrice" type="number" class="form-control-sm price"
                                        th:value="${product.listPrice}"> 원
                             </td>
                         </tr>
                         <tr>
                             <td class="bg-light align-middle text-center" style="width: 250px;">할인율</td>
                             <td>
-                                <input name="discountRate" type="text" th:value="${product.discountRate}"
+                                <input name="discountRate" type="number" th:value="${product.discountRate}"
                                        class="form-control-sm price">
                                 <span class="ms-5">판매가격</span>
                                 <input id="sellingPrice" type="text"
@@ -129,13 +129,16 @@
                         <tr>
                             <td class="bg-light align-middle text-center" style="width: 250px;">재고</td>
                             <td>
-                                <input name="stock" type="text" th:value="${product.stock}" class="form-control-sm">
+                                <input name="stock" type="number" th:value="${product.stock}" class="form-control-sm">
                                 개
+                                <span class="ms-4">재고통보수량</span>
+                                <input name="stockNotification" type="number" th:value="${product.stockNotification}"
+                                       class="form-control-sm">개
                             </td>
                         </tr>
                     </table>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-sm">저장</button>
+                        <button type="submit" class="btn btn-primary">저장</button>
                     </div>
                 </div>
             </form>
