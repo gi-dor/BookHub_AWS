@@ -155,6 +155,7 @@
                         </a>
                     </div>
                     <div class="card-body col-12">
+                        <a th:href="@{|/product/book/detail?bookNo=${book.no}|}" style="text-decoration: none; color: inherit;">
                         <div class="text-section col-9">
                             <!-- 책 제목 -->
                             <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
@@ -181,6 +182,7 @@
                                 <span th:text="${book.averageRating}"></span>
                             </p>
                         </div>
+                        </a>
                         <div class="cta-section col-3">
                             <a th:href="@{/product/wishlist/add(no=${book.no})}" class="btn-add-wishlist2"><i id="wishList" class="far fa-heart" ></i></a>
                             <a href="#" class="btn-add-cart mb-3 btn btn-outline-primary" id="cart">장바구니</a>

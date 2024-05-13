@@ -43,7 +43,7 @@
     </resultMap>
 
     <resultMap type="com.example.bookhub.product.vo.Publisher" id="PublisherResultMap">
-        <id column="publisher_no" property="no"/>
+        <id column="publisher_no" property="publisherNo"/>
         <result column="publisher_name" property="name"/>
     </resultMap>
 
