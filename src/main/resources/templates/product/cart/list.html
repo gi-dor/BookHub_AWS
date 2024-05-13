@@ -4,7 +4,7 @@
     <form id="form-cart" method="post" action="/product/buy/order">
     <div class="row mb-3">
             <div class="col-9">
-                <h3>장바구니</h3>
+                <h3 class="mt-3">장바구니</h3>
                 <table class="table">
                         <colgroup>
                             <col width="5%">
@@ -15,7 +15,7 @@
                         </colgroup>
                         <thead class="thead-dark">
                             <tr>
-                                <th><input type="checkbox" id="checkbox-all"></th>
+                                <th><input type="checkbox" class="form-check-input" id="checkbox-all"></th>
                                 <th>이미지</th>
                                 <th>제목 및 가격</th>
                                 <th>수량</th>
@@ -24,13 +24,21 @@
                         </thead>
                         <tbody id="table-cart-tbody">
                              <tr th:each="cartBook: ${cartBooks}">
-                                 <td><input type="checkbox" name="buyBookNoList" th:value="${cartBook.bookNo}"></td>
+                                 <td><input type="checkbox" class="form-check-input" name="buyBookNoList" th:value="${cartBook.bookNo}"></td>
                                  <input type="hidden" name="cart-no" th:value="${cartBook.cartNo}" />
-                                 <td><img th:src="${cartBook.imageCover}"/></td>
+                                 <td><img class="rounded mx-auto d-block" th:src="${cartBook.imageCover}"/></td>
                                  <td>
-                                     <div th:text="${cartBook.name}">책 제목</div>
-                                     <div class="cart-book-price" th:text="${cartBook.price}">가격</div>
-                                     <div class="cart-book-discountRate" th:text="${cartBook.discountRate}">할인율</div>
+                                     <a th:href="@{|/product/book/detail?bookNo=${cartBook.bookNo}|}"
+                                        style="text-decoration: none; color: inherit;">
+                                         <strong><div th:text="${cartBook.name}">책 제목</div></strong>
+                                         <div>
+                                             <span style="color: forestgreen">
+                                                 <span class="cart-book-discountRate" th:text="${#numbers.formatDecimal(cartBook.discountRate * 100, 0, 0)}"></span>%
+                                             </span>
+                                             <strong><span class="cart-book-discounted-price" th:text="${#numbers.formatDecimal(cartBook.price * (1 - cartBook.discountRate), 0, 0)}"></span></strong>원
+                                             <span class="cart-book-price" th:text="${cartBook.price}" style="text-decoration: line-through; color: grey"></span>
+                                         </div>
+                                     </a>
                                  </td>
                                  <td>
                                      <div class="btn-group me-2" role="group" aria-label="Second group">
@@ -55,7 +63,7 @@
             <div class="col-3">
                 <div class="card mb-4 rounded-3 shadow-sm">
                     <div class="card-header py-3">
-                        <h5 class="my-0 fw-normal">장바구니 합계</h5>
+                        <h5 class="my-0"><strong>장바구니 합계</strong></h5>
                     </div>
                     <div class="card-body">
                         <ul class="list-unstyled mt-3 mb-4">
@@ -73,12 +81,12 @@
                             </li>
                             <hr class="my-4">
                             <li class="d-flex justify-content-between">
-                                <span>결제 예정 금액</span>
-                                <span id="final-price">0</span>
+                                <span><strong>결제 예정 금액</strong></span>
+                                <strong><span id="final-price">0</span></strong>
                             </li>
                         </ul>
-                        <button type="button" id="btn-order" class="w-100 btn btn-lg btn-primary mb-3">주문하기</button>
-                        <button type="button" id="btn-gift" class="w-100 btn btn-lg btn-primary">선물하기</button>
+                        <button type="button" id="btn-order" class="w-100 btn btn-lg btn-dark mb-3">주문하기</button>
+                        <button type="button" id="btn-gift" class="w-100 btn btn-lg btn-outline-success">선물하기</button>
                     </div>
                 </div>
             </div>
@@ -124,7 +132,7 @@
         let cartNo = $(this).closest("tr").find("input[name=cart-no]").val();
         let prevVal =  parseInt($(this).siblings('input').val());
         let nowVal = prevVal - 1;
-        if(nowVal >= 0){
+        if(nowVal >= 1){
            $(this).siblings('input').val(nowVal);
            updatePrices();
            updateBookCount(cartNo, nowVal);
@@ -146,10 +154,10 @@
         let totalBookDiscountPrice = 0;
         let finalPrice = 0;
 
-        $("tbody tr:has(:checkbox:checked) div[class=cart-book-price]").each(function(){
+        $("tbody tr:has(:checkbox:checked) span[class=cart-book-price]").each(function(){
             let price = parseInt($(this).text());
             let count = parseInt($(this).closest('tr').find('.cart-count').val());
-            let discountRate = parseFloat($(this).closest('tr').find(".cart-book-discountRate").text());
+            let discountRate = parseFloat($(this).closest('tr').find(".cart-book-discountRate").text()) * 0.01;
             totalPrice += price * count;
             totalBookDiscountPrice += price * count * discountRate;
         });

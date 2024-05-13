@@ -6,6 +6,7 @@ import com.example.bookhub.main.dto.SearchCriteria;
 import com.example.bookhub.main.mapper.NewBookMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 public class NewBookService {
     private final NewBookMapper newBookMapper;
 
+    @Transactional(readOnly = true)
     public BookListDto newBooks(SearchCriteria criteria) {
         List<BookDto> newBook = newBookMapper.newBookList(criteria);
 

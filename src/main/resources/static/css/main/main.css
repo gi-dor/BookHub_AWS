@@ -1,10 +1,46 @@
 .cards-wrapper {
     display: flex;
     justify-content: center;
+
 }
-.card img {
-    max-width: 100%;
-    max-height: 100%;
+
+
+.book-view-card{
+    height: 350px;
+    width : 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.bookview-img {
+    height: 250px;
+    max-width: 200px;
+    max-height: 250px;
+}
+
+#book-viewCount.card-body{
+    height: 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bookreco-img{
+    height: 250px;
+    max-width: 200px;
+    max-height: 250px;
+}
+
+#book-recommend.card-body{
+    height: 50px;
+}
+
+#book-recommend.cards-wrapper{
+    display: flex;
+    justify-content: center;
+}
+#book-bestseller .card img {
+    height: 250px;
+    max-width: 200px;
+    max-height: 250px;
 }
 
 .card {
@@ -12,6 +48,9 @@
     box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
     border: none;
     border-radius: 0;
+}
+#book-bestseller .card-body {
+    height: 350px;
 }
 .carousel-inner {
     padding: 1em;
@@ -48,9 +87,24 @@
     box-shadow: 0px 0px 10px #1D3559;
 }
 
-.newbook-img {
+
+
+.newbook-img-wrapper {
     border-top-left-radius: 10em;
     border-top-right-radius: 10em;
+
+}
+
+.newbook-img{
+    border-top-left-radius: 10em;
+    border-top-right-radius: 10em;
+    height: 300px;
+    width: 250px;
+}
+
+#newbook.cards-wrapper {
+    height: 350px;
+    width: 250px;
 }
 
 #newbookBtn1,
@@ -75,4 +129,26 @@
 
 .page-link {
     border: none;
+}
+
+.txt_post {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    margin-top:1px;
+    max-height:80px;
+    max-width: 200px;
+    overflow:hidden;
+    vertical-align:top;
+    text-overflow: ellipsis;
+    word-break:break-all;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:1
+}
+
+.image-wrapper{
+    text-align: center;
+}
+
+.card-title{
+    text-align: center;
 }

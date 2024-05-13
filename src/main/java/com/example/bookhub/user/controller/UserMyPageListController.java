@@ -14,6 +14,7 @@ import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -133,8 +134,52 @@ public class UserMyPageListController {
         // 로그인한 사용자의 1:1 문의 목록 , 페이징 정보 조회
         PageListDTO<InquiryListDTO> inquiryList = myPageService.getInquiryListByIdPage(user.getId() , page);
 
+
         // 로그인한 사용자가 작성한 글의 갯수 조회
         int totalRows = myPageService.countInquiry(user.getId());
+
+        model.addAttribute("totalRows",totalRows);
+        model.addAttribute("inquiryList",inquiryList.getItems());
+        model.addAttribute("page",inquiryList.getUserPagination());
+
+
+        return "user/list/inquiryList";
+    }
+
+    @GetMapping("/inquiryListNoCache")
+    public String inquiryListPageNoCache(@RequestParam(name="page" , required = false ,defaultValue="1") int page,
+                                  Model model) {
+        System.out.println(" :: 캐싱처리 안함      :: ");
+
+
+        // 로그인한 사용자의 1:1 문의 목록 , 페이징 정보 조회
+        PageListDTO<InquiryListDTO> inquiryList = myPageService.getNoCacheInquiriesList( page);
+
+
+        // 로그인한 사용자가 작성한 글의 갯수 조회
+        int totalRows = myPageService.countInquiriesAll();
+
+        model.addAttribute("totalRows",totalRows);
+        model.addAttribute("inquiryList",inquiryList.getItems());
+        model.addAttribute("page",inquiryList.getUserPagination());
+
+
+        return "user/list/inquiryList";
+    }
+
+
+    @GetMapping("/inquiryListCache")
+    public String inquiryListPageCache(@RequestParam(name="page" , required = false ,defaultValue="1") int page,
+                                       Model model) {
+        System.out.println(" :: 캐싱처리 했음      :: ");
+
+
+        // 로그인한 사용자의 1:1 문의 목록 , 페이징 정보 조회
+        PageListDTO<InquiryListDTO> inquiryList = myPageService.getCacheInquiriesList( page);
+
+
+        // 로그인한 사용자가 작성한 글의 갯수 조회
+        int totalRows = myPageService.countInquiriesAll();
 
         model.addAttribute("totalRows",totalRows);
         model.addAttribute("inquiryList",inquiryList.getItems());

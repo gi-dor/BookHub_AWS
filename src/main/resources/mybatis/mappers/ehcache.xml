@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cache>
+
+    <defaultCache
+            maxElementsInMemory="1000"
+            maxElementsOnDisk="0"
+            eternal="false"
+            statistics="false"
+            timeToIdleSeconds="10"
+            timeToLiveSeconds="10"
+            overflowToDisk="false"
+            diskPersistent="false"
+            memoryStoreEvictionPolicy="LRU"/>
+
+    <cache
+            name="MyPageMapper.cacheInquiries"
+            maxElementsInMemory="1000"
+            maxElementsOnDisk="0"
+            eternal="false"
+            statistics="false"
+            timeToIdleSeconds="10"
+            timeToLiveSeconds="10"
+            overflowToDisk="false"
+            diskPersistent="false"
+            memoryStoreEvictionPolicy="LRU"/>
+
+    <!--
+            maxElementsInMemory="1000"  메모리에 저장될 최대 항목수 , 캐시에서 가장 오래된 항목이 제거
+            maxElementsOnDisk="0"       디스크에 저장될 최대 항목 수를 설정 0 으로 설정했으므로 , 디스크는 항목이 저장되지 않음
+            eternal="false"             캐시의 항목이 만료되지 않고 영구적으로 유지되어야 하는지 여부 설정
+            statistics="false"          캐시통계를 사용할지 여부
+            timeToIdleSeconds="10"      캐시 항목이 유효하지 않아야하는 시간을 설정 , 캐시항목이 사용되지 않는동인 이 시간이 경과하면 항목이 캐시에서 제거
+            timeToLiveSeconds="10"      캐시항목이 캐시에서 제거도기전에는 존속해야하는 시간(초) 설정
+            overflowToDisk="false"      메모리 공간이 부족할 때 캐시 항목을 디스크로 넘길지 여부를 설정
+            diskPersistent="false"      디스크에 영구적으로 캐시항목을 저장할지 여부
+            memoryStoreEvictionPolicy="LRU" 메모리내 저장소에서 캐시항목을 제거할 때 사용할 정책을 설정
+            -->
+
+</cache>

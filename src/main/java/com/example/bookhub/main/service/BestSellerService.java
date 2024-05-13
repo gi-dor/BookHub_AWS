@@ -7,6 +7,7 @@ import com.example.bookhub.main.mapper.BestSellerMapper;
 import com.example.bookhub.main.mapper.NewBookMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class BestSellerService {
     private final BestSellerMapper bestSellerMapper;
 
+    @Transactional(readOnly = true)
     public BookListDto bestSeller(SearchCriteria criteria) {
         List<BookDto> bestBook = bestSellerMapper.bestSeller(criteria);
         for (BookDto book : bestBook) {

@@ -1,14 +1,15 @@
 <html lang="ko" layout:decorate="~{layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<div layout:fragment="noticeList" class="container-fluid">
+<div layout:fragment="content" class="container-fluid">
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
                 <h3>공지사항</h3>
 
-                <form th:action="@{/board/notice/list}" th:object="${filter}">
-                    <input type="hidden" name="page"/>
-
+                <form th:action="@{/admin/board/notice/list}" th:object="${filter}">
+                    <input type="hidden" name="page" th:value="${page}">
+                    <input type="hidden" name="opt" th:value="${filter.opt}">
+                    <input type="hidden" name="keyword" th:value="${filter.keyword}">
                     <!-- 게시글 정보 영역 -->
                     <div class="col-12 bg-light p-3 mb-3">
                         <div class="d-flex justify-content-end">
@@ -28,17 +29,17 @@
                                 </tr>
                             </table>
                         </div>
-                        <div th:utext="${notice.content}"></div>
+                        <div th:utext="${notice.content}" style="min-height: 100px;"></div>
                     </div>
 
-                    <!-- 모든 게시글 조회 결과 영역 -->
+                    <!-- 게시글 조회 결과 영역 -->
                     <div class="col-12 bg-light p-3 mb-3">
                         <!-- 조회 리스트 -->
-                        <table class="table text-center" id="table-posts" th:if="${paging.totalRows != 0}">
+                        <table class="table text-center" id="table-posts">
                             <colgroup>
                                 <col width="10%">
                                 <col width="*">
-                                <col width="15%">
+                                <col width="25%">
                                 <col width="10%">
                             </colgroup>
                             <thead>
@@ -50,73 +51,32 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!--
-                                ** 게시글 순번 **
-
-                                1. 마지막 숫자부터 시작
-                                    전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
-                                    ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
-
-                                2. 1번부터 시작
-                                    ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
-                                    ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
-                            -->
-                            <tr th:each="post, loop : ${posts}"
-                                th:class="${#strings.equals(post.no, param.postNo) ? 'table-secondary' : ' '}">
-
-                                <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
-                                    번호
-                                </td>
+                            <tr th:each="notice, loop : ${notices}"
+                                th:class="${#strings.equals(notice.no, param.postNo) ? 'table-secondary' : ' '}">
+                                <td th:text="${loop.size - loop.index}">순번</td>
                                 <td class="text-start">
-                                    <a th:href="@{/admin/board/notice/views(postNo=${post.no})}"
-                                       th:text="${post.title}">제목</a>
+                                    <span th:if="${notice.important == 'Y'}"
+                                          class="text-danger font-weight-bold border border-danger">필독</span>
+                                    <a th:href="@{/admin/board/notice/views(postNo=${notice.no}, page=${param.page}, opt=${param.opt}, keyword=${param.keyword})}"
+                                       th:text="${notice.title}">제목</a>
                                 </td>
                                 <td>
-                                    <p th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                    <p th:text="${#dates.format(notice.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
                                 </td>
-                                <td th:text="${post.getViews}">조회수</td>
+                                <td th:text="${notice.getViews}">조회수</td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
-                            <p>조회된 결과가 없습니다.</p>
-                        </div>
-
-                        <!-- 페이징 처리-->
-                        <!--
-                               th:classappend="${조건식} ? 값1 : 값2"
-                               th:classappend="${조건식} ? 값1"
-                                   조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
-                                   조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
-                                   * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
-                        -->
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                                <a th:href="@{/board/notice/list(page=${paging.currentPage - 1})}"
-                                   class="page-link">이전</a>
-                            </li>
-
-                            <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
-                                th:if="${num >= 1 and num <= paging.totalPages}"
-                                class="page-item"
-                                th:classappend="${num == paging.currentPage} ? 'active'">
-                                <a th:href="@{/board/notice/list(page=${num})}" th:text="${num}"
-                                   class="page-link">1</a>
-                            </li>
-
-                            <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                                <a th:href="@{/board/notice/list(page=${paging.currentPage + 1})}"
-                                   class="page-link">다음</a>
-                            </li>
-                        </ul>
                     </div>
+                    <button type="submit" class="btn btn-secondary">목록</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<script layout:fragment="noticeListScript" type="text/javascript">
+<script layout:fragment="script" type="text/javascript">
+
     $(function () {
 
     })

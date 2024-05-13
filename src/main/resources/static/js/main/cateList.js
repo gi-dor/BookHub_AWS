@@ -7,13 +7,6 @@ function cateList() {
     $("#cateList").trigger("submit");
 }
 
-$("#cateKeyword a ").click(function (event) {
-    event.preventDefault();
-    $("#cateList input[name=cateKeyword]").val($(this).attr("data-cateKeyword"));
-    $("#cateList input[name=page]").val(1);
-    $("#cateList input[name=sort]").val(1);
-    $("#cateList").trigger("submit");
-});
 
 $("#pubDate a ").click(function (event) {
     event.preventDefault();

@@ -2,11 +2,14 @@ package com.example.bookhub.product.controller;
 
 import com.example.bookhub.product.dto.BookDto;
 import com.example.bookhub.product.dto.BuyForm;
+import com.example.bookhub.product.dto.GiftDto;
 import com.example.bookhub.product.dto.GiftReceiverForm;
 import com.example.bookhub.product.service.BookService;
 import com.example.bookhub.product.service.BuyService;
 import com.example.bookhub.product.service.GiftService;
 import com.example.bookhub.product.vo.CouponProduced;
+import com.example.bookhub.user.service.UserService;
+import com.example.bookhub.user.vo.User;
 import com.example.bookhub.user.vo.UserDelivery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,7 @@ public class GiftController {
     private final GiftService giftService;
     private final BookService bookService;
     private final BuyService buyService;
+    private final UserService userService;
 
     @PostMapping("")
     public String gift(BuyForm buyForm){
@@ -65,8 +69,14 @@ public class GiftController {
         }
         model.addAttribute("buyBookCountList", buyBookCountList);
 
+        int couponCount = buyService.getCouponCountByUserNo(principal.getName());
+        model.addAttribute("couponCount", couponCount);
+
         int point = buyService.getPointByUserNo(principal.getName());
         model.addAttribute("point", point);
+
+        User user = userService.selectUserById(principal.getName());
+        model.addAttribute("user", user);
 
         // BuyForm 객체 HttpSession에 저장
         model.addAttribute("buyForm", buyForm);
@@ -83,8 +93,11 @@ public class GiftController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/receiver/{giftReceiverNo}")
-    public String receiver(@PathVariable("giftReceiverNo") long giftReceiverNo, Model model, Principal principal){
+    @GetMapping("/receiver/{giftOrderId}")
+    public String receiver(@PathVariable("giftOrderId") String giftOrderId,
+                           Model model, Principal principal){
+
+        long giftReceiverNo = giftService.getGiftReceiverNoByGiftOrderId(giftOrderId);
 
         UserDelivery defaultUserDelivery = null;
         List<UserDelivery> userDeliveryList = buyService.getUserDeliveryByUserNo(principal.getName());
@@ -94,9 +107,12 @@ public class GiftController {
             }
         }
 
+        List<GiftDto> giftDtoList = giftService.getGiftDetail(giftReceiverNo);
+
         model.addAttribute("userDeliveryList", userDeliveryList);
         model.addAttribute("defaultUserDelivery", defaultUserDelivery);
-        model.addAttribute("giftReceiveNo", giftReceiverNo);
+        model.addAttribute("giftReceiverNo", giftReceiverNo);
+        model.addAttribute("giftDtoList", giftDtoList);
 
         return "product/gift/receiverDetail";
     }
@@ -107,4 +123,5 @@ public class GiftController {
 
         return "/product/gift/success";
     }
+
 }

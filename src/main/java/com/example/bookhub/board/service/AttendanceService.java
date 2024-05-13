@@ -43,6 +43,7 @@ public class AttendanceService {
         return attendanceMapper.userAttendanceCheckByNo(userNo);
     }
 
+//    @Scheduled(fixedRate = 180000)
 //    public void deleteAttendance() {
 //        attendanceMapper.deleteAttendance();
 //    }

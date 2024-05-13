@@ -25,9 +25,9 @@
     VALUES (#{no})
 </insert>
 
-<!--<delete id="deleteAttendance">-->
-<!--    DELETE FROM ATTENDANCE_CHECKS-->
-<!--</delete>-->
+<delete id="deleteAttendance">
+   DELETE FROM ATTENDANCE_CHECKS
+</delete>
 
 <select id="attendanceCheckCount" resultType="int">
     SELECT COUNT(*)

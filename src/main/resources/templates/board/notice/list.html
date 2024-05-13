@@ -1,13 +1,13 @@
 <html lang="ko" layout:decorate="~{layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<div layout:fragment="noticeList" class="container-fluid">
+<div layout:fragment="content" class="container-fluid">
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
-                <h3>공지사항</h3>
+                <h2 class="text-center">공지사항</h2>
 
                 <!-- 필터 선택 영역-->
-                <form th:action="@{/board/notice/list}" th:object="${filter}">
+                <form id="noticeListForm" th:action="@{/admin/board/notice/list}" th:object="${filter}">
                     <input type="hidden" name="page"/>
                     <div class="col-12 bg-light p-3 mb-3 d-flex justify-content-end">
                         <select th:field="*{opt}" class="form-select-sm">
@@ -16,7 +16,7 @@
                             <option value="content">내용</option>
                         </select>
                         <input type="text" th:field="*{keyword}" class="form-control-sm ms-2">
-                        <button type="submit" class="btn btn-outline-dark btn-sm ms-2">검색어</button>
+                        <button type="submit" class="btn btn-outline-dark btn-sm ms-2">검색</button>
                     </div>
 
                     <!-- 조회 결과 영역 -->
@@ -26,14 +26,14 @@
                             <colgroup>
                                 <col width="10%">
                                 <col width="*">
-                                <col width="15%">
+                                <col width="25%">
                                 <col width="10%">
                             </colgroup>
                             <thead>
                             <tr>
                                 <th>번호</th>
                                 <th>제목</th>
-                                <th>등록일/수정일</th>
+                                <th>등록일</th>
                                 <th>조회</th>
                             </tr>
                             </thead>
@@ -54,7 +54,9 @@
                                     번호
                                 </td>
                                 <td class="text-start">
-                                    <a th:href="@{/admin/board/notice/views(postNo=${post.no})}"
+                                    <span th:if="${post.important == 'Y'}"
+                                          class="text-danger font-weight-bold border border-danger">필독</span>
+                                    <a th:href="@{/admin/board/notice/views(postNo=${post.no}, page=${param.page}, opt=${param.opt}, keyword=${param.keyword})}"
                                        th:text="${post.title}">제목</a>
                                 </td>
                                 <td>
@@ -78,21 +80,21 @@
                         -->
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                                <a th:href="@{/board/notice/list(page=${paging.currentPage - 1})}"
-                                   class="page-link">이전</a>
+                                <a th:href="@{/admin/board/notice/list(page=${paging.currentPage - 1})}"
+                                   th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
                             </li>
 
                             <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
                                 th:if="${num >= 1 and num <= paging.totalPages}"
                                 class="page-item"
                                 th:classappend="${num == paging.currentPage} ? 'active'">
-                                <a th:href="@{/board/notice/list(page=${num})}" th:text="${num}"
-                                   class="page-link">1</a>
+                                <a th:href="@{/admin/board/notice/list(page=${num})}" th:text="${num}"
+                                   th:data-page="${num}" class="page-link">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                                <a th:href="@{/board/notice/list(page=${paging.currentPage + 1})}"
-                                   class="page-link">다음</a>
+                                <a th:href="@{/admin/board/notice/list(page=${paging.currentPage + 1})}"
+                                   th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
                             </li>
                         </ul>
                     </div>
@@ -102,8 +104,18 @@
     </div>
 </div>
 
-<script layout:fragment="noticeListScript" type="text/javascript">
+<script layout:fragment="script" type="text/javascript">
     $(function () {
+
+        // 페이지 이동 시 필터 유지
+        $(".pagination a").click(function (event) {
+            event.preventDefault();
+
+            let page = $(this).data("page");
+
+            $("input[name=page]").val(page)
+            $("#noticeListForm").trigger("submit")
+        });
 
     })
 </script>

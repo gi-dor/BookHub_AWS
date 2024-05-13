@@ -71,7 +71,7 @@
         (total_price, total_book_discount_price, total_coupon_discount_amount, total_point_use_amount, final_price, point_accumulation_amount,
          common_entrance_approach, common_entrance_password, gift_yn, buy_pay_method_no, buy_status_no, buy_delivery_request_no, user_no, delivery_no, order_id)
         values
-        (#{totalPrice}, #{totalBookDiscountPrice}, #{totalCouponDiscountAmount}, #{totalPointUseAmount}, #{finalPrice}, 1000,
+        (#{totalPrice}, #{totalBookDiscountPrice}, #{totalCouponDiscountAmount}, #{totalPointUseAmount}, #{finalPrice}, #{pointAccumulationAmount},
          #{commonEntranceApproach}, "1234", #{giftYn}, #{buyPayMethod.buyPayMethodNo}, 2, #{buyDeliveryRequest.buyDeliveryRequestNo}, #{user.no}, #{userDelivery.no}, #{orderId})
 
          <selectKey keyProperty="buyNo" resultType="long" order="AFTER">
@@ -215,5 +215,14 @@
             and due_date >= sysdate()
             and used = 'N'
     </select>
+
+    <update id="updatePointAccumulated">
+        update
+            USER
+        set
+            user_point = user_point + #{pointAccumulationAmount}
+        where
+            user_no = #{userNo}
+    </update>
 
 </mapper>

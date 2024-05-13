@@ -10,10 +10,10 @@ import java.util.List;
 
 
 @Mapper
-public interface CateListMapper {
+public interface BookCategory {
     /**
-     * 검색 리스트 조회
-     * @return 검색결과 리스트
+     * 각각의 카테고리에대한 리스트 조회
+     * @return
      */
     List<BookDto> categoryList(SearchCriteria criteria);
 

@@ -3,10 +3,11 @@ package com.example.bookhub.main.service;
 import com.example.bookhub.main.dto.BookDto;
 import com.example.bookhub.main.dto.BookListDto;
 import com.example.bookhub.main.dto.SearchCriteria;
-import com.example.bookhub.main.mapper.CateListMapper;
+import com.example.bookhub.main.mapper.BookCategory;
 import com.example.bookhub.product.vo.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,17 +15,18 @@ import java.util.List;
 @Service
 public class CateListService {
 
-    private final CateListMapper cateListMapper;
+    private final BookCategory bookCategory;
 
+    @Transactional(readOnly = true)
     public Category getCategory(int categoryNo) {
-        return cateListMapper.getCategory(categoryNo);
+        return bookCategory.getCategory(categoryNo);
     }
 
     public BookListDto cateBooks(SearchCriteria criteria) {
-        List<BookDto> cateBook = cateListMapper.categoryList(criteria);
+        List<BookDto> cateBook = bookCategory.categoryList(criteria);
 
 
-        int totalRows = cateListMapper.count(criteria);
+        int totalRows = bookCategory.count(criteria);
         criteria.setTotalRows(totalRows);
 
         BookListDto dto = new BookListDto();
