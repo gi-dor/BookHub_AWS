@@ -7,7 +7,7 @@
 <div layout:fragment="content" class="container my-3">
     <div class="row mb-3">
         <div class="col-4">
-            <div>
+            <div class="mt-5" style="font-weight: bold">
                 <span th:each="bookAuthor : ${bookAuthorList}">
                     <div>
                         <span th:if="${bookAuthor.authorType == '지은이'}">
@@ -23,7 +23,7 @@
                     </div>
                 </span>
             </div>
-            <div>
+            <div style="font-weight: bold">
                 <span>출판사 : </span>
                 <span th:text="${book.publisher.name}"></span>
             </div>
@@ -616,7 +616,9 @@
 
     $("#count-minus").click(function(event){
         let prevCount = parseInt($("input[name=buyBookCountList]").val());
-        $("input[name=buyBookCountList]").val(prevCount - 1);
+        if(prevCount > 1) {
+            $("input[name=buyBookCountList]").val(prevCount - 1);
+        }
     })
 
     $("#count-plus").click(function(event){

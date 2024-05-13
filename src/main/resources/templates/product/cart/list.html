@@ -132,7 +132,7 @@
         let cartNo = $(this).closest("tr").find("input[name=cart-no]").val();
         let prevVal =  parseInt($(this).siblings('input').val());
         let nowVal = prevVal - 1;
-        if(nowVal >= 0){
+        if(nowVal >= 1){
            $(this).siblings('input').val(nowVal);
            updatePrices();
            updateBookCount(cartNo, nowVal);

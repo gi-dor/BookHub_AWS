@@ -129,7 +129,11 @@
                     <div>
                         <button type="button" class="btn btn-outline-success" onclick="showModalExchange()">교환</button>
                         <button type="button" class="btn btn-outline-danger" onclick="showModalRefund()">환불</button>
-                        <button type="button" class="btn btn-outline-warning" onclick="showModalBuyCancel()">주문취소</button>
+                        <button type="button" class="btn btn-outline-dark" onclick="showModalBuyCancel()">주문취소</button>
+                    </div>
+                    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                        부분 주문 취소, 부분 환불의 경우 사용한 쿠폰과 포인트가 돌아오지 않습니다.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
