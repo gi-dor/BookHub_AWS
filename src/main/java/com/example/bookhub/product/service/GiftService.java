@@ -48,6 +48,11 @@ public class GiftService {
         this.buyForm = buyForm;
         User user = userMapper.selectUserById(userId);
 
+        if(buyForm.getReceiverCount() > 1){
+            for(int i = 0; i < buyForm.getBuyBookCountList().size(); i++)
+                buyForm.getBuyBookCountList().set(i, buyForm.getBuyBookCountList().get(i) * buyForm.getReceiverCount());
+        }
+
         // 재고 감소
         updateBookStock(buyForm);
 

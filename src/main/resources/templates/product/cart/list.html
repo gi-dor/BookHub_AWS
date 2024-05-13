@@ -28,14 +28,17 @@
                                  <input type="hidden" name="cart-no" th:value="${cartBook.cartNo}" />
                                  <td><img class="rounded mx-auto d-block" th:src="${cartBook.imageCover}"/></td>
                                  <td>
-                                     <strong><div th:text="${cartBook.name}">책 제목</div></strong>
-                                     <div>
-                                         <span style="color: forestgreen">
-                                             <span class="cart-book-discountRate" th:text="${#numbers.formatDecimal(cartBook.discountRate * 100, 0, 0)}"></span>%
-                                         </span>
-                                         <strong><span class="cart-book-discounted-price" th:text="${#numbers.formatDecimal(cartBook.price * (1 - cartBook.discountRate), 0, 0)}"></span></strong>원
-                                         <span class="cart-book-price" th:text="${cartBook.price}" style="text-decoration: line-through; color: grey"></span>
-                                     </div>
+                                     <a th:href="@{|/product/book/detail?bookNo=${cartBook.bookNo}|}"
+                                        style="text-decoration: none; color: inherit;">
+                                         <strong><div th:text="${cartBook.name}">책 제목</div></strong>
+                                         <div>
+                                             <span style="color: forestgreen">
+                                                 <span class="cart-book-discountRate" th:text="${#numbers.formatDecimal(cartBook.discountRate * 100, 0, 0)}"></span>%
+                                             </span>
+                                             <strong><span class="cart-book-discounted-price" th:text="${#numbers.formatDecimal(cartBook.price * (1 - cartBook.discountRate), 0, 0)}"></span></strong>원
+                                             <span class="cart-book-price" th:text="${cartBook.price}" style="text-decoration: line-through; color: grey"></span>
+                                         </div>
+                                     </a>
                                  </td>
                                  <td>
                                      <div class="btn-group me-2" role="group" aria-label="Second group">
