@@ -37,18 +37,25 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
     implementation 'org.webjars:bootstrap:5.3.3'
     implementation group: 'org.webjars.npm', name: 'bootstrap-icons', version: '1.11.3'
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3.1'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-cache:2.7.4'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
-//    BookApplication - edit - ModifyOption - VMoption add ->    -Djasypt.encryptor.password=han   입력
-//    -Djasypt.encryptor.password=han
+    implementation("org.springframework.retry:spring-retry")
+    implementation 'org.springframework:spring-aspects'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
 
-//    BookApplication - edit - ModifyOption - VMoption add ->    -Djasypt.encryptor.password=han   입력
-//    -Djasypt.encryptor.password=han
 
+    // ShedLock 의존성
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:5.10.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.10.0'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
 
 
 }

@@ -83,7 +83,7 @@
                         <col width="">
                         <col width="15%">
                         <col width="">
-                        <col width="">
+                        <col width="15%">
                     </colgroup>
                     <thead>
                     <tr>
@@ -100,10 +100,12 @@
                             <form method="post" th:action="@{/kakaoPay/refund}">
                                 <input type="hidden" name="buyNo" th:value="${order.buyNo}"/>
                             <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}"></td>
-                            <td><a href="#" th:text="${order.buyNo}"></a></td>
+                            <td><a th:href="@{/mypage/list/orderDetail/{no}(no=${order.buyNo})}" th:text="${order.buyNo}"></a></td>
                             <td>
                                 <!-- 주문에 대한 상품 목록 -->
-                                <span th:text="${order.book.name}"></span>
+                                <a th:href="@{/mypage/list/orderDetail/{no}(no=${order.buyNo})}">
+                                    <span th:text="${order.book.name}"></span>
+                                </a>
                                 <!-- 만약 주문한 상품이 여러 개인 경우 -->
                                 <span th:if="${order.cnt > 1}" th:text="' 외 ' + ${order.cnt} + '개' "></span>
                             </td>

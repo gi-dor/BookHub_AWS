@@ -7,6 +7,7 @@ import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -15,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +28,10 @@ public class ReviewService {
 
     private final ReviewMapper reviewMapper;
     private final UserMapper userMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ReviewService.class);
 
     @Transactional
-    public void createReview(ReviewForm reviewForm, String userId) {
+    public long createReview(ReviewForm reviewForm, String userId) {
 
         User user = userMapper.selectUserById(userId);
 
@@ -64,8 +68,11 @@ public class ReviewService {
                     reviewMapper.createReviewImage(reviewImage);
                 }
             }
+
+        return generatedReviewNo;
     }
 
+    @Transactional(readOnly = true)
     public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort, String option) {
         long userNo = 0;
         if(!"guest".equals(userId)) {
@@ -140,7 +147,7 @@ public class ReviewService {
         }
     }
 
-    public void createReviewReply(ReviewReplyForm reviewReplyForm, String userId) {
+    public long createReviewReply(ReviewReplyForm reviewReplyForm, String userId) {
 
         Review review = new Review();
         review.setReviewNo(reviewReplyForm.getReviewNo());
@@ -155,6 +162,8 @@ public class ReviewService {
 
         reviewMapper.createReviewReply(reviewReply);
         reviewMapper.updateReviewReplyCount(reviewReplyForm.getReviewNo(), "create");
+
+        return reviewReply.getReviewReplyNo();
     }
 
     public Review getReviewByReviewNo(long reviewNo) {
@@ -193,6 +202,7 @@ public class ReviewService {
         reviewMapper.deleteReview(reviewNo);
     }
 
+    @Transactional(readOnly = true)
     public List<Integer> getRate(long bookNo) {
         List<Integer> rateCountList = new ArrayList<>();
         for(int start = 0; start <= 4; start++){
@@ -202,6 +212,7 @@ public class ReviewService {
         return rateCountList;
     }
 
+    @Transactional(readOnly = true)
     public List<Integer> getReviewTagCount(long bookNo){
         List<Integer> reviewTagCountList = new ArrayList<>();
         for(int i = 1; i <= 5; i++){

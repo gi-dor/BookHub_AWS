@@ -1,0 +1,86 @@
+<html lang="ko" layout:decorate="~{layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content" class="container-fluid">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h3>공지사항</h3>
+
+                <form th:action="@{/admin/board/notice/list}" th:object="${filter}">
+                    <input type="hidden" name="page" th:value="${page}">
+                    <input type="hidden" name="opt" th:value="${filter.opt}">
+                    <input type="hidden" name="keyword" th:value="${filter.keyword}">
+                    <!-- 게시글 정보 영역 -->
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <div class="d-flex justify-content-end">
+                            <table class="table table-bordered ">
+                                <tr>
+                                    <td class="bg-light align-middle text-center" style="width: 100px;">제목</td>
+                                    <td th:text="${notice.title}" style="width: 200px;"></td>
+                                    <td class="bg-light align-middle text-center" style="width: 100px;">작성자</td>
+                                    <td th:text="${notice.writer}" style="width: 200px;"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light align-middle text-center" style="width: 100px;">등록일</td>
+                                    <td th:text="${#dates.format(notice.createdDate, 'yyyy-MM-dd HH:mm:ss')}"
+                                        style="width: 200px;"></td>
+                                    <td class="bg-light align-middle text-center" style="width: 100px;">조회수</td>
+                                    <td th:text="${notice.views}" style="width: 200px;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div th:utext="${notice.content}" style="min-height: 100px;"></div>
+                    </div>
+
+                    <!-- 게시글 조회 결과 영역 -->
+                    <div class="col-12 bg-light p-3 mb-3">
+                        <!-- 조회 리스트 -->
+                        <table class="table text-center" id="table-posts">
+                            <colgroup>
+                                <col width="10%">
+                                <col width="*">
+                                <col width="25%">
+                                <col width="10%">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>등록일</th>
+                                <th>조회</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="notice, loop : ${notices}"
+                                th:class="${#strings.equals(notice.no, param.postNo) ? 'table-secondary' : ' '}">
+                                <td th:text="${loop.size - loop.index}">순번</td>
+                                <td class="text-start">
+                                    <span th:if="${notice.important == 'Y'}"
+                                          class="text-danger font-weight-bold border border-danger">필독</span>
+                                    <a th:href="@{/admin/board/notice/views(postNo=${notice.no}, page=${param.page}, opt=${param.opt}, keyword=${param.keyword})}"
+                                       th:text="${notice.title}">제목</a>
+                                </td>
+                                <td>
+                                    <p th:text="${#dates.format(notice.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                                </td>
+                                <td th:text="${notice.getViews}">조회수</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">목록</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" type="text/javascript">
+
+    $(function () {
+
+    })
+
+</script>
+
+</html>

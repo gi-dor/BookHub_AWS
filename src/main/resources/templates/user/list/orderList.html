@@ -35,7 +35,6 @@
                                 <col width="">
                                 <col width="10%">
                                 <col width="10%">
-                                <col width="15%">
                             </colgroup>
                             <thead>
                                 <tr>
@@ -44,7 +43,6 @@
                                     <th>주문 상품</th>
                                     <th>주문 상태</th>
                                     <th>주문 금액 </th>
-                                    <th>주문 취소</th>
                                 </tr>
                             </thead>
                                 <tbody>
@@ -56,15 +54,12 @@
                                         <td th:text="${#temporals.format(order.buyDate, 'yyyy-MM-dd')}">결제 일자</td>
                                         <td>
                                             <a th:href="@{/mypage/list/orderDetail/{orderId}(orderId=${order.no})}">
-                                            <span th:text="${order.book.name}"></span>
-                                            <span th:if="${order.cnt > 1}" th:text=" ' 외' + ${order.cnt} + '개' "></span>
+                                                <span th:text="${order.book.name}"></span>
+                                                <span th:if="${order.cnt > 1}" th:text=" ' 외' + ${order.cnt} + '개' "></span>
                                             </a>
                                         </td>
                                         <td th:text="${order.buyStatus.name}">결제 상태</td>
                                         <td th:text="${order.finalPrice}">가격</td>
-                                        <td>
-                                            <button class="btn btn-secondary btn-sm" type=submit>주문취소</button>
-                                        </td>
                                     </tr>
                                 </tbody>
                         </table>

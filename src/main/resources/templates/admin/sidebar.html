@@ -37,17 +37,12 @@
         <li class="mb-1">
             <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                     data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                Orders
+                주문
             </button>
             <div class="collapse" id="orders-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                    </li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                    </li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                    </li>
+                    <li><a href="/admin/order/return/list"
+                           class="link-body-emphasis d-inline-flex text-decoration-none rounded">환불 관리</a></li>
                 </ul>
             </div>
         </li>
@@ -63,9 +58,26 @@
                     </li>
                     <li><a href="/admin/product/create"
                            class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 등록</a></li>
+                    <li><a href="/admin/stock/notification/list"
+                           class="link-body-emphasis d-inline-flex text-decoration-none rounded">재고 관리</a></li>
                     <li><a href="/admin/category"
                            class="link-body-emphasis d-inline-flex text-decoration-none rounded">카테고리 관리</a>
                     </li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                    data-bs-toggle="collapse" data-bs-target="#board-collapse" aria-expanded="false">
+                게시판
+            </button>
+            <div class="collapse" id="board-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="/admin/board/list"
+                           class="link-body-emphasis d-inline-flex text-decoration-none rounded">게시글 조회/관리</a>
+                    </li>
+                    <li><a href="/admin/board/create"
+                           class="link-body-emphasis d-inline-flex text-decoration-none rounded">게시글 등록</a></li>
                 </ul>
             </div>
         </li>

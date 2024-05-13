@@ -55,6 +55,9 @@ public class BuyService {
 
         // 포인트 차감
         updatePoint(user);
+
+        // 포인트 적립
+        accumulatePoint(user);
     }
 
     public long insertBuy(String tid, User user){
@@ -72,6 +75,7 @@ public class BuyService {
                 .totalBookDiscountPrice(buyForm.getTotalBookDiscountPrice())
                 .totalCouponDiscountAmount(buyForm.getTotalCouponDiscountAmount())
                 .totalPointUseAmount(buyForm.getTotalPointUseAmount())
+                .pointAccumulationAmount(buyForm.getPointAccumulationAmount())
                 .finalPrice(buyForm.getFinalPrice())
                 .commonEntranceApproach(buyForm.getCommonEntranceApproach())
                 .giftYn("N")
@@ -135,6 +139,11 @@ public class BuyService {
         buyMapper.updatePointUsed(map);
     }
 
+    private void accumulatePoint(User user) {
+        int pointAccumulationAmount = buyForm.getPointAccumulationAmount();
+        buyMapper.updatePointAccumulated(user.getNo(), pointAccumulationAmount);
+    }
+
     public List<UserDelivery> getUserDeliveryByUserNo(String userId) {
         User user = userMapper.selectUserById(userId);
 
@@ -170,6 +179,7 @@ public class BuyService {
         return buyerYn;
     }
 
+    @Transactional
     public void updateBookStock(BuyForm buyForm){
         for(int i = 0; i < buyForm.getBuyBookNoList().size(); i++) {
             long bookNo = buyForm.getBuyBookNoList().get(i);
@@ -193,6 +203,5 @@ public class BuyService {
         User user = userMapper.selectUserById(userId);
         return buyMapper.getCouponCountByUserNo(user.getNo());
     }
-
 
 }

@@ -27,12 +27,15 @@ public class ReviewController {
         long bookNo = reviewForm.getBookNo();
         String createYn = reviewForm.getCreateYn();
 
-        if("create".equals(createYn))
-            reviewService.createReview(reviewForm, principal.getName());
-        else if("modify".equals(createYn))
+        long reviewNo = 0;
+        if("create".equals(createYn)) {
+            reviewNo = reviewService.createReview(reviewForm, principal.getName());
+        }
+        else if("modify".equals(createYn)) {
             reviewService.modifyReview(reviewForm);
-
-        return "redirect:/product/book/detail?bookNo=" + bookNo;
+            reviewNo = reviewForm.getReviewNo();
+        }
+        return String.format("redirect:/product/book/detail?bookNo=%d#review_%d", bookNo, reviewNo);
     }
 
 //    @GetMapping("/{bookNo}")
@@ -51,15 +54,14 @@ public class ReviewController {
 
     @PostMapping("/reply/create")
     public String createReview(ReviewReplyForm reviewReplyForm, Principal principal){
-        reviewService.createReviewReply(reviewReplyForm, principal.getName());
-
-        return "redirect:/product/book/detail?bookNo=" + reviewReplyForm.getBookNo();
+        long reviewReplyNo = reviewService.createReviewReply(reviewReplyForm, principal.getName());
+        return String.format("redirect:/product/book/detail?bookNo=%d#reply_%d", reviewReplyForm.getBookNo(), reviewReplyNo);
     }
 
     @PostMapping("/reply/modify")
     public String modifyReviewReply(ReviewReplyForm reviewReplyForm){
         reviewService.modifyReviewReply(reviewReplyForm);
-        return "redirect:/product/book/detail?bookNo=" + reviewReplyForm.getBookNo();
+        return String.format("redirect:/product/book/detail?bookNo=%d#reply_%d", reviewReplyForm.getBookNo(), reviewReplyForm.getReviewReplyNo());
     }
 
     @GetMapping("/reply/delete")
@@ -67,7 +69,7 @@ public class ReviewController {
                                     @RequestParam("reviewNo") long reviewNo,
                                     @RequestParam("bookNo") long bookNo){
         reviewService.deleteReviewReply(reviewReplyNo, reviewNo);
-        return "redirect:/product/book/detail?bookNo=" + bookNo;
+        return String.format("redirect:/product/book/detail?bookNo=%d#review_%d", bookNo, reviewNo);
     }
 
     @GetMapping("/modify/{reviewNo}")
@@ -80,7 +82,7 @@ public class ReviewController {
     @GetMapping("/delete/{bookNo}/{reviewNo}")
     public String deleteReview(@PathVariable("bookNo") long bookNo, @PathVariable("reviewNo") long reviewNo){
         reviewService.deleteReview(reviewNo);
-        return "redirect:/product/book/detail?bookNo=" + bookNo;
+        return String.format("redirect:/product/book/detail?bookNo=%d#review-block", bookNo);
     }
 
     @GetMapping("/rate/{bookNo}")

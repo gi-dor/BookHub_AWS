@@ -11,17 +11,22 @@
                 <!-- 주문 정보 -->
                 <div class="card mb-4 rounded-3 shadow-sm">
                     <div class="card-header py-3 d-flex justify-content-between">
-                        <h5 class="my-0 fw-normal">주문 상품</h5>
+                        <h5 class="my-0">주문 상품</h5>
                     </div>
                     <div class="card-body">
                         <table class="table">
                             <tbody>
                             <tr th:each="buyBook, iterStat : ${buyBookList}">
-                                <td><img th:src="${buyBook.imageCover}"></td>
-                                <td th:text="${buyBook.name}"></td>
-                                <td class="buy-book-price" th:text="${buyBook.price}"></td>
-                                <td class="buy-book-discount-rate" th:text="${buyBook.discountRate}"></td>
-                                <td class="buy-book-count" th:text="${buyBookCountList.get(iterStat.index)}"></td>
+                                <td><img class="rounded mx-auto d-block" th:src="${buyBook.imageCover}"></td>
+                                <td><strong><div th:text="${buyBook.name}"></div></strong></td>
+                                <td>
+                                    <span style="color: forestgreen">
+                                        <span class="buy-book-discount-rate" th:text="${#numbers.formatDecimal(buyBook.discountRate * 100, 0, 0)}"></span>%
+                                    </span>
+                                    <strong><span class="buy-book-discounted-price" th:text="${#numbers.formatDecimal(buyBook.price * (1 - buyBook.discountRate), 0, 0)}"></span></strong>원
+                                    <span class="buy-book-price" th:text="${buyBook.price}" style="text-decoration: line-through; color: grey"></span>
+                                </td>
+                                <td class="buy-book-count" th:text="${buyBookCountList.get(iterStat.index) * buyForm.receiverCount}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -31,7 +36,7 @@
                 <!-- 쿠폰, 포인트 -->
                 <div class="card mb-4 rounded-3 shadow-sm">
                     <div class="card-header py-3 d-flex justify-content-between">
-                        <h5 class="my-0 fw-normal">쿠폰/포인트 적용</h5>
+                        <h5 class="my-0">쿠폰/포인트 적용</h5>
                     </div>
                     <div class="card-body">
                         <table class="table">
@@ -43,16 +48,16 @@
                             </colgroup>
                             <tbody>
                             <tr>
-                                <td>북허브 쿠폰</td>
-                                <td></td>
+                                <td><strong>북허브 쿠폰</strong></td>
+                                <td><span th:text="${couponCount}"></span>장 사용가능</td>
                                 <td><input id="total-coupon-discount-amount-tmp" style="width: 80px" readonly />원</td>
-                                <td><button type="button" class="btn btn-primary" onclick="showCouponUseModal()">사용하기</button></td>
+                                <td><button type="button" class="btn btn-dark" onclick="showCouponUseModal()">사용하기</button></td>
                             </tr>
                             <tr>
-                                <td>북허브 포인트</td>
+                                <td><strong>북허브 포인트</strong></td>
                                 <td><span id="total-point-amount" th:text="${point}"/>원</td>
                                 <td><input id="total-point-use-amount-tmp" style="width: 80px"/>원</td>
-                                <td><button type="button" class="btn btn-primary" onclick="useTotalPoint()">모두 사용</button></td>
+                                <td><button type="button" class="btn btn-dark" onclick="useTotalPoint()">모두 사용</button></td>
                             </tr>
                             </tbody>
                         </table>
@@ -62,7 +67,7 @@
                 <!-- 결제수단 -->
                 <div class="card mb-4 rounded-3 shadow-sm">
                     <div class="card-header py-3 d-flex justify-content-between">
-                        <h5 class="my-0 fw-normal">결제수단</h5>
+                        <h5 class="my-0">결제수단</h5>
                     </div>
                     <div class="card-body">
                         <span class="form-check">
@@ -81,7 +86,7 @@
             <div class="col-3">
                 <div id="card-order-total" class="card mb-4 rounded-3 shadow-sm">
                     <div class="card-header py-3">
-                        <h5 class="my-0 fw-normal">주문 합계</h5>
+                        <h5 class="my-0">주문 합계</h5>
                     </div>
                     <div class="card-body">
                         <table class="table">
@@ -110,12 +115,19 @@
                                 <td colspan="2"><hr class="my-4"></td>
                             </tr>
                             <tr>
-                                <td>결제 예정 금액</td>
-                                <td><input id="final-price" name="finalPrice" value="0" readonly/></td>
+                                <td><strong>결제 예정 금액</strong></td>
+                                <td><input id="final-price" name="finalPrice" value="0"
+                                           style="font-weight: bold" readonly/></td>
+                            </tr>
+                            <tr>
+                                <input id="user-grade-no" type="hidden" th:value="${user.userGrade.no}" disabled/>
+                                <td>포인트 적립</td>
+                                <td><input id="point-accumulation-amount" name="pointAccumulationAmount" value="0"
+                                            readonly/></td>
                             </tr>
                             </tbody>
                         </table>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary" onclick="checkUserDelivery()">결제하기</button>
+                        <button type="submit" class="w-100 btn btn-lg btn-dark" onclick="checkUserDelivery()">결제하기</button>
                     </div>
                 </div>
             </div>
@@ -152,7 +164,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary" onclick="useSelectedCoupon()">사용</button>
+                        <button type="button" class="btn btn-dark" onclick="useSelectedCoupon()">사용</button>
                     </div>
                 </div>
             </div>
@@ -185,15 +197,18 @@
         let totalPrice = 0;
         let totalBookDiscountPrice = 0;
 
-        $("tbody tr td[class=buy-book-price]").each(function(){
+        $("tbody tr td span[class=buy-book-price]").each(function(){
             let price = parseInt($(this).text());
             let count = parseInt($(this).closest('tr').find('.buy-book-count').text());
-            let discountRate = parseFloat($(this).closest('tr').find('.buy-book-discount-rate').text());
+            let discountRate = parseFloat($(this).closest('tr').find('.buy-book-discount-rate').text()) * 0.01;
             totalPrice += price * count;
             totalBookDiscountPrice += (price * count * discountRate);
         });
+        let pointAccumulationAmount = parseInt(totalPrice * parseInt($("#user-grade-no").val()) * 0.01);
+
         $("#total-price").val(totalPrice);
         $("#total-book-discount-price").val(totalBookDiscountPrice);
+        $("#point-accumulation-amount").val(pointAccumulationAmount);
 
         updateFinalPrice();
     }
@@ -231,7 +246,7 @@
 
             rows += `
                        <tr id="tr-coupon">
-                            <td><input type="checkbox" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
+                            <td><input type="checkbox" class="form-check-input" name="couponProducedNoList" value="${couponProduced.couponProducedNo}" checked/></td>
                             <td>${couponProduced.coupon.name}</td>
                             <td><span class="couponDiscountAmount">${couponProduced.coupon.price}</span>원</td>
                             <td><input name="couponDiscountAmountList"

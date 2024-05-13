@@ -23,3 +23,7 @@
 .table td, .table th {
     border: none; /* 테이블 셀의 경계선을 없앱니다. */
 }
+
+h5{
+    font-weight: bold;
+}

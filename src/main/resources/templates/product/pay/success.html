@@ -8,9 +8,9 @@
         <h3 class="fw-bold text-body-emphasis" th:text="${successMessage}"></h3>
         <h3 class="fw-bold text-body-emphasis"><span th:text="${finalPrice}">20000</span>원</h3>
         <div class="col-lg-6 mx-auto">
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <button type="button" class="btn btn-primary btn-lg px-4 gap-3">주문내역으로 이동</button>
-                <button type="button" class="btn btn-outline-secondary btn-lg px-4">홈으로 이동</button>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-5">
+                <a type="button" class="btn btn-dark btn-lg px-4 gap-3" href="/mypage/list/orderList">주문내역으로 이동</a>
+                <a type="button" class="btn btn-outline-secondary btn-lg px-4" href="/">홈으로 이동</a>
             </div>
         </div>
     </div>

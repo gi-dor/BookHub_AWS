@@ -9,6 +9,9 @@
             <p style="margin-bottom: 10px;">이름: <span th:text="${user.name}"></span></p>
         </div>
     </div>
+    <div class="text-end">
+        <p>한 달 중 20일을 출석하시면 쿠폰을 지급합니다.</p>
+    </div>
 
     <div class="table-responsive"> <!-- 반응형 디자인을 적용하여 작은 화면에서도 스크롤 가능하도록 함 -->
         <table class="table table-bordered table-striped" style="background-color: white; color: black;" id="table-attendance"> <!-- 테이블의 높이를 1.5배로 늘림 -->
@@ -26,6 +29,7 @@
             <tbody id="calendar-body" style="background-color: white; color: black;"></tbody>
         </table>
     </div>
+
 
     <div class="text-center">
         <form id="attendance-form" method="post" th:action="@{/board/attendance/attendanceCheck}">
@@ -81,14 +85,22 @@
         }
 
         $.getJSON("/board/attendance/attendanceCheck.do", function (response){
+            var couponGiven = false;
+            var attendanceCount = 0;
             $.each(response, function(index, attendance) {
                 // 중복된 값이 이미 존재하는지 확인
                 if ($(`#table-attendance td[id=cell-${attendance.day}] .bi-check-lg`).length === 0) {
                     // 중복된 값이 없는 경우에만 추가
                     $(`#table-attendance td[id=cell-${attendance.day}]`).append("<i class=\"bi bi-check-lg\" style='color:green;'></i>");
-
+                    attendanceCount++;
                 }
             });
+
+            // 출석일수가 10이 되면 출석쿠폰을 지급하는 처리
+            if (attendanceCount === 10 && !couponGiven) {
+                alert("출석쿠폰이 지급되었습니다.");
+                couponGiven = true; // 쿠폰이 지급되었음을 표시
+            }
         });
 
         document.getElementById("attendance-form").addEventListener("submit", function(event) {

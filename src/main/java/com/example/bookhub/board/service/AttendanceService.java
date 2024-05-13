@@ -1,7 +1,11 @@
 package com.example.bookhub.board.service;
 
 import com.example.bookhub.board.mapper.AttendanceMapper;
+import com.example.bookhub.board.mapper.CouponMapper;
 import com.example.bookhub.board.vo.Attendance;
+import com.example.bookhub.product.mapper.BuyMapper;
+import com.example.bookhub.product.vo.Coupon;
+import com.example.bookhub.product.vo.CouponProduced;
 import com.example.bookhub.user.mapper.UserMapper;
 import com.example.bookhub.user.vo.User;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttendanceService {
 
+    private final CouponMapper couponMapper;
     private final AttendanceMapper attendanceMapper;
     private final UserMapper userMapper;
 
@@ -38,8 +43,25 @@ public class AttendanceService {
         return attendanceMapper.userAttendanceCheckByNo(userNo);
     }
 
+//    @Scheduled(fixedRate = 180000)
 //    public void deleteAttendance() {
 //        attendanceMapper.deleteAttendance();
 //    }
+
+    public int attendanceCheckCount(long userNo) {
+
+        return attendanceMapper.attendanceCheckCount(userNo);
+    }
+
+    public void insertAttendanceCoupon(long userNo) {
+
+        User user = userMapper.selectUserByNo(userNo);
+
+        CouponProduced couponProduced = new CouponProduced();
+        couponProduced.setCoupon(couponMapper.getCoupon(1));
+        couponProduced.setUser(user);
+
+        couponMapper.insertAttendanceCoupon(couponProduced);
+    }
 
 }

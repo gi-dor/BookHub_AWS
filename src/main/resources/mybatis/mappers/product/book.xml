@@ -5,6 +5,7 @@
     <resultMap type="com.example.bookhub.product.dto.BookDto" id="BookDetailResultMap">
         <id column="book_no" property="bookNo"/>
         <result column="book_image_cover" property="imageCover"/>
+        <result column="book_image_description" property="imageDescription"/>
         <result column="book_name" property="name"/>
         <result column="book_published_date" property="publishedDate"/>
         <result column="book_description" property="description"/>
@@ -82,6 +83,7 @@
         select
             B.BOOK_NO,
             BI.BOOK_IMAGE_COVER,
+            BI.BOOK_IMAGE_DESCRIPTION,
             B.BOOK_NAME,
             B.BOOK_PUBLISHED_DATE,
             B.BOOK_DESCRIPTION,
@@ -151,9 +153,19 @@
             author_no = #{authorNo}
     </select>
 
+
     <update id="increaseBookViewCount" parameterType="long">
         UPDATE BOOK
         SET BOOK_VIEW_COUNT = BOOK_VIEW_COUNT + 1
         WHERE BOOK_NO = #{bookNo}
+  </update>
+
+    <update id="returnBookStock">
+        update
+            BOOK
+        set
+            book_stock = book_stock + #{count}
+        where
+            book_no = #{bookNo}
     </update>
 </mapper>

@@ -5,15 +5,20 @@ import com.example.bookhub.product.dto.BuyForm;
 import com.example.bookhub.product.dto.KakaoApproveResponse;
 import com.example.bookhub.product.dto.KakaoCancelResponse;
 import com.example.bookhub.product.dto.KakaoReadyResponse;
+import com.example.bookhub.product.exception.BookHubException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayApproveException;
 import com.example.bookhub.product.exception.kakaoPay.KakaoPayReadyException;
-import com.example.bookhub.product.vo.Buy;
+import com.example.bookhub.user.mapper.UserMapper;
+import com.example.bookhub.user.vo.User;
 import groovy.util.logging.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -23,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -37,12 +43,23 @@ public class KakaoPayService {
     private KakaoReadyResponse kakaoReadyResponse;
     private KakaoApproveResponse kakaoApproveResponse;
     private KakaoCancelResponse kakaoCancelResponse;
+    private RestTemplate restTemplate;
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * 결제 준비
      */
-    public String kakaoPayReady(BuyForm buyForm) {
-        RestTemplate restTemplate = new RestTemplate();
+    @Retryable(
+            value = RuntimeException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
+    public String kakaoPayReady(BuyForm buyForm, String userId)  {
+
+        //restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory()); // 정확한 에러 파악을 위해 생성
 
         // 서버 요청 헤더
@@ -53,7 +70,7 @@ public class KakaoPayService {
 
         params.add("cid", "TC0ONETIME"); // 가맹점 코드 - 테스트용
         params.add("partner_order_id", "1001"); // 주문 번호
-        params.add("partner_user_id", "lucy"); // 회원 아이디
+        params.add("partner_user_id", userId); // 회원 아이디
         params.add("item_name", "북허브 도서"); // 상품 명
         params.add("quantity", String.valueOf(buyForm.getBuyBookNoList().size())); // 상품 수량
         params.add("total_amount", String.valueOf(buyForm.getFinalPrice())); // 상품 가격
@@ -83,7 +100,7 @@ public class KakaoPayService {
     /**
      * 결제 완료 승인
      */
-    public KakaoApproveResponse approveResponse(String pgToken) {
+    public KakaoApproveResponse approveResponse(String pgToken, String userId) {
 
         // 서버 요청 헤더
         HttpHeaders headers = getHeaders();
@@ -94,7 +111,7 @@ public class KakaoPayService {
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoReadyResponse.getTid());
         params.add("partner_order_id", "1001");
-        params.add("partner_user_id", "lucy");
+        params.add("partner_user_id", userId);
         params.add("pg_token", pgToken);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
@@ -140,7 +157,7 @@ public class KakaoPayService {
                     requestEntity,
                     KakaoCancelResponse.class);
         } catch(RestClientException e){
-            throw new KakaoPayApproveException("카카오 결제 취소 실패");
+            throw new KakaoPayApproveException("이미 주문취소/환불된 주문입니다");
         }
 
         return kakaoCancelResponse;
@@ -154,5 +171,10 @@ public class KakaoPayService {
         httpHeaders.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         return httpHeaders;
+    }
+
+    @Recover
+    public String recover(RuntimeException e, BuyForm buyForm) {
+        throw new BookHubException(e.getMessage());
     }
 }

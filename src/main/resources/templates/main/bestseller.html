@@ -202,6 +202,7 @@
                         </a>
                     </div>
                     <div class="card-body col-12">
+                        <a th:href="@{|/product/book/detail?bookNo=${book.no}|}" style="text-decoration: none; color: inherit;">
                         <div class="text-section col-9">
                             <!--베스트셀러 순위-->
                             <h5 class="card-title" th:text="${iterStat.count}" ></h5>
@@ -230,6 +231,7 @@
                                 9.8
                             </p>
                         </div>
+                        </a>
                         <div class="cta-section col-3">
                             <a th:href="@{/product/wishlist/add(no=${book.no})}" class="btn-add-wishlist2"><i id="wishList" class="far fa-heart" ></i></a>
                             <a th:href="@{/product/cart/add(no=${book.no})}"class="btn-add-cart2 mb-3 btn btn-outline-primary" id="cart">장바구니</a>

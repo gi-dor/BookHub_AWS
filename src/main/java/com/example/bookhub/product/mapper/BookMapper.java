@@ -14,5 +14,8 @@ public interface BookMapper {
     BookDto getBookByBookNo(long bookNo);
     void updateBookStatus(long bookNo);
     List<BookAuthor> getAuthorByBookNo(long bookNo);
+
     void increaseBookViewCount(@Param("bookNo") Long bookNo);
+    void returnBookStock(@Param("bookNo") long bookNo, @Param("count") int count);
+
 }

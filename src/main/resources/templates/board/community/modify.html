@@ -1,24 +1,41 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Community Post</title>
-</head>
-<body>
-<h1>Edit Community Post</h1>
-<form th:action="@{/board/community/modify/{no}(no=${community.no})}" method="post">
-    <input type="hidden" name="no" th:value="${community.no}">
-    <div>
-        <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title" th:value="${community.title}">
-    </div>
-    <div>
-        <label for="content">Content:</label><br>
-        <textarea id="content" name="content" rows="5" th:text="${community.content}"></textarea>
-    </div>
-    <div>
-        <button type="submit">Update</button>
-    </div>
-</form>
-</body>
-</html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout/base}" >
+
+<div layout:fragment="content" class="container py-4">
+    <h1 class="text-center">게시글 수정하기</h1>
+    <form th:action="@{/board/community/modify/{no}(no=${community.no})}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="no" th:value="${community.no}">
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" id="title" name="title" th:value="${community.title}" required>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" id="content" name="content" rows="5" th:utext="${community.content}" required></textarea>
+        </div>
+        <div class="form-row align-items-center">
+            <div class="form-group text-center"> <!-- 오른쪽 정렬을 위해 text-right 클래스 추가 -->
+                <button type="submit" class="btn btn-primary">등록</button>
+                <a href="/board/community/list" class="btn btn-secondary">돌아가기</a>
+            </div>
+        </div>
+    </form>
+<script>
+    // Summernote를 초기화하고 이미지 업로드 기능을 추가합니다.
+    $(document).ready(function() {
+        $('#content').summernote({
+            height: 300,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            lang: "ko-KR",
+            placeholder: '최대 2048자까지 쓸 수 있습니다',
+            callbacks: {
+                onImageUpload: function(files) {
+                }
+            }
+        });
+    });
+</script>
+</div>
+

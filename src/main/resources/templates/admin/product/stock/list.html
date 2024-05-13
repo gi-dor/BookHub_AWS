@@ -1,0 +1,303 @@
+<html lang="ko" layout:decorate="~{admin/layout/base}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="content" class="container-fluid">
+    <div class="row me-5 mt-3 mb-5">
+        <div class="col-12">
+            <h3>재고 관리</h3>
+
+            <!-- 필터 선택 영역-->
+            <form id="productListForm" th:action="@{/admin/stock/notification/list}" th:object="${filter}">
+                <div class="col-12 bg-light p-3 mb-3">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td class="bg-light">검색어</td>
+                            <td>
+                                <select th:field="*{opt}" class="form-select-sm">
+                                    <option value="null">전체</option>
+                                    <option value="notificationNo">통보번호</option>
+                                    <option value="bookNo">상품번호</option>
+                                    <option value="publisherName">출판사</option>
+                                </select>
+                                <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요"
+                                       class="form-control-sm">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-light">기간 검색</td>
+                            <td>
+                                <div class="d-flex">
+                                    <select th:field="*{dateOpt}" class="form-select-sm me-2">
+                                        <option value="createdDate">재고 통보 일시</option>
+                                    </select>
+                                    <input th:field="*{moreDate}" type="date" class="form-control-sm me-2"> -
+                                    <input th:field="*{lessDate}" type="date" class="form-control-sm ms-2 me-2">
+                                    <div class="input-group">
+                                        <input type="hidden" th:field="*{period}"/>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="0"
+                                                th:classappend="${filter.period == '0' ? 'active' : ''}">오늘
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="3"
+                                                th:classappend="${filter.period == '3' ? 'active' : ''}">3일간
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="7"
+                                                th:classappend="${filter.period == '7' ? 'active' : ''}">일주일
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="30"
+                                                th:classappend="${filter.period == '30' ? 'active' : ''}">1개월
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="90"
+                                                th:classappend="${filter.period == '90' ? 'active' : ''}">3개월
+                                        </button>
+                                        <button name="btn-date" class="btn btn-outline-secondary btn-sm"
+                                                type="button" data-offset="all"
+                                                th:classappend="${filter.period == 'all' ? 'active' : ''}">전체
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-reset">초기화</button>
+                    </div>
+                </div>
+
+                <!-- 조회 결과 영역 -->
+                <div class="col-12 bg-light p-3 mb-3">
+                    <input type="hidden" name="page"/>
+                    <div class="my-3 d-flex justify-content-between">
+                        <div class="text-left">전체: <b th:text="${paging.totalRows}">n</b> 개 조회</div>
+                        <div class="d-flex">
+                            <!-- 조회 개수 설정 -->
+                            <select class="form-control-sm me-2" th:field="*{rows}">
+                                <option value="10">10개씩</option>
+                                <option value="50">30개씩</option>
+                                <option value="100">50개씩</option>
+                                <option value="200">100개씩</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- 재고 통보 수량 일괄 변경 버튼 -->
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-left">
+                            <label for="modifyStockNotification">통보수량: </label>
+                            <input type="number" id="modifyStockNotification">
+                            <label for="modifyStockNotification">개</label>
+                            <button id="btn-modify-stock-notification" type="button"
+                                    class="btn btn-outline-secondary btn-sm">일괄 변경
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 조회 리스트 -->
+                    <table class="table text-center" id="table-products" th:if="${paging.totalRows != 0}">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="10%">
+                            <col width="20%">
+                            <col width="20%">
+                            <col width="15%">
+                            <col width="20%">
+                            <col width="10%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><input id="chk-select-all-product" type="checkbox"></th>
+                            <th>번호</th>
+                            <th>통보번호</th>
+                            <th>상품번호</th>
+                            <th>출판사</th>
+                            <th>재고통보 일시</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--
+                            ** 게시글 순번 **
+
+                            1. 마지막 숫자부터 시작
+                                전체 게시글 개수 - ((현재 페이지번호 - 1)* 페이지당 게시글 개수) - index
+                                ex) ${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}
+
+                            2. 1번부터 시작
+                                ((현재 페이지번호 -1) * 페이지당 게시글 개수) + count
+                                ex) ${((paging.currentPage - 1)*paging.rows) + loop.count}
+                        -->
+                        <tr th:each="stockNotification, loop : ${stockNotifications}">
+                            <td><input name="selectProduct" type="checkbox"
+                                       th:data-book-no="${stockNotification.bookNo}"></td>
+                            <td th:text="${(paging.totalRows - (paging.currentPage - 1) * paging.rows) - loop.index}">
+                                순번
+                            </td>
+                            <td th:text="${stockNotification.notificationNo}">통보번호</td>
+                            <td th:text="${stockNotification.bookNo}">도서번호</td>
+                            <td th:text="${stockNotification.publisherName}">출판사</td>
+                            <td>
+                                <p th:text="${#dates.format(stockNotification.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                            </td>
+                            <td>
+                                <button id="btn-manage-stock-${stockNotification.notificationNo}" type="button"
+                                        class="btn btn-outline-secondary btn-sm"
+                                        th:data-no="${stockNotification.notificationNo}">처리
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center bg-white" th:if="${paging.totalRows == 0}">
+                        <p>조회된 결과가 없습니다.</p>
+                    </div>
+
+                    <!-- 페이징 처리-->
+                    <!--
+                           th:classappend="${조건식} ? 값1 : 값2"
+                           th:classappend="${조건식} ? 값1"
+                               조건식이 true로 판정되면 값1을 기존 클래스 속성값에 추가하고,
+                               조건식이 false로 판정되면 값2를 기존 클래스 속성값에 추가한다.
+                               * 조건식이 false로 판정될 때 추가할 값이 없으면 값2 부분을 생략할 수 있다.
+                    -->
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                            <a th:href="@{/admin/stock/notification/list(page=${paging.currentPage - 1})}"
+                               th:data-page="${paging.currentPage - 1}" class="page-link">이전</a>
+                        </li>
+
+                        <li th:each="num : ${#numbers.sequence(paging.currentPage - 2, paging.currentPage + 2)}"
+                            th:if="${num >= 1 and num <= paging.totalPages}"
+                            class="page-item"
+                            th:classappend="${num == paging.currentPage} ? 'active'">
+                            <a th:href="@{/admin/stock/notification/list(page=${num})}" th:text="${num}"
+                               th:data-page="${num}"
+                               class="page-link">1</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                            <a th:href="@{/admin/stock/notification/list(page=${paging.currentPage + 1})}"
+                               th:data-page="${paging.currentPage + 1}" class="page-link">다음</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" type="text/javascript">
+    $(function () {
+
+        $("#btn-reset").click(function () {
+            // 검색어 초기화
+            $("select[name='opt']").val("null");
+            $("input[name='keyword']").val("");
+
+            // 기간 검색 초기화
+            $("select[name='dateOpt']").val("createdDate");
+            $("input[name='moreDate']").val("");
+            $("input[name='lessDate']").val("");
+            $("button[name='btn-date']").removeClass("active");
+        });
+
+        // 기간 검색 버튼 클릭 시 해당 날짜 입력
+        $("button[name='btn-date']").click(function () {
+            let offset = $(this).data('offset');
+            let today = new Date();
+
+            if (offset === 'all') {
+                $("#moreDate").val('');
+                $("#lessDate").val('');
+            }
+            if (offset !== 'all') {
+                let endDate = new Date(today);
+                endDate.setDate(today.getDate() - parseInt(offset));
+                $("#moreDate").val(endDate.toISOString().split('T')[0]);
+                $("#lessDate").val(today.toISOString().split('T')[0]);
+            }
+
+            $("button[name='btn-date']").removeClass("active");
+            $(this).addClass("active");
+
+            $("input[name=period]").val(offset);
+        });
+
+        $("input[name$='Date']").click(function () {
+            $("button[name='btn-date']").removeClass("active");
+        });
+
+        $("select[name='rows']").change(function () {
+            $(this).closest('form').submit();
+        });
+
+        // '전체 선택' 체크박스를 선택하면 각 상품 체크박스를 모두 선택한다.
+        $("#chk-select-all-product").click(function () {
+            let isChecked = $(this).prop("checked");
+
+            $("input[name='selectProduct']").prop("checked", isChecked);
+        });
+
+        $("input[name='selectProduct']").click(function () {
+            updateSelectAllProductCheckbox();
+        });
+
+        // 각 상품의 체크박스를 모두 선택하면 '전체 선택' 체크박스가 선택된다. 그렇지 않은 경우 '전체 선택' 체크박스가 선택 해제된다.
+        function updateSelectAllProductCheckbox() {
+            let checkedBox = $("input[name='selectProduct']:checked").length;
+            let numberOfStatusCheckboxes = $("input[name='selectProduct']").length;
+
+            if (checkedBox === numberOfStatusCheckboxes) {
+                $("#chk-select-all-product").prop("checked", true);
+            }
+            if (checkedBox !== numberOfStatusCheckboxes) {
+                $("#chk-select-all-product").prop("checked", false);
+            }
+        }
+
+        // 재고통보수량 일괄 변경
+        $("#btn-modify-stock-notification").click(function () {
+            let modifiedStockNotification = $("#modifyStockNotification").val();
+            let checkedNos = [];
+            $("#table-products tbody :checkbox:checked").each(function () {
+                checkedNos.push($(this).data("bookNo"));
+            });
+
+            if (checkedNos.length === 0) {
+                alert("선택된 상품이 없습니다.");
+                return;
+            }
+
+            if (!confirm("선택한 상품의 재고통보수량을 변경하시겠습니까?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/stock/notification/modify",
+                type: "POST",
+                data: JSON.stringify({
+                    checkedNos: checkedNos, // [100, 100, 100]
+                    modifiedStockNotification: modifiedStockNotification // 50
+                }),
+                contentType: 'application/json',
+                success: function () {
+                    alert("재고통보수량이 변경되었습니다.");
+                },
+                error: function (xhr, status, error) {
+                    console.error("오류 발생", error);
+                }
+            });
+        });
+
+    })
+
+</script>
+
+</html>

@@ -16,8 +16,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -35,12 +37,19 @@ public class MyPageService {
        return cnt;
     }
 
+    public int countInquiriesAll() {
+        int cnt = myPageMapper.countInquiriesAll();
+        return cnt;
+    }
 
+
+    @Transactional(readOnly = true)
     public List<Buy> getOrderListById(String id) {
         User user = userMapper.selectUserById(id);
       return   myPageMapper.selectOrderListById(user.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<Inquiry> getInquiryListById(String id) {
         User user = userMapper.selectUserById(id);
         return myPageMapper.selectInquiryList(user.getId());
@@ -89,6 +98,7 @@ public class MyPageService {
     }
 
 
+    @Transactional(readOnly = true)
     public PageListDTO<WishListDTO> getWishListById(String id , int page) {
         // 해당 사용자의 정보 조회
         User user = userMapper.selectUserById(id);
@@ -108,6 +118,7 @@ public class MyPageService {
         return  new PageListDTO(wishListDTO,userPagination );
     }
 
+    @Transactional(readOnly = true)
     public PageListDTO<InquiryListDTO> getInquiryListByIdPage(String id , int page) {
         // 사용자 정보조회
         User user = userMapper.selectUserById(id);
@@ -134,6 +145,57 @@ public class MyPageService {
     }
 
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "MyPageMapper.cacheInquiries" , key = "#page", condition = "#page <= 4")
+    public PageListDTO<InquiryListDTO> getCacheInquiriesList( int page) {
+
+        // 사용자의 아이디로 전체 작성된 1:1문의 갯수 조회
+        int totalRows = myPageMapper.countInquiriesAll();
+
+        // 페이징 정보
+        UserPagination userPagination =  new UserPagination(page , totalRows);
+
+        int offset = userPagination.getBegin() -1;
+
+        // 페이징된 결과 조회 - 캐싱 Mapper
+        List<InquiryListDTO> inquiryListDTO = myPageMapper.cacheInquiries(offset);
+
+        PageListDTO<InquiryListDTO> pageListDTO = new PageListDTO<>();
+        pageListDTO.setItems(inquiryListDTO);
+        pageListDTO.setUserPagination(userPagination);
+
+        // PageListDTO<InquiryListDTO> pageListDTO = new PageListDTO<>(inquiryListDTO,userPagination);
+
+        return pageListDTO;
+
+    }
+
+    @Transactional(readOnly = true)
+    public PageListDTO<InquiryListDTO> getNoCacheInquiriesList( int page) {
+
+        // 사용자의 아이디로 전체 작성된 1:1문의 갯수 조회
+        int totalRows = myPageMapper.countInquiriesAll();
+
+        // 페이징 정보
+        UserPagination userPagination =  new UserPagination(page , totalRows);
+
+        int offset = userPagination.getBegin() -1;
+
+        // 페이징된 결과 조회 - 캐싱 Mapper
+        List<InquiryListDTO> inquiryListDTO = myPageMapper.cacheInquiries(offset);
+
+        PageListDTO<InquiryListDTO> pageListDTO = new PageListDTO<>();
+        pageListDTO.setItems(inquiryListDTO);
+        pageListDTO.setUserPagination(userPagination);
+
+        // PageListDTO<InquiryListDTO> pageListDTO = new PageListDTO<>(inquiryListDTO,userPagination);
+
+        return pageListDTO;
+
+    }
+
+
+
     public List<Inquiry> findInquiryByDate(LocalDateTime startDate, LocalDateTime endDate , String id ) {
         return myPageMapper.findInquiryByDate(startDate,endDate , id);
     }
@@ -146,6 +208,7 @@ public class MyPageService {
 
     }
 
+    @Transactional(readOnly = true)
     public PageListDTO<OrderListDTO> getOrderListByIdPage(String id, int page) {
         // 사용자 정보조회
         User user = userMapper.selectUserById(id);
@@ -168,6 +231,7 @@ public class MyPageService {
         return pageListDTO;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDetailDTO> orderDetail(String id , Long no ) {
        User user =  userMapper.selectUserById(id);
 
@@ -175,6 +239,7 @@ public class MyPageService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDetailDTO> deliveryDetail (String id , Long no) {
         User user = userMapper.selectUserById(id);
         return myPageMapper.deliveryDetail(user.getId(),no);
