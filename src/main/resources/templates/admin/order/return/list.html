@@ -265,6 +265,7 @@
 
         // 환불 처리 승인 버튼
         $("[id^=btn-complete-return]").click(function () {
+            let $btn = $(this);
             let returnNo = $(this).data("no");
 
             if (!confirm("환불을 승인하시겠습니까?")) {
@@ -276,12 +277,12 @@
                 type: "GET",
                 success: function (data) {
                     alert("환불 처리가 완료되었습니다.");
+
+                    // 환불처리 완료된 행 삭제
+                    $btn.closest("tr").remove();
                 },
                 error: function (xhr, status, error) {
                     alert("환불 처리에 실패했습니다.");
-                },
-                complete: function () {
-                    window.location.href = "/admin/order/return/list";
                 }
             })
         })
