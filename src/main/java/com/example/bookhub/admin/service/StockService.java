@@ -23,7 +23,7 @@ public class StockService {
         return stockMapper.getStockNotifications(filter, offset, limit);
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */30 * * * *")
     @SchedulerLock(name = "sendNoticeContentAutomatically", lockAtLeastFor = "20s", lockAtMostFor = "50s")
     public void notifyInsufficientStock() {
         List<Long> bookNos = stockMapper.getBookNoBelowStockNotification();
