@@ -38,13 +38,13 @@
         insert into CART
         (book_no, user_no, count)
         values
-        (#{bookNo}, #{userNo}, 1)
+        (#{bookNo}, #{userNo}, #{count})
     </insert>
 
-    <update id="increaseBookCountByCartNo" parameterType="long">
+    <update id="increaseBookCountByCartNo">
         update CART
-        set count = count + 1
-        where cart_no = #{value}
+        set count = count + #{count}
+        where cart_no = #{cartNo}
     </update>
 
     <delete id="deleteBookByCartNo" parameterType="long">

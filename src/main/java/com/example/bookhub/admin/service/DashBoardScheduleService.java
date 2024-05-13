@@ -33,9 +33,9 @@ public class DashBoardScheduleService {
         retryLogic(dashBoardScheduleMapper::saveTotalYesterday);
     }
 
-    // 매월 1일 오전 12시마다 지난달 값을 계산하여 저장하기
+    // 매월 1일 오전 10시마다 지난달 값을 계산하여 저장하기
     @SchedulerLock(name = "lastMonth_lock", lockAtLeastFor = "20s", lockAtMostFor = "50s")
-    @Scheduled(cron = "0 0 12 1 * ?")
+    @Scheduled(cron = "0 0 10 1 * ?")
     public void saveTotalLastMonth(){
         retryLogic(dashBoardScheduleMapper::saveTotalLastMonth);
     }

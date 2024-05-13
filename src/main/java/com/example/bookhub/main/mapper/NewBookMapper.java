@@ -10,8 +10,8 @@ import java.util.List;
 public interface NewBookMapper {
 
     /**
-     * 검색 리스트 조회
-     * @return 검색결과 리스트
+     * 신간도서 리스트 조회
+     * @return 결과 리스트
      */
     List<BookDto> newBookList(SearchCriteria criteria);
 

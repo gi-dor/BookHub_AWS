@@ -14,7 +14,7 @@
            </form>
 
        <div class="row">
-           <!-- Sidebar -->
+           <h5>신간도서</h5>
         <div class="sidebar col-2">
         </div>
         <!-- /Sidebar -->
@@ -48,7 +48,9 @@
                         <a href="#" data-cateKeyword="21"><span class="catebadge rounded-pill text-bg-light me-5">만화</span></a>
                         <a href="#" data-cateKeyword="9"><span class="catebadge rounded-pill text-bg-light me-5">초/중/고참고서</span></a>
                         <a href="#" data-cateKeyword="16"><span class="catebadge rounded-pill text-bg-light me-5">예술/대중문화</span></a>
-                        <li><hr class="dropdown-divider"></li>
+                        <div class="mb-4">
+                            <li class="list"><hr class="dropdown-divider"></li>
+                        </div>
                         <a href="#" data-cateKeyword="10"><span class="catebadge rounded-pill text-bg-light me-5">요리/살림</span></a>
                         <a href="#" data-cateKeyword="18"><span class="catebadge rounded-pill text-bg-light me-5">종교/역학</span></a>
                         <a href="#" data-cateKeyword="19"><span class="catebadge rounded-pill text-bg-light me-5">컴퓨터/모바일</span></a>
@@ -98,7 +100,7 @@
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" >
-                                <a th:href="@{|new?page=${criteria.page - 1}|}"
+                                <a th:href="@{|/main/newbook?page=${criteria.page - 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.first ? 'disabled' : '' }"
                                    aria-label="Previous"
@@ -108,7 +110,7 @@
                             </li>
                             <th:block th:each="num : ${#numbers.sequence(criteria.beginPage, criteria.endPage)}">
                                 <li class="page-item" >
-                                    <a th:href="@{|new?page=${num}|}"
+                                    <a th:href="@{|/main/newbook?page=${num}|}"
                                        class="page-link"
                                        th:text="${num}"
                                        th:attr="data-page=${num}">
@@ -118,7 +120,7 @@
                                 </li>
                             </th:block>
                             <li class="page-item">
-                                <a th:href="@{|new?page=${criteria.page + 1}|}"
+                                <a th:href="@{|/main/newbook?page=${criteria.page + 1}|}"
                                    class="page-link"
                                    th:classappend="${criteria.last ? 'disabled' : '' }"
                                    aria-label="Next"
@@ -130,9 +132,9 @@
                     </nav>
                 </div>
                 <div class="col-5">
-                    <button type="button" class="btn me-2">전체선택</button>
-                    <button type="button" class="btn">장바구니 담기</button>
-                    <button type="button" class="btn">마이리스트 담기</button>
+                    <button type="button" class="btn-all-choice me-2 btn btn-outline-primary">전체선택</button>
+                    <button type="button" class="btn-add-cart me-2 btn btn-outline-primary" id="btn-add-cart">장바구니 담기</button>
+                    <button type="button" class="btn-add-wishlist btn btn-outline-primary" >위시리스트 담기</button>
                 </div>
             </div>
 
@@ -141,55 +143,54 @@
             </div>
 
             <!--상품 목록-->
-            <div class="card mb-5 col-12" th:each="book : ${book}">
-                <div class="ms-2">
-                    <button type="button" class="btn btn-sm rounded-circle" id="checkButton">
-                        <i class="bi bi-check"></i>
-                    </button>
-                </div>
-                <div >
-                    <!-- 책 이미지 -->
-                    <a href="#">
-                        <img th:src="${book.cover}" class="card-img-top" alt="책 사진">
-                    </a>
-                </div>
-                <div class="card-body col-12">
-                    <a th:href="@{|/product/book/detail?bookNo=${book.no}|}" style="text-decoration: none; color: inherit;">
-                    <div class="text-section col-9">
-                        <!-- 책 제목 -->
-                        <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
-                        <!-- 저자 -->
-                        <div th:each="author : ${book.authors}">
-                            <p class="card-text" th:text="${author.name + ' (' + author.type + ')'}">저자</p>
+
+           <form id="book-form">
+                <div class="card mb-5 col-12" th:each="book : ${book}">
+                    <div class="ms-2">
+                        <input type="checkbox" name="no" class="btn btn-sm rounded-circle" th:value="${book.no}" />
+                    </div>
+                    <div >
+                        <!-- 책 이미지 -->
+                        <a href="#">
+                            <img th:src="${book.cover}" class="card-img-top" alt="책 사진">
+                        </a>
+                    </div>
+                    <div class="card-body col-12">
+                        <div class="text-section col-9">
+                            <!-- 책 제목 -->
+                            <h5 class="card-title fw-bold" th:text="${book.name}"></h5>
+                            <!-- 저자 -->
+                            <div th:each="author : ${book.authors}">
+                                <p class="card-text" th:text="${author.name + ' (' + author.type + ')'}">저자</p>
+                            </div>
+                            <!--출판사-->
+                            <p class="card-text">
+                                <span th:text="${book.publisherName}"></span>
+                            </p>
+                            <!-- 가격 -->
+                            <p class="card-text">
+                                <span th:text="${book.price} + '원'"></span>
+                            </p>
+                            <!-- 출판일 -->
+                            <p class="card-text">
+                                <span th:text="${book.publishedDate}"></span>
+                            </p>
+                            <!-- 책 설명 -->
+                            <p class="card-text" th:text="${book.description}" id="txt_post"></p>
+                            <p class="card-text">
+                                <i class="fas fa-star"></i>
+                                <span th:text="${book.averageRating}"></span>
+                            </p>
                         </div>
-                        <!--출판사-->
-                        <p class="card-text">
-                            <span th:text="${book.publisherName}"></span>
-                        </p>
-                        <!-- 가격 -->
-                        <p class="card-text">
-                            <span th:text="${book.price} + '원'"></span>
-                        </p>
-                        <!-- 출판일 -->
-                        <p class="card-text">
-                            <span th:text="${book.publishedDate}"></span>
-                        </p>
-                        <!-- 책 설명 -->
-                        <p class="card-text" th:text="${book.description}" id="txt_post"></p>
-                        <p class="card-text">
-                            <i class="fas fa-star"></i>
-                            9.8
-                        </p>
+                        <div class="cta-section col-3">
+                            <a th:href="@{/product/wishlist/add(no=${book.no})}" class="btn-add-wishlist2"><i id="wishList" class="far fa-heart" ></i></a>
+                            <a href="#" class="btn-add-cart mb-3 btn btn-outline-primary" id="cart">장바구니</a>
+                            <a href="#" class="btn-buy btn btn-outline-primary" id="buyButton">바로구매</a>
+                        </div>
+                        <div class="mt-3" style="border-top: 1.5px solid #FFFFFF; "></div>
                     </div>
-                    </a>
-                    <div class="cta-section col-3">
-                        <i id="zzim" class="far fa-heart mb-3"></i>
-                        <a href="#" class="btn mb-3" id="cart">장바구니</a>
-                        <a href="#" class="btn" id="buyButton">바로구매</a>
-                    </div>
-                    <div class="mt-3" style="border-top: 1.5px solid #FFFFFF; "></div>
                 </div>
-            </div>
+           </form>
         </div>
     </div>
 </div>

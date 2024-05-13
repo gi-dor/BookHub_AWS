@@ -4,12 +4,13 @@ import com.example.bookhub.product.service.WishListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/product/wishlist")
 @RequiredArgsConstructor
 public class WishListController {
@@ -36,6 +37,6 @@ public class WishListController {
     @GetMapping("/add")
     public String addWishList(@RequestParam("no") List<Long> bookNoList, Principal principal) {
         wishListService.addWishList(bookNoList, principal.getName());
-        return "redirect:/product/wishlist";
+        return "redirect:/mypage/list/wishList";
     }
 }
