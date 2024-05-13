@@ -74,28 +74,23 @@
                 count(DISTINCT R.RETURN_NO)
         FROM
                 BookHub.RETURNS R
-                LEFT JOIN RETURN_BOOK RB ON R.RETURN_NO = RB.RETURN_NO
-                LEFT JOIN RETURN_REASON RR ON R.RETURN_REASON_NO = RR.RETURN_REASON_NO
-                LEFT JOIN USER U ON R.USER_NO = U.USER_NO
+                INNER JOIN USER U ON R.USER_NO = U.USER_NO
 
         <include refid="where"></include>
     </select>
 
     <select id="getReturns" resultType="com.example.bookhub.admin.vo.Return">
         SELECT
-                R.RETURN_NO                   AS no,
-                R.BUY_NO	    		      AS buyNo,
-                U.USER_NAME               	  AS userName,
-                RB.COUNT                      AS buyCount,
-                R.RETURN_PRICE                AS returnPrice,
-                R.RETURN_DATE                 AS returnDate,
-                R.RETURNED_DATE               AS returnedDate
-
+                R.RETURN_NO                                                             AS no,
+                R.BUY_NO	    		                                                AS buyNo,
+                U.USER_NAME               	                                            AS userName,
+                (SELECT COUNT(*) FROM RETURN_BOOK RB WHERE RB.RETURN_NO = R.RETURN_NO)  AS buyCount,
+                R.RETURN_PRICE                                                          AS returnPrice,
+                R.RETURN_DATE                                                           AS returnDate,
+                R.RETURNED_DATE                                                         AS returnedDate
         FROM
                 BookHub.RETURNS R
-                LEFT JOIN RETURN_BOOK RB ON R.RETURN_NO = RB.RETURN_NO
-                LEFT JOIN RETURN_REASON RR ON R.RETURN_REASON_NO = RR.RETURN_REASON_NO
-                LEFT JOIN USER U ON R.USER_NO = U.USER_NO
+                INNER JOIN USER U ON R.USER_NO = U.USER_NO
 
         <include refid="where"></include>
 
