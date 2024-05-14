@@ -3,7 +3,9 @@ package com.example.bookhub.admin.controller;
 import com.example.bookhub.admin.dto.Pagination;
 import com.example.bookhub.admin.dto.StockFilter;
 import com.example.bookhub.admin.service.StockService;
+import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.admin.vo.Stock;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,13 @@ public class StockController {
     @GetMapping("/notification/list")
     public String stock(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
                         @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
-                        @ModelAttribute("filter") StockFilter filter,
+                        @ModelAttribute("filter") StockFilter filter, HttpSession session,
                         Model model) {
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
 
         int totalRows = stockService.getTotalRows(filter);
         Pagination pagination = new Pagination(page, totalRows, rows);

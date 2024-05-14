@@ -1,7 +1,9 @@
 package com.example.bookhub.admin.controller;
 
 import com.example.bookhub.admin.service.CategoryService;
+import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.admin.vo.Category;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,13 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/category")
-    public String category(Model model) {
+    public String category(HttpSession session, Model model) {
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+
         List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
         List<Category> secondLevelCategories = categoryService.getAllSecondLevelCategories();
         List<Category> thirdLevelCategories = categoryService.getAllThirdLevelCategories();

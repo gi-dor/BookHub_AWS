@@ -34,8 +34,13 @@ public class BoardController {
     public String boardList(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
                             @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
                             @RequestParam(name = "sort", required = false, defaultValue = "writer") String sort,
-                            @ModelAttribute("filter") BoardFilter filter,
+                            @ModelAttribute("filter") BoardFilter filter, HttpSession session,
                             Model model) {
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
 
         int totalRows = boardService.getTotalRows(filter);
         Pagination pagination = new Pagination(page, totalRows, rows);
@@ -62,7 +67,14 @@ public class BoardController {
     }
 
     @GetMapping("/create")
-    public String create(Model model) {
+    public String create(Model model, HttpSession session) {
+
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+
         model.addAttribute("post", new Post());
 
         return "admin/board/create";
@@ -70,15 +82,12 @@ public class BoardController {
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("post") Post createdPost, BindingResult error, HttpSession session) {
-        // 로그인 한 관리자 정보 가져오기
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin == null) {
-            // 로그인 페이지로 이동
-        }
-
         if (error.hasErrors()) {
             return "admin/board/create";
         }
+
+        // 로그인 한 관리자 정보 가져오기
+        Admin admin = (Admin) session.getAttribute("admin");
 
         createdPost.setAdminNo(admin.getNo());
         boardService.createPost(createdPost);
