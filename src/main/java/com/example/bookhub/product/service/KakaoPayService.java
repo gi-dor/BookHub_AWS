@@ -88,8 +88,10 @@ public class KakaoPayService {
                     requestEntity,
                     KakaoReadyResponse.class);
         } catch (RestClientException e) {
+            e.printStackTrace();
             throw new KakaoPayReadyException("카카오 결제 준비 실패");
         } catch (URISyntaxException e) {
+            e.printStackTrace();
             throw new KakaoPayReadyException("카카오 결제 준비 실패");
         }
 
