@@ -3,7 +3,9 @@ package com.example.bookhub.admin.controller;
 import com.example.bookhub.admin.dto.OrderFilter;
 import com.example.bookhub.admin.dto.Pagination;
 import com.example.bookhub.admin.service.OrderService;
+import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.admin.vo.Return;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +29,14 @@ public class OrderController {
     public String boardList(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
                             @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
                             @RequestParam(name = "sort", required = false, defaultValue = "returnDate") String sort,
-                            @ModelAttribute("filter") OrderFilter filter,
+                            @ModelAttribute("filter") OrderFilter filter, HttpSession session,
                             Model model) {
+
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
 
         if (filter.getStatus() == null) {
             List<String> status = new ArrayList<>();

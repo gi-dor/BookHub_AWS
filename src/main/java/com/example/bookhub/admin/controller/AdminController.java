@@ -110,7 +110,7 @@ public class AdminController {
 
             redirect.addFlashAttribute("admin", admin);
             long finishTime = end - start;
-            // log.info(":::    비동기 이메일 작업방식 총 작업 소요 시간 " + finishTime + "ms");
+            log.info(":::    비동기 이메일 작업방식 총 작업 소요 시간 " + finishTime + "ms");
             return "redirect:/admin/home";
 
         } catch (AlreadyAdminIdException ex){
