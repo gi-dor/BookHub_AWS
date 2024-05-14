@@ -75,9 +75,9 @@ public class KakaoPayService {
         params.add("quantity", String.valueOf(buyForm.getBuyBookNoList().size())); // 상품 수량
         params.add("total_amount", String.valueOf(buyForm.getFinalPrice())); // 상품 가격
         params.add("tax_free_amount", "0"); // 상품 비과세 금액
-        params.add("approval_url", "http://localhost:8080/kakaoPay/success"); // 성공시 url
-        params.add("cancel_url", "http://localhost:8080/kakaoPay/cancel"); // 실패시 url
-        params.add("fail_url", "http://localhost:8080/kakaoPay/fail");
+        params.add("approval_url", "http://52.79.119.109:8080/kakaoPay/success"); // 성공시 url
+        params.add("cancel_url", "http://52.79.119.109:8080/kakaoPay/cancel"); // 실패시 url
+        params.add("fail_url", "http://52.79.119.109:8080/kakaoPay/fail");
 
         // 헤더와 바디 붙이기
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(params, headers);
