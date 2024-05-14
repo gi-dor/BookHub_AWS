@@ -57,7 +57,7 @@
                                 <td th:text="${loop.size - loop.index}">순번</td>
                                 <td class="text-start">
                                     <a th:href="@{/admin/board/notice/views(postNo=${notice.no}, page=${param.page}, opt=${param.opt}, keyword=${param.keyword})}"
-                                       th:text="${notice.title}">제목</a>
+                                       th:text="${notice.title}" style="text-decoration: none; color: inherit;">제목</a>
                                 </td>
                                 <td>
                                     <p th:text="${#dates.format(notice.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></p>

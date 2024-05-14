@@ -158,7 +158,8 @@
                                 번호
                             </td>
                             <td>
-                                <a th:href="@{/book/detail(id=${post.no})}" th:text="${post.title}">제목</a>
+                                <a th:href="@{/book/detail(id=${post.no})}" th:text="${post.title}"
+                                   style="text-decoration: none; color: inherit;">제목</a>
                             </td>
                             <td th:text="${post.writer}">작성자</td>
                             <td th:text="${post.views}">조회수</td>
