@@ -6,9 +6,11 @@ import com.example.bookhub.admin.dto.Product;
 import com.example.bookhub.admin.dto.ProductFilter;
 import com.example.bookhub.admin.service.CategoryService;
 import com.example.bookhub.admin.service.ProductService;
+import com.example.bookhub.admin.vo.Admin;
 import com.example.bookhub.admin.vo.Category;
 import com.example.bookhub.product.vo.Author;
 import com.example.bookhub.product.vo.Publisher;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -35,8 +37,14 @@ public class ProductController {
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
                        @RequestParam(name = "rows", required = false, defaultValue = "10") int rows,
                        @RequestParam(name = "sort", required = false, defaultValue = "productName") String sort,
-                       @ModelAttribute("filter") ProductFilter filter,
+                       @ModelAttribute("filter") ProductFilter filter, HttpSession session,
                        Model model) {
+
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
 
         List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
         List<Category> secondLeveCategories = categoryService.getSubCategoriesByCategoryNo(filter.getTopCategoryNo());
@@ -80,7 +88,13 @@ public class ProductController {
     }
 
     @GetMapping("/modify")
-    public String modify(@RequestParam("no") Long productNo, Model model) {
+    public String modify(@RequestParam("no") Long productNo, HttpSession session, Model model) {
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+
         Product product = productService.getProductByNo(productNo);
         Long secondCategoryNo = product.getSecondCategoryNo();
         Long topLevelCategoryNo = productService.getSuperCategoryNoBySubCategoryNo(secondCategoryNo);
@@ -108,7 +122,13 @@ public class ProductController {
     }
 
     @GetMapping("/create")
-    public String create(Model model) {
+    public String create(HttpSession session, Model model) {
+        // 비로그인 접근 차단
+        Admin admin = (Admin) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+        
         List<Category> topLevelCategories = categoryService.getAllTopLevelCategories();
         List<Publisher> publishers = productService.getPublishers();
         List<Author> authors = productService.getAuthors();

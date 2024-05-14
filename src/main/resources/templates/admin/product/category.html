@@ -42,7 +42,7 @@
             <div class="col-12 bg-light p-3 mb-3">
                 <h4>중분류</h4>
                 <div class="card mt-3">
-                    <div id="secondLevelCategories" class="card-body">
+                    <div id="secondLevelCategories" class="card-body ">
                         <!-- 중분류 내용 추가 -->
                     </div>
                 </div>
@@ -380,9 +380,9 @@
 
                     $secondLevelCategories.empty();
 
-                    secondLevelCategories.forEach(secondLevelCategory => {
+                    secondLevelCategories.forEach((secondLevelCategory, index) => {
                         const $span = $("<span>")
-                            .addClass("border p-1 me-1")
+                            .addClass("border p-1 me-1 d-inline-block mb-2")
                             .text(secondLevelCategory.name)
                             .attr("data-second-category-no", secondLevelCategory.no)
                             .attr("id", `secondLevelCategory-${secondLevelCategory.no}`);
@@ -392,6 +392,7 @@
                         }
 
                         $secondLevelCategories.append($span);
+
                     });
                 },
                 error: function (xhr, status, error) {

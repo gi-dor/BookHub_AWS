@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,10 +16,12 @@ public class StockService {
 
     private final StockMapper stockMapper;
 
+    @Transactional(readOnly = true)
     public int getTotalRows(StockFilter filter) {
         return stockMapper.getTotalRows(filter);
     }
 
+    @Transactional(readOnly = true)
     public List<Stock> getStockNotifications(StockFilter filter, int offset, int limit) {
         return stockMapper.getStockNotifications(filter, offset, limit);
     }

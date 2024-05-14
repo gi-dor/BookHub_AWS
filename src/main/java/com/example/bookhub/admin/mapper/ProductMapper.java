@@ -33,5 +33,4 @@ public interface ProductMapper {
 
     void registerImage(Product product);
 
-    int getStockNotificationTotalRows(ProductFilter filter);
 }
