@@ -132,5 +132,29 @@
             diskPersistent="false"
             memoryStoreEvictionPolicy="LRU"/>
 
+    <cache
+            name="dashBoardMapper.answerRatio"
+            maxElementsInMemory="100"
+            maxElementsOnDisk="0"
+            eternal="false"
+            statistics="false"
+            timeToIdleSeconds="60"
+            timeToLiveSeconds="3600"
+            overflowToDisk="false"
+            diskPersistent="false"
+            memoryStoreEvictionPolicy="LRU"/>
+
+    <cache
+            name="dashBoardMapper.getRatios"
+            maxElementsInMemory="100"
+            maxElementsOnDisk="0"
+            eternal="false"
+            statistics="false"
+            timeToIdleSeconds="60"
+            timeToLiveSeconds="3600"
+            overflowToDisk="false"
+            diskPersistent="false"
+            memoryStoreEvictionPolicy="LRU"/>
+
 
 </cache>
