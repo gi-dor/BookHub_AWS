@@ -209,7 +209,7 @@ public class GiftService {
     }
 
     public void makeEmail(String giftOrderId, String receiverMail, String receiverName){
-        String url = "http://localhost:8080/product/gift/receiver/" + giftOrderId;
+        String url = "http://52.79.119.109:8080/product/gift/receiver/" + giftOrderId;
         String title = "북허브 도서 선물이 도착했습니다";
         String content = "<html><body>" + receiverName + "님, 북허브 도서 선물이 도착했습니다. <br/>" +
                 "주소를 입력하여 선물을 받아보세요!<br/><a href='" + url + "'>" + url + "</a></body></html>";
