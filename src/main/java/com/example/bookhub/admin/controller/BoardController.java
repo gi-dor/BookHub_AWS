@@ -6,10 +6,12 @@ import com.example.bookhub.admin.dto.Post;
 import com.example.bookhub.admin.service.BoardService;
 import com.example.bookhub.admin.vo.Admin;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,12 +69,17 @@ public class BoardController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("post") Post createdPost, HttpSession session) {
+    public String create(@Valid @ModelAttribute("post") Post createdPost, BindingResult error, HttpSession session) {
         // 로그인 한 관리자 정보 가져오기
         Admin admin = (Admin) session.getAttribute("admin");
         if (admin == null) {
             // 로그인 페이지로 이동
         }
+
+        if (error.hasErrors()) {
+            return "admin/board/create";
+        }
+
         createdPost.setAdminNo(admin.getNo());
         boardService.createPost(createdPost);
 
