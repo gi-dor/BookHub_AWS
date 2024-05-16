@@ -59,7 +59,7 @@ public class UserMyPageController {
         model.addAttribute("orderList",orderList);
         model.addAttribute("inquiryList",inquiryList);
 
-        return "/user/mypage/myPageMain";
+        return "user/mypage/myPageMain";
     }
 
 
