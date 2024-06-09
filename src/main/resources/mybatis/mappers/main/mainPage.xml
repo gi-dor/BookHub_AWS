@@ -10,59 +10,60 @@
                 A.AMOUNT
             FROM (
                      SELECT B.BOOK_NO, SUM(B.COUNT) AS AMOUNT
-                     FROM BUY A, BUY_BOOK B
-                     WHERE A.BUY_NO = B.BUY_NO
+                     FROM BUY A
+                              JOIN BUY_BOOK B ON A.BUY_NO = B.BUY_NO
                      GROUP BY B.BOOK_NO
-                     ORDER BY AMOUNT DESC
-                         LIMIT 10
                  ) AS A
                      JOIN BOOK B ON A.BOOK_NO = B.BOOK_NO
                      JOIN BOOK_IMAGES C ON B.BOOK_NO = C.BOOK_NO
+            ORDER BY A.AMOUNT DESC
+                LIMIT 10
         </select>
 
-        <select id="getNewBook"  parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
-            SELECT
-                A.BOOK_NO,
-                A.BOOK_NAME,
-                B.BOOK_IMAGE_COVER
-            FROM BOOK A, BOOK_IMAGES B
-            WHERE
-                A.BOOK_NO = B.BOOK_NO
-              AND
-                BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
-            GROUP BY A.BOOK_NAME
-                LIMIT 8;
-        </select>
-
-        <select id="getRecoBook"  parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
+    <select id="getNewBook" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
         SELECT
-        A.BOOK_NO,
-        A.BOOK_NAME,
-        B.BOOK_IMAGE_COVER
-        FROM BOOK A, BOOK_IMAGES B
+            A.BOOK_NO,
+            A.BOOK_NAME,
+            B.BOOK_IMAGE_COVER
+        FROM BOOK A
+                 JOIN BOOK_IMAGES B ON A.BOOK_NO = B.BOOK_NO
         WHERE
-        A.BOOK_NO = B.BOOK_NO
-        AND
-        BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
-        GROUP BY A.BOOK_NAME
-        LIMIT 8;
-        </select>
+            BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+            LIMIT 8
+    </select>
 
-        <select id="getBookViewCount"  parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
-            SELECT
-                A.BOOK_NO,
-                A.BOOK_NAME,
-                B.BOOK_IMAGE_COVER,
-                A.BOOK_VIEW_COUNT
-            FROM
-                BOOK A
-                    JOIN BOOK_IMAGES B ON A.BOOK_NO = B.BOOK_NO
-            GROUP BY
-                A.BOOK_NAME
-            ORDER BY
-                SUM(A.BOOK_VIEW_COUNT) DESC
-                LIMIT 10;
-        </select>
+
+    <select id="getRecoBook" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
+        SELECT
+            A.BOOK_NO,
+            A.BOOK_NAME,
+            MAX(B.BOOK_IMAGE_COVER) AS BOOK_IMAGE_COVER
+        FROM
+            BOOK A
+                JOIN BOOK_IMAGES B ON A.BOOK_NO = B.BOOK_NO
+        WHERE
+            BOOK_PUBLISHED_DATE >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+        GROUP BY
+            A.BOOK_NO, A.BOOK_NAME
+            LIMIT 8
+    </select>
+
+
+    <select id="getBookViewCount" parameterType="com.example.bookhub.main.dto.SearchCriteria" resultMap="bookResultMap">
+        SELECT
+            A.BOOK_NO,
+            A.BOOK_NAME,
+            B.BOOK_IMAGE_COVER,
+            SUM(A.BOOK_VIEW_COUNT) AS TOTAL_VIEW_COUNT
+        FROM
+            BOOK A
+                JOIN BOOK_IMAGES B ON A.BOOK_NO = B.BOOK_NO
+        GROUP BY
+            A.BOOK_NO, A.BOOK_NAME, B.BOOK_IMAGE_COVER
+        ORDER BY
+            TOTAL_VIEW_COUNT DESC
+            LIMIT 10
+    </select>
 
         <!--조회 결과 집합을 객체로 매핑-->
     <resultMap id="bookResultMap" type="com.example.bookhub.main.dto.BookDto">
