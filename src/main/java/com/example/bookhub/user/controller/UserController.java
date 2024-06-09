@@ -162,10 +162,10 @@ public class UserController {
         } catch (IllegalArgumentException aex) {
             // 사용자 정보가 일치하지 않거나 누락된 경우 에러 메시지를 모델에 추가
             model.addAttribute("error",aex.getMessage());
-            return "/user/passwordResetForm";
+            return "user/passwordResetForm";
         }
         catch (Exception ex) {
-            return "/main";
+            return "main";
         }
 
     }
