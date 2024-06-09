@@ -149,7 +149,6 @@ public class UserService implements UserDetailsService {
      * @return 선택된 사용자
      * @throws RuntimeException 주어진 번호에 해당하는 사용자를 찾을 수 없는 경우 발생
      */
-    @Transactional(readOnly = true)
     public User selectUserByNo(Long no) {
         User user = userMapper.selectUserByNo(no);
 
@@ -165,7 +164,6 @@ public class UserService implements UserDetailsService {
      * @return 선택된 사용자
      * @throws RuntimeException 주어진 아이디에 해당하는 사용자를 찾을 수 없는 경우 발생
      */
-    @Transactional(readOnly = true)
     public User selectUserById(String id) {
         System.out.println("userService.selectUserById = " +id);
         User user = userMapper.selectUserById(id);
@@ -218,7 +216,6 @@ public class UserService implements UserDetailsService {
      * @return 선택된 사용자
      * @throws RuntimeException 주어진 이메일에 해당하는 사용자를 찾을 수 없는 경우 발생
      */
-    @Transactional(readOnly = true)
     public User selectUserByIdAndEmail(String id, String email) {
         User user = userMapper.selectUserByIdAndEmail(id,email);
         if (user == null) {

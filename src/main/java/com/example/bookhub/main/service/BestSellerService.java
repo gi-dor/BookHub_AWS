@@ -16,7 +16,6 @@ import java.util.List;
 public class BestSellerService {
     private final BestSellerMapper bestSellerMapper;
 
-    @Transactional(readOnly = true)
     public BookListDto bestSeller(SearchCriteria criteria) {
         List<BookDto> bestBook = bestSellerMapper.bestSeller(criteria);
         for (BookDto book : bestBook) {

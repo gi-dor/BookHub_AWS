@@ -72,7 +72,6 @@ public class ReviewService {
         return generatedReviewNo;
     }
 
-    @Transactional(readOnly = true)
     public ReviewListDto getReviewsByBookNo(long bookNo, String userId, int page, String sort, String option) {
         long userNo = 0;
         if(!"guest".equals(userId)) {
@@ -202,7 +201,6 @@ public class ReviewService {
         reviewMapper.deleteReview(reviewNo);
     }
 
-    @Transactional(readOnly = true)
     public List<Integer> getRate(long bookNo) {
         List<Integer> rateCountList = new ArrayList<>();
         for(int start = 0; start <= 4; start++){
@@ -212,7 +210,6 @@ public class ReviewService {
         return rateCountList;
     }
 
-    @Transactional(readOnly = true)
     public List<Integer> getReviewTagCount(long bookNo){
         List<Integer> reviewTagCountList = new ArrayList<>();
         for(int i = 1; i <= 5; i++){

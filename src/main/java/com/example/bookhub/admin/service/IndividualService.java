@@ -20,12 +20,10 @@ public class IndividualService {
 
     // 미완료 CS 시작
     // 미완료 CS 리스트
-    @Transactional(readOnly = true)
     public List<IndividualDto> getNoAnswerList(Pagination pagination){
         return individualMapper.getNoAnswerList(pagination);
     }
     // 미완료 CS 디테일
-    @Transactional(readOnly = true)
     public Inquiry getNoAnswerNo(Long no){
         return individualMapper.getNoAnswerNo(no);
     }
@@ -43,7 +41,6 @@ public class IndividualService {
         individualMapper.updateNoAnswer(no);
     }
 
-    @Transactional(readOnly = true)
     // 전체 행 수를 구하는 메소드
     public int getTotalRows(int no){
         return individualMapper.getTotalRows(no);
@@ -53,19 +50,16 @@ public class IndividualService {
     // 완료 CS
 
     // 완료 CS 리스트
-    @Transactional(readOnly = true)
     public List<IndividualDto> getAnswerList(Pagination pagination){
         return individualMapper.getAnswerList(pagination);
     }
 
     // 완료 CS 디테일(질문번호로 조회)
-    @Transactional(readOnly = true)
     public InquiryComment getAnswerNo(Long no){
         return individualMapper.getAnswerNo(no);
     }
 
     // 답변번호로 조회
-    @Transactional(readOnly = true)
     public InquiryComment getAnswerResponseNo(Long no){
         return individualMapper.getAnswerResponseNo(no);
     }

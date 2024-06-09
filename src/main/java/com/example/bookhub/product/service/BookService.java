@@ -16,7 +16,6 @@ public class BookService {
 
     private final BookMapper bookMapper;
 
-    @Transactional(readOnly = true)
     public BookDto getBookDetailByNo(long bookNo){
         return bookMapper.getBookDetailByNo(bookNo);
     }
@@ -25,7 +24,6 @@ public class BookService {
         return bookMapper.getBookByBookNo(bookNo);
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(value = "BookMapper.getAuthorByBookNo" , condition = "")
     public List<BookAuthor> getAuthorByBookNo(long bookNo) {
         return bookMapper.getAuthorByBookNo(bookNo);

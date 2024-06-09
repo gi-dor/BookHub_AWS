@@ -15,7 +15,6 @@ public class BoardService {
 
     private final BoardMapper boardMapper;
 
-    @Transactional(readOnly = true)
     public int getTotalRows(BoardFilter filter) {
         String boardType = filter.getBoardType();
 
@@ -26,7 +25,6 @@ public class BoardService {
         return 0;
     }
 
-    @Transactional(readOnly = true)
     public List<Post> getPosts(BoardFilter filter, int offset, int limit, String sort) {
         String boardType = filter.getBoardType();
 
@@ -58,7 +56,6 @@ public class BoardService {
         }
     }
 
-    @Transactional(readOnly = true)
     public Post getPostByNo(long postNo) {
         return boardMapper.getPostByNo(postNo);
     }
@@ -75,7 +72,6 @@ public class BoardService {
         boardMapper.modifyPost(post);
     }
 
-    @Transactional(readOnly = true)
     public Post getNoticeByNo(long postNo) {
         return boardMapper.getNoticeByNo(postNo);
     }
@@ -84,7 +80,6 @@ public class BoardService {
         boardMapper.increaseViewCount(postNo);
     }
 
-    @Transactional(readOnly = true)
     public List<Post> getNoticesByNo(long postNo, BoardFilter filter) {
         return boardMapper.getNoticesByNo(postNo, filter);
     }
