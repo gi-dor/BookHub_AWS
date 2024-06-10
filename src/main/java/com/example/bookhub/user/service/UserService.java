@@ -50,6 +50,7 @@ public class UserService implements UserDetailsService {
      * @throws UsernameNotFoundException 주어진 아이디에 해당하는 사용자를 찾을 수 없는 경우 발생합니다.
      */
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
         // 사용자 아이디를 기준으로 데이터베이스에서 사용자 정보를 가져옵니다. 이 정보는 user 객체에 저장

@@ -96,6 +96,7 @@ public class MyPageService {
     }
 
 
+    @Transactional(readOnly = true)
     public PageListDTO<WishListDTO> getWishListById(String id , int page) {
         // 해당 사용자의 정보 조회
         User user = userMapper.selectUserById(id);
@@ -115,6 +116,7 @@ public class MyPageService {
         return  new PageListDTO(wishListDTO,userPagination );
     }
 
+    @Transactional(readOnly = true)
     public PageListDTO<InquiryListDTO> getInquiryListByIdPage(String id , int page) {
         // 사용자 정보조회
         User user = userMapper.selectUserById(id);
@@ -202,6 +204,7 @@ public class MyPageService {
 
     }
 
+    @Transactional(readOnly = true)
     public PageListDTO<OrderListDTO> getOrderListByIdPage(String id, int page) {
         // 사용자 정보조회
         User user = userMapper.selectUserById(id);
@@ -224,6 +227,7 @@ public class MyPageService {
         return pageListDTO;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDetailDTO> orderDetail(String id , Long no ) {
        User user =  userMapper.selectUserById(id);
 
