@@ -119,12 +119,12 @@
     <br>
     <strong> INDEX 적용 전 </strong>
     
-    ![인덱스 사용하기 전](src/testImg/index/인덱스 사용하기 전.jpg)
+    ![인덱스 사용하기 전](src/testImg/index/인덱스%20사용하기%20전.jpg)
     <br><br>
     
     <strong>INDEX 적용 후</strong>
     
-    ![인덱스 사용하기 전](src/testImg/index/인덱스 사용 후.jpg)
+    ![인덱스 사용하기 전](src/testImg/index/인덱스%20사용%20후.jpg)
     
     </details>
 
