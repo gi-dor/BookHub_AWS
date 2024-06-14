@@ -27,12 +27,12 @@
 ## ⚙ 기술 스택 <a name="기술-스택"></a>
 
 
-| 분류      | 기술명                                                        |
-|-----------|------------------------------------------------------------|
-| BackEnd   | Java, Spring Boot, Spring Security, Junit, MySql , MyBatis |
-| FrontEnd  | HTML, Javascript, Bootstrap,  Thymeleaf, jQuery, Ajax      |
-| DevOps    | nGrinder, EC2, RDS, S3, CodeDeploy, GithubAction           |
-| Tools     | IntelliJ, Gradle                                           |
+| 분류      | 기술명                                                         |
+|-----------|-------------------------------------------------------------|
+| BackEnd   | Java, Spring Boot, Spring Security, Junit, MySql , MyBatis  |
+| FrontEnd  | HTML, Javascript, Bootstrap,  Thymeleaf, jQuery, Ajax       |
+| DevOps    | nGrinder, MobaXterm, EC2, RDS, S3, CodeDeploy, GithubAction |
+| Tools     | IntelliJ, Gradle                                            |
 
 <br>
 
