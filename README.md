@@ -10,7 +10,7 @@
 - [기능 구현](#기능-구현)
 - [개선 사항](#개선-사항)
 
-
+<br>
 
 ## 📃 소개 <a name="소개"></a>
 
@@ -22,7 +22,7 @@
   <a href = "https://www.kyobobook.co.kr/" > 교보문고  </a>  ,
   <a href = "https://www.aladin.co.kr/home/welcome.aspx"> 알라딘  </a>
 
-  
+  <br>
 
 ## ⚙ 기술 스택 <a name="기술-스택"></a>
 
