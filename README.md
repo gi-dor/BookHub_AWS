@@ -46,12 +46,18 @@
         - 결과 및 추가사항
 ```
 
+### AWS EC2 포트포워딩
+  - EC2 보안그룹 , 포트 리다이렉트 설정 
+    -  15.165.134.135/:8080 → 15.165.134.135 변경
+   
 
 ### AWS EC2 , RDS 를 사용한 배포
   - 프로젝트 당시 경험하지 못한 AWS EC2와 RDS를 이용한 배포 방식 적용 
+  - EC2 인스턴스를 사용한 배포
+  - RDS를 사용한 데이터베이스 호스팅
 
 ### AWS RDS MySQL로 데이터베이스를 이전
-  - 기존의 로컬 `MySQL` 데이터베이스에서 `AWS RDS MySQL` 로 전환
+  - 기존 로컬 `MySQL` 데이터베이스를 `AWS RDS MySQL` 로 전환
     - 관리 간편 , 확장성  , 다중 사용자 지원
 
 ### Master - Slave DB 간의 `Write/Read` 쿼리 분산 [ [코드](https://github.com/gi-dor/BookHub_AWS/blob/30fcb619ad22758e65fe71214f00f1c8ec493e8e/src/main/java/com/example/bookhub/config/DataSourceConfiguration.java#L16-L62) ]
