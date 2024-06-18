@@ -13,7 +13,7 @@ on:
 # 여러 Job은 기본적으로 병렬적으로 수행된다.
 jobs:
   # Job을 식별하기 위한 id
-    Deploy:
+    deploy:
       # Github Actions를 실행시킬 서버 종류 선택
       # ubuntu 환경 / 가장최신버전 latest
       runs-on: ubuntu-latest
@@ -27,11 +27,11 @@ jobs:
             host: ${{ secrets.EC2_HOST }}
             username: ${{ secrets.EC2_USERNAME }}
             key: ${{ secrets.EC2_PRIVATE_KEY }}
-            script_stop: true
+            script_stop: true # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리
             script: |
               cd /home/ubuntu/BookHub_AWS
               git pull origin main
               ./gradlew clean
-              ./gradlew build
+              ./gradlew bootJar
               sudo fuser -k -n tcp 8080 || true
               nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
