@@ -1,0 +1,36 @@
+# Workflow의 이름
+# Workflow : 하나의 yml 파일을 하나의 Workflow라고 부른다.
+name: Deploy To EC2
+
+# Event : 실행되는 시점을 설정
+# main이라는 브랜치에 push 될 때 아래 Workflow를 실행
+on:
+  push:
+    branches:
+      - main
+
+# 하나의 Workflow는 1개 이상의 Job으로 구성된다.
+# 여러 Job은 기본적으로 병렬적으로 수행된다.
+jobs:
+  # Job을 식별하기 위한 id
+    Deploy:
+      # Github Actions를 실행시킬 서버 종류 선택
+      # ubuntu 환경 / 가장최신버전 latest
+      runs-on: ubuntu-latest
+
+      # Step : 특정 작업을 수행하는 가장 작은 단위
+      # Job은 여러 Step들로 구성되어 있다.
+      steps:
+        - name : SSH(원격 접속)로 EC2에 접속하기
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USERNAME }}
+            password: ${{ secrets.EC2_PRIVATE_KEY }}
+            port: ${{ secrets.PORT }}
+            script: |
+              cd /home/ubuntu/BookHub_AWS
+              git pull origin main
+              ./gradlew clean bootJar
+              sudo fuser -k -n tcp 8080 || true
+              nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
