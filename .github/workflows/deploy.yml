@@ -26,8 +26,8 @@ jobs:
           with:
             host: ${{ secrets.EC2_HOST }}
             username: ${{ secrets.EC2_USERNAME }}
-            password: ${{ secrets.EC2_PRIVATE_KEY }}
-            port: ${{ secrets.PORT }}
+            key: ${{ secrets.EC2_PRIVATE_KEY }}
+            script_stop: true
             script: |
               cd /home/ubuntu/BookHub_AWS
               git pull origin main
