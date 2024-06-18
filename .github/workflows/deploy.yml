@@ -32,6 +32,6 @@ jobs:
               cd /home/ubuntu/BookHub_AWS
               git pull origin main
               ./gradlew clean
-              ./gradlew build
+              ./gradlew bootJar
               sudo fuser -k -n tcp 8080 || true
               nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
