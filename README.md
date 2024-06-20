@@ -11,14 +11,12 @@
 
 
 
-
 <br>
 
 ## 🐥 목차
 - [⚙ 기술 스택](#기술-스택)
 - [🔥 개선 사항](#개선-사항)
 - [💻 기능 구현](#기능-구현)
-
 <br>
 
 
@@ -93,7 +91,7 @@
           </details>
 
 
-### 1:1 문의사항 `INDEX 조회성능 개선`   [  [BLOG](https://gi-dor.tistory.com/252) ]
+### 1:1 문의사항 `INDEX 조회성능 개선`   [ [코드](https://github.com/gi-dor/BookHub_AWS/blob/f330f85d60b0ba8639fda9bc610c3df3083a08fc/src/testImg/index/INDEXSQL.sql#L18-L26) / [BLOG](https://gi-dor.tistory.com/252) ]
 
   - 지속해서 누적되는 데이터로 인해 조회성능이 저하됩니다 이를 개선하기위해  INDEX를 설정하여 성능을 향상 시켰습니다
     - 카디널리티 수치가 높은 컬럼을 기준으로 INDEX 를 설정하였습니다
@@ -172,4 +170,5 @@
     - Regex 에 허용된 임시 비밀번호 생성 
     - 이메일 전송
     ![비밀번호 찾기](src/testImg/Implementation/비밀번호_찾기.jpg)
-  
+
+---
