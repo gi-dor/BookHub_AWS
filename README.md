@@ -50,9 +50,9 @@ BookHub는 사용자에게 다양한 도서 검색, 찜하기, 결제, 상세 �
 
 ### AWS EC2와 RDS를 활용한 CICD 배포
   - 프로젝트 당시 경험하지 못한 CI/CD 배포방식 적용
-    - AWS EC2와 RDS를 사용한 데이터베이스 호스팅 : 로컬 MySQL 대신 AWS RDS를 이용하여 데이터베이스를 호스팅합니다.
-    - CodeDeploy 사용 : AWS CodeDeploy를 이용하여 배포를 자동화합니다.
-    - GitHub Actions 설정 : GitHub Actions를 설정하여, 프로젝트를 푸시하면 자동으로 배포되도록 구성하였습니다.
+    - AWS EC2와 RDS를 사용한 데이터베이스 호스팅 : 로컬 MySQL 대신 AWS RDS를 이용하여 데이터베이스를 호스팅
+    - CodeDeploy 사용 : AWS CodeDeploy를 이용하여 배포를 자동화
+    - GitHub Actions 설정 : GitHub Actions를 설정하여, 프로젝트를 푸시하면 자동으로 배포되도록 구성
 
 
 ### AWS RDS MySQL로 데이터베이스를 이전
