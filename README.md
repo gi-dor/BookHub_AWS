@@ -135,9 +135,9 @@
 
 - 회원가입 완료시 이메일 전송
 
-    ![회원가입 완료](src/testImg/Implementation/회원가입 완료.png)
+    ![회원가입 완료](src/testImg/Implementation/회원가입_완료.png)
 
-    ![회원가입 완료 이메일](src/testImg/Implementation/회원가입 완료 이메일.png)
+    ![회원가입 완료 이메일](src/testImg/Implementation/회원가입_완료_이메일.png)
 
 
 - 마이페이지
@@ -145,24 +145,24 @@
     ![회원정보 조회](src/testImg/Implementation/회원정보.png)
   
   - 회원정보 수정
-    ![회원정보 수정](src/testImg/Implementation/회원정보 수정.png)
+    ![회원정보 수정](src/testImg/Implementation/회원정보_수정.png)
   
   - 비밀번호 변경
     - aJax 비동기
-    ![비밀번호 변경](src/testImg/Implementation/비밀번호 변경.png)
+    ![비밀번호 변경](src/testImg/Implementation/비밀번호_변경.png)
     
   - 주문 내역 조회
-    [주문내역 조회](src/testImg/Implementation/주문내역 조회.png)
+    [주문내역 조회](src/testImg/Implementation/주문내역_조회.png)
   
   - 주문 상세 내역 조회
-    [주문내역 상세 조회](src/testImg/Implementation/주문 상세내역 조회.png)
+    [주문내역 상세 조회](src/testImg/Implementation/주문_상세내역_조회.png)
   
   - 찜 목록
     [찜 목록](src/testImg/Implementation/찜목록.png)
   
   - 회원 탈퇴
     - 회원 탈퇴시 로그인 불가 처리
-    [회원탈퇴](src/testImg/Implementation/회원탈퇴.png)
+    [회원탈퇴](src/testImg/Implementation/회원_탈퇴.png)
     
   - 1 : 1 문의 내역 조회
     - INDEX 조회 성능개선
@@ -171,5 +171,5 @@
   - 비밀번호 찾기
     - Regex 에 허용된 임시 비밀번호 생성 
     - 이메일 전송
-    [비밀번호 찾기](src/testImg/Implementation/비밀번호 찾기.jpg)
+    [비밀번호 찾기](src/testImg/Implementation/비밀번호_찾기.jpg)
   
