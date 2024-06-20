@@ -117,7 +117,7 @@
 
 ## 💻 기능구현 <a name="기능-구현"></a>
 
-  - 인증된 사용자에 한해서만 navbar를 변경했습니다
+  - 인증된 사용자에 한해서만 navbar를 변경했습니다 <br>
     ![navbar 로그인](src/testImg/Implementation/로그인_navbar.jpg)
 
   - 로그인 / 로그아웃
@@ -151,25 +151,25 @@
     - aJax 비동기
     ![비밀번호 변경](src/testImg/Implementation/비밀번호_변경.png)
     
-  - 주문 내역 조회
-    [주문내역 조회](src/testImg/Implementation/주문내역_조회.png)
+    - 주문 내역 조회
+    ![주문내역 조회](src/testImg/Implementation/주문내역_조회.png)
   
   - 주문 상세 내역 조회
-    [주문내역 상세 조회](src/testImg/Implementation/주문_상세내역_조회.png)
+    ![주문내역 상세 조회](src/testImg/Implementation/주문_상세내역_조회.png)
   
   - 찜 목록
-    [찜 목록](src/testImg/Implementation/찜목록.png)
+    ![찜 목록](src/testImg/Implementation/찜목록.png)
   
   - 회원 탈퇴
     - 회원 탈퇴시 로그인 불가 처리
-    [회원탈퇴](src/testImg/Implementation/회원_탈퇴.png)
+    ![회원탈퇴](src/testImg/Implementation/회원_탈퇴.png)
     
   - 1 : 1 문의 내역 조회
     - INDEX 조회 성능개선
-    [1:1문의사항](src/testImg/Implementation/문의사항.png)
+    ![1:1문의사항](src/testImg/Implementation/문의사항.png)
     
   - 비밀번호 찾기
     - Regex 에 허용된 임시 비밀번호 생성 
     - 이메일 전송
-    [비밀번호 찾기](src/testImg/Implementation/비밀번호_찾기.jpg)
+    ![비밀번호 찾기](src/testImg/Implementation/비밀번호_찾기.jpg)
   
