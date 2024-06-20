@@ -119,14 +119,14 @@ BookHub는 사용자에게 다양한 도서 검색, 찜하기, 결제, 상세 �
 ## 💻 기능구현 <a name="기능-구현"></a>
 
   - 인증된 사용자에 한해서만 navbar를 변경했습니다
-  ![navbar 로그인](src/testImg/Implementation/로그인_navbar.jpg)
+    ![navbar 로그인](src/testImg/Implementation/로그인_navbar.jpg)
 
   - 로그인 / 로그아웃
-  ![로그인 기능 구현](src/testImg/Implementation/로그인.png)
+    ![로그인 기능 구현](src/testImg/Implementation/로그인.png)
 
   
 - 회원가입
-  - Regex 정규표현식 , @valid 검증
+  - 정규표현식 , @valid 검증
   - kakao 우편번호 API
   - 아이디 중복 체크
     - aJax 비동기  
@@ -135,30 +135,40 @@ BookHub는 사용자에게 다양한 도서 검색, 찜하기, 결제, 상세 �
 
 
 - 회원가입 완료시 이메일 전송
+
     ![회원가입 완료](src/testImg/Implementation/회원가입 완료.png)
+
     ![회원가입 완료 이메일](src/testImg/Implementation/회원가입 완료 이메일.png)
 
 
 - 마이페이지
   - 회원정보 조회 
     ![회원정보 조회](src/testImg/Implementation/회원정보.png)
+  
   - 회원정보 수정
     ![회원정보 수정](src/testImg/Implementation/회원정보 수정.png)
+  
   - 비밀번호 변경
     - aJax 비동기
     ![비밀번호 변경](src/testImg/Implementation/비밀번호 변경.png)
+    
   - 주문 내역 조회
     [주문내역 조회](src/testImg/Implementation/주문내역 조회.png)
+  
   - 주문 상세 내역 조회
     [주문내역 상세 조회](src/testImg/Implementation/주문 상세내역 조회.png)
+  
   - 찜 목록
     [찜 목록](src/testImg/Implementation/찜목록.png)
+  
   - 회원 탈퇴
     - 회원 탈퇴시 로그인 불가 처리
     [회원탈퇴](src/testImg/Implementation/회원탈퇴.png)
+    
   - 1 : 1 문의 내역 조회
     - INDEX 조회 성능개선
     [1:1문의사항](src/testImg/Implementation/문의사항.png)
+    
   - 비밀번호 찾기
     - Regex 에 허용된 임시 비밀번호 생성 
     - 이메일 전송
