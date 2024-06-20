@@ -115,14 +115,14 @@
 
 ## 💻 기능구현 <a name="기능-구현"></a>
 
-  - 인증된 사용자에 한해서만 navbar를 변경했습니다 <br>
+  - ### 인증된 사용자에 조건에 맞는 navbar <br>
     ![navbar 로그인](src/testImg/Implementation/로그인_navbar.jpg)
 
-  - 로그인 / 로그아웃
+  - ### 로그인 / 로그아웃
     ![로그인 기능 구현](src/testImg/Implementation/로그인.png)
 
   
-- 회원가입
+- ### 회원가입
   - 정규표현식 , @valid 검증
   - kakao 우편번호 API
   - 아이디 중복 체크
@@ -131,44 +131,71 @@
   ![회원가입](src/testImg/Implementation/회원가입.png)  
 
 
-- 회원가입 완료시 이메일 전송
+- ### 회원가입 완료 ,  이메일 전송
 
-    ![회원가입 완료](src/testImg/Implementation/회원가입_완료.png)
+  <img src="src/testImg/Implementation/회원가입_완료.png" width="450" height="500" alt="회원가입 완료 이미지">
 
-    ![회원가입 완료 이메일](src/testImg/Implementation/회원가입_완료_이메일.png)
+  <img src="src/testImg/Implementation/회원가입_완료_이메일.png" width="600" height=auto alt="회원가입 완료 이메일">
 
 
-- 마이페이지
-  - 회원정보 조회 
-    ![회원정보 조회](src/testImg/Implementation/회원정보.png)
+<br><br>
+
+- ### 마이페이지
+    - 회원정보 조회
   
-  - 회원정보 수정
-    ![회원정보 수정](src/testImg/Implementation/회원정보_수정.png)
-  
-  - 비밀번호 변경
-    - aJax 비동기
-    ![비밀번호 변경](src/testImg/Implementation/비밀번호_변경.png)
+      <img src="src/testImg/Implementation/회원정보.png" width="700" height="400">
     
+    <br>
+  
+    - 회원정보 수정
+  
+      <img src="src/testImg/Implementation/회원정보_수정.png" width="700" height="450">
+
+    <br>
+  
+    - 비밀번호 변경
+      - aJax 비동기
+      
+      <img src="src/testImg/Implementation/비밀번호_변경.png" width="600" height="400">
+    
+    <br>
+  
     - 주문 내역 조회
-    ![주문내역 조회](src/testImg/Implementation/주문내역_조회.png)
-  
-  - 주문 상세 내역 조회
-    ![주문내역 상세 조회](src/testImg/Implementation/주문_상세내역_조회.png)
-  
-  - 찜 목록
-    ![찜 목록](src/testImg/Implementation/찜목록.png)
-  
-  - 회원 탈퇴
-    - 회원 탈퇴시 로그인 불가 처리
-    ![회원탈퇴](src/testImg/Implementation/회원_탈퇴.png)
+
+      <img src="src/testImg/Implementation/주문내역_조회.png" width="600" height="450">
     
-  - 1 : 1 문의 내역 조회
-    - INDEX 조회 성능개선
-    ![1:1문의사항](src/testImg/Implementation/문의사항.png)
+    <br>
+  
+    - 주문 상세 내역 조회
+  
+       <img src="src/testImg/Implementation/주문_상세내역_조회.png" width="600" height="450">
+  
+    <br>
+  
+    - 찜 목록
+  
+      <img src="src/testImg/Implementation/찜목록.png" width="700" height="450">
+  
+    <br>
+  
+    - 회원 탈퇴
+      - 회원 탈퇴시 로그인 불가 처리
+      
+        <img src="src/testImg/Implementation/회원_탈퇴.png" width="700" height="450">
+
+    <br>
+  
+    - 1 : 1 문의 내역 조회
+      - INDEX 조회 성능개선
+      
+      <img src="src/testImg/Implementation/문의사항.png" width="700" height="450"> 
     
-  - 비밀번호 찾기
-    - Regex 에 허용된 임시 비밀번호 생성 
-    - 이메일 전송
-    ![비밀번호 찾기](src/testImg/Implementation/비밀번호_찾기.jpg)
+    <br>
+  
+    - 비밀번호 찾기
+      - Regex 에 허용된 임시 비밀번호 생성 
+      - 이메일 전송
+    
+        <img src="src/testImg/Implementation/비밀번호_찾기.jpg" width="600" height="200">
 
 ---
