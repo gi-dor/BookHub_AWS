@@ -50,9 +50,12 @@ jobs:
       - name: Code Deploy를 활용해 EC2에 프로젝트 배포하기
         #           배포를 생성
         run: aws deploy create-deployment
+          # codeDeploy - 애플리케이션 - 이름
           --application-name BookHub_AWS
           --deployment-config-name CodeDeployDefault.AllAtOnce
+          # 배포그룸
           --deployment-group-name Production_BookHub_AWS
+          # S3 버킷
           --s3-location bucket=bookhub-server-s3,bundleType=tgz,key=$GITHUB_SHA.tar.gz
 
 
