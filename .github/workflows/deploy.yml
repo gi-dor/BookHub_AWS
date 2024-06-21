@@ -1,37 +1,96 @@
-# Workflow의 이름
-# Workflow : 하나의 yml 파일을 하나의 Workflow라고 부른다.
 name: Deploy To EC2
 
-# Event : 실행되는 시점을 설정
-# main이라는 브랜치에 push 될 때 아래 Workflow를 실행
 on:
   push:
     branches:
       - main
 
-# 하나의 Workflow는 1개 이상의 Job으로 구성된다.
-# 여러 Job은 기본적으로 병렬적으로 수행된다.
 jobs:
-  # Job을 식별하기 위한 id
-    deploy:
-      # Github Actions를 실행시킬 서버 종류 선택
-      # ubuntu 환경 / 가장최신버전 latest
-      runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Github Repository 파일 불러오기
+        uses: actions/checkout@v4
 
-      # Step : 특정 작업을 수행하는 가장 작은 단위
-      # Job은 여러 Step들로 구성되어 있다.
-      steps:
-        - name : SSH(원격 접속)로 EC2에 접속하기
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USERNAME }}
-            key: ${{ secrets.EC2_PRIVATE_KEY }}
-            script_stop: true # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리
-            script: |
-              cd /home/ubuntu/BookHub_AWS
-              git pull origin main
-              ./gradlew clean
-              ./gradlew bootJar
-              sudo fuser -k -n tcp 8080 || true
-              nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
+      - name: JDK 17버전 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: application.properties 파일 만들기
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+
+#       권한 안준다고 멈춤
+      - name : 테스트 및 빌드 권한주기
+        run: chmod +x gradlew
+
+      - name: 테스트
+        run: ./gradlew clean
+
+      - name: 빌드
+        run: ./gradlew bootJar
+
+      - name: 빌드된 파일 이름 변경하기
+        run: mv ./build/libs/*SNAPSHOT.jar ./project.jar
+
+      - name: 압축해서 S3로 전송
+        run: tar -czvf $GITHUB_SHA.tar.gz project.jar appspec.yml scripts
+
+      - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: S3에 프로젝트 폴더 업로드
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.tar.gz s3://cicd-server/$GITHUB_SHA.tar.gz
+
+      - name: Code Deploy를 활용해 EC2에 프로젝트 배포하기
+        #           배포를 생성
+        run: aws deploy create-deployment
+          --application-name BookHub_AWS
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name Production_BookHub_AWS
+          --s3-location bucket=bookhub-server-s3,bundleType=tgz,key=$GITHUB_SHA.tar.gz
+
+
+
+## Workflow의 이름
+## Workflow : 하나의 yml 파일을 하나의 Workflow라고 부른다.
+#name: Deploy To EC2
+#
+## Event : 실행되는 시점을 설정
+## main이라는 브랜치에 push 될 때 아래 Workflow를 실행
+#on:
+#  push:
+#    branches:
+#      - main
+#
+## 하나의 Workflow는 1개 이상의 Job으로 구성된다.
+## 여러 Job은 기본적으로 병렬적으로 수행된다.
+#jobs:
+#  # Job을 식별하기 위한 id
+#    deploy:
+#      # Github Actions를 실행시킬 서버 종류 선택
+#      # ubuntu 환경 / 가장최신버전 latest
+#      runs-on: ubuntu-latest
+#
+#      # Step : 특정 작업을 수행하는 가장 작은 단위
+#      # Job은 여러 Step들로 구성되어 있다.
+#      steps:
+#        - name : SSH(원격 접속)로 EC2에 접속하기
+#          uses: appleboy/ssh-action@v1.0.3
+#          with:
+#            host: ${{ secrets.EC2_HOST }}
+#            username: ${{ secrets.EC2_USERNAME }}
+#            key: ${{ secrets.EC2_PRIVATE_KEY }}
+#            script_stop: true # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리
+#            script: |
+#              cd /home/ubuntu/BookHub_AWS
+#              git pull origin main
+#              ./gradlew clean
+#              ./gradlew bootJar
+#              sudo fuser -k -n tcp 8080 || true
+#              nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
