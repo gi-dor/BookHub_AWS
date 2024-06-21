@@ -45,7 +45,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: S3에 프로젝트 폴더 업로드
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.tar.gz s3://cicd-server/$GITHUB_SHA.tar.gz
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.tar.gz s3://bookhub-server-s3/$GITHUB_SHA.tar.gz
 
       - name: Code Deploy를 활용해 EC2에 프로젝트 배포하기
         #           배포를 생성
