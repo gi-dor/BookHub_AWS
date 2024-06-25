@@ -30,6 +30,15 @@
             color: black;
             text-decoration: none;
         }
+
+        .empty-wishlist-message {
+            text-align: center;
+            margin-top: 20px; /* 원하는 만큼의 마진 추가 */
+            padding: 10px;
+            background-color: #f8f9fa; /* 배경색 설정 */
+            border: 1px solid #ced4da; /* 테두리 설정 */
+            border-radius: 5px; /* 모서리 둥글게 만들기 */
+        }
     </style>
 </th:block>
 
@@ -75,6 +84,10 @@
                     </div>
                 </div>
                 <br>
+                <!-- 찜 목록이 비어있을 경우 메시지 표시 -->
+                <div class="col-12" th:if="${#lists.isEmpty(wishList)}">
+                    <p class="empty-wishlist-message">찜 한 상품이 없습니다.</p>
+                </div>
                 <div>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center pagination-sm">
