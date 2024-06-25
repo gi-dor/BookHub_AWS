@@ -2,6 +2,14 @@
       layout:decorate="~{layout/base}" >
 <th:block layout:fragment="style">
     <link rel="stylesheet" th:href="@{/css/user/modifyUserInfo.css}" />
+    <style>
+        /* 비밀번호 입력 필드가 비활성화 상태일 때의 스타일 */
+        input[readonly] {
+            background-color: #f8f9fa; /* 배경색 지정 */
+            color: #495057; /* 글자색 지정 */
+            cursor: not-allowed; /* 마우스 커서를 사용할 수 없는 상태로 변경 */
+        }
+    </style>
 </th:block>
 
 <div layout:fragment="content" class="container my-3">
