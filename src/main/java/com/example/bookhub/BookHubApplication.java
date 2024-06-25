@@ -8,7 +8,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.example.bookhub")
 @EnableCaching
 @EnableRetry
 @MapperScan("com.example.bookhub.*.mapper") // 여기에 MyBatis Mapper 인터페이스가 위치한 패키지를 지정
