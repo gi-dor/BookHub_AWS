@@ -108,7 +108,7 @@ public class MyPageService {
         UserPagination userPagination = new UserPagination(page,totalRows);
 
         // offset에 getBegin사용
-        int offset = userPagination.getBegin()-1;
+        int offset = userPagination.getBegin();
 
         // 사용자의 페이징 정보를 기반으로 찜 목록을 가져온다
         List<WishListDTO> wishListDTO =   myPageMapper.selectWishListById(user.getId() , offset);
@@ -127,7 +127,7 @@ public class MyPageService {
         // 페이징 정보
         UserPagination userPagination =  new UserPagination(page , totalRows);
 
-        int offset = userPagination.getBegin() -1;
+        int offset = userPagination.getBegin();
 
         // 페이징된 결과 조회
         List<InquiryListDTO> inquiryListDTO = myPageMapper.selectInquiryListPaging(user.getId(), offset);
@@ -152,7 +152,7 @@ public class MyPageService {
         // 페이징 정보
         UserPagination userPagination =  new UserPagination(page , totalRows);
 
-        int offset = userPagination.getBegin() -1;
+        int offset = userPagination.getBegin();
 
         // 페이징된 결과 조회 - 캐싱 Mapper
         List<InquiryListDTO> inquiryListDTO = myPageMapper.cacheInquiries(offset);
@@ -175,7 +175,7 @@ public class MyPageService {
         // 페이징 정보
         UserPagination userPagination =  new UserPagination(page , totalRows);
 
-        int offset = userPagination.getBegin() -1;
+        int offset = userPagination.getBegin();
 
         // 페이징된 결과 조회 - 캐싱 Mapper
         List<InquiryListDTO> inquiryListDTO = myPageMapper.cacheInquiries(offset);
@@ -215,7 +215,7 @@ public class MyPageService {
         // 페이징 정보
         UserPagination userPagination =  new UserPagination(page , totalRows);
 
-        int offset = userPagination.getBegin() -1;
+        int offset = userPagination.getBegin();
 
         // 페이징된 결과 조회
         List<OrderListDTO> orderListDTO = myPageMapper.selectOrderListByIdPaging(user.getId() , offset);
