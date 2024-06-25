@@ -19,7 +19,7 @@ jobs:
           java-version: 17
 
       - name: application.properties 파일 만들기
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
 
 #       권한 안준다고 멈춤
       - name : 테스트 및 빌드 권한주기
