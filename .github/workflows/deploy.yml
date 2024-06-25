@@ -55,8 +55,6 @@ jobs:
           --s3-location bucket=bookhub-server,bundleType=tgz,key=$GITHUB_SHA.tar.gz
 
 
-
-
 ## Workflow의 이름
 ## Workflow : 하나의 yml 파일을 하나의 Workflow라고 부른다.
 #name: Deploy To EC2
