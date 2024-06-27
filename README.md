@@ -21,9 +21,10 @@
 <br>
 <br>
 
-## <a href="http://15.165.134.135" target="_blank">📌 BookHub 보기</a>
+### 💻 <a href="http://15.165.134.135" target="_blank"> BookHub </a>
+### ▶ <a href="https://www.youtube.com/watch?v=pa9IGdqlc6Q">  시연 동영상 </a>
 
-
+[![Video Label](http://img.youtube.com/vi/pa9IGdqlc6Q/0.jpg)](https://www.youtube.com/watch?v=pa9IGdqlc6Q)
 
 ## ⚙ 기술 스택 <a name="기술-스택"></a>
 
