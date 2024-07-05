@@ -21,7 +21,8 @@
 <br>
 <br>
 
-### 💻 <a href="http://15.165.134.135" target="_blank"> BookHub </a>
+### 💻 <a href="http://15.165.134.135" target="_blank"><s>http://15.165.134.135</s></a> (배포 종료)
+
 ### ▶ <a href="https://www.youtube.com/watch?v=pa9IGdqlc6Q">  시연 동영상 </a>
 
 [![Video Label](http://img.youtube.com/vi/pa9IGdqlc6Q/0.jpg)](https://www.youtube.com/watch?v=pa9IGdqlc6Q)
