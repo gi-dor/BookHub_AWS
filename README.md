@@ -15,8 +15,8 @@
 
 ## 🐥 목차
 - [⚙ 기술 스택](#기술-스택)
-- [🔥 개선 사항](#개선-사항)
 - [🧩 인프라 구조](#인프라)
+- [🔥 개선 사항](#개선-사항)
 - [💻 기능 구현](#기능-구현)
 <br>
 <br>
@@ -40,12 +40,14 @@
 
 <br>
 
+## 🧩 인프라 <a name="인프라"></a>
+![인파르](src/testImg/인프라%20구조.png)
 
 ## 🔥 개선사항 <a name="개선-사항"></a><br>
 
 
 ### AWS EC2 포트포워딩
-  - 프로젝트 배포 후 URL에서 :8080 포트제거
+  - 프로젝트 배포 후 URL에서 :8080 포트제거 [ [BLOG ](https://gi-dor.tistory.com/260)]
     - EC2 보안그룹 설정
     - 포트 리다이렉트 설정 
       -  설정 전 : 15.165.134.135/:8080 
@@ -63,12 +65,14 @@
   - 기존 로컬 `MySQL` 데이터베이스를 `AWS RDS MySQL` 로 전환
 
 
-### Master - Slave DB 간의 `Write/Read` 쿼리 분산 [ [코드](https://github.com/gi-dor/BookHub_AWS/blob/30fcb619ad22758e65fe71214f00f1c8ec493e8e/src/main/java/com/example/bookhub/config/DataSourceConfiguration.java#L16-L62) ]
-  - `@Transactional` 의 `readOnly` 속성을 이용한 쿼리 분산 (@Transactional : 스프링 어노테이션)
-  - `@RouteDataSource` 의 `dataSourceType` 속성을 이용한 쿼리분산
+### Master - Slave DB 간의 `Write/Read` 쿼리 분산 [ [코드](https://github.com/gi-dor/BookHub_AWS/blob/672abc619e616fa5e0b973afdbf3bddd3d666314/src/main/java/com/example/bookhub/user/service/UserService.java#L52-L66) ]
+  - DB의 데이터 누적으로 발생하는 과부하를 염두해 AWS RDS 읽기  전용 replica 생성
+  - 데이터가 쌓이면서 DB의 부하를 분산 시키기 위해 요청이 가장 많은 읽기 작업(Select문)만을 위한 Read Replica 복제 본을 생성하여 DataSource 구분
+    - `@Transactional` 의 `readOnly` 속성을 이용한 쿼리 분산 (@Transactional : 스프링 어노테이션)
+    - `@RouteDataSource` 의 `dataSourceType` 속성을 이용한 쿼리분산
 
 
-### 중요정보 암호화 처리 [ [ 코드 ](https://github.com/gi-dor/BookHub_AWS/blob/30fcb619ad22758e65fe71214f00f1c8ec493e8e/src/main/java/com/example/bookhub/config/JasyptConfig.java#L16-L35) / [ BLOG ](https://gi-dor.tistory.com/250) ]
+### 중요정보 암호화 처리 [ [ 코드 ](https://github.com/gi-dor/BookHub_AWS/blob/672abc619e616fa5e0b973afdbf3bddd3d666314/src/test/java/com/example/bookhub/JasyptConfigTest.java#L10-L28) / [ BLOG ](https://gi-dor.tistory.com/250) ]
   - DB 접속정보 및 EmailAPI 정보 누출로 인한 보안위험 대응
     - 지난 프로젝트에서 application.properties 에 저장된 DB 연결정보를 GitHub에 push 되어 데이터베이스를 해킹 당한 사례가 있었습니다
       - `application.properties`에 저장된 `DB 연결 정보 와 EmailAPI 접속 정보`를 `jasypt` 암호화를 통한 보안을 강화하였습니다
@@ -116,12 +120,7 @@
         ![인덱스 사용하기 전](src/testImg/index/인덱스%20사용%20후.jpg)
     
         </details>
-
-
-  <br>
-
-## 🧩 인프라 <a name="인프라"></a>
-![인파르](src/testImg/인프라%20구조.png)
+    
 
 <br>
 
