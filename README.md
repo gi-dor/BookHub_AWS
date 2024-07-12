@@ -140,7 +140,8 @@
   - 아이디 중복 체크
     - aJax 비동기  
     - 중복체크 사용자 예외처리 클래스
-  ![회원가입](src/testImg/Implementation/회원가입.png)  
+    
+    ![회원가입](src/testImg/Implementation/회원가입.png)  
 
 
 - ### 회원가입 완료 ,  이메일 전송
